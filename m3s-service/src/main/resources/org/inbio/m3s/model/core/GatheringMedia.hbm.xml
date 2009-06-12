@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.GatheringMedia"
+	table="core.gathering_media">
+<!-- 		table="core.gathering_media" schema="m3s"> -->
+		<composite-id name="id"
+			class="org.inbio.m3s.model.core.GatheringMediaId">
+			<key-property name="mediaId" type="int">
+				<column name="media_id" />
+			</key-property>
+			<key-property name="gatheringDetailPersonId" type="int">
+				<column name="gathering_detail_person_id" />
+			</key-property>
+			<key-property name="creationDate" type="date">
+				<column name="creation_date" length="4" />
+			</key-property>
+			<key-property name="createdBy" type="string">
+				<column name="created_by" length="20" />
+			</key-property>
+			<key-property name="lastModificationDate" type="date">
+				<column name="last_modification_date" length="4" />
+			</key-property>
+			<key-property name="lastModificationBy" type="string">
+				<column name="last_modification_by" length="20" />
+			</key-property>
+			<key-property name="gatheringNumber" type="int">
+				<column name="gathering_number" />
+			</key-property>
+		</composite-id>
+		<many-to-one name="media"
+			class="org.inbio.m3s.model.core.Media" update="false"
+			insert="false" fetch="select">
+			<column name="media_id" not-null="true" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

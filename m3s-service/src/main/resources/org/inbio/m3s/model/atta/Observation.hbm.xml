@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Observation" table="ATTA.OBSERVATION">
+        <id name="observationId" type="java.lang.Integer">
+            <column name="OBSERVATION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" fetch="select">
+            <column name="VALUER_PERSON_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="site" class="org.inbio.m3s.model.atta.Site" fetch="select">
+            <column name="SITE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="contents" type="string">
+            <column name="CONTENTS" length="4000" />
+        </property>
+        <property name="certaintyLevel" type="java.lang.Integer">
+            <column name="CERTAINTY_LEVEL" precision="1" scale="6" />
+        </property>
+        <property name="observationDate" type="date">
+            <column name="OBSERVATION_DATE" length="7" not-null="true" />
+        </property>
+        <property name="surroundingsDescription" type="string">
+            <column name="SURROUNDINGS_DESCRIPTION" length="500" />
+        </property>
+        <property name="observationSiteDescription" type="string">
+            <column name="OBSERVATION_SITE_DESCRIPTION" length="500" />
+        </property>
+        <property name="precision" type="java.lang.Integer">
+            <column name="PRECISION" precision="22" scale="0" />
+        </property>
+        <property name="elevationLowerBound" type="java.lang.Integer">
+            <column name="ELEVATION_LOWER_BOUND" precision="22" scale="0" />
+        </property>
+        <property name="elevationUpperBound" type="java.lang.Integer">
+            <column name="ELEVATION_UPPER_BOUND" precision="22" scale="0" />
+        </property>
+        <property name="relativeAltitude" type="java.lang.Integer">
+            <column name="RELATIVE_ALTITUDE" precision="22" scale="0" />
+        </property>
+        <property name="samplingTypeId" type="java.lang.Integer">
+            <column name="SAMPLING_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="altimeterElevation" type="java.lang.Integer">
+            <column name="ALTIMETER_ELEVATION" precision="22" scale="0" />
+        </property>
+        <property name="gradientPercentage" type="java.lang.Integer">
+            <column name="GRADIENT_PERCENTAGE" precision="22" scale="0" />
+        </property>
+        <property name="expositionId" type="java.lang.Integer">
+            <column name="EXPOSITION_ID" precision="22" scale="0" />
+        </property>
+        <property name="altitudeFloorId" type="java.lang.Integer">
+            <column name="ALTITUDE_FLOOR_ID" precision="22" scale="0" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="mapElevation" type="java.lang.Integer">
+            <column name="MAP_ELEVATION" precision="22" scale="0" />
+        </property>
+        <property name="observationNumber" type="string">
+            <column name="OBSERVATION_NUMBER" length="80" />
+        </property>
+        <property name="gpsParameterSequence" type="java.lang.Integer">
+            <column name="GPS_PARAMETER_SEQUENCE" precision="22" scale="0" />
+        </property>
+        <set name="observedTaxons" inverse="true">
+            <key>
+                <column name="OBSERVATION_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.ObservedTaxon" />
+        </set>
+    </class>
+</hibernate-mapping>

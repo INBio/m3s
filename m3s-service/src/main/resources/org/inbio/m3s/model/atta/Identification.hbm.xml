@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Identification" table="ATTA.IDENTIFICATION">
+        <composite-id name="id" class="org.inbio.m3s.model.atta.IdentificationId">
+            <key-property name="specimenId" type="java.lang.Integer">
+                <column name="SPECIMEN_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="initialTimestamp" type="date">
+                <column name="INITIAL_TIMESTAMP" length="7" />
+            </key-property>
+            <key-property name="identificationSequence" type="java.lang.Integer">
+                <column name="IDENTIFICATION_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.Taxon" fetch="select">
+            <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="specimen" class="org.inbio.m3s.model.atta.Specimen" update="false" insert="false" fetch="select">
+            <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" fetch="select">
+            <column name="VALUER_PERSON_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="identificationDate" type="date">
+            <column name="IDENTIFICATION_DATE" length="7" not-null="true" />
+        </property>
+        <property name="identificationTypeId" type="java.lang.Integer">
+            <column name="IDENTIFICATION_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="identificationStatus" type="string">
+            <column name="IDENTIFICATION_STATUS" length="1" not-null="true" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="dataEntryError" type="java.lang.Integer">
+            <column name="DATA_ENTRY_ERROR" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

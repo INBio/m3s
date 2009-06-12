@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Specimen" table="ATTA.SPECIMEN">
+        <id name="specimenId" type="java.lang.Integer">
+            <column name="SPECIMEN_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="gathering" class="org.inbio.m3s.model.atta.Gathering" fetch="select">
+            <column name="GATHERING_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="specimenCategoryId" type="java.lang.Integer">
+            <column name="SPECIMEN_CATEGORY_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="specimenTypeId" type="java.lang.Integer">
+            <column name="SPECIMEN_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="storageTypeId" type="java.lang.Integer">
+            <column name="STORAGE_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="substrateId" type="java.lang.Integer">
+            <column name="SUBSTRATE_ID" precision="22" scale="0" />
+        </property>
+        <property name="originId" type="java.lang.Integer">
+            <column name="ORIGIN_ID" precision="22" scale="0" />
+        </property>
+        <property name="preservationMediumId" type="java.lang.Integer">
+            <column name="PRESERVATION_MEDIUM_ID" precision="22" scale="0" />
+        </property>
+        <property name="discarded" type="string">
+            <column name="DISCARDED" length="1" not-null="true" />
+        </property>
+        <property name="gatheringDetailPersonId" type="java.lang.Integer">
+            <column name="GATHERING_DETAIL_PERSON_ID" precision="22" scale="0" />
+        </property>
+        <property name="gatheringNumber" type="java.lang.Integer">
+            <column name="GATHERING_NUMBER" precision="14" scale="4" />
+        </property>
+        <property name="morphologicalDescriptionId" type="java.lang.Integer">
+            <column name="MORPHOLOGICAL_DESCRIPTION_ID" precision="22" scale="0" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="collectionId" type="java.lang.Integer">
+            <column name="COLLECTION_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="extractionTypeId" type="java.lang.Integer">
+            <column name="EXTRACTION_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="numberWhole" type="java.lang.Integer">
+            <column name="NUMBER_WHOLE" precision="22" scale="0" />
+        </property>
+        <property name="numberFragments" type="java.lang.Integer">
+            <column name="NUMBER_FRAGMENTS" precision="22" scale="0" />
+        </property>
+        <property name="externalSpecimen" type="string">
+            <column name="EXTERNAL_SPECIMEN" length="1" />
+        </property>
+        <set name="identifications" inverse="true">
+            <key>
+                <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Identification" />
+        </set>
+        <!-- 
+        <set name="specimenMedias" inverse="true">
+            <key>
+                <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.SpecimenMedia" />
+        </set>
+         -->
+    </class>
+</hibernate-mapping>

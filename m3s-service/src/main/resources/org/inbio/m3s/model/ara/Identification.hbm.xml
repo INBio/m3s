@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.ara.Identification" table="ara.identification">
+        <composite-id name="id" class="org.inbio.m3s.model.ara.IdentificationId">
+            <key-property name="specimenId" type="java.lang.Integer">
+                <column name="specimen_id" precision="22" scale="0" />
+            </key-property>
+            <key-property name="initialTimestamp" type="date">
+                <column name="initial_timestamp" length="7" />
+            </key-property>
+            <key-property name="identificationSequence" type="java.lang.Integer">
+                <column name="identification_sequence" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="specimen" class="org.inbio.m3s.model.ara.Specimen" update="false" insert="false" fetch="select">
+            <column name="specimen_id" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="taxon" class="org.inbio.m3s.model.ara.Taxon" fetch="select">
+            <column name="taxon_id" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="identificationDate" type="date">
+            <column name="identification_date" length="7" not-null="true" />
+        </property>
+        <property name="identificationTypeId" type="java.lang.Integer">
+            <column name="identification_type_id" precision="22" scale="0" />
+        </property>
+        <many-to-one name="valuerPerson" class="org.inbio.m3s.model.ara.ARAPerson" fetch="select">
+            <column name="valuer_person_id" precision="22" scale="0" />
+        </many-to-one>
+        <property name="dataEntryError" type="string">
+            <column name="data_entry_error" length="1" />
+        </property>
+        <property name="objVersion" type="java.lang.Integer">
+        	<column name="obj_version" precision="22" scale="0"></column>
+        </property>
+        <property name="createdBy" type="string" not-null="true">
+            <column name="created_by" length="100" />
+        </property>
+        <property name="creationDate" type="date" not-null="true">
+            <column name="creation_date" length="7" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string" not-null="true">
+            <column name="last_modification_by" length="100" />
+        </property>
+        <property name="identificationStatusId" type="java.lang.Integer">
+            <column name="identification_status_id" precision="22" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

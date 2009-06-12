@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Profile" table="ATTA.PROFILE">
+        <id name="profileId" type="java.lang.Integer">
+            <column name="PROFILE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="80" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="200" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <set name="personProfiles" inverse="true">
+            <key>
+                <column name="PROFILE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.PersonProfile" />
+        </set>
+    </class>
+</hibernate-mapping>

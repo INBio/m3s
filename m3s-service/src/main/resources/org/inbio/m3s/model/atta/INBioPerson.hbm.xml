@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.INBioPerson" table="ATTA.PERSON">
+        <id name="personId" type="java.lang.Integer">
+            <column name="PERSON_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="40" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="40" not-null="true" />
+        </property>
+        <property name="initials" type="string">
+            <column name="INITIALS" length="20" />
+        </property>
+        <property name="birthYear" type="java.lang.Integer">
+            <column name="BIRTH_YEAR" precision="22" scale="0" />
+        </property>
+        <property name="deathYear" type="java.lang.Integer">
+            <column name="DEATH_YEAR" precision="22" scale="0" />
+        </property>
+        <property name="occupation" type="string">
+            <column name="OCCUPATION" length="200" />
+        </property>
+        <property name="telephone" type="string">
+            <column name="TELEPHONE" length="30" />
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="30" />
+        </property>
+        <property name="streetAddress" type="string">
+            <column name="STREET_ADDRESS" length="200" />
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="25" />
+        </property>
+        <property name="stateProvince" type="string">
+            <column name="STATE_PROVINCE" length="25" />
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="25" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="50" />
+        </property>
+        <property name="url" type="string">
+            <column name="URL" length="100" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="secondLastName" type="string">
+            <column name="SECOND_LAST_NAME" length="40" />
+        </property>
+        <!--
+        <set name="observations" inverse="true">
+            <key>
+                <column name="VALUER_PERSON_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Observation" />
+        </set>
+        <set name="gatherings" inverse="true">
+            <key>
+                <column name="RESPONSIBLE_PERSON_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Gathering" />
+        </set>
+        <set name="personProfiles" inverse="true">
+            <key>
+                <column name="PERSON_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.PersonProfile" />
+        </set>
+        <set name="identifications" inverse="true">
+            <key>
+                <column name="VALUER_PERSON_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Identification" />
+        </set>
+         -->
+    </class>
+</hibernate-mapping>

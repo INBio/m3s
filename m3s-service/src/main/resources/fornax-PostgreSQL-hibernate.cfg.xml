@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+	<property name="hibernate.version">3.0</property>
+    <property name="hibernate.connection.pool_size">5</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.jdbc.batch_size">50</property>
+    <property name="hibernate.use.query.cache">false</property>
+	
+		<!-- Clases/tabla de tipo "core" -->
+		<mapping resource="org/inbio/m3s/model/core/GatheringMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/ImportControl.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/Keyword.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/KeywordCategory.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/Language.hbm.xml" />
+		<!--<mapping resource="org/inbio/m3s/model/core/M3SInstitution.hbm.xml" /> -->
+		<!--<mapping resource="org/inbio/m3s/model/core/M3SPerson.hbm.xml" />-->
+		<mapping resource="org/inbio/m3s/model/core/Media.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaAttribute.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaAttributeType.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaAttributeValue.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaCategory.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaKeyword.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaProject.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaType.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaUse.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MediaUseMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/MetadataStandard.hbm.xml" />			
+		<mapping resource="org/inbio/m3s/model/core/ObservedTaxonMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/Privilege.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/Project.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/SecurityUsers.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/SpecimenMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/TaxonMedia.hbm.xml" />	
+		<mapping resource="org/inbio/m3s/model/core/Text.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/TextTranslation.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/TypeSpecimenMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/User.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/UsePolicy.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/core/UserProjectPrivilege.hbm.xml" />	
+
+	</session-factory>
+
+</hibernate-configuration>

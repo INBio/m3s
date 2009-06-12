@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.ara.Profile" table="ara.profile">
+        <id name="profileId" type="java.lang.Integer">
+            <column name="profile_id" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="80" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="500" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="100" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="100" />
+        </property>
+        <property name="objVersion" type="java.lang.Integer">
+            <column name="obj_version" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

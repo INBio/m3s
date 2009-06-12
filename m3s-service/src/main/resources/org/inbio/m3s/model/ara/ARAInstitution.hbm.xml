@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.ara.ARAInstitution" table="ara.institution">
+        <id name="institutionId" type="java.lang.Integer">
+            <column name="institution_id" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="80" not-null="true" />
+        </property>
+        <property name="telephone" type="string">
+            <column name="telephone" length="100" />
+        </property>
+        <property name="fax" type="string">
+            <column name="fax" length="100" />
+        </property>
+        <property name="streetAddress" type="string">
+            <column name="street_address" length="500" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="100" />
+        </property>
+        <property name="stateProvince" type="string">
+            <column name="state_province" length="100" />
+        </property>
+        <property name="country" type="string">
+            <column name="country" length="100" />
+        </property>
+        <property name="acronym" type="string">
+            <column name="acronym" length="10" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="500" />
+        </property>
+        <property name="logoImageId" type="java.lang.Integer">
+	        <column name="multimedia_id" precision="22" scale="0"/>
+        </property>
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="100" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>

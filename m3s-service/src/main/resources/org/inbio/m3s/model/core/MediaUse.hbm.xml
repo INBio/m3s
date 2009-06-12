@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.MediaUse"
+		table="core.media_use">
+		<id name="mediaUseId" type="java.lang.Integer">
+			<column name="media_use_id" />
+			<generator class="increment" />
+		</id>
+		<many-to-one name="textByDescriptionTextId"
+			class="org.inbio.m3s.model.core.Text" fetch="select">
+			<column name="description_text_id" />
+		</many-to-one>
+		<many-to-one name="textByNameTextId"
+			class="org.inbio.m3s.model.core.Text" fetch="select">
+			<column name="name_text_id" not-null="true" />
+		</many-to-one>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="45" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+		<set name="mediaUseMedias" inverse="true">
+			<key>
+				<column name="media_use_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.model.core.MediaUseMedia" />
+		</set>
+	</class>
+</hibernate-mapping>

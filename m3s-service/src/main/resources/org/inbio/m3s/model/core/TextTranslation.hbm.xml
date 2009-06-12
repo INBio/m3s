@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/10/2007 02:55:50 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.TextTranslation"
+		table="core.text_translation">
+		<id name="textTranslationId" type="java.lang.Integer">
+			<column name="text_translation_id" />
+			<generator class="increment" />
+		</id>
+		<many-to-one name="text"
+			class="org.inbio.m3s.model.core.Text" fetch="select">
+			<column name="text_id" not-null="true" />
+		</many-to-one>
+		<many-to-one name="language"
+			class="org.inbio.m3s.model.core.Language" fetch="select">
+			<column name="language_id" not-null="true" />
+		</many-to-one>
+		<property name="name" type="string">
+			<column name="name" length="200" not-null="true" />
+		</property>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+	</class>
+</hibernate-mapping>

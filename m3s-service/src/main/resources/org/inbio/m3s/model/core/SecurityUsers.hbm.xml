@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.SecurityUsers"
+		table="core.security_users">
+		<id name="name" type="string">
+			<column name="name" length="16" />
+			<generator class="increment" />
+		</id>
+		<property name="description" type="string">
+			<column name="description" length="32" />
+		</property>
+		<property name="priority" type="java.lang.Float">
+			<column name="priority" precision="4" scale="0" />
+		</property>
+		<property name="userType" type="java.lang.Float">
+			<column name="user_type" precision="4" scale="0" />
+		</property>
+		<property name="password" type="string">
+			<column name="password" length="20" not-null="true" />
+		</property>
+		<property name="deleted" type="java.lang.Character">
+			<column name="deleted" length="1" />
+		</property>
+		<property name="systemGroup" type="java.lang.Character">
+			<column name="system_group" length="1" />
+		</property>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+		<!-- 
+		<set name="projects" inverse="true">
+			<key>
+				<column name="project_manager_name" length="16"
+					not-null="true" />
+			</key>
+			<one-to-many class="org.inbio.m3s.model.core.Project" />
+		</set>
+		<set name="userProjectPrivileges" inverse="true">
+			<key>
+				<column name="user_name" length="16" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.model.core.UserProjectPrivilege" />
+		</set>
+		<set name="importControls" inverse="true">
+			<key>
+				<column name="user_name" length="16" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.model.core.ImportControl" />
+		</set>
+		 -->
+	</class>
+</hibernate-mapping>

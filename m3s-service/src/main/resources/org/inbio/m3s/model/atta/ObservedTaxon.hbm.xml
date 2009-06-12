@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.ObservedTaxon" table="ATTA.OBSERVED_TAXON">
+        <composite-id name="id" class="org.inbio.m3s.model.atta.ObservedTaxonId">
+            <key-property name="observationId" type="int">
+                <column name="OBSERVATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="taxonId" type="java.lang.Integer">
+                <column name="TAXON_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.Taxon" update="false" insert="false" fetch="select">
+            <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="observation" class="org.inbio.m3s.model.atta.Observation" update="false" insert="false" fetch="select">
+            <column name="OBSERVATION_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="taxonomicalTimestamp" type="date">
+            <column name="TAXONOMICAL_TIMESTAMP" length="7" not-null="true" />
+        </property>
+        <property name="originId" type="java.lang.Integer">
+            <column name="ORIGIN_ID" precision="22" scale="0" />
+        </property>
+        <property name="substrateId" type="java.lang.Integer">
+            <column name="SUBSTRATE_ID" precision="22" scale="0" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <!-- 
+        <set name="observedTaxonMedias" inverse="true">
+            <key>
+                <column name="OBSERVATION_ID" precision="22" scale="0" not-null="true" />
+                <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.ObservedTaxonMedia" />
+        </set>
+         -->
+    </class>
+</hibernate-mapping>

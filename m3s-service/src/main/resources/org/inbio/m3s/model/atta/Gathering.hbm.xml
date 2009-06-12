@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Gathering" table="ATTA.GATHERING">
+        <id name="gatheringId" type="java.lang.Integer">
+            <column name="GATHERING_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="site" class="org.inbio.m3s.model.atta.Site" fetch="select">
+            <column name="SITE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" fetch="select">
+            <column name="RESPONSIBLE_PERSON_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="gatheringMethodId" type="java.lang.Integer">
+            <column name="GATHERING_METHOD_ID" precision="22" scale="0" />
+        </property>
+        <property name="initialDateTime" type="date">
+            <column name="INITIAL_DATE_TIME" length="7" not-null="true" />
+        </property>
+        <property name="finalDateTime" type="date">
+            <column name="FINAL_DATE_TIME" length="7" not-null="true" />
+        </property>
+        <property name="surroundingsDescription" type="string">
+            <column name="SURROUNDINGS_DESCRIPTION" length="500" />
+        </property>
+        <property name="precision" type="java.lang.Integer">
+            <column name="PRECISION" precision="22" scale="0" />
+        </property>
+        <property name="elevationLowerBound" type="java.lang.Integer">
+            <column name="ELEVATION_LOWER_BOUND" precision="22" scale="0" />
+        </property>
+        <property name="elevationUpperBound" type="java.lang.Integer">
+            <column name="ELEVATION_UPPER_BOUND" precision="22" scale="0" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="relativeAltitude" type="java.lang.Integer">
+            <column name="RELATIVE_ALTITUDE" precision="22" scale="0" />
+        </property>
+        <property name="collectionId" type="java.lang.Integer">
+            <column name="COLLECTION_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="labelId" type="java.lang.Integer">
+            <column name="LABEL_ID" precision="22" scale="0" />
+        </property>
+        <property name="originalLabelId" type="java.lang.Integer">
+            <column name="ORIGINAL_LABEL_ID" precision="22" scale="0" />
+        </property>
+        <property name="samplingTypeId" type="java.lang.Integer">
+            <column name="SAMPLING_TYPE_ID" precision="22" scale="0" />
+        </property>
+        <property name="gatheringSiteDescription" type="string">
+            <column name="GATHERING_SITE_DESCRIPTION" length="500" />
+        </property>
+        <set name="specimens" inverse="true">
+            <key>
+                <column name="GATHERING_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Specimen" />
+        </set>
+    </class>
+</hibernate-mapping>

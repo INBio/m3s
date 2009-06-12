@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.version">3.0</property>
+    <property name="hibernate.connection.pool_size">5</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.jdbc.batch_size">50</property>
+    <property name="hibernate.use.query.cache">false</property>
+	<mapping resource="org/inbio/m3s/model/ara/ARAInstitution.hbm.xml"/>
+	<mapping resource="org/inbio/m3s/model/ara/ARAPerson.hbm.xml"/>
+	<mapping resource="org/inbio/m3s/model/ara/GatheringObservation.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/Site.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/Taxon.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/PersonProfile.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/Profile.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/Specimen.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/Identification.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/CollectorObserver.hbm.xml" />
+	
+  </session-factory>
+</hibernate-configuration>
+

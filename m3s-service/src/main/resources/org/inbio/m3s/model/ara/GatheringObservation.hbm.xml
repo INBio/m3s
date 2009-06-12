@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.ara.GatheringObservation" table="ara.gathering_observation">
+        <id name="gatheringObservationId" type="java.lang.Integer">
+            <column name="gathering_observation_id" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="site" class="org.inbio.m3s.model.ara.Site" fetch="select">
+            <column name="site_id" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="responsiblePerson" class="org.inbio.m3s.model.ara.ARAPerson" fetch="select">
+            <column name="responsible_person_id" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="initialDate" type="date">
+            <column name="initial_date" length="7" not-null="true" />
+        </property>
+        <property name="finalDate" type="date">
+            <column name="final_date" length="7" not-null="true" />
+        </property>        
+        <property name="surroundingsDescription" type="string">
+            <column name="surroundings_description" length="4000" />
+        </property>        
+        <property name="minimumElevation" type="java.lang.Integer">
+            <column name="minimum_elevation" precision="22" scale="0" />
+        </property>
+        <property name="maximumElevation" type="java.lang.Integer">
+            <column name="maximum_elevation" precision="22" scale="0" />
+        </property>
+        <property name="collectionId" type="java.lang.Integer">
+            <column name="collection_id" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="labelId" type="java.lang.Integer">
+            <column name="label_id" precision="22" scale="0" />
+        </property>
+        <property name="originalLabelId" type="java.lang.Integer">
+            <column name="original_label_id" precision="22" scale="0" />
+        </property>
+        <property name="siteDescription" type="string">
+            <column name="site_description" length="4000" />
+        </property>
+        <property name="samplingTypeId" type="java.lang.Integer">
+            <column name="sampling_type_id" precision="22" scale="0" />
+        </property>
+        <property name="gradientPercentage" type="java.lang.Integer">
+            <column name="gradient_percentage" precision="22" scale="0" />
+        </property>
+        <property name="objVersion" type="java.lang.Integer">
+            <column name="obj_version" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="100" not-null="true" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="100" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="7" />
+        </property>
+        <property name="minimumDepth" type="java.lang.Integer">
+            <column name="minimum_depth" precision="22" scale="0" not-null="true" />
+        </property>        
+        <property name="maximumDepth" type="java.lang.Integer">
+            <column name="maximum_depth" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="expositionId" type="java.lang.Integer">
+            <column name="exposition_id" precision="22" scale="0" not-null="true" />
+        </property>
+        
+        
+    </class>
+</hibernate-mapping>

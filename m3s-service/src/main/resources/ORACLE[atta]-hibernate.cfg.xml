@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+    	<property name="hibernate.version">3.0</property>
+    	<property name="hibernate.connection.pool_size">5</property>
+    	<property name="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</property>
+    	<property name="hibernate.show_sql">false</property>
+    	<property name="hibernate.jdbc.batch_size">50</property>
+    	<property name="hibernate.use.query.cache">false</property>	
+		<mapping resource="org/inbio/m3s/model/atta/Gathering.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/Identification.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/INBioInstitution.hbm.xml"/>
+		<mapping resource="org/inbio/m3s/model/atta/INBioPerson.hbm.xml" />		
+		<mapping resource="org/inbio/m3s/model/atta/Observation.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/ObservedTaxon.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/PersonProfile.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/Profile.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/Site.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/Specimen.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/Taxon.hbm.xml" />
+	</session-factory>
+
+</hibernate-configuration>

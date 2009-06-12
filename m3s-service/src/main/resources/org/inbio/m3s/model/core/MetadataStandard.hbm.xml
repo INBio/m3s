@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.MetadataStandard"
+		table="core.metadata_standard">
+		<id name="metadataStandardId" type="java.lang.Integer">
+			<column name="metadata_standard_id" />
+			<generator class="increment" />
+		</id>
+		<property name="name" type="string">
+			<column name="name" length="80" not-null="true" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" length="200" />
+		</property>
+		<property name="metadataStandardImplementationClass"
+			type="string">
+			<column name="metadata_standard_implementation_class"
+				length="80" />
+		</property>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+		<set name="mediaAttributeTypes" inverse="true">
+			<key>
+				<column name="metadata_standard_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.model.core.MediaAttributeType" />
+		</set>
+	</class>
+</hibernate-mapping>

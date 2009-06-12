@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+<!--
+	DAO Layer for Service Layer.	
+-->	
+	<!-- BaseDAO Bean-->
+  <bean id="superBaseDAO" abstract="true">
+	<property name="sessionFactory" ref="coffeaSessionFactory"/>
+	<!--<property name="sessionFactory" ref="fornaxSessionFactory"/> -->
+	<!--<property name="sessionFactory" ref="museoNacionalFornaxSessionFactory"/> -->
+  </bean>
+	
+  <bean id="baseDAORO" class="org.inbio.m3s.dao.impl.BaseDAOImpl" parent="superBaseDAO"/>
+	
+  <bean id="attaBaseDAORO" abstract="true">
+	<property name="sessionFactory" ref="attaSessionFactory"/>
+  </bean>
+  
+  <bean id="araBaseDAORO" abstract="true">
+	<property name="sessionFactory" ref="araSessionFactory"/>
+  </bean>
+
+	
+  <!-- Hibernate/postgres DAO Implementations -->
+  <bean id="gatheringMediaDAO" class="org.inbio.m3s.dao.core.impl.GatheringMediaDAOImpl"  parent="baseDAORO"/>
+  <bean id="importControlDAO" class="org.inbio.m3s.dao.core.impl.ImportControlDAOImpl" parent="baseDAORO"/>
+  <bean id="keywordDAO" class="org.inbio.m3s.dao.core.impl.KeywordDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaAttributeDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaAttributeTypeDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeTypeDAOImpl" parent="baseDAORO"/>  
+  <bean id="mediaAttributeValueDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeValueDAOImpl" parent="baseDAORO">
+  	<property name="mediaDAO" ref="mediaDAO"/>
+  	<property name="mediaAttributeDAO" ref="mediaAttributeDAO" />
+  </bean>
+  <bean id="mediaCategoryDAO" class="org.inbio.m3s.dao.core.impl.MediaCategoryDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaDAO" class="org.inbio.m3s.dao.core.impl.MediaDAOImpl" parent="baseDAORO"/>  
+  <bean id="mediaKeywordDAO" class="org.inbio.m3s.dao.core.impl.MediaKeywordDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaProjectDAO" class="org.inbio.m3s.dao.core.impl.MediaProjectDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaTypeDAO" class="org.inbio.m3s.dao.core.impl.MediaTypeDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaUseDAO" class="org.inbio.m3s.dao.core.impl.MediaUseDAOImpl" parent="baseDAORO"/>
+  <bean id="mediaUseMediaDAO" class="org.inbio.m3s.dao.core.impl.MediaUseMediaDAOImpl" parent="baseDAORO"/>  
+  <bean id="metadataStandardDAO" class="org.inbio.m3s.dao.core.impl.MetadataStandardDAOImpl" parent="baseDAORO"/>
+  <bean id="observationMediaDAO" class="org.inbio.m3s.dao.core.impl.ObservationMediaDAOImpl"  parent="baseDAORO"/>  
+  <bean id="projectDAO" class="org.inbio.m3s.dao.core.impl.ProjectDAOImpl"  parent="baseDAORO"/>
+  <bean id="securityUserDAO" class="org.inbio.m3s.dao.core.impl.SecurityUserDAOImpl" parent="baseDAORO"/>
+  <bean id="specimenMediaDAO" class="org.inbio.m3s.dao.core.impl.SpecimenMediaDAOImpl"  parent="baseDAORO"/>
+  <bean id="statisticsDAO" class="org.inbio.m3s.dao.core.impl.StatisticsDAOImpl" parent="baseDAORO"/>
+  <bean id="taxonMediaDAO" class="org.inbio.m3s.dao.core.impl.TaxonMediaDAOImpl" parent="baseDAORO"/>
+  <bean id="textTranslationDAO" class="org.inbio.m3s.dao.core.impl.TextTranslationDAOImpl" parent="baseDAORO"/>
+  <bean id="usePolicyDAO" class="org.inbio.m3s.dao.core.impl.UsePolicyDAOImpl" parent="baseDAORO"/>
+  <bean id="userPrivilegeDAO" class="org.inbio.m3s.dao.core.impl.UserPrivilegeDAOImpl" parent="baseDAORO"/>
+  <bean id="genericSearchDAO" class="org.inbio.m3s.dao.impl.GenericSearchDAOImpl" parent="baseDAORO"/>
+
+  <!-- M3S Agents implementation -->
+  <bean id="M3SPersonDAO" class="org.inbio.m3s.dao.core.impl.M3SPersonDAOImpl" parent="baseDAORO"/>
+  <bean id="M3SInstitutionDAO" class="org.inbio.m3s.dao.core.impl.M3SInstitutionDAOImpl" parent="baseDAORO"/>
+
+  <!-- Atta oracle DAO Implementations -->
+  <bean id="INBioInstitutionDAO" class="org.inbio.m3s.dao.atta.impl.INBioInstitutionDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioPersonDAO" class="org.inbio.m3s.dao.atta.impl.INBioPersonDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioSiteDAO" class="org.inbio.m3s.dao.atta.impl.INBioSiteDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioSpecimenDAO" class="org.inbio.m3s.dao.atta.impl.INBioSpecimenDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioTaxonDAO" class="org.inbio.m3s.dao.atta.impl.INBioTaxonDAOImpl" parent="attaBaseDAORO">
+    <property name="specimenDAO" ref="INBioSpecimenDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>  
+
+	<!-- Ara DAO Implementations -->  
+  <bean id="ARAInstitutionDAO" class="org.inbio.m3s.dao.ara.impl.ARAInstitutionDAOImpl" parent="araBaseDAORO"/>
+  <bean id="ARAPersonDAO" class="org.inbio.m3s.dao.ara.impl.ARAPersonDAOImpl" parent="araBaseDAORO"/>
+  <!-- 
+  <bean id="ARASiteDAO" class="org.inbio.m3s.dao.atta.impl.INBioSiteDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="ARASpecimenDAO" class="org.inbio.m3s.dao.atta.impl.INBioSpecimenDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.atta.impl.INBioTaxonDAOImpl" parent="attaBaseDAORO">
+    <property name="specimenDAO" ref="ARASpecimenDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>
+   -->  
+  
+</beans>

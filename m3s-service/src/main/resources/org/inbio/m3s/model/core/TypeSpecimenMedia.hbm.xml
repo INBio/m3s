@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.core.TypeSpecimenMedia" table="core.type_specimen_media">
+        <composite-id name="id" class="org.inbio.m3s.model.core.TypeSpecimenMediaId">
+            <key-property name="typeSpecimenId" type="int">
+                <column name="type_specimen_id" />
+            </key-property>
+            <key-property name="mediaId" type="int">
+                <column name="media_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="media" class="org.inbio.m3s.model.core.Media" update="false" insert="false" fetch="select">
+            <column name="media_id" not-null="true" />
+        </many-to-one>
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="4" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="4" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

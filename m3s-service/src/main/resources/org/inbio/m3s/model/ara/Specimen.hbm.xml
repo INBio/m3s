@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.ara.Specimen" table="ara.specimen">
+        <id name="specimenId" type="java.lang.Integer">
+            <column name="specimen_id" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="gatheringObservation" class="org.inbio.m3s.model.ara.GatheringObservation" fetch="select">
+            <column name="gathering_observation_id" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="discarded" type="string">
+            <column name="discarded" length="1" not-null="true" />
+        </property>
+        <property name="specimenCategoryId" type="java.lang.Integer">
+            <column name="specimen_category_id" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="specimenTypeId" type="java.lang.Integer">
+            <column name="specimen_type_id" precision="22" scale="0" />
+        </property>
+        <property name="storageTypeId" type="java.lang.Integer">
+            <column name="storage_type_id" precision="22" scale="0" />
+        </property>
+        <property name="substrateId" type="java.lang.Integer">
+            <column name="substrate_id" precision="22" scale="0" />
+        </property>
+        <property name="originId" type="java.lang.Integer">
+            <column name="origin_id" precision="22" scale="0" />
+        </property>
+        <property name="preservationMediumId" type="java.lang.Integer">
+            <column name="preservation_medium_id" precision="22" scale="0" />
+        </property>
+        <property name="morphologicalDescriptionId" type="java.lang.Integer">
+            <column name="morphological_description_id" precision="22" scale="0" />
+        </property>
+		<property name="lifeStageId" type="java.lang.Integer">
+            <column name="life_stage_id" precision="22" scale="0" />
+        </property>
+        <property name="sexId" type="java.lang.Integer">
+            <column name="sex_id" precision="22" scale="0" />
+        </property>
+        <property name="numberWhole" type="java.lang.Integer">
+            <column name="number_whole" precision="22" scale="0" />
+        </property>
+        <property name="numberFragments" type="java.lang.Integer">
+            <column name="number_fragments" precision="22" scale="0" />
+        </property>
+        <property name="extractionTypeId" type="java.lang.Integer">
+            <column name="extraction_type_id" precision="22" scale="0" />
+        </property>
+        <property name="objVersion" type="java.lang.Integer">
+            <column name="obj_version" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="100" />
+        </property>        
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="100" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="7" />
+        </property>
+        <property name="collectionId" type="java.lang.Integer">
+            <column name="collection_id" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="externalSpecimen" type="string">
+            <column name="external_specimen" length="1" />
+        </property>
+        <property name="gatheringObservationMethodId" type="java.lang.Integer">
+            <column name="gathering_observation_method_id" precision="22" scale="0" />
+        </property>
+        <property name="certaintyLevel" type="java.lang.Integer">
+            <column name="certainty_level" precision="22" scale="0" />
+        </property>
+        <property name="dateTime" type="date">
+            <column name="date_time" length="13" />
+        </property>
+        <property name="gatheringObservationDetailId" type="java.lang.Integer">
+            <column name="gathering_observation_detail_id" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

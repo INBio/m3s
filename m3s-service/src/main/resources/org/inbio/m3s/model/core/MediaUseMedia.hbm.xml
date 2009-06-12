@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.MediaUseMedia"
+		table="core.media_use_media">
+		<composite-id name="id"
+			class="org.inbio.m3s.model.core.MediaUseMediaId">
+			<key-property name="mediaId" type="int">
+				<column name="media_id" />
+			</key-property>
+			<key-property name="mediaUseId" type="int">
+				<column name="media_use_id" />
+			</key-property>
+		</composite-id>
+		<many-to-one name="media"
+			class="org.inbio.m3s.model.core.Media" update="false"
+			insert="false" fetch="select">
+			<column name="media_id" not-null="true" />
+		</many-to-one>
+		<many-to-one name="mediaUse"
+			class="org.inbio.m3s.model.core.MediaUse" update="false"
+			insert="false" fetch="select">
+			<column name="media_use_id" not-null="true" />
+		</many-to-one>
+		<property name="approved" type="char">
+			<column name="approved" length="1" not-null="true" />
+		</property>
+		<property name="approvedByPersonId" type="java.lang.Integer">
+			<column name="approved_by_person_id" />
+		</property>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+	</class>
+</hibernate-mapping>

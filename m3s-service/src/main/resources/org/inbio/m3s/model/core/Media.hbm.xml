@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/10/2007 02:55:50 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.Media" table="core.media" >
+
+		<id name="mediaId" type="java.lang.Integer">
+			<column name="media_id" />
+			<generator class="increment" />
+		</id>
+		<many-to-one name="mediaType"
+			class="org.inbio.m3s.model.core.MediaType" fetch="select">
+			<column name="media_type_id" not-null="true" />
+		</many-to-one>
+		<many-to-one name="usePolicy"
+			class="org.inbio.m3s.model.core.UsePolicy" fetch="select">
+			<column name="use_policy_id" not-null="true" />
+		</many-to-one>
+		<property name="authorPersonId" type="java.lang.Integer">
+			<column name="author_person_id" />
+		</property>
+		<property name="ownerPersonId" type="java.lang.Integer">
+			<column name="owner_person_id" />
+		</property>
+		<property name="ownerInstitutionId" type="java.lang.Integer">
+			<column name="owner_institution_id" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" length="65535" />
+		</property>
+		<property name="location" type="string">
+			<column name="location" length="200" />
+		</property>
+		<property name="highResolutionVolume" type="string">
+			<column name="high_resolution_volume" length="50" />
+		</property>
+		<property name="highResolutionFileName" type="string">
+			<column name="high_resolution_file_name" length="50" />
+		</property>
+		<property name="siteId" type="java.lang.Integer">
+			<column name="site_id" />
+		</property>
+		<property name="siteDescription" type="string">
+			<column name="site_description" length="200" />
+		</property>
+		<property name="title" type="string">
+			<column name="title" length="200" />
+		</property>
+		<property name="series" type="string">
+			<column name="series" length="200" />
+		</property>
+		<property name="isPublic" type="char">
+			<column name="is_public" length="1" not-null="true" />
+		</property>
+		<property name="isBackup" type="char">
+			<column name="is_backup" length="1" not-null="true" />
+		</property>
+		<property name="oldImageFile" type="java.lang.Integer">
+			<column name="old_image_file" />
+		</property>
+		<property name="oldImageId" type="java.lang.Integer">
+			<column name="old_image_id" />
+		</property>
+		<property name="contents" type="string">
+			<column name="contents" length="100" />
+		</property>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+		<property name="mediaDateYear" type="java.lang.Integer">
+			<column name="media_date_year" />
+		</property>
+		<property name="mediaDateMonth" type="java.lang.Integer">
+			<column name="media_date_month" />
+		</property>
+		<property name="mediaDateDay" type="java.lang.Integer">
+			<column name="media_date_day" />
+		</property>
+		<!--
+		<set name="mediaKeywords" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.MediaKeyword" />
+		</set>
+		<set name="gatheringMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.GatheringMedia" />
+		</set>
+		<set name="mediaProjects" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.MediaProject" />
+		</set>
+		<set name="mediaUseMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.MediaUseMedia" />
+		</set>
+		<set name="mediaAttributeValues" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.MediaAttributeValue" />
+		</set>
+		<set name="specimenMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.SpecimenMedia" />
+		</set>
+		<set name="observedTaxonMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.ObservedTaxonMedia" />
+		</set>
+		<set name="typeSpecimenMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.TypeSpecimenMedia" />
+		</set>
+		<set name="taxonMedias" inverse="true" lazy="false">
+			<key>
+				<column name="media_id" not-null="true" />
+			</key>
+			<one-to-many
+				class="org.inbio.m3s.persistence.core.TaxonMedia" />
+		</set>
+		 -->
+	</class>
+</hibernate-mapping>

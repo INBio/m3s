@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.core.Project" table="core.project">
+        <id name="projectId" type="java.lang.Integer">
+            <column name="project_id" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="securityUsers" class="org.inbio.m3s.model.core.SecurityUsers" fetch="select">
+            <column name="project_manager_name" length="16" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="80" not-null="true" unique="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="200" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="4" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="4" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="20" />
+        </property>
+        <set name="userProjectPrivileges" inverse="true">
+            <key>
+                <column name="project_id" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.core.UserProjectPrivilege" />
+        </set>
+        <set name="mediaProjects" inverse="true">
+            <key>
+                <column name="project_id" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.core.MediaProject" />
+        </set>
+    </class>
+</hibernate-mapping>

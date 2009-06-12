@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.inbio.m3s.model.core.UserProjectPrivilege"
+		table="core.user_project_privilege">
+		<composite-id name="id"
+			class="org.inbio.m3s.model.core.UserProjectPrivilegeId">
+			<key-property name="projectId" type="int">
+				<column name="project_id" />
+			</key-property>
+			<key-property name="privilegeId" type="int">
+				<column name="privilege_id" />
+			</key-property>
+			<key-property name="userName" type="string">
+				<column name="user_name" length="16" />
+			</key-property>
+		</composite-id>
+		<many-to-one name="privilege"
+			class="org.inbio.m3s.model.core.Privilege" update="false"
+			insert="false" fetch="select">
+			<column name="privilege_id" not-null="true" />
+		</many-to-one>
+		<many-to-one name="securityUsers"
+			class="org.inbio.m3s.model.core.SecurityUsers" update="false"
+			insert="false" fetch="select">
+			<column name="user_name" length="16" not-null="true" />
+		</many-to-one>
+		<many-to-one name="project"
+			class="org.inbio.m3s.model.core.Project" update="false"
+			insert="false" fetch="select">
+			<column name="project_id" not-null="true" />
+		</many-to-one>
+		<property name="creationDate" type="date">
+			<column name="creation_date" length="4" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="20" />
+		</property>
+		<property name="lastModificationDate" type="date">
+			<column name="last_modification_date" length="4" />
+		</property>
+		<property name="lastModificationBy" type="string">
+			<column name="last_modification_by" length="20" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.Site" table="ATTA.SITE">
+        <id name="siteId" type="java.lang.Integer">
+            <column name="SITE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="300" />
+        </property>
+        <property name="longitude" type="string">
+            <column name="LONGITUDE" length="15" not-null="true" />
+        </property>
+        <property name="latitude" type="string">
+            <column name="LATITUDE" length="15" not-null="true" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+        <property name="lambertX" type="java.lang.Integer">
+            <column name="LAMBERT_X" precision="22" scale="0" />
+        </property>
+        <property name="lambertY" type="java.lang.Integer">
+            <column name="LAMBERT_Y" precision="22" scale="0" />
+        </property>
+        <property name="lambertProjection" type="string">
+            <column name="LAMBERT_PROJECTION" length="1" />
+        </property>
+        <property name="siteCalculationMethodId" type="java.lang.Integer">
+            <column name="SITE_CALCULATION_METHOD_ID" precision="22" scale="0" />
+        </property>
+        <property name="crtmEast" type="java.lang.Integer">
+            <column name="CRTM_EAST" precision="22" scale="0" />
+        </property>
+        <property name="crtmNorth" type="java.lang.Integer">
+            <column name="CRTM_NORTH" precision="22" scale="0" />
+        </property>
+        <property name="baseProjectionId" type="java.lang.Integer">
+            <column name="BASE_PROJECTION_ID" precision="22" scale="0" />
+        </property>
+        <set name="observations" inverse="true">
+            <key>
+                <column name="SITE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Observation" />
+        </set>
+        <set name="gatherings" inverse="true">
+            <key>
+                <column name="SITE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="org.inbio.m3s.model.atta.Gathering" />
+        </set>
+    </class>
+</hibernate-mapping>

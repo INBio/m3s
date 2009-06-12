@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.inbio.m3s.model.atta.PersonProfile" table="ATTA.PERSON_PROFILE">
+        <composite-id name="id" class="org.inbio.m3s.model.atta.PersonProfileId">
+            <key-property name="personId" type="int">
+                <column name="PERSON_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="profileId" type="java.lang.Integer">
+                <column name="PROFILE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="profile" class="org.inbio.m3s.model.atta.Profile" update="false" insert="false" fetch="select">
+            <column name="PROFILE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" update="false" insert="false" fetch="select">
+            <column name="PERSON_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="shortName" type="string">
+            <column name="SHORT_NAME" length="30" />
+        </property>
+        <property name="validFrom" type="java.lang.Integer">
+            <column name="VALID_FROM" precision="22" scale="0" />
+        </property>
+        <property name="validTo" type="java.lang.Integer">
+            <column name="VALID_TO" precision="22" scale="0" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="LAST_MODIFICATION_DATE" length="7" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="LAST_MODIFICATION_BY" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>
