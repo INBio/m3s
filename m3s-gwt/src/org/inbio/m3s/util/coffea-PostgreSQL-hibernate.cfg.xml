@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	
+	<session-factory>
+		<!-- PARA UTILIZAR PostgreSQL-->
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<!-- <property name="connection.url">jdbc:postgresql://localhost:5432/mn_m3s</property> -->
+		<property name="connection.url">jdbc:postgresql://localhost:5432/m3s</property>
+		<!-- <property name="connection.username">museonacional</property> -->
+		<property name="connection.username">miniatta</property>
+		<!-- <property name="connection.password">mn2008m3s</property> -->
+		<property name="connection.password">inbio1234</property>
+		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+<!-- configuration pool via c3p0--> 
+<!-- 
+<property name="c3p0.acquire_increment">1</property> 
+<property name="c3p0.idle_test_period">100</property> 
+<property name="c3p0.max_size">100</property> 
+<property name="c3p0.max_statements">0</property> 
+<property name="c3p0.min_size">10</property> 
+<property name="c3p0.timeout">100</property>
+ -->
+<!-- DEPRECATED very expensive property name="c3p0.validate>-->
+
+		<!-- JDBC connection pool (use the built-in) -->
+		<property name="connection.pool_size">10</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Disable the second-level cache  -->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+ 
+		<property name="show_sql">true</property>
+
+ 		
+		<!-- Create the database schema on startup -->
+		<!-- <property name="hbm2ddl.auto">validate</property> -->
+		<!-- <property name="hbm2ddl.auto">create</property> -->
+		<!-- <property name="hbm2ddl.auto">create-drop</property> -->
+		<!-- <property name="hbm2ddl.auto">update</property>  -->
+
+		<!-- Clases que se estan mapeando -->
+		<!-- Clases/tabla de tipo "core" -->
+		<mapping resource="org/inbio/m3s/persistence/core/GatheringMedia.hbm.xml" />
+		<!--<mapping resource="org/inbio/m3s/persistence/core/ImportControl.hbm.xml" />-->
+		<mapping resource="org/inbio/m3s/persistence/core/Keyword.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/KeywordCategory.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/Language.hbm.xml" />
+		<!--<mapping resource="org/inbio/m3s/persistence/core/M3SInstitution.hbm.xml" /> -->
+		<!--<mapping resource="org/inbio/m3s/persistence/core/M3SPerson.hbm.xml" />-->
+		<mapping resource="org/inbio/m3s/persistence/core/Media.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaAttribute.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaAttributeType.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaAttributeValue.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaCategory.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaKeyword.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaProject.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaType.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaUse.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MediaUseMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/MetadataStandard.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/ObservedTaxonMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/Privilege.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/Project.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/SecurityUsers.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/SpecimenMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/TaxonMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/Text.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/TextTranslation.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/TypeSpecimenMedia.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/User.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/UsePolicy.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/core/UserProjectPrivilege.hbm.xml" />
+
+	</session-factory>
+
+</hibernate-configuration>

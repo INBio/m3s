@@ -1,0 +1,99 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                  -->
+	<inherits name='com.google.gwt.user.User' />
+
+
+	<!-- The Simple Sortable Table -->
+	<!-- <inherits name='com.thapar.gwt.user.ui.SimpleSortableTable' /> -->
+	<inherits name='org.inbio.gwt.associatedto.AssociatedTo'/>
+	<inherits name='org.inbio.gwt.galleries.Galleries'/>	
+	<inherits name='org.inbio.gwt.controlledtext.ControlledText'/>	
+    <inherits name='org.inbio.gwt.taxonomy.Taxonomy'/>
+	
+
+      <!-- Inherit the default GWT style sheet.  You can change       -->
+      <!-- the theme of your GWT application by uncommenting          -->
+      <!-- any one of the following lines.                            -->
+      <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+      <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+      <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+      
+	<!-- Specify the app entry point class.                   -->
+	<entry-point class='org.inbio.m3s.gwt.client.Index' />
+
+
+	<!-- The CSS for the application-->
+	<stylesheet src='m3s.css' />
+	<stylesheet src='sortable.css' />
+
+	<!-- Entry point for the server RPC. -->
+
+	<servlet path='/mediaUtilRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.MediaUtilImpl' />
+
+	<servlet path='/metadataRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.MetadataRPCImpl' />
+
+	<servlet path='/importRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.ImportRPCImpl' />
+
+	<servlet path='/infoRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.InfoRPCImpl' />
+	
+	<servlet path='/multimediaInfoRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.MultimediaInfoRPCImpl' />
+
+
+	<servlet path='/loginRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.LoginRPCImpl' />
+
+	<servlet path='/RPCManager'
+		class='org.inbio.m3s.gwt.server.rpcimpl.InitServicesRPCImpl' />
+
+	<servlet path='/searchMediaRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.SearchMediaRPCImpl' />
+
+	<servlet path='/taxonomyRPC'
+		class='org.inbio.m3s.gwt.server.rpcimpl.TaxonSelectorRPCImpl' />
+	<!-- keywords -->
+	<servlet path="/keywordsRPC"
+		class="org.inbio.m3s.gwt.server.rpcimpl.KeywordsRPCImpl" />		
+
+	<!-- The upload servlet -->
+	<servlet path="/uploadFile"
+		class="org.inbio.m3s.gwt.server.servlets.FileUploadManager" />
+
+	<!-- The upload import file servlet -->
+	<servlet path="/uploadImportFile"
+		class="org.inbio.m3s.gwt.server.servlets.ImportFileUploadServlet" />
+
+
+	<!-- The images dispatcher servlet2 -->
+	<servlet path="/getImage"
+		class="org.inbio.m3s.dispatchers.ImageDispatcher" />
+
+	<!-- The images galleries servlet -->
+	<servlet path="/getGallery"
+		class="org.inbio.m3s.dispatchers.GalleryDispatcher" />
+
+	<!-- The video dispatcher servlet -->
+	<servlet path="/getVideo"
+		class="org.inbio.m3s.dispatchers.VideoDispatcher" />		
+
+	<!-- The multimedia info dispatcher servlet -->
+	<servlet path="/getInfo"
+		class="org.inbio.m3s.dispatchers.InfoDispatcher" />
+	
+	<servlet path="/multimediaInfoRPC"
+		class="org.inbio.m3s.dispatchers.MultimediaInfoDispatcher" />			
+		
+
+
+
+	<!-- The listener servet 
+	<servlet path="/sessionListener"
+		class="org.inbio.m3s.gwt.server.servlets.SessionListener" />
+	-->
+	
+</module>

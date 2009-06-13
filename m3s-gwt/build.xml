@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="build" basedir="." default="web-deploy">
+
+	<!-- 
+    for a clean run:>ant web-deploy
+    for a update run:>ant web-update -to be fixed-
+    -->
+
+	<description>
+        ant build file for working with linux.
+        This is used to package up your project as a jar/war file if you want to distribute it.  
+        This isn't needed for normal operation.
+        The property variables must be customized!!!.
+        A folder /lib with the .jar files used must be on the project root
+    </description>
+
+	<!-- Info of the GWT project -->
+	<property name="GWTProjectName" value="org.inbio.m3s.gwt" />
+	<!-- name of the folder that contains the client, server and public folder.-->
+	<property name="GWTMainClass" value="Index" />
+
+	<!-- jar package name-->
+	<property name="m3sVersion" value="2.1-beta" />
+	<property name="m3sPackageName" value="org-inbio-m3s-${m3sVersion}" />
+
+	<!-- Name of the destination folder in the tomcat webapplications folder-->
+	<property name="webapps-dir-name" value="m3sINBio" />
+
+	<!-- Required Dir's for the good working of the server -->
+	<!-- <property name="TempImagesDir" value="UploadedMedia" /> -->
+	<!-- <property name="ImagesDir" value="ImagesDir" /> -->
+
+	<!-- path of the tomcat webapplications dir -->
+	<!--	<property name="tomcat.home" value="/usr/share/tomcat5.5" />-->
+	<property name="tomcat.home" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16" />
+	<property name="webappspdir" value="${tomcat.home}\webapps" />
+
+	<!-- ubicacion de los directorios -->
+	<property name="sourcedir" value="${basedir}/src" />
+	<property name="testdir" value="${basedir}/test" />
+	<property name="targetdir" value="${basedir}/bin" />
+	<property name="librarydir" value="${basedir}/lib" />
+	<property name="distrodir" value="${basedir}/dist" />
+	<property name="webdir" value="${basedir}/www" />
+	<property name="javadocs.dir" value="${basedir}/docs/api" />
+
+	<!-- librerias -->
+	<path id="libraries">
+		<fileset dir="${librarydir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- set classpath -->
+	<path id="project.class.path">
+		<path refid="libraries" />
+		<pathelement path="${java.class.path}/" />
+	</path>
+
+	<!-- Compiles java -->
+	<target name="javac" description="Compile src to bin">
+		<mkdir dir="${targetdir}" />
+		<javac srcdir="${sourcedir}:${testdir}" destdir="${targetdir}" classpathref="libraries" debug="true" debuglevel="lines, vars, source" />
+	</target>
+
+	<!-- Compiles java -->
+	<target name="javac-test" description="Compile test to bin">
+		<mkdir dir="${targetdir}" />
+		<javac srcdir="${testdir}" destdir="${targetdir}" classpathref="libraries" debug="true" debuglevel="lines, vars, source" />
+	</target>
+
+	<!-- Makes the jar file of the project -->
+	<target name="jar" depends="javac" description="Package up the project as a jar">
+		<jar destfile="${distrodir}/${m3sPackageName}.jar">
+			<fileset dir="${targetdir}">
+				<include name="**/*.class" />
+			</fileset>
+			<!-- Get everything; source, modules, html files -->
+			<fileset dir="src">
+				<include name="**" />
+			</fileset>
+		</jar>
+
+	</target>
+
+	<!-- Compiles the java GWT code to javaScript-->
+	<target name="gwt-compile" description="Compile to JavaScript">
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" failonerror="true" classpathref="libraries">
+			<classpath>
+				<pathelement location="${sourcedir}" />
+				<pathelement location="libraries" />
+				<path refid="project.class.path" />
+			</classpath>
+			<arg value="-out" />
+			<arg file="${targetdir}" />
+			<arg value="${GWTProjectName}.${GWTMainClass}" />
+		</java>
+	</target>
+
+	<!-- sets up the web things-->
+	<target name="pre-web" depends="jar, gwt-compile">
+		<!-- WEB-INF folder, with the web.xml file and the libs folder -->
+		<mkdir dir="${webdir}/WEB-INF" />
+		<copy file="${basedir}/web.xml" todir="${webdir}/WEB-INF" />
+		<!-- the libraries folder -->
+		<mkdir dir="${webdir}/WEB-INF/lib" />
+		<copy todir="${webdir}/WEB-INF/lib">
+			<fileset dir="${librarydir}" />
+		</copy>
+		<copy file="${distrodir}/${m3sPackageName}.jar" todir="${webdir}/WEB-INF/lib" />
+		<!--copy the gwt files -->
+		<copy todir="${webdir}">
+			<fileset dir="${targetdir}/${GWTProjectName}.${GWTMainClass}" />
+		</copy>
+
+		<!--SECTION: folders used for this specific project!! -->
+		<!--<mkdir dir="${webdir}/${TempImagesDir}" /> -->
+		<!--<mkdir dir="${webdir}/${ImagesDir}" />-->
+		<!--
+		<copy file="${basedir}/etc/images/inbio.gif" todir="${webdir}/${ImagesDir}" />
+		<copy file="${basedir}/etc/images/12344567890_170.jpg" todir="${webdir}/${ImagesDir}" />
+		<copy file="${basedir}/etc/images/12344567890_170_2.jpg" todir="${webdir}/${ImagesDir}" />	
+		-->
+
+		<!--END SECTION: folders used for this specific project!! -->
+	</target>
+
+	<!-- Makes the war file and Moves it to the tomcats webapps dir-->
+	<target name="war" depends="clean-fast, pre-web">
+		<jar destfile="${distrodir}/${m3sPackageName}.war" basedir="${webdir}" duplicate="preserve" />
+	</target>
+
+
+	<!-- Moves the www dir to the tomcats webapps dir  -->
+	<target name="web-deploy" depends="clean-all, javac, pre-web">
+		<copy todir="${webappspdir}/${webapps-dir-name}">
+			<fileset dir="${webdir}" />
+		</copy>
+	</target>
+
+
+	<!-- Moves to the tomcats webapps dir only the necesarily files 
+    Updates the webdir files, the jar and web.xml, DO NOT update libraries-->
+	<target name="web-update" depends="clean-fast, jar, gwt-compile">
+
+		<copy todir="${webappspdir}/${webapps-dir-name}" overwrite="true">
+			<fileset dir="${targetdir}/${GWTProjectName}.${GWTMainClass}" />
+		</copy>
+
+		<copy file="${basedir}/web.xml" todir="${webappspdir}/${webapps-dir-name}/WEB-INF" overwrite="true" />
+		<copy file="${distrodir}/${m3sPackageName}.jar" todir="${webappspdir}/${webapps-dir-name}/WEB-INF/lib" overwrite="true" />
+
+	</target>
+
+	<!-- deletes some files -->
+	<target name="clean-fast">
+		<!-- Delete the bin directory tree -->
+		<delete dir="${targetdir}" />
+		<delete dir="${webdir}" />
+		<delete file="${GWTProjectName}.jar" />
+	</target>
+
+	<!-- deletes ALL files used -->
+	<target name="clean-all" depends="clean-fast">
+		<delete file="${webapps-dir-name}.war" />
+		<delete file="${webappspdir}/${webapps-dir-name}.war" />
+		<delete dir="${webappspdir}/${webapps-dir-name}" />
+	</target>
+
+	<!-- delete ALL javadoc files-->
+	<target name="clean-javadoc">
+		<delete dir="${javadocs.dir}" />
+	</target>
+
+	<target name="Aguacate-Test" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
+		<java fork="true" classname="org.inbio.m3s.test.Aguacate.AguacateBlablabla" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+	<!--quick test -->
+	<target name="run-file" depends="clean-fast, javac, copy-hibernate-xml-files, copy-log4j-files">
+		<java fork="true" classname="org.inbio.m3s.usecases.ImportFromFile" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+	<!-- MediaAdmin test -->
+	<target name="run-MediaAdminTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
+		<java fork="true" classname="org.inbio.m3s.test.MediaAdmin" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+	<!-- ImageUtil test -->
+	<target name="run-ImageUtilTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
+		<java fork="true" classname="org.inbio.m3s.test.ImageUtil" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+	<!-- ImportMedia test -->
+	<target name="run-ImportMediaTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
+		<java fork="true" classname="org.inbio.m3s.test.ImportMedia" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+
+	<!--MediaAdmin run only test -->
+	<target name="run-only-MediaAdminTest">
+		<java fork="true" classname="org.inbio.m3s.test.MediaAdmin" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+	<!--quick test -->
+	<target name="run-only-file">
+		<java fork="true" classname="org.inbio.m3s.usecases.ImportFromFile" classpathref="libraries">
+			<classpath path="${targetdir}" />
+		</java>
+	</target>
+
+	<target name="copy-log4j-files">
+		<copy file="${sourcedir}/log4j.properties" todir="${targetdir}" overwrite="true" />
+		<copy file="${sourcedir}/org/inbio/m3s/util/m3s.log4j.properties" todir="${targetdir}/org/inbio/m3s" overwrite="true" />
+	</target>
+
+	<target name="copy-hibernate-xml-files">
+		<!-- config files-->
+		<!-- coffea system files -->
+		<copy file="${sourcedir}/org/inbio/m3s/util/coffea-PostgreSQL-hibernate.cfg.xml" todir="${targetdir}/org/inbio/m3s/util" overwrite="true" />
+		<copy file="${sourcedir}/org/inbio/m3s/util/ORACLE[atta]-hibernate.cfg.xml" todir="${targetdir}/org/inbio/m3s/util" overwrite="true" />
+
+		<!-- fornax system files-->
+		<copy file="${sourcedir}/org/inbio/m3s/util/fornax-PostgreSQL-hibernate.cfg.xml" todir="${targetdir}/org/inbio/m3s/util" overwrite="true" />
+		<!--<copy file="${sourcedir}/org/inbio/m3s/util/ORACLE[atta]-hibernate.cfg.xml" todir="${targetdir}/org/inbio/m3s/util" overwrite="true" />-->
+
+		<!-- M3S core Tables xml files -->
+		<copy todir="${targetdir}/org/inbio/m3s/persistance/core">
+			<fileset dir="${sourcedir}/org/inbio/m3s/persistance/core">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<!-- Atta oracle xml files-->
+		<copy todir="${targetdir}/org/inbio/m3s/persistance/atta">
+			<fileset dir="${sourcedir}/org/inbio/m3s/persistance/atta">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<!-- pam [predefined attributes of the multimedia] xml files -->
+		<copy todir="${targetdir}/org/inbio/m3s/persistance/pam">
+	
+			<fileset dir="${sourcedir}/org/inbio/m3s/persistance/pam">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- javadoc target-->
+	<target name="run-javadoc" depends="clean-javadoc">
+		<javadoc classpathref="libraries" packagenames="org.inbio.m3s.*" sourcepath="src" defaultexcludes="yes" destdir="${javadocs.dir}" author="true" version="true" use="true" windowtitle="API Documentation">
+			<doctitle>
+				<![CDATA[<h1>MultiMediaManagement System API</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; INBio. Some Rights Reserved.</i>]]></bottom>
+	<tag name="todo" scope="all" description="To do:" />
+</javadoc>
+</target>
+
+<!-- tomcat targets
+    <target name="tomcat-start">
+    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+    <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+    <arg line="start"/>
+    </java>
+    </target>
+    
+    <target name="tomcat-stop">
+    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+    <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+    <arg line="stop"/>
+    </java>
+    </target>
+-->
+
+
+</project>

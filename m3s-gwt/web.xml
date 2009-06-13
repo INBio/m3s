@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : web.xml
+	Created on : October 25, 2006, 3:38 PM
+	Author     : jgutierrez
+	Description:
+	For running the project on tomcat.
+-->
+
+<web-app>
+
+	<!-- Session Listener, cleans up temporal files used in the session-->
+	<!-- 
+	<listener>
+		<listener-class>
+			org.inbio.m3s.gwt.server.servlets.SessionListener
+		</listener-class>
+	</listener>
+	 -->
+	<!--  org.inbio.m3s.gwt.server.rpcimpl.MediaUtilImpl-->
+
+	<!-- file upload servlet -->
+	<servlet>
+		<servlet-name>uploadFile</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.servlets.FileUploadManager
+		</servlet-class>
+	</servlet>
+
+	<!-- The images dispatcher servet -->
+	<servlet>
+		<servlet-name>getImage</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.dispatchers.ImageDispatcher
+		</servlet-class>
+	</servlet>
+
+	<!-- The galleries dispatcher servet -->
+	<servlet>
+		<servlet-name>getGallery</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.dispatchers.GalleryDispatcher
+		</servlet-class>
+	</servlet>
+		
+	<!-- The videos dispatcher servet -->
+	<servlet>
+		<servlet-name>getVideo</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.dispatchers.VideoDispatcher
+		</servlet-class>
+	</servlet>
+
+	<!-- The multimedia info dispatcher servet -->
+	<servlet>
+		<servlet-name>getInfo</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.dispatchers.InfoDispatcher
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>getMultimediaInfo</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.dispatchers.MultimediaInfoDispatcher
+		</servlet-class>
+	</servlet>
+
+	<!-- import file upload servlet -->
+	<servlet>
+		<servlet-name>uploadImportFile</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.servlets.ImportFileUploadServlet
+		</servlet-class>
+	</servlet>
+
+	<!-- Metadata RPC's -->
+	<servlet>
+		<servlet-name>metadataRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.MetadataRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Import RPC's -->
+	<servlet>
+		<servlet-name>importRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.ImportRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Info RPC's -->
+	<servlet>
+		<servlet-name>infoRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.InfoRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Login RPC's -->
+	<servlet>
+		<servlet-name>loginRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.LoginRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Media Util RPC's -->
+	<servlet>
+		<servlet-name>mediaUtilRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.MediaUtilImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- RPCManager RPC -->
+	<servlet>
+		<servlet-name>RPCManager</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.InitServicesRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Search Images RPC's -->
+	<servlet>
+		<servlet-name>searchMediaRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.SearchMediaRPCImpl
+		</servlet-class>
+	</servlet>
+
+	<!-- Taxonomy RPC's -->
+	<!-- 
+	<servlet>
+		<servlet-name>taxonSelectorRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.TaxonSelectorRPCImpl
+		</servlet-class>
+	</servlet>
+ -->
+ 	<servlet>
+		<servlet-name>taxonomyRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.TaxonSelectorRPCImpl
+		</servlet-class>
+	</servlet>
+ 	<servlet>
+		<servlet-name>keywordsRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.KeywordsRPCImpl
+		</servlet-class>
+	</servlet>
+
+
+	<!-- file upload servlet -->
+	<servlet-mapping>
+		<servlet-name>uploadFile</servlet-name>
+		<url-pattern>/uploadFile</url-pattern>
+	</servlet-mapping>
+
+	<!-- The images dispatcher servet -->
+	<servlet-mapping>
+		<servlet-name>getImage</servlet-name>
+		<url-pattern>/getImage</url-pattern>
+	</servlet-mapping>
+
+	<!-- The galleries dispatcher servet -->
+	<servlet-mapping>
+		<servlet-name>getGallery</servlet-name>
+		<url-pattern>/getGallery</url-pattern>
+	</servlet-mapping>
+	
+	<!-- The videos dispatcher servet -->
+	<servlet-mapping>
+		<servlet-name>getVideo</servlet-name>
+		<url-pattern>/getVideo</url-pattern>
+	</servlet-mapping>
+	
+	<!-- The multimedia info dispatcher servet -->
+	<servlet-mapping>
+		<servlet-name>getInfo</servlet-name>
+		<url-pattern>/getInfo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>getMultimediaInfo</servlet-name>
+		<url-pattern>/getMultimediaInfo</url-pattern>
+	</servlet-mapping>
+
+	<!-- import file upload servlet -->
+	<servlet-mapping>
+		<servlet-name>uploadImportFile</servlet-name>
+		<url-pattern>/uploadImportFile</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Insert Images RPC's -->
+	<servlet-mapping>
+		<servlet-name>mediaUtilRPC</servlet-name>
+		<url-pattern>/mediaUtilRPC</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Search Images RPC's -->
+	<servlet-mapping>
+		<servlet-name>searchMediaRPC</servlet-name>
+		<url-pattern>/searchMediaRPC</url-pattern>
+	</servlet-mapping>
+
+	<!-- Taxonomy RPC's -->
+	<!-- 
+	<servlet-mapping>
+		<servlet-name>taxonSelectorRPC</servlet-name>
+		<url-pattern>/taxonSelectorRPC</url-pattern>
+	</servlet-mapping>
+	 -->
+	 	<servlet-mapping>
+		<servlet-name>taxonomyRPC</servlet-name>
+		<url-pattern>/taxonomyRPC</url-pattern>
+	</servlet-mapping>
+	 	<servlet-mapping>
+		<servlet-name>keywordsRPC</servlet-name>
+		<url-pattern>/keywordsRPC</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>metadataRPC</servlet-name>
+		<url-pattern>/metadataRPC</url-pattern>
+	</servlet-mapping>
+
+	<!-- Metadata RPC's -->
+	<servlet-mapping>
+		<servlet-name>importRPC</servlet-name>
+		<url-pattern>/importRPC</url-pattern>
+	</servlet-mapping>
+
+	<!-- Info RPC's -->
+	<servlet-mapping>
+		<servlet-name>infoRPC</servlet-name>
+		<url-pattern>/infoRPC</url-pattern>
+	</servlet-mapping>
+
+	<!-- Login RPC's -->
+	<servlet-mapping>
+		<servlet-name>loginRPC</servlet-name>
+		<url-pattern>/loginRPC</url-pattern>
+	</servlet-mapping>
+
+	<!-- RPCManager RPC -->
+	<servlet-mapping>
+		<servlet-name>RPCManager</servlet-name>
+		<url-pattern>/RPCManager</url-pattern>
+	</servlet-mapping>
+
+</web-app>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+<!-- Esta BD no debe ser utilizada para la aplicacion en produccion. -->
+
+	<session-factory>
+		<!-- PARA UTILIZAR ORACLE9i -->
+		<property name="hibernate.connection.driver_class">
+			oracle.jdbc.driver.OracleDriver
+		</property>
+		<property name="hibernate.connection.password">
+			inbio1234
+		</property>
+		<property name="hibernate.connection.url">
+			jdbc:oracle:thin:@10.0.0.28:1521:aweb
+		</property>
+		<property name="hibernate.connection.username">
+			miniatta
+		</property>
+		<!--  <property name="hibernate.default_schema">MINIATTA</property> -->
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.Oracle9Dialect
+		</property>
+
+		<!-- JDBC connection pool (use the built-in) -->
+		<property name="connection.pool_size">5</property>
+
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Disable the second-level cache  -->
+		<property name="cache.provider_class">
+			org.hibernate.cache.NoCacheProvider
+		</property>
+
+		<!-- Echo all executed SQL to stdout 
+			<property name="show_sql">true</property>
+		-->
+		<!-- Create the database schema on startup -->
+		<!--<property name="hbm2ddl.auto">create</property>-->
+
+
+		<!-- Clases que se estan mapeando -->
+		<mapping resource="org/inbio/m3s/persistence/atta/Gathering.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/Identification.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/INBioInstitution.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/INBioPerson.hbm.xml" />		
+		<mapping resource="org/inbio/m3s/persistence/atta/Observation.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/ObservedTaxon.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/PersonProfile.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/Profile.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/Site.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/Specimen.hbm.xml" />
+		<mapping resource="org/inbio/m3s/persistence/atta/Taxon.hbm.xml" />
+
+	</session-factory>
+
+</hibernate-configuration>

@@ -1,0 +1,3 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+java  -cp "$APPDIR/src:$APPDIR/bin:/home/jgutierrez/SoftwareTools/gwt-linux-1.5.1/gwt-user.jar:/home/jgutierrez/SoftwareTools/gwt-linux-1.5.1/gwt-dev-linux.jar:$APPDIR/lib/org.inbio.gwt.associatedto-1.1.jar:$APPDIR/lib/org.inbio.gwt.controlledtext-1.0.jar:$APPDIR/lib/org.inbio.gwt.galleries-1.2.jar:$APPDIR/lib/org.inbio.gwt.taxonomy-1.1.jar" com.google.gwt.dev.GWTShell -out "$APPDIR/www" "$@" org.inbio.m3s.gwt.Index/Index.html;
