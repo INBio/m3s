@@ -15,10 +15,10 @@ SET escape_string_warning = off;
 -- Name: m3s; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE m3s WITH TEMPLATE = template0 ENCODING = 'UTF8';
+--CREATE DATABASE m3s WITH TEMPLATE = template0 ENCODING = 'UTF8';
 
 
-\connect m3s
+--\connect m3s
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -1346,7 +1346,7 @@ ALTER TABLE ONLY observed_taxon_media
 --
 
 REVOKE ALL ON SCHEMA core FROM PUBLIC;
-REVOKE ALL ON SCHEMA core FROM miniatta;
+--REVOKE ALL ON SCHEMA core FROM miniatta;
 GRANT ALL ON SCHEMA core TO PUBLIC;
 
 
@@ -1369,8 +1369,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 
 REVOKE ALL ON TABLE text FROM PUBLIC;
-REVOKE ALL ON TABLE text FROM miniatta;
-GRANT ALL ON TABLE text TO miniatta;
+--REVOKE ALL ON TABLE text FROM miniatta;
+--GRANT ALL ON TABLE text TO miniatta;
 GRANT ALL ON TABLE text TO PUBLIC;
 
 
