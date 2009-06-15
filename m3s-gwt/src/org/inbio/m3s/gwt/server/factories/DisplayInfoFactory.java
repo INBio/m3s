@@ -65,7 +65,7 @@ public class DisplayInfoFactory {
 		AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER); 
 		PersonLiteDTO pLite = null;
 		InstitutionLiteDTO il = null;
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> taxonLiteList = new ArrayList<TaxonLiteDTO>(); //lista de TaxonLite
 		TaxonLiteDTO tlDTO = null;
 		MediaCategoryDAO mcDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");

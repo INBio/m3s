@@ -47,7 +47,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 
 	private static Logger logger = Logger.getLogger(MetadataRPCImpl.class);
 
-	private MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean("mediaManager");
+	private MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
 	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean("messageManager");
 	private AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER);
 
@@ -312,7 +312,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 				+ specimenNumber + ".";
 
 		try {
-			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 			tlDTO = taxonomyManager.getTaxonLiteFromSpecimenId(specimenNumber.toString());
 			name = tlDTO.getDefaultName();
 			
@@ -343,7 +343,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 		String errorMsj = "No se puede obtener la taxonomía asociada al especimen #"
 				+ specimenNumber + ".";
 		List<String> result = new ArrayList<String>();
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		TaxonLiteDTO tlDTO = null;
 
 		try {
@@ -371,7 +371,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 		String errorMsj = "No se puede obtener los taxonones asociados con la observacion  #"
 				+ observationNumber + ".";
 		List<String> result = new ArrayList<String>();
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> tlDTOList = null;
 
 		try {
@@ -403,7 +403,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 				+ gatheringCode + ".";
 		List<String> result = new ArrayList<String>();
 		List<TaxonLiteDTO> tlDTOList = null;
-		TaxonomyManager taxonomyManger = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager"); 
+		TaxonomyManager taxonomyManger = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER); 
 
 		try {
 			tlDTOList = taxonomyManger.getTaxonLiteFromGatheringCode(gatheringCode);

@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
+import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOLite;
 import org.inbio.m3s.service.ImportationManager;
 import org.inbio.m3s.util.ServiceUtil;
@@ -25,7 +26,7 @@ public class ImportThread extends Thread {
 
 	private String systemFileName;
 	
-	private ImportationManager importationManager = (ImportationManager) ServiceUtil.appContext.getBean("importationManager");
+	private ImportationManager importationManager = (ImportationManager) ServiceUtil.appContext.getBean(Properties.IMPORTATION_MANAGER);
 
 
 	private static Logger logger = Logger.getLogger(ImportThread.class);

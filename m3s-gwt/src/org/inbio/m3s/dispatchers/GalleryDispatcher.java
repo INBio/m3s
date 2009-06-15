@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.inbio.gwt.associatedto.client.dto.AssociatedToConstants;
+import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.converters.MetadataConverter;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.gwt.client.widgets.galleries.SearchCriteriaTriplet;
@@ -88,7 +89,7 @@ public class GalleryDispatcher extends HttpServlet {
 		
 		totalResults = SearchManager.getTotalResults(sctList); 
 		List<Integer> mediaIdsList = SearchManager.getResults(sctList, first, last);
-		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean("mediaManager");
+		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
 		GeneralMetadataTV gmtv = null;
 		UsesAndCopyrightsTV uactv = null;
 				
@@ -184,7 +185,7 @@ public class GalleryDispatcher extends HttpServlet {
 		String info1;
 		if(gmtv.getTaxonomyInfo()!=null){
 			if(gmtv.getTaxonomyInfo().size() > 0){
-			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 			TaxonLiteDTO tlDTO = (TaxonLiteDTO) taxonomyManager.getTaxonLiteById((String) gmtv.getTaxonomyInfo().get(0));
 			info1 = tlDTO.getDefaultName();
 			} else

@@ -261,7 +261,7 @@ public class MetadataConverter {
 		ProjectDAO projectDAO =  (ProjectDAO) ServiceUtil.appContext.getBean("projectDAO");
 		List<ProjectLite> projectsList = new ArrayList<ProjectLite>();
 		ProjectLite projectLite = null;
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		TaxonLiteDTO tlDTO = null;
 		
 

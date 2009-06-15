@@ -35,7 +35,7 @@ public class ImportRPCImpl extends RemoteServiceServlet implements ImportRPC {
 
 	private static Logger logger = Logger.getLogger(ImportRPCImpl.class);
 	
-	private ImportationManager importationManager = (ImportationManager) ServiceUtil.appContext.getBean("importationManager");
+	private ImportationManager importationManager = (ImportationManager) ServiceUtil.appContext.getBean(Properties.IMPORTATION_MANAGER);
 	
 	
 	/**

@@ -74,7 +74,7 @@ public class ImportFromFile {
 		String mediaFileName;
 		Integer mediaId = null;
 		
-		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean("mediaManager");
+		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
 
 		logger.debug("Total minimo de elementos a importar:"
 				+ fileParser.getTotalEntries());
@@ -223,11 +223,11 @@ public class ImportFromFile {
 		String kingdom;
 		List<Integer> taxonIds = new ArrayList<Integer>();
 		List<String> literalTaxonIds = new ArrayList<String>();
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		TaxonLiteDTO tlDTO = null;
 		List<TextInfo> keywordsTV;
 		SiteDAO siteDAO = (SiteDAO) ServiceUtil.appContext.getBean("INBioSiteDAO");
-		SiteManager siteManager = (SiteManager) ServiceUtil.appContext.getBean("siteManager");
+		SiteManager siteManager = (SiteManager) ServiceUtil.appContext.getBean(Properties.SITE_MANAGER);
 
 		gmtv.setMediaId(null);
 

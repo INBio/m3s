@@ -160,7 +160,7 @@ public class SearchManager {
 		String criteria = getCriteria(triplete.getCriteria());
 		boolean firstWhereElement = true;
 
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> tlDTOList = taxonomyManager.getTaxonsIncludedIn(triplete.getValue(), taxonomicalRangeEntity);
 
 		for(TaxonLiteDTO tlDTO : tlDTOList){
@@ -259,7 +259,7 @@ public class SearchManager {
 		
 		//FIXME esto no funciona para todos los casos pues un taxon 
 		//no es unico solo por su nombre, requiere al menos el kingdom
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> posibleTaxons = taxonomyManager.getTaxonLite(value);
 		TaxonLiteDTO tlDTO = posibleTaxons.get(0);
 

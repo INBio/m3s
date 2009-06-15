@@ -9,6 +9,7 @@ import java.util.List;
 import org.inbio.gwt.taxonomy.client.dto.TaxonInfo;
 import org.inbio.gwt.taxonomy.client.events.TaxonomyRPCException;
 import org.inbio.gwt.taxonomy.client.rpc.TaxonSelectorRPC;
+import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.service.TaxonomyManager;
@@ -36,7 +37,7 @@ public class TaxonSelectorRPCImpl extends RemoteServiceServlet implements
 			throws TaxonomyRPCException {
 
 		List<TaxonInfo> result = new ArrayList<TaxonInfo>();
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> tlDTOList = null;
 		TaxonInfo taxonInfo;
 
@@ -73,7 +74,7 @@ public class TaxonSelectorRPCImpl extends RemoteServiceServlet implements
 			throws TaxonomyRPCException {
 
 		List<TaxonInfo> result = new ArrayList<TaxonInfo>();
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		TaxonLiteDTO tlDTO = null;
 		TaxonInfo taxonInfo;
 		TaxonLiteDTO kindomLiteDTO;

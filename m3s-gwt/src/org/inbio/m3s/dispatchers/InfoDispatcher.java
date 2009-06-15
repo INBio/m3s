@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.lite.MediaCategoryLite;
@@ -60,7 +61,7 @@ public class InfoDispatcher extends HttpServlet {
 		String taxonomy = req.getParameter("taxonomy");
 		String kingdomName = req.getParameter("kingdom");
 
-		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean("taxonomyManager");
+		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		MediaDAO mDAO = (MediaDAO) ServiceUtil.appContext.getBean("mediaDAO");
 		MediaCategoryDAO mcDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
 		TaxonLiteDTO tl = null;
