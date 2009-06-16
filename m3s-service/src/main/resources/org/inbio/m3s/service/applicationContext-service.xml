@@ -59,7 +59,7 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="taxonomyManager" ref="taxonomyManager"/>     
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>     
   </bean>
   <bean id="M3SMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
@@ -79,7 +79,7 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="M3SAgentManager"/>
-    <property name="taxonomyManager" ref="taxonomyManager"/>     
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>     
   </bean>
   <bean id="ARAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
@@ -99,7 +99,7 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="taxonomyManager" ref="taxonomyManager"/>     
+    <property name="taxonomyManager" ref="M3STaxonomyManager"/>     
   </bean>
    
   <!-- Message Manager (1 version)-->
@@ -117,12 +117,12 @@
   
   <!-- SiteManager (2 version)-->
   <bean id="ATTASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
-  	<property name="taxonomyManager" ref="taxonomyManager"/>
+  	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
   	<property name="siteDAO" ref="INBioSiteDAO"/>
   </bean>
   <!-- 
   <bean id="ARASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
-  	<property name="taxonomyManager" ref="taxonomyManager"/>
+  	<property name="taxonomyManager" ref="M3STaxonomyManager"/>
   	<property name="siteDAO" ref="ARASiteDAO"/>
   </bean>
    -->    
@@ -133,7 +133,7 @@
   </bean>
 
 <!-- taxonomy Manager (2 versiones, seran 3)-->
-  <bean id="ATTAtaxonomyManager" class="org.inbio.m3s.service.impl.TaxonomyManagerImpl">
+  <bean id="ATTATaxonomyManager" class="org.inbio.m3s.service.impl.TaxonomyManagerImpl">
     <property name="taxonDAO" ref="INBioTaxonDAO"/>
     <property name="tlDTOFactory" ref="taxonLiteDTOFactory"/>
     <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
@@ -165,9 +165,9 @@
 <!-- importFromFile (2 versiones, seran 3)-->  
   <bean id="ATTAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="mediaManager" ref="ATTAMediaManager"/>
-  	<property name="taxonomyManager" ref="ATTAtaxonomyManager"/>
+  	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
   	<property name="siteDAO" ref="INBioSiteDAO"/>
-  	<property name="siteManager" ref="ATTAsiteManager"/>
+  	<property name="siteManager" ref="ATTASiteManager"/>
   	<property name="mediaTypeDAO" ref="mediaTypeDAO"/>
   	<property name="agentManager" ref="ATTAAgentManager"/>
   	<property name="projectDAO" ref="projectDAO"/>
@@ -177,9 +177,9 @@
   </bean>
   <bean id="M3SImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="mediaManager" ref="M3SMediaManager"/>
-  	<property name="taxonomyManager" ref="taxonomyManager"/>
+  	<property name="taxonomyManager" ref="M3STaxonomyManager"/>
   	<property name="siteDAO" ref="INBioSiteDAO"/>
-  	<property name="siteManager" ref="siteManager"/>
+  	<property name="siteManager" ref="ATTASiteManager"/>
   	<property name="mediaTypeDAO" ref="mediaTypeDAO"/>
   	<property name="agentManager" ref="M3SAgentManager"/>
   	<property name="projectDAO" ref="projectDAO"/>
