@@ -20,5 +20,4 @@ public class ServiceUtil {
 	
 	public static ApplicationContext appContext = new ClassPathXmlApplicationContext(locations);
 	
-	//SequenceProcessor workflow = (SequenceProcessor)context.getBean("GBIF:INDEX:1.0:metadataOfResourceAccessPoint");
 }
