@@ -61,7 +61,7 @@
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="taxonomyManager"/>     
   </bean>
-  <bean id="MuseoNacionalMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
+  <bean id="M3SMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="projectDAO" ref="projectDAO"/>
     <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
