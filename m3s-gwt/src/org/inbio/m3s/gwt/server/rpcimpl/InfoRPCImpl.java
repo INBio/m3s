@@ -22,14 +22,17 @@ public class InfoRPCImpl extends RemoteServiceServlet implements InfoRPC {
 	StatisticsManager statisticsManager = (StatisticsManager) ServiceUtil.appContext.getBean(Properties.STATISTICS_MANAGER);
 
 	public Integer countMultimedia() {
+		System.out.println("Usando el statisticsManager");
 		return new Integer(statisticsManager.getAllMediaCount());
 	}
 
 	public Integer countDigitalPhotos() {
+		System.out.println("Usando el statisticsManager");
 		return new Integer(statisticsManager.getDSCPhotosCount());
 	}
 
 	public Integer countVideos() {
+		System.out.println("Usando el statisticsManager");
 		return new Integer(statisticsManager.getVideosCount());
 	}
 

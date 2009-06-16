@@ -67,7 +67,7 @@ public class VideoDispatcher extends HttpServlet {
 			mediaAddress = RealMediaFinder.getVideoPath(videoId);
 			//mediaAddress = RealMediaFinder.getPath(imageId, size);
 		}	else{
-			mediaAddress = Properties.web_APP_FILES + "/BIG_IMG_PRIVATE.gif";
+			mediaAddress = Properties.WEB_APP_FILES + "/unavailable.png";
 			throw new ServletException("flv not exists");
 		}
 		

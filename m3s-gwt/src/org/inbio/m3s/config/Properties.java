@@ -15,13 +15,13 @@ public class Properties {
 
 	// CATALINA_HOME a copy of the result of this command:
 	// $echo "$CATALINA_HOME"
-	private static String CATALINA_HOME = null;
+	public static String CATALINA_HOME = null;
 	//"/webapps/m3sINBioFiles/"
-	private static String TEMP_WEB_DIR = null;
+	public static String TEMP_WEB_DIR = null;
 	//web address
-	private static String WEB_ADDRESS = null;
+	public static String WEB_ADDRESS = null;
 	//imagenes originales,big y thumb.
-	private static String M3S_BASE_DIR = null;
+	public static String M3S_BASE_DIR = null;
 
 	// the temporal media files
 	private static String TEMP_FILES_DIR = null;
@@ -33,25 +33,24 @@ public class Properties {
 	// public static String REAL_BATCH_MEDIA_DIR = "/media/sda5/Buzon/m3s/";
 	public static String REAL_BATCH_MEDIA_DIR = null;
 	
-
 	//Estas se setean automáticamente a partir de las variables de arriba:
 	// apache webapps dir
-	private static String REAL_WEB_DIR = CATALINA_HOME + TEMP_WEB_DIR;
+	public static String REAL_WEB_DIR = null;
 	// m3s application public files- images and stuff like that
-	public static String web_APP_FILES = WEB_ADDRESS + APP_FILES;
+	public static String WEB_APP_FILES = null;
 
 	// public addresses
-	public static String REAL_TEMP_FILES_DIR = REAL_WEB_DIR + TEMP_FILES_DIR	+ "/";
-	public static String WEB_TEMP_MEDIA_DIR = WEB_ADDRESS + TEMP_FILES_DIR + "/";
-	public static String MEDIA_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/";
+	public static String REAL_TEMP_FILES_DIR = null;
+	public static String WEB_TEMP_MEDIA_DIR = null;
+	public static String MEDIA_REAL_BASE_ADDRESS = null;
 	
-	public static String IMAGES_PUBLIC_WEB_BASE_ADDRESS = WEB_ADDRESS	+ "MEDIA/IMAGES/PUBLIC";
+	public static String IMAGES_PUBLIC_WEB_BASE_ADDRESS = null;
 
-	public static String IMAGES_ORIGINAL_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/ORIGINAL";
+	public static String IMAGES_ORIGINAL_REAL_BASE_ADDRESS = null;
 
 	// public static String REAL_BATCH_MEDIA_DIR = "/media/sda5/Buzon/m3s/";
-	public static String REAL_IMPORT_FILES_DIR = REAL_WEB_DIR + IMPORT_FILES+ "/";
-	public static String WEB_IMPORT_FILES_DIR = WEB_ADDRESS + IMPORT_FILES + "/";
+	public static String REAL_IMPORT_FILES_DIR = null;
+	public static String WEB_IMPORT_FILES_DIR = null;
 
 	
 	// params for the dispatchers
@@ -86,20 +85,19 @@ public class Properties {
 	public static String IMPORT_FROM_FILE = null;
 	
 	public static void init() throws ConfigurationException{
+		
 		PropertiesConfiguration config = new PropertiesConfiguration("m3s.properties");
 		
 		Properties.CATALINA_HOME = (String) config.getProperty("catalina_home");
 		Properties.TEMP_WEB_DIR = (String) config.getProperty("temp_web_dir");
 
-		Properties.WEB_ADDRESS = (String) config.getProperty("web_address");
+		Properties.WEB_ADDRESS = (String) config.getProperty("web_address");	
 		Properties.M3S_BASE_DIR = (String) config.getProperty("m3s_base_dir");
-
+		
 		Properties.TEMP_FILES_DIR = (String) config.getProperty("temp_files_dir");
 		Properties.IMPORT_FILES = (String) config.getProperty("import_files_dir");
-		//Properties.MEDIA_FILES_DIR = (String) config.getProperty("media_files_dir");
 		
 		Properties.APP_FILES = (String) config.getProperty("app_files");
-		
 		Properties.REAL_BATCH_MEDIA_DIR = (String) config.getProperty("real_batch_media_dir");
 		
 		Properties.AGENT_MANAGER = (String) config.getProperty("agent_manager");
@@ -114,6 +112,24 @@ public class Properties {
 		Properties.IMPORT_FROM_FILE = (String) config.getProperty("import_from_file");
 
 		
+		//Estas se setean automáticamente a partir de las variables de arriba:
+		Properties.REAL_WEB_DIR = CATALINA_HOME + TEMP_WEB_DIR;
+		// m3s application public files- images and stuff like that
+		Properties.WEB_APP_FILES = WEB_ADDRESS + APP_FILES;
+
+		// public addresses
+		Properties.REAL_TEMP_FILES_DIR = CATALINA_HOME + TEMP_WEB_DIR + TEMP_FILES_DIR	+ "/";
+
+		Properties.WEB_TEMP_MEDIA_DIR = WEB_ADDRESS + TEMP_FILES_DIR + "/";
+		Properties.MEDIA_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/";
+		
+		Properties.IMAGES_PUBLIC_WEB_BASE_ADDRESS = WEB_ADDRESS	+ "MEDIA/IMAGES/PUBLIC";
+
+		Properties.IMAGES_ORIGINAL_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/ORIGINAL";
+
+		// public static String REAL_BATCH_MEDIA_DIR = "/media/sda5/Buzon/m3s/";
+		Properties.REAL_IMPORT_FILES_DIR = REAL_WEB_DIR + IMPORT_FILES+ "/";
+		Properties.WEB_IMPORT_FILES_DIR = WEB_ADDRESS + IMPORT_FILES + "/";
 		
 
 

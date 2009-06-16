@@ -9,6 +9,7 @@ import java.util.List;
 import org.inbio.gwt.controlledtext.client.dto.TextInfo;
 import org.inbio.gwt.controlledtext.client.exception.ControlledTextException;
 import org.inbio.gwt.controlledtext.client.rpc.ControlledTextRPC;
+import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
 import org.inbio.m3s.service.MessageManager;
@@ -25,7 +26,7 @@ public class KeywordsRPCImpl extends RemoteServiceServlet implements ControlledT
 	/**	 */
 	private static final long serialVersionUID = 5121913669318916491L;
 
-	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean("messageManager");
+	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean(Properties.MESSAGE_MANAGER);
 	
 	/**
 	 * @deprecated parece que no se usa!

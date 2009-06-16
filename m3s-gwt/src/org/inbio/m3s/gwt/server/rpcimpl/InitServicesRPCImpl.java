@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.gwt.server.rpcimpl;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.inbio.m3s.config.Properties;
@@ -29,57 +30,19 @@ public class InitServicesRPCImpl extends RemoteServiceServlet implements
 	 */
 	public boolean InitServices(String moduleBaseURL) {
 		
+		try {
+			Properties.init();
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
 		Properties.MODULE_BASE_URL = moduleBaseURL;
 		 logger.debug("init de module base URL done");
 		
 		return true;
 	}
-
-	/**
-	 * Initialize the Hibernate Configuration and the session factory variable for
-	 * future use in tha application
-	 * @deprecated
-	 * @return true if everything goes cool
-	 */
-	public boolean initHibernateConfig() {
-		logger.debug("initHibernateConfig");
-		System.out.println("initHibernateConfig");
-		boolean result = true;
-		// inits the sessin factory variable for the application use...
-
-		// inits the local MultiMedia Management Data Base
-		//if (Properties.POSTGRES_DB_CONECTION_AVALIABLE) {
-			//System.out.println("si postgres");
-			// DB Local
-			//result = HibernateUtil.buildM3SDBSessionFactory(Properties.M3S_HIBERNATE_CONFIG_FILE);
-			//logger.debug("Postgres bien? = "+result);
-			//System.out.println("fin si postgres");
-		//}
-		
-
-		// inits the local atta Databa
-		//if (Properties.ORACLE_DB_CONECTION_AVALIABLE) {
-			//System.out.println("si oracle");
-			// atta
-			 //result = HibernateUtil.buildATTADBSessionFactory(Properties.ATTA_HIBERNATE_CONFIG_FILE);
-			 //logger.debug("Oracle bien? = "+result);
-			 //System.out.println("fin si oracle");
-		//}
-		
-		//if(Properties.ARA_DB_CONECTION_AVALIABLE) {
-			//System.out.println("si ara");
-			//ara
-			//result = HibernateUtil.buildARADBSessionFactory(Properties.ARA_HIBERNATE_CONFIG_FILE);
-			//logger.debug("ARA bien? = "+ result);
-			//System.out.println("fin si ara");
-		//}
-		
-		
-		//logger.debug("initSessionFactory... PURA VIDA!");
-
-		return result;
-	}
-
 
 
 	/**

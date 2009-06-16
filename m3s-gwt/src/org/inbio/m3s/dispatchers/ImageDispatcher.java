@@ -95,7 +95,7 @@ public class ImageDispatcher extends HttpServlet {
 			if (mediaLite.getIsPublic() == 'Y')
 				imageAddress = RealMediaFinder.getPath(imageId, size);
 			else
-				imageAddress = Properties.web_APP_FILES + "/BIG_IMG_PRIVATE.gif";
+				imageAddress = Properties.WEB_APP_FILES + "/unavailable.png";
 
 			// Open image file.
 			// Prepare file object.

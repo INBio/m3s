@@ -11,10 +11,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
  */
 public interface InitServicesRPC extends RemoteService {
 
-	/**
-	 *@deprecated
-	 */
-	//public boolean initHibernateConfig();
 
 	//public int isLoginValid(String username, String password);
 

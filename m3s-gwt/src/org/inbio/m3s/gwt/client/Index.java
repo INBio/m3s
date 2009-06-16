@@ -91,7 +91,7 @@ public class Index implements EntryPoint, MenuItemSelectedListener, LoginListene
 				// TODO
 			}
 		});
-
+		System.out.println("SETEANDO LAS COSAS");
 		rpc.InitServices(GWT.getModuleBaseURL(), new AsyncCallback() {
 			public void onFailure(Throwable caught) {
 				rpcError();
@@ -101,7 +101,7 @@ public class Index implements EntryPoint, MenuItemSelectedListener, LoginListene
 		});
 		
 		loginManager.addLoginListener(this);
-		hibernateReady();
+		hibernateReady();				
 	}
 
 	/**
