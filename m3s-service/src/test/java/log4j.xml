@@ -10,7 +10,7 @@
 
 	<!-- Alter the logging of known libs -->
 	<category name="org.inbio">
-		<priority value="DEBUG"/>
+		<priority value="INFO"/>
 	</category>		
 	<category name="org">
 		<priority value="ERROR"/>
