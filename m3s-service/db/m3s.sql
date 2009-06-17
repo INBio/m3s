@@ -109,6 +109,10 @@ CREATE TABLE institution (
     country character varying(25),
     acronym character varying(10),
     url character varying(100),
+    creation_date date,
+    created_by character varying(20),
+    last_modification_date date,
+    last_modification_by character varying(20),
     logo_image_id integer
 );
 
