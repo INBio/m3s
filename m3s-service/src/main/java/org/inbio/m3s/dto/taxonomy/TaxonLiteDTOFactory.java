@@ -5,7 +5,7 @@ package org.inbio.m3s.dto.taxonomy;
 
 import org.inbio.m3s.dto.BaseDTOFactory;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
-import org.inbio.m3s.model.atta.Taxon;
+import org.inbio.m3s.model.taxonomy.Taxon;
 
 /**
  * @author jgutierrez
@@ -27,7 +27,7 @@ public class TaxonLiteDTOFactory extends BaseDTOFactory {
 
 	/**
 	 * Copy properties from model object to dto.
-	 * @param mav
+	 * @param t
 	 * @param dto
 	 */
 	public void populateTaxonLite(Taxon t, TaxonLiteDTO dto){
