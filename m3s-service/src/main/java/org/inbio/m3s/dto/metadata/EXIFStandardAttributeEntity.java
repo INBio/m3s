@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.inbio.m3s.dto.util;
+package org.inbio.m3s.dto.metadata;
 
 /**
  * @author jgutierrez

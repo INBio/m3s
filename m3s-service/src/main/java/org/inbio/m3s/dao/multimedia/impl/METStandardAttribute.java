@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.inbio.m3s.service.util.impl;
+package org.inbio.m3s.dao.multimedia.impl;
 
 /**
  * @author jgutierrez

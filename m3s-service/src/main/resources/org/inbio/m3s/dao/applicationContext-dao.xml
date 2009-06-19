@@ -79,4 +79,8 @@
      -->  
   <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.ara.impl.ARATaxonDAOImpl" parent="araBaseDAORO"/>
   
+  
+  <!--  Multimedia  Metadata Exraction DAO's -->
+  <bean id="EXIFMetadataExtractorDAO" class="org.inbio.m3s.dao.multimedia.impl.EXIFMetadataExtractorDAOImpl"/>
+  
 </beans>

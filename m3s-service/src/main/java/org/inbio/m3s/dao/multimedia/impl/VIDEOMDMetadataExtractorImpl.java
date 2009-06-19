@@ -1,7 +1,7 @@
-package org.inbio.m3s.service.util.impl;
+package org.inbio.m3s.dao.multimedia.impl;
 
 import org.apache.log4j.Logger;
-import org.inbio.m3s.service.util.MetadataExtractor;
+import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.util.VideoMetadataExtractorAPI;
 
 /**
@@ -10,7 +10,7 @@ import org.inbio.m3s.util.VideoMetadataExtractorAPI;
  * @author jgutierrez
  *
  */
-public class VIDEOMDMetadataExtractorImpl implements MetadataExtractor {
+public class VIDEOMDMetadataExtractorImpl implements MetadataExtractorDAO {
 
 	public static final int FORMAT_NAME = 0;
 	

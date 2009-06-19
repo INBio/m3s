@@ -1,10 +1,10 @@
+package org.inbio.m3s.dao.multimedia.impl;
 /**
  * 
  */
-package org.inbio.m3s.service.util.impl;
 
 import org.apache.log4j.Logger;
-import org.inbio.m3s.service.util.MetadataExtractor;
+import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.util.ImageMagickAPI;
 
 
@@ -12,9 +12,10 @@ import org.inbio.m3s.util.ImageMagickAPI;
  * @author jgutierrez
  * 
  * Works nice on Fedora...
+ * @deprecated
  * 
  */
-public class EXIFMetadataExtractorRedHatImpl implements MetadataExtractor {
+public class EXIFMetadataExtractorRedHatImpl implements MetadataExtractorDAO {
 	
 	private static Logger logger = Logger.getLogger(EXIFMetadataExtractorRedHatImpl.class);
 	

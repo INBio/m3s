@@ -1,13 +1,13 @@
 /**
  * 
  */
-package org.inbio.m3s.service.util.impl;
+package org.inbio.m3s.dao.multimedia.impl;
 
 import java.io.File;
 
-import javax.activation.MimetypesFileTypeMap;
+import javax.activation.*;
 
-import org.inbio.m3s.service.util.MetadataExtractor;
+import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 
 
 /**
@@ -19,7 +19,7 @@ import org.inbio.m3s.service.util.MetadataExtractor;
  * @author jgutierrez
  * 
  */
-public class FileInfoMetadataExtractorImpl implements MetadataExtractor {
+public class FileInfoMetadataExtractorImpl implements MetadataExtractorDAO {
 
 	public String fileAddress = null;
 
