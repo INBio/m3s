@@ -146,6 +146,12 @@
 			<version>3.1</version>
 			<scope>compile</scope>
 		</dependency>
+	<dependency>
+	<!-- http://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor/2.4.0-beta-1 -->
+    	<groupId>com.drewnoakes</groupId>
+    	<artifactId>metadata-extractor</artifactId>
+    	<version>2.4.0-beta-1</version>
+	</dependency> 
 	
 </dependencies>
 
