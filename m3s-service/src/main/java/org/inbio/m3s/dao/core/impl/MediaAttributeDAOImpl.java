@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaAttributeDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.dto.full.MediaAttributeFull;
+import org.inbio.m3s.model.core.MediaAttribute;
 import org.inbio.m3s.service.MessageManager;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -108,6 +109,24 @@ public class MediaAttributeDAOImpl extends BaseDAOImpl implements MediaAttribute
 			}
 		});
 				
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MediaAttribute> findAllByMediaType(final String mediaTypeKey)
+			throws IllegalArgumentException {
+		logger.debug("findAllByMediaType, param mediaTypeId["	+ mediaTypeKey);
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<MediaAttribute>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select ma" +
+						" from MediaAttribute as ma, MediaAttributeType as mat"+
+						" where mat.id.mediaTypeId = " + mediaTypeKey +
+						" and ma.mediaAttributeId = mat.id.mediaAttributeId");
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
 	}
 
 

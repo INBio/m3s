@@ -10,7 +10,7 @@ public class ObservedTaxon implements Serializable {
 
 	private ObservedTaxonId id;
 
-	private Taxon taxon;
+	private INBioTaxon taxon;
 
 	private Observation observation;
 
@@ -33,7 +33,7 @@ public class ObservedTaxon implements Serializable {
 	public ObservedTaxon() {
 	}
 
-	public ObservedTaxon(ObservedTaxonId id, Taxon taxon,
+	public ObservedTaxon(ObservedTaxonId id, INBioTaxon taxon,
 			Observation observation, Date taxonomicalTimestamp) {
 		this.id = id;
 		this.taxon = taxon;
@@ -41,7 +41,7 @@ public class ObservedTaxon implements Serializable {
 		this.taxonomicalTimestamp = taxonomicalTimestamp;
 	}
 
-	public ObservedTaxon(ObservedTaxonId id, Taxon taxon,
+	public ObservedTaxon(ObservedTaxonId id, INBioTaxon taxon,
 			Observation observation, Date taxonomicalTimestamp,
 			Integer originId, Integer substrateId, Date creationDate,
 			String createdBy, Date lastModificationDate,
@@ -68,11 +68,11 @@ public class ObservedTaxon implements Serializable {
 		this.id = id;
 	}
 
-	public Taxon getTaxon() {
+	public INBioTaxon getTaxon() {
 		return this.taxon;
 	}
 
-	public void setTaxon(Taxon taxon) {
+	public void setTaxon(INBioTaxon taxon) {
 		this.taxon = taxon;
 	}
 

@@ -17,7 +17,7 @@ public class Identification implements Serializable {
 
 	private Specimen specimen;
 	
-	private Taxon taxon;
+	private ARATaxon taxon;
 
 	private Date identificationDate;
 
@@ -58,7 +58,7 @@ public class Identification implements Serializable {
 	 * @param lastModificationDate
 	 * @param identificationStatusId
 	 */
-	public Identification(IdentificationId id, Specimen specimen, Taxon taxon, Date identificationDate, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
+	public Identification(IdentificationId id, Specimen specimen, ARATaxon taxon, Date identificationDate, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
 		super();
 		this.id = id;
 		this.specimen = specimen;
@@ -87,7 +87,7 @@ public class Identification implements Serializable {
 	 * @param lastModificationDate
 	 * @param identificationStatusId
 	 */
-	public Identification(IdentificationId id, Specimen specimen, Taxon taxon, Date identificationDate, Integer identificationTypeId, ARAPerson valuerPerson, String dataEntryError, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
+	public Identification(IdentificationId id, Specimen specimen, ARATaxon taxon, Date identificationDate, Integer identificationTypeId, ARAPerson valuerPerson, String dataEntryError, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
 		super();
 		this.id = id;
 		this.specimen = specimen;
@@ -261,14 +261,14 @@ public class Identification implements Serializable {
 	/**
 	 * @return the taxon
 	 */
-	public Taxon getTaxon() {
+	public ARATaxon getTaxon() {
 		return taxon;
 	}
 
 	/**
 	 * @param taxon the taxon to set
 	 */
-	public void setTaxon(Taxon taxon) {
+	public void setTaxon(ARATaxon taxon) {
 		this.taxon = taxon;
 	}
 

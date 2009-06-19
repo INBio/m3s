@@ -15,13 +15,13 @@
 		<mapping resource="org/inbio/m3s/model/atta/Identification.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/INBioInstitution.hbm.xml"/>
 		<mapping resource="org/inbio/m3s/model/atta/INBioPerson.hbm.xml" />		
+		<mapping resource="org/inbio/m3s/model/atta/INBioTaxon.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/Observation.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/ObservedTaxon.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/PersonProfile.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/Profile.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/Site.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/Specimen.hbm.xml" />
-		<mapping resource="org/inbio/m3s/model/atta/Taxon.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>

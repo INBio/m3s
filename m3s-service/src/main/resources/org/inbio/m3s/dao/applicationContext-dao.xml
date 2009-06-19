@@ -76,10 +76,7 @@
   <!-- 
   <bean id="ARASiteDAO" class="org.inbio.m3s.dao.atta.impl.INBioSiteDAOImpl" parent="attaBaseDAORO"/>
   <bean id="ARASpecimenDAO" class="org.inbio.m3s.dao.atta.impl.INBioSpecimenDAOImpl" parent="attaBaseDAORO"/>
-  <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.atta.impl.INBioTaxonDAOImpl" parent="attaBaseDAORO">
-    <property name="specimenDAO" ref="ARASpecimenDAO"/>
-    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
-  </bean>
-   -->  
+     -->  
+  <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.ara.impl.ARATaxonDAOImpl" parent="araBaseDAORO"/>
   
 </beans>

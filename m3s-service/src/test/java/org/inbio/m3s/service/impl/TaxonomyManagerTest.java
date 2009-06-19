@@ -70,20 +70,23 @@ public class TaxonomyManagerTest extends AbstractServiceTest{
 	}
 	*/
 	
+	
 	public void testGetTaxonLiteById(){
 		
-		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
-		GeneralMetadataDTO gmDTO = mm.getGM(new Integer(100053));
-		System.out.println(gmDTO.toString());
+		//MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
+		//GeneralMetadataDTO gmDTO = mm.getGM(new Integer(100053));
+		//System.out.println(gmDTO.toString());
 		
-		System.out.println("hijo");
+		//System.out.println("hijo");
+		logger.info("Usando el TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
 		TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
-		TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
-		System.out.println(tlDTO.toString());
+		//TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
+		TaxonLiteDTO tlDTO = tm.getTaxonLiteById("55");
+		logger.info(tlDTO.toString());
 		
-		System.out.println("kingdom");
+		logger.info("kingdom");
 		TaxonLiteDTO tlKingdomDTO = tm.getTaxonLiteById(tlDTO.getKingdomKey());
-		System.out.println(tlKingdomDTO.toString());
+		logger.info(tlKingdomDTO.toString());
 		
 		assertTrue( true );
 	}
@@ -156,3 +159,4 @@ public class TaxonomyManagerTest extends AbstractServiceTest{
 
 
 }
+

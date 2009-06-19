@@ -11,8 +11,11 @@
 	<!-- Alter the logging of known libs -->
 	<category name="org.inbio">
 		<priority value="INFO"/>
-	</category>		
+	</category>
 	<category name="org">
+		<priority value="ERROR"/>
+	</category>			
+	<category name="org.hibernate">
 		<priority value="ERROR"/>
 	</category>	
 	<category name="net">

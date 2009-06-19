@@ -12,7 +12,7 @@
 	<mapping resource="org/inbio/m3s/model/ara/ARAPerson.hbm.xml"/>
 	<mapping resource="org/inbio/m3s/model/ara/GatheringObservation.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/ara/Site.hbm.xml" />
-	<mapping resource="org/inbio/m3s/model/ara/Taxon.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/ara/ARATaxon.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/ara/PersonProfile.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/ara/Profile.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/ara/Specimen.hbm.xml" />

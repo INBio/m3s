@@ -11,7 +11,7 @@ public class Identification implements Serializable {
 
 	private IdentificationId id;
 
-	private Taxon taxon;
+	private INBioTaxon taxon;
 
 	private Specimen specimen;
 
@@ -36,7 +36,7 @@ public class Identification implements Serializable {
 	public Identification() {
 	}
 
-	public Identification(IdentificationId id, Taxon taxon, Specimen specimen,
+	public Identification(IdentificationId id, INBioTaxon taxon, Specimen specimen,
 			Date identificationDate, String identificationStatus) {
 		this.id = id;
 		this.taxon = taxon;
@@ -45,7 +45,7 @@ public class Identification implements Serializable {
 		this.identificationStatus = identificationStatus;
 	}
 
-	public Identification(IdentificationId id, Taxon taxon, Specimen specimen,
+	public Identification(IdentificationId id, INBioTaxon taxon, Specimen specimen,
 			INBioPerson person, Date identificationDate,
 			Integer identificationTypeId, String identificationStatus,
 			Date creationDate, String createdBy, Date lastModificationDate,
@@ -72,11 +72,11 @@ public class Identification implements Serializable {
 		this.id = id;
 	}
 
-	public Taxon getTaxon() {
+	public INBioTaxon getTaxon() {
 		return this.taxon;
 	}
 
-	public void setTaxon(Taxon taxon) {
+	public void setTaxon(INBioTaxon taxon) {
 		this.taxon = taxon;
 	}
 

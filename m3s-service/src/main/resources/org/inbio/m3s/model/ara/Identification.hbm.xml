@@ -18,7 +18,7 @@
         <many-to-one name="specimen" class="org.inbio.m3s.model.ara.Specimen" update="false" insert="false" fetch="select">
             <column name="specimen_id" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <many-to-one name="taxon" class="org.inbio.m3s.model.ara.Taxon" fetch="select">
+        <many-to-one name="taxon" class="org.inbio.m3s.model.ara.ARATaxon" fetch="select">
             <column name="taxon_id" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="identificationDate" type="date">

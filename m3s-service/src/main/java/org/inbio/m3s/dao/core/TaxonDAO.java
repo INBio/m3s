@@ -6,7 +6,7 @@ package org.inbio.m3s.dao.core;
 import java.util.List;
 
 import org.inbio.m3s.dao.BaseDAO;
-import org.inbio.m3s.model.atta.Taxon;
+import org.inbio.m3s.model.taxonomy.Taxon;
 
 /**
  * @author jgutierrez

@@ -10,7 +10,7 @@ import org.inbio.m3s.model.DBLogEntity;
  * @author jgutierrez
  *
  */
-public class Institution  extends DBLogEntity implements Serializable {
+public class Institution extends DBLogEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

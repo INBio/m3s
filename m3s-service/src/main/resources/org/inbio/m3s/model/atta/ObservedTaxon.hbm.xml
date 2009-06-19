@@ -12,7 +12,7 @@
                 <column name="TAXON_ID" precision="22" scale="0" />
             </key-property>
         </composite-id>
-        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.Taxon" update="false" insert="false" fetch="select">
+        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.INBioTaxon" update="false" insert="false" fetch="select">
             <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="observation" class="org.inbio.m3s.model.atta.Observation" update="false" insert="false" fetch="select">

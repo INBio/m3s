@@ -15,7 +15,7 @@
                 <column name="IDENTIFICATION_SEQUENCE" precision="22" scale="0" />
             </key-property>
         </composite-id>
-        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.Taxon" fetch="select">
+        <many-to-one name="taxon" class="org.inbio.m3s.model.atta.INBioTaxon" fetch="select">
             <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="specimen" class="org.inbio.m3s.model.atta.Specimen" update="false" insert="false" fetch="select">

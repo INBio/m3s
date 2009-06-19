@@ -1,13 +1,17 @@
+package org.inbio.m3s.dto;
+
+
 /**
  * 
  */
-package org.inbio.m3s.dto;
+
 
 import java.util.List;
 
 /**
  * @author jgutierrez
  * 
+ * @deprecated
  */
 public class TechnicalMetadataDTO {
 	/**
