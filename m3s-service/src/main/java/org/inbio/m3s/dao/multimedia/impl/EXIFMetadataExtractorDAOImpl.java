@@ -6,7 +6,7 @@ package org.inbio.m3s.dao.multimedia.impl;
 import java.io.File;
 
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
-import org.inbio.m3s.dto.metadata.EXIFStandardAttributeEntity;
+import org.inbio.m3s.dto.metadata.util.EXIFStandardAttributeEntity;
 
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
