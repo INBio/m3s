@@ -89,5 +89,6 @@ public class TechnicalMetadataItemDTO implements Serializable {
 	public void setMediaAttributeName(String mediaAttributeName) {
 		this.mediaAttributeName = mediaAttributeName;
 	}
+
 	
 }

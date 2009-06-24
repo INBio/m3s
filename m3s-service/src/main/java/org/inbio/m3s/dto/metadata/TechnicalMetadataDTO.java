@@ -59,6 +59,23 @@ public class TechnicalMetadataDTO {
 			items.add(tmiDTO);
 		else 
 			throw new NullPointerException();
+		
+	}
+	
+
+	@Override
+	public String toString(){
+		String result = "El Technical Metadata DTO tiene:" +
+				"\n\tMediaId: " + this.getMediaKey() +
+				"\n\tMediaTypeId: " + this.getMediaTypeKey() +
+				"\n\tTotal de Items: " + this.items.size();
+		for(TechnicalMetadataItemDTO tmiDTO : this.getItems()){
+			result = result + "\n\t["+tmiDTO.getMediaAttributeKey()+"] "
+				+tmiDTO.getMediaAttributeName()+" = "+tmiDTO.getValue();
+		}
+			
+		
+		return result;
 	}
 	
 	/**
