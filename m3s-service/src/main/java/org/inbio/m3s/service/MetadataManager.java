@@ -12,6 +12,10 @@ import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
  */
 public interface MetadataManager {
 	
-	public TechnicalMetadataDTO getTechnicalMetadata(Integer mediaId);
+	public TechnicalMetadataDTO getTechMetadataByMedia(String mediaKey);
+	
+	public TechnicalMetadataDTO getTechMetadataByMediaType(String mediaTypeKey);
+	
+	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress);
 
 }
