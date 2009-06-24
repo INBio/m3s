@@ -13,8 +13,10 @@ public interface MediaAttributeManager {
 	
 	public MediaAttributeValueFullDTO getMediaAttributeValueFull(Integer mediaId, Integer mediaAttributeId) throws IllegalArgumentException;
 	
+	@Deprecated
 	public void insertMediaAttributeValueFull(MediaAttributeValueFullDTO mavFull) throws IllegalArgumentException;
 	
+	@Deprecated
 	public void updateMediaAttributeValueFull(MediaAttributeValueFullDTO mavFull) throws IllegalArgumentException; 
 	
 	

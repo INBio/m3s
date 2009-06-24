@@ -12,10 +12,29 @@ import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
  */
 public interface MetadataManager {
 	
-	public TechnicalMetadataDTO getTechMetadataByMedia(String mediaKey);
-	
+
+
+	/**
+	 * 
+	 * @param techMetadataDTO
+	 */
+	public void saveTechnicalMetadata(TechnicalMetadataDTO techMetadataDTO);
+	/**
+	 * @param mediaKey
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public TechnicalMetadataDTO getTechMetadataByMedia(String mediaKey) throws IllegalArgumentException;
+	/**
+	 * @param mediaTypeKey
+	 * @return
+	 */
 	public TechnicalMetadataDTO getTechMetadataByMediaType(String mediaTypeKey);
-	
+	/**
+	 * @param mediaTypeKey
+	 * @param fileAddress
+	 * @return
+	 */
 	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress);
 
 }

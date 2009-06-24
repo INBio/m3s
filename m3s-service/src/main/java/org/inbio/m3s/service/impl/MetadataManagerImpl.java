@@ -4,6 +4,10 @@
 package org.inbio.m3s.service.impl;
 
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.inbio.m3s.dao.core.MediaAttributeDAO;
 import org.inbio.m3s.dao.core.MediaAttributeTypeDAO;
@@ -13,7 +17,6 @@ import org.inbio.m3s.dao.core.TextTranslationDAO;
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
-import org.inbio.m3s.dto.metadata.util.MediaAtttributeValueTypeEntity;
 import org.inbio.m3s.dto.metadata.util.MetadataStandardEntity;
 import org.inbio.m3s.model.core.Media;
 import org.inbio.m3s.model.core.MediaAttribute;
@@ -45,10 +48,13 @@ public class MetadataManagerImpl implements MetadataManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.MetadataManager#getTechMetadataByMedia(java.lang.String)
 	 */
-	public TechnicalMetadataDTO getTechMetadataByMedia(String mediaKey) {
+	public TechnicalMetadataDTO getTechMetadataByMedia(String mediaKey) throws IllegalArgumentException{
 		logger.debug("getTechnicalMetadata with mediaId [" + mediaKey + "]");
 		
 		Media media =  (Media) getMediaDAO().findById(Media.class, new Integer(mediaKey));
+		if(media==null)
+			throw new IllegalArgumentException("Invalid mediaKey["+mediaKey+"]");
+		
 		String mediaTypeKey = String.valueOf(media.getMediaType().getMediaTypeId());
 				
 		TechnicalMetadataDTO tmDTO = getTechMetadataByMediaType(mediaTypeKey);
@@ -139,6 +145,84 @@ public class MetadataManagerImpl implements MetadataManager {
 		
 		return tmDTO;
 	}
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MetadataManager#saveTechnicalMetadata(org.inbio.m3s.dto.metadata.TechnicalMetadataDTO)
+	 */
+	public void saveTechnicalMetadata(TechnicalMetadataDTO techMetadataDTO) {
+		logger.info("saveTechnicalMetadata for mediaId = " + techMetadataDTO.getMediaKey());
+		logger.debug(techMetadataDTO.toString());
+		
+		MediaAttribute ma;
+		MediaAttributeValue mav;
+		MediaAttributeValueId mavId;
+
+		for(TechnicalMetadataItemDTO tmiDTO : techMetadataDTO.getItems()){
+			mavId = new MediaAttributeValueId(tmiDTO.getMediaAttributeKey(), techMetadataDTO.getMediaKey());
+			mav = (MediaAttributeValue) mediaAttributeValueDAO.findById(MediaAttributeValue.class, mavId);
+			if(mav==null)
+				mav = saveEmptyMediaAttributeValue(tmiDTO.getMediaAttributeKey(), techMetadataDTO.getMediaKey());
+			ma = mav.getMediaAttribute();
+			
+			switch(ma.getMediaAttributeValueType()){
+			case 'V' :
+				mav.setValueVarchar(tmiDTO.getValue());
+				break;
+			case 'N' :
+				mav.setValueNumber(Integer.valueOf(tmiDTO.getValue()));
+				break;
+			case 'D' :
+				// dateFormat for metadata from the camara
+				SimpleDateFormat dateFormat;
+				Date date = null;
+				try {
+					dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+					date = dateFormat.parse(tmiDTO.getValue());
+				} catch (Exception e) {
+					logger.debug("date viene directamente de la camara");
+				}
+
+				try {
+					// dateFormat for info from the DB
+					dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if (date == null) 
+						date = dateFormat.parse(tmiDTO.getValue());
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					mav.setValueDate(null);
+				}
+				
+				if(date==null)
+					mav.setValueDate(null);
+				else
+					mav.setValueDate(new Timestamp(date.getTime()));
+				break;
+			}
+			
+			mediaAttributeValueDAO.update(mav);
+		}
+			
+		logger.info("saveTechnicalMetadata done!");
+	}
+
+	/**
+	 * 
+	 * @param mediaAttributeKey
+	 * @param mediaKey
+	 * @return
+	 */
+	private MediaAttributeValue saveEmptyMediaAttributeValue(String mediaAttributeKey, String mediaKey) {
+		Media media = (Media) mediaDAO.findById(Media.class, Integer.valueOf(mediaKey));
+		MediaAttribute ma = (MediaAttribute) mediaAttributeDAO.findById(MediaAttribute.class, Integer.valueOf(mediaAttributeKey));
+		MediaAttributeValueId mavId = new MediaAttributeValueId(ma.getMediaAttributeId(), media.getMediaId());
+		MediaAttributeValue mav = new MediaAttributeValue(mavId, ma, media,null,null,null,null,null,null,null,null);
+		// saves the Media Object in the database
+		mediaAttributeValueDAO.create(mav);
+		return mav;
+	}
+
 
 
 	/**
