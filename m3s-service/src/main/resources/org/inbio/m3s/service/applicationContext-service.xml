@@ -203,6 +203,16 @@
   	<property name="messageManager" ref="messageManager"/>  
   </bean>
   
+<!-- Metadata Manager Implementation -->
+  <bean id="metadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+	<property name="mediaDAO" ref="mediaDAO"/>
+	<property name="mediaAttributeDAO" ref="mediaAttributeDAO"/> 
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    
+  </bean> 
+  
 	<!-- DTO Factories -->
 	<bean id="institutionLiteDTOFactory" class="org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory"/>
 	<bean id="personLiteDTOFactory" class="org.inbio.m3s.dto.agent.PersonLiteDTOFactory"/>
