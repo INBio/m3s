@@ -9,16 +9,17 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaAttributeTypeDAO;
+import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.dto.lite.MediaAttributeTypeLite;
+import org.inbio.m3s.model.core.MediaAttributeType;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
  *
  */
-public class MediaAttributeTypeDAOImpl extends HibernateDaoSupport implements MediaAttributeTypeDAO {
+public class MediaAttributeTypeDAOImpl extends BaseDAOImpl implements MediaAttributeTypeDAO {
 
 	private static Logger logger = Logger.getLogger(MediaAttributeTypeDAOImpl.class);
 	
@@ -40,10 +41,21 @@ public class MediaAttributeTypeDAOImpl extends HibernateDaoSupport implements Me
 						+ " where mat.mediaType.mediaTypeId = " + mediaTypeId);
 				query.setCacheable(true);
 				return query.list();
-				//for(MediaAttributeTypeLite maf : tempResult){
-				//	maf.setDescription("");
-				//}
-				//return tempResult;
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MediaAttributeType> findAllByMediaType(final String mediaTypeKey) throws IllegalArgumentException {
+		logger.debug("findAllByMediaType");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<MediaAttributeType>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select mat from MediaAttributeType as mat"
+						+ " where mat.mediaType.mediaTypeId = " + mediaTypeKey);
+				query.setCacheable(true);
+				return query.list();
 			}
 		});
 	}
