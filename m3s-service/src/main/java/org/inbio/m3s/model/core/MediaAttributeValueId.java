@@ -20,6 +20,11 @@ public class MediaAttributeValueId implements java.io.Serializable {
 		this.mediaAttributeId = mediaAttributeId;
 		this.mediaId = mediaId;
 	}
+	
+	public MediaAttributeValueId(String mediaAttributeKey, String mediaKey) {
+		this.mediaAttributeId = Integer.valueOf(mediaAttributeKey).intValue();
+		this.mediaId = Integer.valueOf(mediaKey).intValue();
+	}
 
 	public int getMediaAttributeId() {
 		return this.mediaAttributeId;
