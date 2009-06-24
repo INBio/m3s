@@ -18,6 +18,7 @@ public class MetadataManagerTest extends AbstractServiceTest{
 	
 	protected static Log logger = LogFactory.getLog(MetadataManagerTest.class);
 
+	
 	public void testGetTechMetadataByMediaType(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
@@ -26,6 +27,8 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMediaType("1");
 		logger.info(tmDTO.toString());
 	}
+	
+	
 	
 	public void testGetTechMetadataFromFile(){
 		
@@ -36,12 +39,27 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		logger.info(tmDTO.toString());
 	}
 	
+	/*
+	public void testSaveTechnicalMetadata(){
+		
+		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
+		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
+		
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/Desktop/Foto.jpg");
+		tmDTO.setMediaKey("100001");
+		
+		mm.saveTechnicalMetadata(tmDTO);
+		
+		//logger.info(tmDTO.toString());
+	}
+	*/
+	
 	public void testGetTechMetadataByMedia(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
 		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100056");
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100001");
 		logger.info(tmDTO.toString());
 	}
 
