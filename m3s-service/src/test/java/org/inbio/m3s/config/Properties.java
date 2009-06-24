@@ -21,6 +21,7 @@ public class Properties {
 	public static String STATISTICS_MANAGER = null;
 	public static String TAXONOMY_MANAGER = null;
 	public static String IMPORT_FROM_FILE = null;
+	public static String METADATA_MANAGER = null;
 	
 	
 	public static void init() throws ConfigurationException{
@@ -36,6 +37,7 @@ public class Properties {
 		Properties.STATISTICS_MANAGER = (String) config.getProperty("statistics_manager");
 		Properties.TAXONOMY_MANAGER = (String) config.getProperty("taxonomy_manager");
 		Properties.IMPORT_FROM_FILE = (String) config.getProperty("import_from_file");
+		Properties.METADATA_MANAGER = (String) config.getProperty("metadata_manager");
 
 	}
 }
