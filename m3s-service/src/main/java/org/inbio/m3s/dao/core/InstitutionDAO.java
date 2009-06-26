@@ -11,15 +11,16 @@ import org.inbio.m3s.model.general.Institution;
  * 
  *
  */
+//public interface InstitutionDAO<E extends Institution,I extends Object> extends BaseDAO<E,I>{
 public interface InstitutionDAO extends BaseDAO{
-
 	/**
 	 * 
 	 * @param institutionName
-	 * @return
+	 * @returns
 	 */
 	public Institution findByName(String institutionName);
 	
 	
 	
 }
+
