@@ -393,8 +393,7 @@ public class InsertMedia extends Composite implements MetadataListener {
 		main.add(metadataPanel, MetadataPanelDiv);
 		metadataPanel.initGeneralMetadata(ClientProperties.DEFAULT_LANGUAGE,
 				true);
-		metadataPanel.initUsesAndCopyrightsTab(
-				ClientProperties.DEFAULT_LANGUAGE, false);
+		metadataPanel.initUsesAndCopyrightsTab(ClientProperties.DEFAULT_LANGUAGE, false);
 	}
 
 	/**

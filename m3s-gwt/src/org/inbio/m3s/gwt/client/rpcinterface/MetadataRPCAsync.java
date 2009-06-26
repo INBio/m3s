@@ -3,8 +3,8 @@
  */
 package org.inbio.m3s.gwt.client.rpcinterface;
 
+import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,7 +43,7 @@ public interface MetadataRPCAsync {
 	 * @param callback
 	 */
 	public void getTechnicalMetadataNames(String mediaTypeName,
-			AsyncCallback callback);
+			AsyncCallback<TechnicalMetadataGWTDTO> callback);
 
 	/**
 	 * 
@@ -52,7 +52,7 @@ public interface MetadataRPCAsync {
 	 * @param callback
 	 */
 	public void getTechnicalMetadataTV(String mediaTempFileId,
-			String mediaTypeName, AsyncCallback callback);
+			String mediaTypeName, AsyncCallback<TechnicalMetadataGWTDTO> callback);
 
 	/**
 	 * 
@@ -63,7 +63,7 @@ public interface MetadataRPCAsync {
 	 * @param callback
 	 */
 	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv,
-			TechnicalMetadataTV tmtv, String username, AsyncCallback callback);
+			TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback callback);
 
 	/**
 	 * 

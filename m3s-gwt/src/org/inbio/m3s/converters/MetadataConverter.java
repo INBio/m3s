@@ -17,23 +17,22 @@ import org.inbio.gwt.associatedto.client.dto.AssociatedToConstants;
 import org.inbio.gwt.associatedto.client.dto.AssociatedToInfo;
 import org.inbio.gwt.controlledtext.client.dto.TextInfo;
 import org.inbio.m3s.config.Properties;
+import org.inbio.m3s.converters.impl.PersonConverter;
 import org.inbio.m3s.dao.core.MediaAttributeDAO;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaTypeDAO;
 import org.inbio.m3s.dao.core.MediaUseDAO;
-import org.inbio.m3s.dao.core.MetadataStandardDAO;
 import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.MediaOwnerConstants;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
@@ -41,15 +40,12 @@ import org.inbio.m3s.dto.full.MediaAttributeFull;
 import org.inbio.m3s.dto.lite.MediaCategoryLite;
 import org.inbio.m3s.dto.lite.MediaTypeLite;
 import org.inbio.m3s.dto.lite.MediaUseLite;
-import org.inbio.m3s.dto.lite.MetadataStandardLiteDTO;
 import org.inbio.m3s.dto.lite.ProjectLite;
 import org.inbio.m3s.dto.lite.UsePolicyLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.TaxonomyManager;
-import org.inbio.m3s.usecases.admin.MetadataExtractor;
-import org.inbio.m3s.util.ImageMagickAPI;
 import org.inbio.m3s.util.ServiceUtil;
 import org.inbio.m3s.util.StringUtil;
 
@@ -468,6 +464,7 @@ public class MetadataConverter {
 		UsePolicyLite usePolicyLite = null;
 		AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER);
 		PersonLiteDTO pLite = null;
+		PersonConverter plConverter = new PersonConverter();
 
 		logger.debug("Translating UACDBValues to UACDTextualValues...");
 		UsesAndCopyrightsTV uactv = new UsesAndCopyrightsTV();
@@ -479,7 +476,8 @@ public class MetadataConverter {
 		logger.debug("Translating UACDBValues to UACDTextualValues... authorDBID: "
 				+ uacm.getAuthorId());
 		pLite = agentManager.getPersonLite(uacm.getAuthorId().toString());
-		uactv.setAuthor(pLite.getName());
+		//uactv.setAuthor(pLite.getName());
+		uactv.setAuthor( (PersonGWTDTO) plConverter.toGWTDTO(pLite));
 		logger.debug("Translating UACDBValues to UACDTextualValues... author: "
 				+ uactv.getAuthor());
 
@@ -573,7 +571,7 @@ public class MetadataConverter {
 		try {
 
 			// author
-			pLite = agentManager.getPersonLiteByName(uactv.getAuthor());
+			pLite = agentManager.getPersonLiteByName(uactv.getAuthor().getName());
 			uacm.setAuthorId(new Integer(pLite.getPersonKey()));
 			logger.debug("Translating UACDTV to DBValues... author: "
 					+ uacm.getAuthorId());
@@ -676,6 +674,7 @@ public class MetadataConverter {
 	 * @return a equivalent widgets display ready TechnicalMetadataTV Object
 	 * 
 	 */
+	/*
 	public static TechnicalMetadataTV toTextualValues(TechnicalMetadataDTO tm) {
 		logger.debug("Translating TMDBvalues to TM TextualValues...");
 		TechnicalMetadataTV tmtv = new TechnicalMetadataTV();
@@ -731,6 +730,7 @@ public class MetadataConverter {
 		logger.debug("Translating TMDBvalues to TM TextualValues... done");
 		return tmtv;
 	}
+	*/
 
 	/**
 	 * Converts the Technical Metadata Text Values that are ready to be used on the
@@ -741,6 +741,7 @@ public class MetadataConverter {
 	 *          is the source TechnicalMetadataTV object
 	 * @return a equivalent DB ready TechnicalMetadata Object
 	 */
+	/*
 	public static TechnicalMetadataDTO toDBValues(TechnicalMetadataTV tmtv) {
 
 		logger.debug("Translating TM TextualValues to TMDBvalues...");
@@ -781,136 +782,8 @@ public class MetadataConverter {
 		logger.debug("Translating TM TextualValues to TMDBvalues... done");
 		return tm;
 	}
+	*/
 
-	/**
-	 * Gets the technicalMetadata for a file and not from the database. Also loads
-	 * the expected Names every technical metadata attribute
-	 * 
-	 * @param fileAddress
-	 * @param mediaTypeName
-	 * @return
-	 * @deprecated
-	 * @NIUS
-	 */
-	public static TechnicalMetadataTV getTechnicalMetadataTVFromFile2(
-			String fileAddress, String mediaTypeName) throws IllegalArgumentException {
-		logger.debug("getting Technical Metadata TV... from a file");
-		MediaTypeDAO mediaTypeDAO = (MediaTypeDAO) ServiceUtil.appContext.getBean("mediaTypeDAO");
-		MediaTypeLite mediaTypeLite = null;
-		MetadataStandardDAO msDAO = (MetadataStandardDAO) ServiceUtil.appContext.getBean("metadataStandardDAO");
-
-		TechnicalMetadataTV tmtv = new TechnicalMetadataTV();
-		tmtv.setMediaId(null);
-		tmtv.setMediaType(mediaTypeName);
-
-		mediaTypeLite = mediaTypeDAO.getMediaTypeLite(mediaTypeName);
-		Integer mediaTypeDBId = mediaTypeLite.getMediaTypeId();
-		//Integer mediaTypeDBId = MediaTypeDAO.getMediaTypeDBId(mediaTypeName);
-		logger.debug("getting Technical Metadata TV... for media type "
-				+ mediaTypeName + "[" + mediaTypeDBId + "].");
-
-		// resulting lists to be added to the tmtv object
-		List<String> names = new ArrayList<String>();
-		List<String> values = new ArrayList<String>();
-
-		// temporal values
-		//Object dataSet[];
-		//String MANameTextual;
-		// DBId of the standard metadata used for the attribute representation
-		// [Ex: EXIF]
-		//Integer metadataStandardDBId;
-		// metadata ID on the given standard. [Ex: 40962, decimal representation
-		// of A002H, or height of the image
-		//Integer standarAttributeId;
-		List<MetadataStandardLiteDTO> queryResult;
-
-		try {
-			// This query returns a list of objects like this:
-			// Object N[0]: Attribute Name ->String
-			// Object N[1]: Standard DBId ->Integer
-			// Object N[2]: standarAttributeId -> Integer
-			queryResult = msDAO.getMetadataStandardLite(mediaTypeDBId, MessageManager.DEFAULT_LANGUAGE);
-			/*
-			queryResult = HibernateUtil
-					.simpleHSQLQuery(
-							"select tt.name, mat.metadataStandard.metadataStandardId, mat.standardAttributeId "
-									+ "from TextTranslation as tt, MediaAttributeType as mat "
-									+ "where mat.mediaType.mediaTypeId = "
-									+ mediaTypeDBId
-									+ " "
-									+ "and tt.text.textId = mat.mediaAttribute.textByNameTextId.textId "
-									+ "and tt.language.languageId = "
-									+ Properties.DEFAULT_LANGUAGE + "", HibernateUtil
-									.openM3SDBSession());
-			 */
-
-			logger.debug("getting media attributes DBIds... HSQL done: ");
-		} catch (Exception e) {
-			logger.debug("getting media attributes DBIds... Error in the query.");
-			logger.debug(e.getMessage());
-			throw new IllegalArgumentException(
-					"Exception in the getMediaAttributesDBIds", e);
-		}
-
-		// sets the values in the TechnicalMetadataTVObect
-		try {
-			String hexadecimalValue;
-			String attributeValue = "";
-			// sets the temporal values
-			logger.debug("getting EXIF info from[" + fileAddress + "]");
-			for(MetadataStandardLiteDTO msLiteDTO : queryResult){
-			// TODO: this should be donde using the MetadataExtractor
-				// Interface,
-				if (msLiteDTO.getMetadataStandardId().equals(MetadataExtractor.EXIF)) {
-
-					hexadecimalValue = Integer.toHexString(msLiteDTO.getStandardAttributeId().intValue());
-					while (hexadecimalValue.length() != 4) {
-						hexadecimalValue = "0" + hexadecimalValue;
-					}
-
-					attributeValue = ImageMagickAPI.identifyEXIF(hexadecimalValue,
-							fileAddress);
-				}
-
-				names.add(msLiteDTO.getName());
-				values.add(attributeValue);
-			}
-			/*
-			for (int i = 0; i < queryResult.size(); i++) {
-				dataSet = (Object[]) queryResult.get(i);
-				MANameTextual = (String) dataSet[0];
-				metadataStandardDBId = (Integer) dataSet[1];
-				standarAttributeId = (Integer) dataSet[2];
-
-				// TODO: this should be donde using the MetadataExtractor
-				// Interface,
-				if (metadataStandardDBId.equals(MetadataExtractor.EXIF)) {
-
-					hexadecimalValue = Integer.toHexString(standarAttributeId.intValue());
-					while (hexadecimalValue.length() != 4) {
-						hexadecimalValue = "0" + hexadecimalValue;
-					}
-
-					attributeValue = ImageMagickAPI.identifyEXIF(hexadecimalValue,
-							fileAddress);
-				}
-
-				names.add(MANameTextual);
-				values.add(attributeValue);
-			}
-			*/
-
-		} catch (Exception e) {
-			logger.debug("gettin Technical metadataTV from file... EXCEPTION");
-			e.getMessage();
-			throw new IllegalArgumentException(e);
-		}
-
-		tmtv.setNames(names);
-		tmtv.setValues(values);
-		logger.debug("getting TechnicalMetadataTV from file... done.");
-		return tmtv;
-	}
 
 	
 	/**
@@ -973,11 +846,9 @@ public class MetadataConverter {
 				case 'D':
 					// dateFormat1 is the one of the metadata that comes
 					// from the camara
-					SimpleDateFormat dateFormat1 = new SimpleDateFormat(
-							"yyyy:MM:dd HH:mm:ss");
+					SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 					// dateFormat2 means is info from the DB
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
+					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Date date = null;
 					try {
 						date = dateFormat1.parse(mediaAttributeTextualValue);

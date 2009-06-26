@@ -5,8 +5,8 @@ package org.inbio.m3s.gwt.client.widgets.metadata;
 
 import java.util.List;
 
-import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteDTOGWT;
-import org.inbio.m3s.gwt.client.dto.util.PersonLiteDTOGWT;
+import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.MediaOwnerConstants;
@@ -82,6 +82,7 @@ public class MediaOwnerSelector extends Composite {
 	 * Core of the constructors
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	private void initMediaOwnerSelector() {
 		initRPC();
 
@@ -160,6 +161,7 @@ public class MediaOwnerSelector extends Composite {
 	 * @param ownerType
 	 * @param owner
 	 */
+	@SuppressWarnings("unchecked")
 	public void setValue(int ownerType, String owner) {
 		selectedOwnerType = ownerType;
 		ownerValue = owner;
@@ -172,7 +174,6 @@ public class MediaOwnerSelector extends Composite {
 					RPCFailureManager(caught);
 				}
 
-				@SuppressWarnings("unchecked")
 				public void onSuccess(Object result) {
 					setInstitutionsOnListBox(result);
 				}
@@ -185,7 +186,6 @@ public class MediaOwnerSelector extends Composite {
 					RPCFailureManager(caught);
 				}
 
-				@SuppressWarnings("unchecked")
 				public void onSuccess(Object result) {
 					setPeopleOnListBox(result);
 				}
@@ -252,11 +252,11 @@ public class MediaOwnerSelector extends Composite {
 	@SuppressWarnings("unchecked")
 	private void setInstitutionsOnListBox(Object result){
 		
-		List<InstitutionLiteDTOGWT> iList = (List<InstitutionLiteDTOGWT>) result; 
+		List<InstitutionLiteGWTDTO> iList = (List<InstitutionLiteGWTDTO>) result; 
 		listBox.clear();
 		
-		for(InstitutionLiteDTOGWT iLite : iList)
-			listBox.addItem(iLite.getName(), iLite.getInstitutionKey());
+		for(InstitutionLiteGWTDTO iLite : iList)
+			listBox.addItem(iLite.getName());
 
 		setWidgetValue();
 	}
@@ -264,10 +264,10 @@ public class MediaOwnerSelector extends Composite {
 	@SuppressWarnings("unchecked")
 	private void setPeopleOnListBox(Object result){
 		
-		List<PersonLiteDTOGWT> pList = (List<PersonLiteDTOGWT>) result; 
+		List<PersonGWTDTO> pList = (List<PersonGWTDTO>) result; 
 		listBox.clear();
 		
-		for(PersonLiteDTOGWT pLite : pList)
+		for(PersonGWTDTO pLite : pList)
 			listBox.addItem(pLite.getName(), pLite.getPersonKey());
 
 		setWidgetValue();

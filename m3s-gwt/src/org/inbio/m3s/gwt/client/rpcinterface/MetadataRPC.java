@@ -5,11 +5,11 @@ package org.inbio.m3s.gwt.client.rpcinterface;
 
 import java.util.List;
 
-import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteDTOGWT;
-import org.inbio.m3s.gwt.client.dto.util.PersonLiteDTOGWT;
+import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -41,7 +41,7 @@ public interface MetadataRPC extends RemoteService {
 	 * @return
 	 * 
 	 */
-	public TechnicalMetadataTV getTechnicalMetadataTV(Integer mediaId);
+	public TechnicalMetadataGWTDTO getTechnicalMetadataTV(Integer mediaId);
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public interface MetadataRPC extends RemoteService {
 	 * @return
 	 * 
 	 */
-	public TechnicalMetadataTV getTechnicalMetadataTV(String mediaTempFileId,
+	public TechnicalMetadataGWTDTO getTechnicalMetadataTV(String mediaTempFileId,
 			String mediaTypeName);
 
 	/**
@@ -71,8 +71,7 @@ public interface MetadataRPC extends RemoteService {
 	 * @param username
 	 * @return the database Id of the media owner of the metadata
 	 */
-	public Integer saveMetadata(GeneralMetadataTV gmtv,
-			UsesAndCopyrightsTV uactv, TechnicalMetadataTV tmtv, String username)
+	public Integer saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmtv, String username)
 			throws RPCIllegalArgumentException;
 
 	/**
@@ -150,14 +149,14 @@ public interface MetadataRPC extends RemoteService {
 	 * Used in the UsesAndCopyrightsPanel class *
 	 * 
 	 */
-	public List<PersonLiteDTOGWT> getPeople();
+	public List<PersonGWTDTO> getPeople();
 
 	/**
 	 * Used in the UsesAndCopyrightsPanel class
 	 * 
 	 * 
 	 */
-	public List<InstitutionLiteDTOGWT> getInstitutions();
+	public List<InstitutionLiteGWTDTO> getInstitutions();
 
 	/**
 	 * Used in the UsesAndCopyrightsPanel class

@@ -13,12 +13,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author jgutierrez
  *
  */
-public class InstitutionLiteDTOGWT implements IsSerializable {
+public class InstitutionLiteGWTDTO implements IsSerializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	
 	private String institutionKey;
 
@@ -27,7 +23,7 @@ public class InstitutionLiteDTOGWT implements IsSerializable {
 	/**
 	 * 
 	 */
-	public InstitutionLiteDTOGWT() {
+	public InstitutionLiteGWTDTO() {
 		super();
 	}
 
@@ -35,7 +31,7 @@ public class InstitutionLiteDTOGWT implements IsSerializable {
 	 * @param institutionKey
 	 * @param name
 	 */
-	public InstitutionLiteDTOGWT(String institutionKey, String name) {
+	public InstitutionLiteGWTDTO(String institutionKey, String name) {
 		super();
 		this.institutionKey = institutionKey;
 		this.name = name;

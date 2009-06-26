@@ -13,12 +13,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author jgutierrez
  *
  */
-public class PersonLiteDTOGWT implements IsSerializable {
+public class PersonGWTDTO implements IsSerializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4994487393351577195L;
 
 	private String personKey;
 
@@ -29,7 +25,7 @@ public class PersonLiteDTOGWT implements IsSerializable {
 	/**
 	 * 
 	 */
-	public PersonLiteDTOGWT() {
+	public PersonGWTDTO() {
 		super();
 	}
 
@@ -37,7 +33,7 @@ public class PersonLiteDTOGWT implements IsSerializable {
 	 * @param personKey
 	 * @param name
 	 */
-	public PersonLiteDTOGWT(String personKey, String name) {
+	public PersonGWTDTO(String personKey, String name) {
 		super();
 		this.setPersonKey(personKey);
 		this.setName(name);

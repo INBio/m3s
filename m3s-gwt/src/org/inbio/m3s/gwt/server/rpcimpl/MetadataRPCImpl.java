@@ -9,31 +9,32 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.config.UserProfile;
-import org.inbio.m3s.converters.InstitutionLiteConverter;
+import org.inbio.m3s.converters.impl.InstitutionConverter;
 import org.inbio.m3s.converters.MetadataConverter;
-import org.inbio.m3s.converters.PersonLiteConverter;
+import org.inbio.m3s.converters.impl.PersonConverter;
+import org.inbio.m3s.converters.impl.TechnicalMetadataConverter;
 import org.inbio.m3s.dao.core.SiteDAO;
-import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteDTOGWT;
-import org.inbio.m3s.gwt.client.dto.util.PersonLiteDTOGWT;
+import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.ui.UsesAndCopyrightsPanel;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dao.DataCache;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SiteManager;
 import org.inbio.m3s.service.TaxonomyManager;
-import org.inbio.m3s.usecases.admin.TechnicalAttributesManager;
 import org.inbio.m3s.util.ServiceUtil;
 import org.inbio.m3s.util.StringUtil;
 
@@ -47,8 +48,9 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 
 	private static Logger logger = Logger.getLogger(MetadataRPCImpl.class);
 
+	private MetadataManager metadataManager = (MetadataManager) ServiceUtil.appContext.getBean(Properties.METADATA_MANAGER);
 	private MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
-	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean("messageManager");
+	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean(Properties.MESSAGE_MANAGER);
 	private AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER);
 
 
@@ -91,11 +93,13 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 	 * @param mediaId
 	 * @return
 	 */
-	public TechnicalMetadataTV getTechnicalMetadataTV(Integer mediaId) {
+	public TechnicalMetadataGWTDTO getTechnicalMetadataTV(Integer mediaId) {
 		logger.debug("getting Technical Metadata...");
-		TechnicalMetadataDTO tm = mediaManager.getTM(mediaId);
+		TechnicalMetadataDTO tmDTO = metadataManager.getTechMetadataByMedia(String.valueOf(mediaId));
 		logger.debug("getting Technical Metadata... done.");
-		return MetadataConverter.toTextualValues(tm);
+		//return MetadataConverter.toTextualValues(tm);
+		TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
+		return (TechnicalMetadataGWTDTO) tmc.toGWTDTO(tmDTO);
 	}
 
 	/**
@@ -107,7 +111,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public TechnicalMetadataTV getTechnicalMetadataTV(String mediaTempFileId, String mediaTypeName) throws IllegalArgumentException {
+	public TechnicalMetadataGWTDTO getTechnicalMetadataTV(String mediaTempFileId, String mediaTypeName) throws IllegalArgumentException {
 
 		String fileAddress = Properties.REAL_TEMP_FILES_DIR + mediaTempFileId;
 
@@ -116,7 +120,10 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 		// usecases.admin.AdminmediaInfo.java then the result of that method is
 		// a TM and the metadata caonverter should convert it to the appropiated
 		// values as technicalmetadataTV
-		return TechnicalAttributesManager.getTechnicalMetadataTVFromFile(fileAddress, mediaTypeName);
+		
+		TechnicalMetadataDTO tmDTO = metadataManager.getTechMetadataFromFile(mediaTypeName, fileAddress);
+		TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
+		return (TechnicalMetadataGWTDTO) tmc.toGWTDTO(tmDTO);
 	}
 
 	/**
@@ -164,14 +171,14 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 	 *            the GeneralMetadataTV from the GUI
 	 * @param uactv
 	 *            the UsesAndCopyrightsTV from the GUI
-	 * @param tmtv
+	 * @param tmGWTDTO
 	 *            the TechnicalMetadataTV from the GUI
 	 * @param username
 	 * @return the mediaId of the element the was saved or null in case of error
 	 * 
 	 */
 	public Integer saveMetadata(GeneralMetadataTV gmtv,
-			UsesAndCopyrightsTV uactv, TechnicalMetadataTV tmtv, String username)
+			UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmGWTDTO, String username)
 			throws RPCIllegalArgumentException {
 
 		//boolean isPublicBefore;
@@ -180,7 +187,8 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 
 		UsesAndCopyrightsDTO uac = null;
 
-		TechnicalMetadataDTO tm = null;
+		TechnicalMetadataDTO tmDTO = null;
+		TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
 
 		// Sets the UserProfile
 		UserProfile.setUsername(username);
@@ -195,7 +203,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 			uac = MetadataConverter.toDBValues(uactv);
 			logger.debug("listos los uses and copyrigth metadata");
 			
-			tm = MetadataConverter.toDBValues(tmtv);
+			tmDTO = tmc.toDTO(tmGWTDTO);
 			logger.debug("listos los technical metadata");
 
 		} catch (Exception iae) {
@@ -207,9 +215,9 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 		logger.debug("iniciando el guardado de los datos");
 		// if no media Id, this is a new reccord
 		if (gmtv.getMediaId() == null && uactv.getMediaId() == null
-				&& tmtv.getMediaId() == null) {
+				&& tmGWTDTO.getMediaKey() == null) {
 			logger.debug("saving Metadata... insert");
-			Integer mediaId = getMediaManager().insertNewMedia(gm, uac, tm);
+			Integer mediaId = getMediaManager().insertNewMedia(gm, uac, tmDTO);
 
 			logger.debug("saving Metadata... done");
 			return mediaId;
@@ -227,7 +235,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 			logger.debug("saving Metadata... "
 					+ "uses and copyrigths metadata saved");
 			
-			getMediaManager().updateTM(tm);
+			metadataManager.saveTechnicalMetadata(tmDTO);
 			logger.debug("saving Metadata... technical metadata saved");
 
 			logger.debug("saving Metadata... done");
@@ -536,26 +544,24 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 	 * 
 	 * @return List of TextAndValue items.
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PersonLiteDTOGWT> getPeople() {
+	public List<PersonGWTDTO> getPeople() {
 		logger.debug("getting people names...");
 		
-		PersonLiteConverter plc = new PersonLiteConverter();
+		PersonConverter plc = new PersonConverter();
 		
 		List<PersonLiteDTO> pLiteList =  agentManager.getAllPersonLite();
 		
-		return plc.createDTOGWTList(pLiteList);
+		return plc.toGWTDTOList(pLiteList);
 		
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<InstitutionLiteDTOGWT> getInstitutions() {
+	public List<InstitutionLiteGWTDTO> getInstitutions() {
 		
-		InstitutionLiteConverter ilc = new InstitutionLiteConverter();
+		InstitutionConverter ilc = new InstitutionConverter();
 		
 		List<InstitutionLiteDTO> ILiteDTO =  agentManager.getAllInstitutionLite();
 		
-		return ilc.createDTOGWTList(ILiteDTO);
+		return ilc.toGWTDTOList(ILiteDTO);
 	}
 
 	/**

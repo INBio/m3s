@@ -265,14 +265,13 @@ public class EditMediaInfo extends Composite implements ClickListener,
 		metadataPanel.setWidth("100%");
 		metadataPanel.setHeight("500px");
 		main.add(metadataPanel, centralPanelDiv);
-		metadataPanel.initGeneralMetadata(ClientProperties.DEFAULT_LANGUAGE,
-				true);
-		metadataPanel.initUsesAndCopyrightsTab(
-				ClientProperties.DEFAULT_LANGUAGE, false);
-		metadataPanel.initTechMetadataTab(ClientProperties.DEFAULT_LANGUAGE,
-				ClientProperties.DEFAULT_MEDIA_TYPE, false);
+		
+		System.out.println("initMetadataPanel > antes de iniciar cada panel");
+		metadataPanel.initGeneralMetadata(ClientProperties.DEFAULT_LANGUAGE,true, mediaId);
+		metadataPanel.initUsesAndCopyrightsTab(ClientProperties.DEFAULT_LANGUAGE, false, mediaId);
+		metadataPanel.initTechMetadataTab(ClientProperties.DEFAULT_LANGUAGE, false, mediaId);
 
-		metadataPanel.setMetadata(mediaId);
+		//metadataPanel.setMetadata(mediaId);
 	}
 
 	/**

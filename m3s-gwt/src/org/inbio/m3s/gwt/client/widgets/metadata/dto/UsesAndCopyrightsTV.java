@@ -3,6 +3,8 @@
  */
 package org.inbio.m3s.gwt.client.widgets.metadata.dto;
 
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -18,7 +20,7 @@ public class UsesAndCopyrightsTV implements IsSerializable {
 
 	private Integer mediaId;
 
-	private String author;
+	private PersonGWTDTO author;
 
 	private int ownerType;
 
@@ -33,6 +35,7 @@ public class UsesAndCopyrightsTV implements IsSerializable {
 
 	private boolean isPublic;
 
+	
 	/**
 	 * @param mediaId
 	 *            the mediaId to set
@@ -74,14 +77,14 @@ public class UsesAndCopyrightsTV implements IsSerializable {
 	 * @param author
 	 *            the author to set
 	 */
-	public void setAuthor(String author) {
+	public void setAuthor(PersonGWTDTO author) {
 		this.author = author;
 	}
 
 	/**
 	 * @return the author
 	 */
-	public String getAuthor() {
+	public PersonGWTDTO getAuthor() {
 		return author;
 	}
 

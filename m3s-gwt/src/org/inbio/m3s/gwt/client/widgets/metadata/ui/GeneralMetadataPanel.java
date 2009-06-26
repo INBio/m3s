@@ -59,8 +59,7 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @param language
 	 */
-	public GeneralMetadataPanel(Integer language,
-			CategoryAndTypeListener catListener) {
+	public GeneralMetadataPanel(Integer language,	CategoryAndTypeListener catListener) {
 		initRPC();
 		listener = catListener;
 		this.language = language;
@@ -70,6 +69,11 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	/*****************************************************************************
 	 * Methods
 	 ****************************************************************************/
+
+	public GeneralMetadataPanel(Integer language, CategoryAndTypeListener catListener, GeneralMetadataTV gmtv) {
+		this(language,	catListener);
+		this.setGeneralMetadataTV(gmtv);
+	}
 
 	/**
 	 * This is the core of the class constructor.
@@ -316,6 +320,7 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @param SpecimenNumber
 	 */
+	@SuppressWarnings("unchecked")
 	private void getInfoFromSpecimenNumber(Integer SpecimenNumber) {
 		System.out.println("getInfoFromSpecimenNumber CON ID DE SPECIMEN="
 				+ SpecimenNumber);
@@ -327,7 +332,6 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 				Window.alert("Error: " + caught.getMessage());
 			}
 
-			@SuppressWarnings("unchecked")
 			public void onSuccess(Object result) {
 				// setTaxonomyValue((String) result);
 				// this result value must be a list of strings, each one is a
@@ -356,6 +360,7 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @param observationNumber
 	 */
+	@SuppressWarnings("unchecked")
 	private void getInfoFromObservationNumber(Integer observationNumber) {
 
 		rpc.getTaxonIdsByObservationNumber(observationNumber, new AsyncCallback() {
@@ -365,7 +370,6 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 				Window.alert("Error: " + caught.getMessage());
 			}
 
-			@SuppressWarnings("unchecked")
 			public void onSuccess(Object result) {
 				// this result value must be a list of strings, each one
 				// is a
@@ -396,6 +400,7 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @param associationValue
 	 */
+	@SuppressWarnings("unchecked")
 	private void getInfoFromGatheringCode(String code) {
 		System.out.println("getInfoFromGatheringCode para '" + code + "' .");
 
@@ -406,7 +411,6 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 				Window.alert("Error: " + caught.getMessage());
 			}
 
-			@SuppressWarnings("unchecked")
 			public void onSuccess(Object result) {
 				// setTaxonomyValue((String) result);
 				setTaxonomy((List<String>) result);

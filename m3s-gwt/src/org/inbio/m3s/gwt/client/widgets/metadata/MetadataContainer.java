@@ -3,11 +3,11 @@
  */
 package org.inbio.m3s.gwt.client.widgets.metadata;
 
+import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
 import org.inbio.m3s.gwt.client.widgets.login.LoginManager;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.CategoryAndTypeListener;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.MetadataListener;
@@ -50,13 +50,6 @@ public class MetadataContainer extends VerticalPanel implements
 
 	private TechnicalMetadataPanel tmPanel;
 
-	private static int GET_GENERAL_METADATA_TV = 0;
-
-	private int GET_USES_AND_COPYRIGTHS_METADATA_TV = 1;
-
-	private int SAVE_METADATA = 2;
-
-	private int GET_TECHNICAL_METADATA_TV = 3;
 
 	/**
 	 * Class Constructor
@@ -73,11 +66,13 @@ public class MetadataContainer extends VerticalPanel implements
 		tabPanel = new TabPanel();
 		add(tabPanel);
 	}
+	
 
 	/**
 	 * Sends all the metadata to DB to be persist
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public void saveMetadata() {
 		System.out.println("Guardando metadatos - INICIO");
 		// try {
@@ -85,7 +80,7 @@ public class MetadataContainer extends VerticalPanel implements
 
 		UsesAndCopyrightsTV uactv = uacPanel.getUsesAndCopyrightsTV();
 
-		TechnicalMetadataTV tmtv = tmPanel.getTechnicalMetadataTV();
+		TechnicalMetadataGWTDTO tmtv = tmPanel.getTechMetadataGWTDTO();
 		// } catch (Exception e) {
 		// System.out
 		// .println("Ocurrio un error inesperado, por favor intente luego.");
@@ -120,55 +115,6 @@ public class MetadataContainer extends VerticalPanel implements
 		System.out.println("Guardando metadatos - FIN");
 	}
 
-	/**
-	 * This method ints the Panel with the information of a given media
-	 * 
-	 * @param mediaId
-	 *            database identifier of the media
-	 */
-	@SuppressWarnings("unchecked")
-	public void setMetadata(Integer mediaId) {
-		System.out.println("buscando multimedio >" + mediaId.intValue());
-
-		// loading generalMetadata
-		rpc.getGeneralMetadataTV(mediaId, new AsyncCallback() {
-
-			public void onFailure(Throwable caught) {
-				RPCFailureManager(GET_GENERAL_METADATA_TV, caught);
-			}
-
-			public void onSuccess(Object result) {
-				RPCSuccessManager(GET_GENERAL_METADATA_TV, result);
-
-				// The technical Metadata its loaded when the General Metadata
-				// arrives, because needs the mediaType value
-				rpc.getTechnicalMetadataTV(((GeneralMetadataTV) result)
-						.getMediaId(), new AsyncCallback() {
-
-					public void onFailure(Throwable caught) {
-						RPCFailureManager(GET_TECHNICAL_METADATA_TV, caught);
-					}
-
-					public void onSuccess(Object result) {
-						RPCSuccessManager(GET_TECHNICAL_METADATA_TV, result);
-					}
-				});
-			}
-
-		});
-
-		// uacPanel.loadMetadata(mediaId);
-		rpc.getUsesAndCopyrigthsMetadataTV(mediaId, new AsyncCallback() {
-
-			public void onFailure(Throwable caught) {
-				RPCFailureManager(GET_USES_AND_COPYRIGTHS_METADATA_TV, caught);
-			}
-
-			public void onSuccess(Object result) {
-				RPCSuccessManager(GET_USES_AND_COPYRIGTHS_METADATA_TV, result);
-			}
-		});
-	}
 
 	/**
 	 * Inits the General Metadata tab
@@ -184,6 +130,25 @@ public class MetadataContainer extends VerticalPanel implements
 			tabPanel.selectTab(tabPanel.getWidgetIndex(gmPanel));
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void initGeneralMetadata(final Integer language, final boolean mainTab, Integer mediaId) {
+		// loading generalMetadata
+		System.out.println("initGeneralMetadata - INICIO");
+		rpc.getGeneralMetadataTV(mediaId, new AsyncCallback() {
+
+			public void onFailure(Throwable caught) {
+				RPCFailureManager(caught);
+			}
+
+			public void onSuccess(Object result) {
+				initGeneralMetadata(language, mainTab);
+				gmPanel.setGeneralMetadataTV((GeneralMetadataTV) result);
+				System.out.println("initGeneralMetadata - RPC on Success");
+			}
+
+		});		
+	}
 
 	/**
 	 * Inits the Uses and Copyrights tab
@@ -192,12 +157,43 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mainTab
 	 *            if true will set this tab as the
 	 */
-	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab) {
-		uacPanel = new UsesAndCopyrightsPanel(language);
+	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab, UsesAndCopyrightsTV uacTV) {
+		uacPanel = new UsesAndCopyrightsPanel(language, uacTV);
 		tabPanel.add(uacPanel, "Usos y Derechos de Uso");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(uacPanel));
 		}
+	}
+	
+	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab) {
+		uacPanel = new UsesAndCopyrightsPanel(language, null);
+		tabPanel.add(uacPanel, "Usos y Derechos de Uso");
+		if (mainTab) {
+			tabPanel.selectTab(tabPanel.getWidgetIndex(uacPanel));
+		}
+	}
+	
+	/**
+	 * 
+	 * @param language
+	 * @param mainTab
+	 * @param mediaId
+	 */
+	@SuppressWarnings("unchecked")
+	public void initUsesAndCopyrightsTab(final Integer language, final boolean mainTab, Integer mediaId) {
+		System.out.println("initUsesAndCopyrightsTab - INICIO");
+		rpc.getUsesAndCopyrigthsMetadataTV(mediaId, new AsyncCallback() {
+
+			public void onFailure(Throwable caught) {
+				RPCFailureManager(caught);
+			}
+
+			public void onSuccess(Object result) {
+				initUsesAndCopyrightsTab(language, mainTab, (UsesAndCopyrightsTV) result);
+				
+				System.out.println("initUsesAndCopyrightsTab - RPC on Success");
+			}
+		});
 	}
 
 	/**
@@ -216,8 +212,7 @@ public class MetadataContainer extends VerticalPanel implements
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
 		}
-
-	}
+	}	
 
 	/**
 	 * Inits the TechnicalMetadata tab
@@ -227,15 +222,34 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mainTab
 	 *            if true will set this tab as the
 	 */
-	public void initTechMetadataTab(Integer language, String mediaTypeName,
-			boolean mainTab) {
+	public void initTechMetadataTab(Integer language, String mediaTypeName, boolean mainTab) {
 		tmPanel = new TechnicalMetadataPanel(language, mediaTypeName);
 		tabPanel.add(tmPanel, "Información Técnica");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
 		}
-
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void initTechMetadataTab(final Integer language, final boolean mainTab, Integer mediaId) {
+		System.out.println("initTechMetadataTab - INICIO");
+		// The technical Metadata its loaded when the General Metadata
+			// arrives, because needs the mediaType value
+			rpc.getTechnicalMetadataTV(mediaId, new AsyncCallback() {
+
+				public void onFailure(Throwable caught) {
+					RPCFailureManager(caught);
+				}
+
+				public void onSuccess(Object result) {
+					TechnicalMetadataGWTDTO tmGWTDTO = (TechnicalMetadataGWTDTO) result;
+					initTechMetadataTab(language, tmGWTDTO.getMediaTypeKey(), mainTab);
+					tmPanel.setTechMetadataGWTDTO(tmGWTDTO);
+					
+					System.out.println("initTechMetadataTab - RPC on Success");
+				}
+			});
+		}
 
 	/***************************************************************************
 	 * RPC methods
@@ -244,12 +258,9 @@ public class MetadataContainer extends VerticalPanel implements
 	 * Called by the the method that receives the asyncCallback result
 	 * 
 	 * @param caught
-	 * @deprecated
+	 * 
 	 */
-	private void RPCFailureManager(int methodId, Throwable caught) {
-		if (methodId == GET_TECHNICAL_METADATA_TV) {
-			;// TODO
-		} else {
+	private void RPCFailureManager(Throwable caught) {
 			try {
 				throw caught;
 			} catch (InvocationException e) {
@@ -262,33 +273,6 @@ public class MetadataContainer extends VerticalPanel implements
 			} catch (Throwable e) {
 				System.out.println("Error en el RPC @ MetadataContainer");
 			}
-		}
-
-	}
-
-	/**
-	 * Called by the the method that receives the asyncCallback result
-	 * 
-	 * @deprecated
-	 */
-	private void RPCSuccessManager(int methodId, Object result) {
-
-		if (methodId == GET_GENERAL_METADATA_TV) {
-			gmPanel.setGeneralMetadataTV((GeneralMetadataTV) result);
-		} else if (methodId == GET_USES_AND_COPYRIGTHS_METADATA_TV) {
-			uacPanel.setUACMetadata((UsesAndCopyrightsTV) result);
-		} else if (methodId == SAVE_METADATA) {
-			/**
-			 * TODO: Debe retornarse un popup donde diga el resultado de la
-			 * operacion en este se debe indicar el codigo con el cual se
-			 * guardara la imagen, el volumen y el archivo donde queda
-			 * almacenada.
-			 */
-			listener.metadataSaved((Integer) result);
-		} else if (methodId == GET_TECHNICAL_METADATA_TV) {
-			tmPanel.setTechnicalMetadataTV((TechnicalMetadataTV) result);
-		}
-
 	}
 
 
