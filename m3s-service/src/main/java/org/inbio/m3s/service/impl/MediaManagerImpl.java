@@ -3,8 +3,6 @@
  */
 package org.inbio.m3s.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -43,14 +41,11 @@ import org.inbio.m3s.dao.core.SpecimenMediaDAO;
 import org.inbio.m3s.dao.core.TaxonMediaDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.full.MediaAttributeFull;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.lite.MediaUseLite;
 import org.inbio.m3s.dto.lite.ProjectLite;
-import org.inbio.m3s.dto.mediaattribute.MediaAttributeValueFullDTO;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
@@ -60,6 +55,7 @@ import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaAttributeManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.TaxonomyManager;
 
 /**
@@ -89,61 +85,8 @@ public class MediaManagerImpl implements MediaManager {
 	
 	private AgentManager agentManager;
 	private TaxonomyManager taxonomyManager;
+	private MetadataManager metadataManager;
 
-	
-	/**
-	 * 
-	 * @param newTM
-	 */
-	public void updateTM(TechnicalMetadataDTO newTM) {
-		logger.info("updating the TM... mediaId [" + newTM.getMediaId() + "]");
-
-		TechnicalMetadataDTO DBTM = getTM(newTM.getMediaId());
-
-		logger.debug("updating the TM... Iguales? " + DBTM.equals(newTM));
-		if (DBTM.equals(newTM)) {
-			logger.debug("updating the TM... nothing to update");
-			logger.info("updating the TM... done");
-			return;
-		}
-
-
-		// inserts the media Attributes
-		List<Integer> newMAIds = newTM.getMediaAttributeIds();
-		List<Object> newMAValues = newTM.getMediaAttributeValue();
-		
-		MediaAttributeFull maf = null;
-		MediaAttributeValueFullDTO mavFull = null;
-		
-		for(int i = 0; i < newMAIds.size(); i++){
-			
-			mavFull = new MediaAttributeValueFullDTO();
-			mavFull.setMediaAttributeId((Integer)newMAIds.get(i));
-			mavFull.setMediaId(newTM.getMediaId());
-			
-			maf = mediaAttributeDAO.getMediaAttributeFull((Integer) newMAIds.get(i));
-			switch(maf.getMediaAttributeValueType()){
-			case 'V' :
-				mavFull.setValueVarchar((String)newMAValues.get(i));
-				break;
-			case 'N' :
-				mavFull.setValueNumber((Integer)newMAValues.get(i));
-				break;
-			case 'D' :
-				mavFull.setValueDate((Date)newMAValues.get(i));
-				break;
-			}
-			
-			mediaAttributeValueDAO.updateMediaAttributeValueFull(mavFull);
-		}	
-		
-		
-		//logger.info("updating the TM... insertions done with [" + i
-		//		+ "] insertions");
-
-		logger.info("updating the TM... done");
-
-	}
 	
 	/**
 	 * Loads the uac of the storedMedia and compares each element to update only
@@ -350,68 +293,6 @@ public class MediaManagerImpl implements MediaManager {
 		logger.info("updating the GM... done");
 	}
 	
-	public TechnicalMetadataDTO getTM(Integer mediaId) {
-		logger.debug("getting TM... mediaId [" + mediaId + "]");
-		TechnicalMetadataDTO tm = new TechnicalMetadataDTO();
-		
-		MediaLite mediaLite = null;
-		List<MediaAttributeFull> mediaAttributes = null;
-		List<Integer> mediaAttributeIds = new ArrayList<Integer>();
-		List<Object> mediaAttributeValues = new ArrayList<Object>();
-		MediaAttributeValueFullDTO mavFull = null;
-		
-		tm.setMediaId(mediaId);
-		logger.debug("getting TM... gotten mediaId:" + tm.getMediaId());
-
-		try {
-			mediaLite = mediaDAO.getMediaLite(mediaId);
-
-			tm.setMediaTypeId(mediaLite.getMediaTypeId());
-			logger.debug("getting TM... gotten mediaType Id:"	+ tm.getMediaTypeId());
-
-			//sets the media attributes id's	
-			mediaAttributes = mediaAttributeDAO.getMediaAttributesFullForMediaType(tm.getMediaTypeId()); 
-
-			
-			for(MediaAttributeFull maf : mediaAttributes){
-				logger.debug("getting TM... getting media Attributes values for '"
-						+ maf.getMediaAttributeId() + "'");
-				
-				mediaAttributeIds.add(maf.getMediaAttributeId());
-
-				mavFull = mediaAttributeValueDAO.getMediaAttributeValueFull(mediaId, maf.getMediaAttributeId());
-				switch(maf.getMediaAttributeValueType()){
-					case 'V' :
-						mediaAttributeValues.add(mavFull.getValueVarchar());
-						break;
-					case 'N' :
-						mediaAttributeValues.add(mavFull.getValueNumber());
-						break;
-					case 'D' :
-						mediaAttributeValues.add(mavFull.getValueDate());
-						break;
-					default:
-						mediaAttributeValues.add("");
-				}
-				
-			}
-			
-			tm.setMediaAttributeIds(mediaAttributeIds);
-			logger.debug("getting TM... gotten media Attributes.>"	
-					+ tm.getMediaAttributeIds().size());
-			tm.setMediaAttributeValue(mediaAttributeValues);
-			logger.debug("getting TM... gotten media Attributes values.>"
-					+ tm.getMediaAttributeValue().size());
-
-		} catch (Exception he) {
-			logger.error("There was a hibernate exeption in the query");
-			throw new IllegalArgumentException("Query fails on getTM", he);
-		} 
-
-		logger.info("getting TM... done.");
-		return tm;
-	}
-	
 	
 	/**
 	 * Load an objecto of usesAndCopyrigths type
@@ -508,7 +389,7 @@ public class MediaManagerImpl implements MediaManager {
 	 * @throws IllegalArgumentException
 	 */
 	public Integer insertNewMedia(GeneralMetadataDTO gm,
-			UsesAndCopyrightsDTO uac, TechnicalMetadataDTO tm)
+			UsesAndCopyrightsDTO uac, TechnicalMetadataDTO tmDTO)
 			throws IllegalArgumentException {
 
 		Media theMedia = new Media();
@@ -544,8 +425,8 @@ public class MediaManagerImpl implements MediaManager {
 			insertGM(gm);
 			uac.setMediaId(theMedia.getMediaId());
 			insertUACM(uac);
-			tm.setMediaId(theMedia.getMediaId());
-			insertTM(tm);
+			tmDTO.setMediaKey(String.valueOf(theMedia.getMediaId()));
+	    metadataManager.saveTechnicalMetadata(tmDTO);
 		} catch (IllegalArgumentException iae) {
 			logger.error("The insert was involved in erorrs");
 			throw new IllegalArgumentException("Not valid arguments.", iae);
@@ -681,43 +562,6 @@ public class MediaManagerImpl implements MediaManager {
 		}
 
 	}	
-	
-	/**
-	 * 
-	 * @param tm
-	 */
-	private void insertTM(TechnicalMetadataDTO tm) {
-		logger.info("inserting TMetadata... for media: " + tm.getMediaId());
-
-		List<Integer> MAIds = tm.getMediaAttributeIds();
-		List<Object> MAValues = tm.getMediaAttributeValue();
-		
-		MediaAttributeFull maf = null;
-		MediaAttributeValueFullDTO mavFull = null;
-		
-		for(int i = 0; i < MAIds.size(); i++){
-			
-			mavFull = new MediaAttributeValueFullDTO();
-			mavFull.setMediaAttributeId(MAIds.get(i));
-			mavFull.setMediaId(tm.getMediaId());
-			
-			maf = mediaAttributeDAO.getMediaAttributeFull(MAIds.get(i));
-			switch(maf.getMediaAttributeValueType()){
-			case 'V' :
-				mavFull.setValueVarchar((String)MAValues.get(i));
-				break;
-			case 'N' :
-				mavFull.setValueNumber((Integer)MAValues.get(i));
-				break;
-			case 'D' :
-				mavFull.setValueDate((Date)MAValues.get(i));
-				break;
-			}
-			
-			;
-			mediaAttributeManager.insertMediaAttributeValueFull(mavFull);
-		}	
-	}
 	
 	
 	/* (non-Javadoc)
@@ -1591,6 +1435,20 @@ public class MediaManagerImpl implements MediaManager {
 	 */
 	public TaxonomyManager getTaxonomyManager() {
 		return taxonomyManager;
+	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 }

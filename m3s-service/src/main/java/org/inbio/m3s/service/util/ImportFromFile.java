@@ -17,7 +17,6 @@ import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
@@ -26,6 +25,7 @@ import org.inbio.m3s.dto.lite.MediaUseLite;
 import org.inbio.m3s.dto.lite.ProjectLite;
 import org.inbio.m3s.dto.lite.UsePolicyLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.ImportationFileEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
@@ -36,6 +36,7 @@ import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SiteManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.service.util.impl.ExcelImportFileParserImpl;
@@ -62,6 +63,8 @@ public class ImportFromFile {
 	MessageManager messageManager;
 	UsePolicyDAO usePolicyDAO;
 	MediaUseDAO mediaUseDAO;
+	
+	MetadataManager metadataManager;
 	
 	
 	private final static String M3S_BASE_DIR = "/home/jgutierrez/SoftwareTools/m3sINBio/";
@@ -92,7 +95,7 @@ public class ImportFromFile {
 
 		GeneralMetadataDTO gm;
 		UsesAndCopyrightsDTO uacm;
-		TechnicalMetadataDTO tm;
+		TechnicalMetadataDTO tmDTO;
 		ImportFileParser fileParser = getImportFileParser(importFileName, fileType);
 		String mediaFileName;
 		Integer mediaId = null;
@@ -151,11 +154,10 @@ public class ImportFromFile {
 				for (String fileName : fileNames) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '"
 							+ fileName + "'");
-					tm = TechnicalAttributesManager.getTechnicalMetadataFromFile(
-							fileName, gm.getMediaTypeId());
+					tmDTO = metadataManager.getTechMetadataFromFile(String.valueOf(gm.getMediaTypeId()), fileName);
 
 					if (MediaFileManagement.isFileReadable(fileName))
-						mediaId = mediaManager.insertNewMedia(gm, uacm, tm);
+						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
 						
 					else
 						throw new IllegalArgumentException("file '" + fileName + "' is not accesible.");
@@ -788,6 +790,20 @@ public class ImportFromFile {
 	 */
 	public void setMediaUseDAO(MediaUseDAO mediaUseDAO) {
 		this.mediaUseDAO = mediaUseDAO;
+	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 

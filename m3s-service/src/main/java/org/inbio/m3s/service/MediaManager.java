@@ -6,7 +6,7 @@ package org.inbio.m3s.service;
 import java.util.List;
 
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.lite.MediaUseLite;
 import org.inbio.m3s.dto.lite.ProjectLite;
@@ -22,19 +22,15 @@ import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
  */
 public interface MediaManager {
 	
-	public void updateTM(TechnicalMetadataDTO newTM);
-	
 	public void updateUACM(UsesAndCopyrightsDTO newUAC);
 	
 	public void updateGM(GeneralMetadataDTO newGm) throws IllegalArgumentException;
-	
-	public TechnicalMetadataDTO getTM(Integer mediaId);
 	
 	public UsesAndCopyrightsDTO getUACM(Integer mediaId) throws IllegalArgumentException;
 	
 	public GeneralMetadataDTO getGM(Integer mediaId) throws IllegalArgumentException;
 	
-	public Integer insertNewMedia(GeneralMetadataDTO gm, UsesAndCopyrightsDTO uac, TechnicalMetadataDTO tm) throws IllegalArgumentException;
+	public Integer insertNewMedia(GeneralMetadataDTO gm, UsesAndCopyrightsDTO uac, TechnicalMetadataDTO tmDTO) throws IllegalArgumentException;
 
 	public void addProjectsList(Integer mediaId, List<ProjectLite> projectLiteList) throws IllegalArgumentException;
 	
