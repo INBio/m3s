@@ -19,19 +19,19 @@ import org.inbio.m3s.converters.MetadataConverter;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.MediaOwnerConstants;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.TechnicalMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SiteManager;
 import org.inbio.m3s.service.TaxonomyManager;
-import org.inbio.m3s.usecases.admin.TechnicalAttributesManager;
 import org.inbio.m3s.usecases.imports.impl.ExcelImportFileParserImpl;
 import org.inbio.m3s.util.MediaFileManagement;
 import org.inbio.m3s.util.ServiceUtil;
@@ -68,13 +68,13 @@ public class ImportFromFile {
 		GeneralMetadataDTO gm;
 		UsesAndCopyrightsTV uactv;
 		UsesAndCopyrightsDTO uacm;
-		TechnicalMetadataTV tmtv;
-		TechnicalMetadataDTO tm;
+		TechnicalMetadataDTO tmDTO;
 		ImportFileParser fileParser = getImportFileParser(importFileName, fileType);
 		String mediaFileName;
 		Integer mediaId = null;
 		
 		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
+		MetadataManager metadataManager = (MetadataManager) ServiceUtil.appContext.getBean(Properties.METADATA_MANAGER);
 
 		logger.debug("Total minimo de elementos a importar:"
 				+ fileParser.getTotalEntries());
@@ -130,13 +130,12 @@ public class ImportFromFile {
 				for (String fileName : fileNames) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '"
 							+ fileName + "'");
-					tmtv = TechnicalAttributesManager.getTechnicalMetadataTVFromFile(
-							fileName, gmtv.getMediaType());
-					tm = MetadataConverter.toDBValues(tmtv);
+
+					tmDTO = metadataManager.getTechMetadataFromFile(gmtv.getMediaType(), fileName);
 
 					if (MediaFileManagement.isFileReadable(fileName))
 						//mediaId = MetadataManager.insertNewMedia(gm, uacm, tm);
-						mediaId = mediaManager.insertNewMedia(gm, uacm, tm);
+						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
 						
 					else
 						throw new IllegalArgumentException("file '" + fileName + "' is not accesible.");
@@ -412,8 +411,8 @@ public class ImportFromFile {
 		logger.debug("\nGetting uses and copyrigths metadata TV");
 
 		// set author
-		uactv.setAuthor(info.read(rowNumber,
-				ImportFileParser.AUTHOR_PERSON_NAME_DATA));
+		PersonGWTDTO plDTOGWT = new PersonGWTDTO(null,info.read(rowNumber,ImportFileParser.AUTHOR_PERSON_NAME_DATA));
+		uactv.setAuthor(plDTOGWT);
 		info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,
 				ImportFileParser.SUCCESFUL);
 		logger.debug("Author Name: '" + uactv.getAuthor() + "'");
