@@ -3,18 +3,20 @@
  */
 package org.inbio.m3s.dto.agent;
 
-import java.io.Serializable;
+
+
+import org.inbio.m3s.dto.BaseDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public class InstitutionLiteDTO implements Serializable {
+public class InstitutionLiteDTO extends BaseDTO {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 456870559838502944L;
+	private static final long serialVersionUID = -3490523251217605436L;
 
 	private String institutionKey;
 

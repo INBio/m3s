@@ -3,13 +3,13 @@
  */
 package org.inbio.m3s.dto.agent;
 
-import java.io.Serializable;
+import org.inbio.m3s.dto.BaseDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public class PersonLiteDTO implements Serializable {
+public class PersonLiteDTO extends BaseDTO {
 	
 	/**
 	 * 

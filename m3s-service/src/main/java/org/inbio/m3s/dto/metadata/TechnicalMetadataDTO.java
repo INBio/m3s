@@ -7,13 +7,14 @@ package org.inbio.m3s.dto.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.inbio.m3s.dto.BaseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
 
 /**
  * @author jgutierrez
  * 
  */
-public class TechnicalMetadataDTO {
+public class TechnicalMetadataDTO extends BaseDTO{
 
 	/**
 	 * 
