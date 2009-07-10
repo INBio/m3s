@@ -35,15 +35,14 @@ public interface MetadataRPCAsync {
 	 * @param mediaId
 	 * @param callback
 	 */
-	public void getTechnicalMetadataTV(Integer mediaId, AsyncCallback callback);
+	public void getTechnicalMetadataTV(Integer mediaId, AsyncCallback<TechnicalMetadataGWTDTO> callback);
 
 	/**
 	 * 
-	 * @param mediaTypeId
+	 * @param mediaTypeKey
 	 * @param callback
 	 */
-	public void getTechnicalMetadataNames(String mediaTypeName,
-			AsyncCallback<TechnicalMetadataGWTDTO> callback);
+	public void getTechnicalMetadataNames(String mediaTypeKey, AsyncCallback<TechnicalMetadataGWTDTO> callback);
 
 	/**
 	 * 
@@ -51,8 +50,7 @@ public interface MetadataRPCAsync {
 	 * @param mediaTypeName
 	 * @param callback
 	 */
-	public void getTechnicalMetadataTV(String mediaTempFileId,
-			String mediaTypeName, AsyncCallback<TechnicalMetadataGWTDTO> callback);
+	public void getTechnicalMetadataTV(String mediaTempFileId, String mediaTypeName, AsyncCallback<TechnicalMetadataGWTDTO> callback);
 
 	/**
 	 * 
@@ -62,8 +60,7 @@ public interface MetadataRPCAsync {
 	 * @param username
 	 * @param callback
 	 */
-	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv,
-			TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback callback);
+	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback callback);
 
 	/**
 	 * 

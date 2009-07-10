@@ -43,8 +43,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author jgutierrez
  * 
  */
-public class MetadataRPCImpl extends RemoteServiceServlet implements
-		MetadataRPC {
+public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC {
 
 	private static Logger logger = Logger.getLogger(MetadataRPCImpl.class);
 
@@ -135,15 +134,15 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements
 	 * @throws if
 	 *             the MediaTypeName has no associated technical Metadata
 	 */
-	public List<String> getTechnicalMetadataNames(String mediaTypeName)
+	public TechnicalMetadataGWTDTO getTechnicalMetadataNames(String mediaTypeKey)
 			throws IllegalArgumentException {
-		logger
-				.debug("getting Technical Metadata Names... done in metadata converter");
+		logger.debug("getting Technical Metadata Names... done in metadata converter");
 		try {
-			return getTMRowTexts(mediaTypeName);
+			TechnicalMetadataDTO tmDTO = metadataManager.getTechMetadataByMediaType(mediaTypeKey);
+			TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
+			return (TechnicalMetadataGWTDTO) tmc.toGWTDTO(tmDTO);
 		} catch (IllegalArgumentException iae) {
-			logger
-					.debug("gettin Technical metadata Names... ilegal MediaTypeName");
+			logger.debug("gettin Technical metadata Names... ilegal MediaTypeName");
 			iae.getMessage();
 			throw iae;
 		}

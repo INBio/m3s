@@ -59,7 +59,7 @@ public interface MetadataRPC extends RemoteService {
 	 * @param mediaTypeName
 	 * @return
 	 */
-	public List<String> getTechnicalMetadataNames(String mediaTypeName);
+	public TechnicalMetadataGWTDTO getTechnicalMetadataNames(String mediaTypeName);
 
 	/**
 	 * @param gmtv

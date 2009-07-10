@@ -45,7 +45,6 @@ public class TechnicalMetadataPanel extends VerticalPanel {
 	 * @param mediaTypeName
 	 *            the atributes of that media type are the ones that are going
 	 *            to be shown
-	 */
 	public TechnicalMetadataPanel(Integer language, String mediaTypeName) {
 		initRPC();
 
@@ -76,6 +75,15 @@ public class TechnicalMetadataPanel extends VerticalPanel {
 			
 		});
 
+	}
+		 */
+	
+	/**
+	 * 
+	 * @param tmGWTDTO
+	 */
+	public TechnicalMetadataPanel(TechnicalMetadataGWTDTO tmGWTDTO){
+		setTechMetadataGWTDTO(tmGWTDTO);
 	}
 
 

@@ -204,8 +204,7 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mediaTypeName
 	 * @param mainTab
 	 *            if true will set this tab as the
-	 */
-	public void initTechMetadataTab(Integer language, boolean mainTab) {
+	private void initTechMetadataTab(Integer language, boolean mainTab) {
 		String mediaTypeName = gmPanel.getCurrentMediaTypeText();
 		tmPanel = new TechnicalMetadataPanel(language, mediaTypeName);
 		tabPanel.add(tmPanel, "Información Técnica");
@@ -213,6 +212,7 @@ public class MetadataContainer extends VerticalPanel implements
 			tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
 		}
 	}	
+		 */
 
 	/**
 	 * Inits the TechnicalMetadata tab
@@ -222,12 +222,27 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mainTab
 	 *            if true will set this tab as the
 	 */
-	public void initTechMetadataTab(Integer language, String mediaTypeName, boolean mainTab) {
-		tmPanel = new TechnicalMetadataPanel(language, mediaTypeName);
-		tabPanel.add(tmPanel, "Información Técnica");
-		if (mainTab) {
-			tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
-		}
+	@SuppressWarnings("unchecked")
+	public void initTechMetadataTab(Integer language, String mediaTypeKey, final boolean mainTab) {
+		rpc.getTechnicalMetadataNames(mediaTypeKey, new AsyncCallback() {
+
+			public void onFailure(Throwable caught) {
+				RPCFailureManager(caught);
+			}
+
+			public void onSuccess(Object result) {
+				TechnicalMetadataGWTDTO tmGWTDTO = (TechnicalMetadataGWTDTO) result;
+				//initTechMetadataTab(language, tmGWTDTO.getMediaTypeKey(), mainTab);
+				tmPanel = new TechnicalMetadataPanel(tmGWTDTO);
+				tabPanel.add(tmPanel, "Información Técnica");
+				if (mainTab) {
+					tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
+				}
+				tmPanel.setTechMetadataGWTDTO(tmGWTDTO);
+				
+				System.out.println("initTechMetadataTab - RPC on Success");
+			}
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -243,7 +258,36 @@ public class MetadataContainer extends VerticalPanel implements
 
 				public void onSuccess(Object result) {
 					TechnicalMetadataGWTDTO tmGWTDTO = (TechnicalMetadataGWTDTO) result;
-					initTechMetadataTab(language, tmGWTDTO.getMediaTypeKey(), mainTab);
+					tmPanel = new TechnicalMetadataPanel(tmGWTDTO);
+					tabPanel.add(tmPanel, "Información Técnica");
+					if (mainTab) {
+						tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
+					}
+					tmPanel.setTechMetadataGWTDTO(tmGWTDTO);
+					
+					System.out.println("initTechMetadataTab - RPC on Success");
+				}
+			});
+		}
+	
+	@SuppressWarnings("unchecked")
+	public void initTechMetadataTab(final Integer language, String fileAdress, String mediaTypeKey, final boolean mainTab) {
+		System.out.println("initTechMetadataTab - INICIO");
+		// The technical Metadata its loaded when the General Metadata
+			// arrives, because needs the mediaType value
+			rpc.getTechnicalMetadataTV(fileAdress, mediaTypeKey, new AsyncCallback() {
+
+				public void onFailure(Throwable caught) {
+					RPCFailureManager(caught);
+				}
+
+				public void onSuccess(Object result) {
+					TechnicalMetadataGWTDTO tmGWTDTO = (TechnicalMetadataGWTDTO) result;
+					tmPanel = new TechnicalMetadataPanel(tmGWTDTO);
+					tabPanel.add(tmPanel, "Información Técnica");
+					if (mainTab) {
+						tabPanel.selectTab(tabPanel.getWidgetIndex(tmPanel));
+					}
 					tmPanel.setTechMetadataGWTDTO(tmGWTDTO);
 					
 					System.out.println("initTechMetadataTab - RPC on Success");
@@ -297,10 +341,9 @@ public class MetadataContainer extends VerticalPanel implements
 	/**
 	 * 
 	 * @param fileId
-	 */
 	public void setTechnicalMetadataInfo(String fileId) {
 		tmPanel.getTechnicalMetadataTV(fileId);
-
 	}
+	 */
 
 }

@@ -329,10 +329,9 @@ public class InsertMedia extends Composite implements MetadataListener {
 			main.add(theMultimediaPath, multimediaPathDiv);
 
 			// Inits the tech metadata tab
-			metadataPanel.initTechMetadataTab(
-					ClientProperties.DEFAULT_LANGUAGE, false);
+			metadataPanel.initTechMetadataTab(ClientProperties.DEFAULT_LANGUAGE,tempFileId,ClientProperties.DEFAULT_MEDIA_TYPE_KEY,false);
 
-			metadataPanel.setTechnicalMetadataInfo(tempFileId);
+			//metadataPanel.setTechnicalMetadataInfo();
 
 		} else { // ERROR
 			Window.alert(tempFileId); // the explanation of the error
@@ -359,6 +358,7 @@ public class InsertMedia extends Composite implements MetadataListener {
 	 * este se debe indicar el codigo con el cual se guardara la imagen, el
 	 * volumen y el archivo donde queda almacenada.
 	 */
+	@SuppressWarnings("unchecked")
 	public void metadataSaved(Integer theMediaId) {
 		// tempFileId, DBFileName, mediaId
 		mediaId = theMediaId;

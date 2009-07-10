@@ -26,6 +26,7 @@ public class ClientProperties {
 	public static String DEFAULT_MEDIA_CATEGORY = "Imágenes";
 
 	public static String DEFAULT_MEDIA_TYPE = "Cámara Digital";
+	public static String DEFAULT_MEDIA_TYPE_KEY = "1";
 
 	// for the GUI
 	public static String DEFAULT_TEXTBOX_WIDTH = "250px";
