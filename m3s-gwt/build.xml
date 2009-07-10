@@ -32,7 +32,7 @@
 
 	<!-- path of the tomcat webapplications dir -->
 	<!--	<property name="tomcat.home" value="/usr/share/tomcat5.5" />-->
-	<property name="tomcat.home" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16" />
+	<property name="tomcat.home" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16"/>
 	<property name="webappspdir" value="${tomcat.home}\webapps" />
 
 	<!-- ubicacion de los directorios -->
@@ -178,34 +178,6 @@
 		</java>
 	</target>
 
-	<!--quick test -->
-	<target name="run-file" depends="clean-fast, javac, copy-hibernate-xml-files, copy-log4j-files">
-		<java fork="true" classname="org.inbio.m3s.usecases.ImportFromFile" classpathref="libraries">
-			<classpath path="${targetdir}" />
-		</java>
-	</target>
-
-	<!-- MediaAdmin test -->
-	<target name="run-MediaAdminTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
-		<java fork="true" classname="org.inbio.m3s.test.MediaAdmin" classpathref="libraries">
-			<classpath path="${targetdir}" />
-		</java>
-	</target>
-
-	<!-- ImageUtil test -->
-	<target name="run-ImageUtilTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
-		<java fork="true" classname="org.inbio.m3s.test.ImageUtil" classpathref="libraries">
-			<classpath path="${targetdir}" />
-		</java>
-	</target>
-	<!-- ImportMedia test -->
-	<target name="run-ImportMediaTest" depends="clean-fast, javac, javac-test, copy-hibernate-xml-files, copy-log4j-files">
-		<java fork="true" classname="org.inbio.m3s.test.ImportMedia" classpathref="libraries">
-			<classpath path="${targetdir}" />
-		</java>
-	</target>
-
-
 	<!--MediaAdmin run only test -->
 	<target name="run-only-MediaAdminTest">
 		<java fork="true" classname="org.inbio.m3s.test.MediaAdmin" classpathref="libraries">
@@ -268,21 +240,21 @@
 </javadoc>
 </target>
 
-<!-- tomcat targets
+<!-- tomcat targets -->
     <target name="tomcat-start">
-    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-    <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
-    <arg line="start"/>
-    </java>
+    	<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+    		<jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+    		<!--<arg line="start"/>-->
+    	</java>
     </target>
+
     
     <target name="tomcat-stop">
-    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-    <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
-    <arg line="stop"/>
-    </java>
+    	<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+    		<jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+    		<arg line="stop"/>
+    	</java>
     </target>
--->
-
+	
 
 </project>
