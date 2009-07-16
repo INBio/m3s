@@ -1,9 +1,7 @@
-package org.inbio.m3s.model.atta;
+package org.inbio.m3s.model.general;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 
@@ -15,8 +13,6 @@ public class Specimen implements Serializable {
 	private static final long serialVersionUID = 1212115617854666568L;
 
 	private Integer specimenId;
-
-	private Gathering gathering;
 
 	private Integer specimenCategoryId;
 
@@ -56,23 +52,18 @@ public class Specimen implements Serializable {
 
 	private String externalSpecimen;
 
-	private Set<Identification> identifications = new HashSet<Identification>(0);
-
-	// private Set specimenMedias = new HashSet(0);
-
 	public Specimen() {
 	}
 
-	public Specimen(Integer specimenId, Gathering gathering,
-			Integer specimenCategoryId, String discarded, Integer collectionId) {
+	public Specimen(Integer specimenId, Integer specimenCategoryId, 
+			String discarded, Integer collectionId) {
 		this.specimenId = specimenId;
-		this.gathering = gathering;
 		this.specimenCategoryId = specimenCategoryId;
 		this.discarded = discarded;
 		this.collectionId = collectionId;
 	}
 
-	public Specimen(Integer specimenId, Gathering gathering,
+	public Specimen(Integer specimenId, 
 			Integer specimenCategoryId, Integer specimenTypeId,
 			Integer storageTypeId, Integer substrateId, Integer originId,
 			Integer preservationMediumId, String discarded,
@@ -81,11 +72,8 @@ public class Specimen implements Serializable {
 			String createdBy, Date lastModificationDate,
 			String lastModificationBy, Integer collectionId,
 			Integer extractionTypeId, Integer numberWhole,
-			Integer numberFragments, String externalSpecimen,
-			Set<Identification> identifications) {
-		// ,Set specimenMedias) {
+			Integer numberFragments, String externalSpecimen) {
 		this.specimenId = specimenId;
-		this.gathering = gathering;
 		this.specimenCategoryId = specimenCategoryId;
 		this.specimenTypeId = specimenTypeId;
 		this.storageTypeId = storageTypeId;
@@ -105,8 +93,6 @@ public class Specimen implements Serializable {
 		this.numberWhole = numberWhole;
 		this.numberFragments = numberFragments;
 		this.externalSpecimen = externalSpecimen;
-		this.identifications = identifications;
-		// this.specimenMedias = specimenMedias;
 	}
 
 	public Integer getSpecimenId() {
@@ -115,14 +101,6 @@ public class Specimen implements Serializable {
 
 	public void setSpecimenId(Integer specimenId) {
 		this.specimenId = specimenId;
-	}
-
-	public Gathering getGathering() {
-		return this.gathering;
-	}
-
-	public void setGathering(Gathering gathering) {
-		this.gathering = gathering;
 	}
 
 	public Integer getSpecimenCategoryId() {
@@ -276,20 +254,5 @@ public class Specimen implements Serializable {
 	public void setExternalSpecimen(String externalSpecimen) {
 		this.externalSpecimen = externalSpecimen;
 	}
-
-	public Set<Identification> getIdentifications() {
-		return this.identifications;
-	}
-
-	public void setIdentifications(Set<Identification> identifications) {
-		this.identifications = identifications;
-	}
-
-	/*
-	 * public Set getSpecimenMedias() { return this.specimenMedias; }
-	 * 
-	 * public void setSpecimenMedias(Set specimenMedias) { this.specimenMedias =
-	 * specimenMedias; }
-	 */
 
 }

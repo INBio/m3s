@@ -86,7 +86,7 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select i.taxon"
-						+ " from Identification as i, Specimen as s "
+						+ " from Identification as i, INBioSpecimen as s "
 						+ " where i.specimen.specimenId = " + specimenId + ""
 						+ " and i.specimen.specimenId = s.specimenId");
 				//query.setParameter(0, nomenclaturalGroupId);

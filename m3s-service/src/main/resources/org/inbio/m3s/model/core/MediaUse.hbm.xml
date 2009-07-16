@@ -29,12 +29,5 @@
 		<property name="lastModificationBy" type="string">
 			<column name="last_modification_by" length="20" />
 		</property>
-		<set name="mediaUseMedias" inverse="true">
-			<key>
-				<column name="media_use_id" not-null="true" />
-			</key>
-			<one-to-many
-				class="org.inbio.m3s.model.core.MediaUseMedia" />
-		</set>
 	</class>
 </hibernate-mapping>

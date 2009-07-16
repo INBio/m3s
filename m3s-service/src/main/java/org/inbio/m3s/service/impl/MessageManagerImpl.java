@@ -9,10 +9,13 @@ import java.util.List;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dao.core.MediaTypeDAO;
 import org.inbio.m3s.dao.core.TextTranslationDAO;
+import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.lite.MediaTypeLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.model.core.Keyword;
 import org.inbio.m3s.model.core.TextTranslation;
+import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.service.MessageManager;
 
 /**
@@ -26,6 +29,8 @@ public class MessageManagerImpl implements MessageManager {
 	private TextTranslationDAO textTranslationDAO;
 	
 	private MediaTypeDAO mediaTypeDAO;
+	
+	private UsePolicyDAO usePolicyDAO;
 
 	/**
 	 * @return the mediaTypeDAO
@@ -108,7 +113,26 @@ public class MessageManagerImpl implements MessageManager {
 
 	}
 
-
+	public List<UsePolicyDTO> getAllUsePolicies() throws IllegalArgumentException {
+		List<UsePolicyDTO> upDTOList = new ArrayList<UsePolicyDTO>();
+		List<Object> upList =  usePolicyDAO.findAll(UsePolicy.class);
+		TextTranslation tt;
+		
+		for(Object up : upList){
+			tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+			upDTOList.add(new UsePolicyDTO(((UsePolicy) up).getUsePolicyId().toString(), tt.getName()));
+		}
+		
+		return upDTOList;
+	}
+	
+	public UsePolicyDTO getUsePolicy(String usePolicyKey) throws IllegalArgumentException {
+		UsePolicy up = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(usePolicyKey));
+		TextTranslation tt;
+		tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		return new UsePolicyDTO(usePolicyKey, tt.getName());
+		
+	}
 
 	
 	
@@ -139,6 +163,27 @@ public class MessageManagerImpl implements MessageManager {
 	public TextTranslationDAO getTextTranslationDAO() {
 		return textTranslationDAO;
 	}
+
+
+
+	/**
+	 * @return the usePolicyDAO
+	 */
+	public UsePolicyDAO getUsePolicyDAO() {
+		return usePolicyDAO;
+	}
+
+
+
+	/**
+	 * @param usePolicyDAO the usePolicyDAO to set
+	 */
+	public void setUsePolicyDAO(UsePolicyDAO usePolicyDAO) {
+		this.usePolicyDAO = usePolicyDAO;
+	}
+
+
+
 
 
 

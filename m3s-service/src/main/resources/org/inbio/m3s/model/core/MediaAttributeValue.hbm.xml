@@ -15,7 +15,7 @@
 		</composite-id>
 		<many-to-one name="mediaAttribute"
 			class="org.inbio.m3s.model.core.MediaAttribute" update="false"
-			insert="false" fetch="select">
+			insert="false" fetch="select" lazy="false">
 			<column name="media_attribute_id" not-null="true" />
 		</many-to-one>
 		<many-to-one name="media"

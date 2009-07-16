@@ -25,7 +25,7 @@ import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTOFactory;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTOFactory;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
-import org.inbio.m3s.model.atta.Specimen;
+import org.inbio.m3s.model.general.Specimen;
 import org.inbio.m3s.model.core.GatheringMediaId;
 import org.inbio.m3s.model.core.ObservedTaxonMediaId;
 import org.inbio.m3s.model.core.SpecimenMediaId;
@@ -183,11 +183,12 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getTaxonLite(java.lang.String, java.lang.String)
 	 */
-	public TaxonLiteDTO getTaxonLite(String defaultName, String kingdomName)
-			throws IllegalArgumentException {
-		
-		Taxon kingdom = (Taxon) taxonDAO.findByNameAndRange(defaultName, TaxonomicalRangeEntity.KINGDOM.getId());
+	public TaxonLiteDTO getTaxonLite(String defaultName, String kingdomName) throws IllegalArgumentException {
+		logger.debug("start in getTaxonLite");
+		Taxon kingdom = (Taxon) taxonDAO.findByNameAndRange(kingdomName, TaxonomicalRangeEntity.KINGDOM.getId());
+		logger.debug("Kingdom: "+kingdom.getDefaultName());
 		Taxon t = (Taxon) taxonDAO.findByDefaultNameAndKingdomId(defaultName, kingdom.getTaxonId());
+		logger.debug("taxon: "+t.getDefaultName());
 		return (TaxonLiteDTO) tlDTOFactory.createDTO(t);
 	}
 

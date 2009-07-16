@@ -13,8 +13,8 @@ import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.lite.MediaCategoryLite;
 import org.inbio.m3s.dto.lite.MediaTypeLite;
-import org.inbio.m3s.dto.lite.MediaUseLite;
-import org.inbio.m3s.dto.lite.UsePolicyLite;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.util.ServiceUtil;
 
@@ -139,14 +139,14 @@ public class DataCache {
 		MediaUseDAO mediaUseDAO = (MediaUseDAO) ServiceUtil.appContext.getBean("mediaUseDAO");
 		
 		try{
-			List<MediaUseLite> mediaUsesInfo = mediaUseDAO.listAllLite(new Integer(MessageManager.DEFAULT_LANGUAGE));
+			List<MediaUseDTO> mediaUsesInfo = mediaUseDAO.listAllLite(new Integer(MessageManager.DEFAULT_LANGUAGE));
 			
 			mediaUsesDBIds = new ArrayList<Integer>();
 			mediaUsesNames = new ArrayList<String>();
 			
-			for(MediaUseLite mul : mediaUsesInfo){
-				mediaUsesNames.add(mul.getMediaUseName());
-				mediaUsesDBIds.add(mul.getMediaUseId());
+			for(MediaUseDTO muDTO : mediaUsesInfo){
+				mediaUsesNames.add(muDTO.getMediaUseName());
+				mediaUsesDBIds.add(Integer.valueOf(muDTO.getMediaUseKey()));
 			}
 			logger.debug("getting Media uses Info... is now on cache!.");
 			mediaUsesInCache = true;
@@ -164,14 +164,14 @@ public class DataCache {
 		UsePolicyDAO usePolicyDAO = (UsePolicyDAO) ServiceUtil.appContext.getBean("usePolicyDAO");
 		
 		try {
-			List<UsePolicyLite> usePolicyInfo = usePolicyDAO.listAllLite();
+			List<UsePolicyDTO> usePolicyInfo = usePolicyDAO.listAllLite();
 
 			usePoliciesDBIds = new ArrayList<Integer>();
 			usePoliciesNames = new ArrayList<String>();
 			
-			for(UsePolicyLite usePolicyLite: usePolicyInfo){
-				usePoliciesNames.add(usePolicyLite.getName());
-				usePoliciesDBIds.add(usePolicyLite.getUsePolicyId());
+			for(UsePolicyDTO upDTO: usePolicyInfo){
+				usePoliciesNames.add(upDTO.getName());
+				usePoliciesDBIds.add(Integer.valueOf(upDTO.getUsePolicyKey()));
 	
 			}
 

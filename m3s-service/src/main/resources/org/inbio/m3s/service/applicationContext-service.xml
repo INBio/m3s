@@ -59,7 +59,8 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>     
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="metadataManager" ref="metadataManager"/>
   </bean>
   <bean id="M3SMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
@@ -79,7 +80,8 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="M3SAgentManager"/>
-    <property name="taxonomyManager" ref="M3STaxonomyManager"/>     
+    <property name="taxonomyManager" ref="M3STaxonomyManager"/> 
+    <property name="metadataManager" ref="metadataManager"/>
   </bean>
   <bean id="ARAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
@@ -99,14 +101,26 @@
     <property name="keywordDAO" ref="keywordDAO"/>
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>     
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/> 
+    <property name="metadataManager" ref="metadataManager"/>
   </bean>
+  
+  <!-- Metadata Manager (1 version)-->
+  <bean id="metadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+  	<property name="mediaDAO" ref="mediaDAO"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+  </bean>
+
    
   <!-- Message Manager (1 version)-->
   <bean id="messageManager" class="org.inbio.m3s.service.impl.MessageManagerImpl">
   	<property name="keywordDAO" ref="keywordDAO"/>
     <property name="textTranslationDAO" ref="textTranslationDAO"/>
     <property name="mediaTypeDAO" ref="mediaTypeDAO"/>
+    <property name="usePolicyDAO" ref="usePolicyDAO"/>
   </bean>
 
 
@@ -120,12 +134,10 @@
   	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
   	<property name="siteDAO" ref="INBioSiteDAO"/>
   </bean>
-  <!-- 
   <bean id="ARASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
-  	<property name="taxonomyManager" ref="M3STaxonomyManager"/>
+  	<property name="taxonomyManager" ref="ARATaxonomyManager"/>
   	<property name="siteDAO" ref="ARASiteDAO"/>
-  </bean>
-   -->    
+  </bean>    
   
   <!-- statisticsManager (1 version)-->
   <bean id="statisticsManager" class="org.inbio.m3s.service.impl.StatisticsManagerImpl">
@@ -189,6 +201,7 @@
   	<property name="usePolicyDAO" ref="usePolicyDAO"/>
   	<property name="mediaUseDAO" ref="mediaUseDAO"/>
   	<property name="messageManager" ref="messageManager"/>  
+    <property name="metadataManager" ref="metadataManager"/>
   </bean>
   <bean id="M3SImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="mediaManager" ref="M3SMediaManager"/>
@@ -200,17 +213,14 @@
   	<property name="projectDAO" ref="projectDAO"/>
   	<property name="usePolicyDAO" ref="usePolicyDAO"/>
   	<property name="mediaUseDAO" ref="mediaUseDAO"/>
-  	<property name="messageManager" ref="messageManager"/>  
+  	<property name="messageManager" ref="messageManager"/>
+    <property name="metadataManager" ref="metadataManager"/>
   </bean>
   
-<!-- Metadata Manager Implementation -->
-  <bean id="metadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
-	<property name="mediaDAO" ref="mediaDAO"/>
-	<property name="mediaAttributeDAO" ref="mediaAttributeDAO"/> 
-    <property name="textTranslationDAO" ref="textTranslationDAO"/>
-    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
-    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
-    
+<!-- importThread (1 versiones, seran 3)-->  
+  <bean id="ATTAImportThread" class="org.inbio.m3s.service.util.ImportThread">
+    <property name="importationManager" ref="importationManager"/>
+    <property name="importFromFile" ref="ATTAImportFromFile"/>
   </bean> 
   
 	<!-- DTO Factories -->

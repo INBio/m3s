@@ -6,7 +6,7 @@ package org.inbio.m3s.dao.core;
 import java.util.List;
 
 import org.inbio.m3s.dao.BaseDAO;
-import org.inbio.m3s.dto.lite.UsePolicyLite;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 
 /**
  * @author jgutierrez
@@ -14,10 +14,13 @@ import org.inbio.m3s.dto.lite.UsePolicyLite;
  */
 public interface UsePolicyDAO extends BaseDAO{
 	
-	public UsePolicyLite getUsePolicyLite(Integer usePolicyId) throws IllegalArgumentException;
+	@Deprecated
+	public UsePolicyDTO getUsePolicyLite(Integer usePolicyId) throws IllegalArgumentException;
 	
-	public UsePolicyLite getUsePolicyLite(String name) throws IllegalArgumentException;
+	@Deprecated
+	public UsePolicyDTO getUsePolicyLite(String name) throws IllegalArgumentException;
 
-	public List<UsePolicyLite> listAllLite() throws IllegalArgumentException;
+	@Deprecated
+	public List<UsePolicyDTO> listAllLite() throws IllegalArgumentException;
 	
 }

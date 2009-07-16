@@ -15,8 +15,6 @@ import org.inbio.m3s.model.core.GatheringMediaId;
  */
 public interface GatheringMediaDAO extends BaseDAO{
 	
-	//public boolean isValidGatheringLite(GatheringLite gatheringLite) throws IllegalArgumentException;
-	
 	public List<GatheringMediaId> findAllByMediaId(Integer mediaId) throws IllegalArgumentException;
 
 }

@@ -20,8 +20,8 @@
 		<mapping resource="org/inbio/m3s/model/atta/ObservedTaxon.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/PersonProfile.hbm.xml" />
 		<mapping resource="org/inbio/m3s/model/atta/Profile.hbm.xml" />
-		<mapping resource="org/inbio/m3s/model/atta/Site.hbm.xml" />
-		<mapping resource="org/inbio/m3s/model/atta/Specimen.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/INBioSite.hbm.xml" />
+		<mapping resource="org/inbio/m3s/model/atta/INBioSpecimen.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>

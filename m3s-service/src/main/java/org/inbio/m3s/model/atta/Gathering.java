@@ -16,7 +16,7 @@ public class Gathering implements Serializable {
 
 	private Integer gatheringId;
 
-	private Site site;
+	private INBioSite site;
 
 	private INBioPerson person;
 
@@ -54,12 +54,12 @@ public class Gathering implements Serializable {
 
 	private String gatheringSiteDescription;
 
-	private Set<Specimen> specimens = new HashSet<Specimen>(0);
+	private Set<INBioSpecimen> specimens = new HashSet<INBioSpecimen>(0);
 
 	public Gathering() {
 	}
 
-	public Gathering(Integer gatheringId, Site site, INBioPerson person,
+	public Gathering(Integer gatheringId, INBioSite site, INBioPerson person,
 			Date initialDateTime, Date finalDateTime, Integer collectionId) {
 		this.gatheringId = gatheringId;
 		this.site = site;
@@ -69,7 +69,7 @@ public class Gathering implements Serializable {
 		this.collectionId = collectionId;
 	}
 
-	public Gathering(Integer gatheringId, Site site, INBioPerson person,
+	public Gathering(Integer gatheringId, INBioSite site, INBioPerson person,
 			Integer gatheringMethodId, Date initialDateTime,
 			Date finalDateTime, String surroundingsDescription,
 			Integer precision, Integer elevationLowerBound,
@@ -77,7 +77,7 @@ public class Gathering implements Serializable {
 			Date lastModificationDate, String lastModificationBy,
 			Integer relativeAltitude, Integer collectionId, Integer labelId,
 			Integer originalLabelId, Integer samplingTypeId,
-			String gatheringSiteDescription, Set<Specimen> specimens) {
+			String gatheringSiteDescription, Set<INBioSpecimen> specimens) {
 		this.gatheringId = gatheringId;
 		this.site = site;
 		this.person = person;
@@ -109,11 +109,11 @@ public class Gathering implements Serializable {
 		this.gatheringId = gatheringId;
 	}
 
-	public Site getSite() {
+	public INBioSite getSite() {
 		return this.site;
 	}
 
-	public void setSite(Site site) {
+	public void setSite(INBioSite site) {
 		this.site = site;
 	}
 
@@ -261,11 +261,11 @@ public class Gathering implements Serializable {
 		this.gatheringSiteDescription = gatheringSiteDescription;
 	}
 
-	public Set<Specimen> getSpecimens() {
+	public Set<INBioSpecimen> getSpecimens() {
 		return this.specimens;
 	}
 
-	public void setSpecimens(Set<Specimen> specimens) {
+	public void setSpecimens(Set<INBioSpecimen> specimens) {
 		this.specimens = specimens;
 	}
 

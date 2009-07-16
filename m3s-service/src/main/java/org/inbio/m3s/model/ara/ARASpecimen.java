@@ -1,11 +1,11 @@
 package org.inbio.m3s.model.ara;
 
-
-import java.io.Serializable;
 import java.util.Date;
 
+import org.inbio.m3s.model.general.Specimen;
 
-public class Specimen implements Serializable {
+
+public class ARASpecimen extends Specimen {
 
 	private static final long serialVersionUID = 1212115617854666568L;
 
@@ -38,8 +38,6 @@ public class Specimen implements Serializable {
 	private Integer numberFragments;
 
 	private Integer extractionTypeId;
-
-	private Integer objVersion;
 	
 	private String createdBy;
 
@@ -64,7 +62,7 @@ public class Specimen implements Serializable {
 	/**
 	 * 
 	 */
-	public Specimen() {
+	public ARASpecimen() {
 		super();
 	}
 
@@ -72,18 +70,16 @@ public class Specimen implements Serializable {
 	 * @param specimenId
 	 * @param gatheringObservation
 	 * @param discarded
-	 * @param objVersion
 	 * @param createdBy
 	 * @param creationDate
 	 * @param lastModificationBy
 	 * @param lastModificationDate
 	 */
-	public Specimen(Integer specimenId, GatheringObservation gatheringObservation, String discarded, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate) {
+	public ARASpecimen(Integer specimenId, GatheringObservation gatheringObservation, String discarded, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate) {
 		super();
 		this.specimenId = specimenId;
 		this.gatheringObservation = gatheringObservation;
 		this.discarded = discarded;
-		this.objVersion = objVersion;
 		this.createdBy = createdBy;
 		this.creationDate = creationDate;
 		this.lastModificationBy = lastModificationBy;
@@ -118,7 +114,7 @@ public class Specimen implements Serializable {
 	 * @param dateTime
 	 * @param gatheringObservationDetailId
 	 */
-	public Specimen(Integer specimenId, GatheringObservation gatheringObservation, String discarded, Integer specimenCategoryId, Integer specimenTypeId, Integer storageTypeId, Integer substrateId, Integer originId, Integer preservationMediumId, Integer morphologicalDescriptionId, Integer lifeStageId, Integer sexId, Integer numberWhole, Integer numberFragments, Integer extractionTypeId, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer collectionId, String externalSpecimen, Integer gatheringObservationMethodId, Integer certaintyLevel, Date dateTime, Integer gatheringObservationDetailId) {
+	public ARASpecimen(Integer specimenId, GatheringObservation gatheringObservation, String discarded, Integer specimenCategoryId, Integer specimenTypeId, Integer storageTypeId, Integer substrateId, Integer originId, Integer preservationMediumId, Integer morphologicalDescriptionId, Integer lifeStageId, Integer sexId, Integer numberWhole, Integer numberFragments, Integer extractionTypeId, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer collectionId, String externalSpecimen, Integer gatheringObservationMethodId, Integer certaintyLevel, Date dateTime, Integer gatheringObservationDetailId) {
 		super();
 		this.specimenId = specimenId;
 		this.gatheringObservation = gatheringObservation;
@@ -135,7 +131,6 @@ public class Specimen implements Serializable {
 		this.numberWhole = numberWhole;
 		this.numberFragments = numberFragments;
 		this.extractionTypeId = extractionTypeId;
-		this.objVersion = objVersion;
 		this.createdBy = createdBy;
 		this.creationDate = creationDate;
 		this.lastModificationBy = lastModificationBy;
@@ -384,20 +379,6 @@ public class Specimen implements Serializable {
 	 */
 	public void setNumberWhole(Integer numberWhole) {
 		this.numberWhole = numberWhole;
-	}
-
-	/**
-	 * @return the objVersion
-	 */
-	public Integer getObjVersion() {
-		return objVersion;
-	}
-
-	/**
-	 * @param objVersion the objVersion to set
-	 */
-	public void setObjVersion(Integer objVersion) {
-		this.objVersion = objVersion;
 	}
 
 	/**

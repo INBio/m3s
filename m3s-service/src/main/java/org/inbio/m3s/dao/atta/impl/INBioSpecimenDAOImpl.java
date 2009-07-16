@@ -9,17 +9,17 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.SpecimenDAO;
+import org.inbio.m3s.dao.impl.BaseDAOImpl;
 
-import org.inbio.m3s.model.atta.Specimen;
+import org.inbio.m3s.model.general.Specimen;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
  *
  */
-public class INBioSpecimenDAOImpl extends HibernateDaoSupport implements SpecimenDAO{
+public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO{
 	
 	private static Logger logger = Logger.getLogger(INBioSpecimenDAOImpl.class);
 	
@@ -42,7 +42,7 @@ public class INBioSpecimenDAOImpl extends HibernateDaoSupport implements Specime
 				 */
 				Integer gatheringNumberMin = gatheringNumber - 1;
 				Integer gatheringNumberMax = gatheringNumber + 1;
-				Query query = session.createQuery("select s" + " from Specimen as s "
+				Query query = session.createQuery("select s" + " from INBioSpecimen as s "
 						+ " where s.gatheringDetailPersonId = " + gatheringPersonId
 						+ " and s.gatheringNumber > " + gatheringNumberMin
 						+ " and s.gatheringNumber < " + gatheringNumberMax);

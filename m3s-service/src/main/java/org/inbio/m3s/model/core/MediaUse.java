@@ -23,8 +23,6 @@ public class MediaUse extends DBLogEntity implements Serializable {
 
 	private Text textByNameTextId;
 
-	private Set<MediaUseMedia> mediaUseMedias = new HashSet<MediaUseMedia>(0);
-
 	public MediaUse() {
 	}
 
@@ -34,14 +32,13 @@ public class MediaUse extends DBLogEntity implements Serializable {
 
 	public MediaUse(Text textByDescriptionTextId, Text textByNameTextId,
 			Date creationDate, String createdBy, Date lastModificationDate,
-			String lastModificationBy, Set<MediaUseMedia> mediaUseMedias) {
+			String lastModificationBy) {
 		this.textByDescriptionTextId = textByDescriptionTextId;
 		this.textByNameTextId = textByNameTextId;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		this.mediaUseMedias = mediaUseMedias;
 	}
 
 	public Integer getMediaUseId() {
@@ -68,12 +65,5 @@ public class MediaUse extends DBLogEntity implements Serializable {
 		this.textByNameTextId = textByNameTextId;
 	}
 
-	public Set<MediaUseMedia> getMediaUseMedias() {
-		return this.mediaUseMedias;
-	}
-
-	public void setMediaUseMedias(Set<MediaUseMedia> mediaUseMedias) {
-		this.mediaUseMedias = mediaUseMedias;
-	}
 
 }

@@ -19,11 +19,11 @@ import org.inbio.m3s.service.util.ImportFromFile;
  */
 public class ImportFromFileTest extends AbstractServiceTest{
 
-	/*
+/*	
 	public void testGetGM(){
 		ImportFromFile iff = (ImportFromFile) getBean(Properties.IMPORT_FROM_FILE);
 		try {
-			iff.ImportMedia("/home/jgutierrez/Desktop/prueba improtación/U a Z[mod1].xls", ImportationFileEntity.MS_EXCEL_FILE);
+			iff.ImportMedia("/home/jgutierrez/Desktop/m3s pendiente/anfibios y reptiles/reptiles sueltas/reptiles sueltas.xls", ImportationFileEntity.MS_EXCEL_FILE);
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -36,5 +36,6 @@ public class ImportFromFileTest extends AbstractServiceTest{
 		}
 	}
 	*/
+	
 	
 }

@@ -15,7 +15,7 @@ public class Identification implements Serializable {
 
 	private IdentificationId id;
 
-	private Specimen specimen;
+	private ARASpecimen specimen;
 	
 	private ARATaxon taxon;
 
@@ -58,7 +58,7 @@ public class Identification implements Serializable {
 	 * @param lastModificationDate
 	 * @param identificationStatusId
 	 */
-	public Identification(IdentificationId id, Specimen specimen, ARATaxon taxon, Date identificationDate, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
+	public Identification(IdentificationId id, ARASpecimen specimen, ARATaxon taxon, Date identificationDate, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
 		super();
 		this.id = id;
 		this.specimen = specimen;
@@ -87,7 +87,7 @@ public class Identification implements Serializable {
 	 * @param lastModificationDate
 	 * @param identificationStatusId
 	 */
-	public Identification(IdentificationId id, Specimen specimen, ARATaxon taxon, Date identificationDate, Integer identificationTypeId, ARAPerson valuerPerson, String dataEntryError, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
+	public Identification(IdentificationId id, ARASpecimen specimen, ARATaxon taxon, Date identificationDate, Integer identificationTypeId, ARAPerson valuerPerson, String dataEntryError, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer identificationStatusId) {
 		super();
 		this.id = id;
 		this.specimen = specimen;
@@ -247,14 +247,14 @@ public class Identification implements Serializable {
 	/**
 	 * @return the specimen
 	 */
-	public Specimen getSpecimen() {
+	public ARASpecimen getSpecimen() {
 		return specimen;
 	}
 
 	/**
 	 * @param specimen the specimen to set
 	 */
-	public void setSpecimen(Specimen specimen) {
+	public void setSpecimen(ARASpecimen specimen) {
 		this.specimen = specimen;
 	}
 

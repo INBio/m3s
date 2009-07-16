@@ -6,8 +6,7 @@ package org.inbio.m3s.service.impl;
 
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.TechnicalMetadataDTO;
-import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.service.AbstractServiceTest;
 import org.inbio.m3s.service.MediaManager;
 
@@ -17,15 +16,17 @@ import org.inbio.m3s.service.MediaManager;
  */
 public class MediaManagerTest extends AbstractServiceTest{
 
+	/*
 	public void testGetGM(){
 		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
 		GeneralMetadataDTO gmDTO = mm.getGM(new Integer(100053));
 		System.out.println(gmDTO.toString());
 	}
+	*/
 	
 	public void testGetUACM(){
 		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
-		UsesAndCopyrightsDTO uacDTO = mm.getUACM(new Integer(100053));
+		UsesAndCopyrightsDTO uacDTO = mm.getUACM("100058");
 		System.out.println(uacDTO.toString());
 	}
 	

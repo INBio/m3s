@@ -4,8 +4,8 @@
 package org.inbio.m3s.dto.taxonomy;
 
 import org.inbio.m3s.dto.BaseDTOFactory;
-import org.inbio.m3s.model.atta.Specimen;
 import org.inbio.m3s.model.core.SpecimenMediaId;
+import org.inbio.m3s.model.general.Specimen;
 
 /**
  * @author jgutierrez

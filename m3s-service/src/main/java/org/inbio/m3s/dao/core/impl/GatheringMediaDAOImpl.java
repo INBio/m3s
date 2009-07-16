@@ -65,7 +65,7 @@ public class GatheringMediaDAOImpl extends BaseDAOImpl implements GatheringMedia
 	@SuppressWarnings("unchecked")
 	public List<GatheringMediaId> findAllByMediaId(final Integer mediaId)
 			throws IllegalArgumentException {
-		logger.error("getAllGatheringsLiteForMedia, param[mediaId:"+mediaId+"]");
+		logger.debug("findAllByMediaId, param[mediaId:"+mediaId+"]");
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<GatheringMediaId>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {

@@ -1,12 +1,12 @@
-package org.inbio.m3s.model.atta;
+package org.inbio.m3s.model.general;
 
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-public class Site implements Serializable {
+import org.inbio.m3s.model.DBLogEntity;
+
+public class Site extends DBLogEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -17,14 +17,6 @@ public class Site implements Serializable {
 	private String longitude;
 
 	private String latitude;
-
-	private Date creationDate;
-
-	private String createdBy;
-
-	private Date lastModificationDate;
-
-	private String lastModificationBy;
 
 	private Integer lambertX;
 
@@ -40,10 +32,6 @@ public class Site implements Serializable {
 
 	private Integer baseProjectionId;
 
-	private Set<Observation> observations = new HashSet<Observation>(0);
-
-	private Set<Gathering> gatherings = new HashSet<Gathering>(0);
-
 	public Site() {
 	}
 
@@ -58,16 +46,15 @@ public class Site implements Serializable {
 			Date lastModificationDate, String lastModificationBy,
 			Integer lambertX, Integer lambertY, String lambertProjection,
 			Integer siteCalculationMethodId, Integer crtmEast,
-			Integer crtmNorth, Integer baseProjectionId, Set<Observation> observations,
-			Set<Gathering> gatherings) {
+			Integer crtmNorth, Integer baseProjectionId) {
 		this.siteId = siteId;
 		this.description = description;
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.creationDate = creationDate;
-		this.createdBy = createdBy;
-		this.lastModificationDate = lastModificationDate;
-		this.lastModificationBy = lastModificationBy;
+		setCreationDate(creationDate);
+		setCreatedBy(createdBy);
+		setLastModificationDate(lastModificationDate);
+		setLastModificationBy(lastModificationBy);
 		this.lambertX = lambertX;
 		this.lambertY = lambertY;
 		this.lambertProjection = lambertProjection;
@@ -75,8 +62,6 @@ public class Site implements Serializable {
 		this.crtmEast = crtmEast;
 		this.crtmNorth = crtmNorth;
 		this.baseProjectionId = baseProjectionId;
-		this.observations = observations;
-		this.gatherings = gatherings;
 	}
 
 	public Integer getSiteId() {
@@ -109,38 +94,6 @@ public class Site implements Serializable {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getLastModificationDate() {
-		return this.lastModificationDate;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
-	}
-
-	public String getLastModificationBy() {
-		return this.lastModificationBy;
-	}
-
-	public void setLastModificationBy(String lastModificationBy) {
-		this.lastModificationBy = lastModificationBy;
 	}
 
 	public Integer getLambertX() {
@@ -197,22 +150,6 @@ public class Site implements Serializable {
 
 	public void setBaseProjectionId(Integer baseProjectionId) {
 		this.baseProjectionId = baseProjectionId;
-	}
-
-	public Set<Observation> getObservations() {
-		return this.observations;
-	}
-
-	public void setObservations(Set<Observation> observations) {
-		this.observations = observations;
-	}
-
-	public Set<Gathering> getGatherings() {
-		return this.gatherings;
-	}
-
-	public void setGatherings(Set<Gathering> gatherings) {
-		this.gatherings = gatherings;
 	}
 
 }

@@ -17,15 +17,15 @@ import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.lite.MediaTypeLite;
-import org.inbio.m3s.dto.lite.MediaUseLite;
 import org.inbio.m3s.dto.lite.ProjectLite;
-import org.inbio.m3s.dto.lite.UsePolicyLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.ImportationFileEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
@@ -63,7 +63,6 @@ public class ImportFromFile {
 	MessageManager messageManager;
 	UsePolicyDAO usePolicyDAO;
 	MediaUseDAO mediaUseDAO;
-	
 	MetadataManager metadataManager;
 	
 	
@@ -202,7 +201,7 @@ public class ImportFromFile {
 	 */
 	private static ImportFileParser getImportFileParser(String importFileName,
 			ImportationFileEntity fileType) throws IllegalArgumentException {
-
+		logger.debug("importFileName ["+importFileName+"], ImportationFileEntity ["+fileType.getId()+"]");
 		try {
 			if (fileType == ImportationFileEntity.MS_EXCEL_FILE) {
 				logger.debug("Importacion desde un archivo de Excel");
@@ -213,6 +212,7 @@ public class ImportFromFile {
 			}
 		} catch (Exception e) {
 			logger.error("Error grave intentando abrir el archivo de importacion.");
+			logger.error(e.getMessage());
 			throw new IllegalArgumentException();
 		}
 
@@ -316,7 +316,9 @@ public class ImportFromFile {
 			
 			// taxonomy
 			taxonName = info.read(rowNumber, ImportFileParser.TAXONOMY_DATA);
+			logger.debug("taxonName: '" + taxonName + "'");
 			kingdom = info.read(rowNumber, ImportFileParser.TAXNOMY_KINGDOM);
+			logger.debug("kingdom: '" + kingdom + "'");
 			if (taxonName == null || taxonName.compareTo("") == 0) {
 				// in case the media is associated with the specimen Number of
 				// the gathering code the taxonomy should be associated from
@@ -343,6 +345,8 @@ public class ImportFromFile {
 				// TODO revisar si es necesario inicializar este arrayList pues creo que
 				// no hace falta.
 				tlDTO = taxonomyManager.getTaxonLite(taxonName, kingdom);
+				if(tlDTO == null)
+					logger.error("no Taxon Lite was found");
 				taxonsList.add(tlDTO);
 
 			}
@@ -451,22 +455,21 @@ public class ImportFromFile {
 	 * @throws IllegalArgumentException
 	 *           if some information is wrong or in bad format
 	 */
-	private UsesAndCopyrightsDTO getUAC(ImportFileParser info,
-			int rowNumber) throws IllegalArgumentException {
+	private UsesAndCopyrightsDTO getUAC(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
 		UsesAndCopyrightsDTO uacDTO = new UsesAndCopyrightsDTO();
 		String booleanLiteralValue;
 		
 
-		uacDTO.setMediaId(null);
+		uacDTO.setMediaKey(null);
 
 		logger.debug("\nGetting uses and copyrigths metadata TV");
 
 		// set author
 		String authorName = info.read(rowNumber,	ImportFileParser.AUTHOR_PERSON_NAME_DATA);
 		PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
-		uacDTO.setAuthorId(new Integer(plDTO.getPersonKey()));
+		uacDTO.setAuthorKey(plDTO.getPersonKey());
 		info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Author Name: '" + uacDTO.getAuthorId() + "'");
+		logger.debug("Author Key: '" + uacDTO.getAuthorKey() + "'");
 		
 		// owner type: institutionOwnerId and AuthorOwnerId
 		String ownerTypeText = info.read(rowNumber, ImportFileParser.OWNER_TYPE_DATA);
@@ -474,25 +477,25 @@ public class ImportFromFile {
 		Integer ownerTypeId = getOwnerType(ownerTypeText);
 		if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
 			InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerNameText);
-			uacDTO.setInstitutionOwnerId(new Integer(iLiteDTO.getInstitutionKey()));
-			uacDTO.setAuthorId(null);
+			uacDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
+			uacDTO.setPersonOwnerKey(null);
 		} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
 			PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerNameText);
-			uacDTO.setAuthorId(new Integer(oplDTO.getPersonKey()));
-			uacDTO.setInstitutionOwnerId(null);
+			uacDTO.setPersonOwnerKey(oplDTO.getPersonKey());
+			uacDTO.setInstitutionOwnerKey(null);
 		} else {
 			logger.error("No valid owner Type... debería tirarse una excepcion");	
 		}
 		info.writeResult(rowNumber, ImportFileParser.OWNER_TYPE_DATA, ImportFileParser.SUCCESFUL);
-		logger.debug("Author Owner Type: '" + uacDTO.getAuthorId() + "'");
-		logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerId() + "'");
+		logger.debug("Author Owner Type: '" + uacDTO.getAuthorKey() + "'");
+		logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
 
 		// use policy
 		String usePolicyText = info.read(rowNumber, ImportFileParser.USE_POLICY_DATA);
-		UsePolicyLite upLite = usePolicyDAO.getUsePolicyLite(usePolicyText);
-		uacDTO.setUsePolicyID(upLite.getUsePolicyId());
+		UsePolicyDTO upDTO = usePolicyDAO.getUsePolicyLite(usePolicyText);
+		uacDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
 		info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Use policy: '" + uacDTO.getUsePolicyID() + "'");	
+		logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
 		
 		// mediaUses
 		String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
@@ -530,19 +533,20 @@ public class ImportFromFile {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private List<MediaUseLite> getMediaUsesList(String mediaUsesText) {
+	private List<MediaUseDTO> getMediaUsesList(String mediaUsesText) {
 		logger.debug("getMediaUsesList... start");
 		List<String> mediaUseTextualNameList = (List) StringUtil.getIndividualItems(mediaUsesText, String.class);
 		logger.debug("Translating UACDTextualValues to UACDBValues... ["+ mediaUseTextualNameList.size() + "] media uses found");
 
-		MediaUseLite mediaUseLite;
-		List<MediaUseLite> mediaUsesList = new ArrayList<MediaUseLite>();
+		MediaUseDTO muDTO;
+		List<MediaUseDTO> mediaUsesList = new ArrayList<MediaUseDTO>();
 		
 		for(String mediaUseName : mediaUseTextualNameList){
-			mediaUseLite = mediaUseDAO.getMediaUseLite(mediaUseName, new Integer(MessageManager.DEFAULT_LANGUAGE));
-			mediaUsesList.add(mediaUseLite);
+			//muDTO = mediaUseDAO.getMediaUseLite(mediaUseName, MessageManager.DEFAULT_LANGUAGE);
+			muDTO = mediaUseDAO.findByNameAndLanguage(mediaUseName, MessageManager.DEFAULT_LANGUAGE_KEY);
+			mediaUsesList.add(muDTO);
 			logger.debug("Translating UACDTextualValues to UACDBValues... adding mediaUse id: '"
-					+ mediaUseLite.getMediaUseId() + "'.");
+					+ muDTO.getMediaUseKey() + "'.");
 		}
 		
 		return mediaUsesList;

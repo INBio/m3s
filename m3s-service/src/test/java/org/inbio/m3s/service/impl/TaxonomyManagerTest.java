@@ -70,7 +70,7 @@ public class TaxonomyManagerTest extends AbstractServiceTest{
 	}
 	*/
 	
-	
+	/*
 	public void testGetTaxonLiteById(){
 		
 		//MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
@@ -82,6 +82,23 @@ public class TaxonomyManagerTest extends AbstractServiceTest{
 		TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
 		//TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
 		TaxonLiteDTO tlDTO = tm.getTaxonLiteById("55");
+		logger.info(tlDTO.toString());
+		
+		logger.info("kingdom");
+		TaxonLiteDTO tlKingdomDTO = tm.getTaxonLiteById(tlDTO.getKingdomKey());
+		logger.info(tlKingdomDTO.toString());
+		
+		assertTrue( true );
+	}
+	*/
+	
+public void testGetTaxonLite(){
+		
+		
+		logger.info("Usando el TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
+		TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
+		//TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
+		TaxonLiteDTO tlDTO = tm.getTaxonLite("Eleutherodactylus pardalis","Animalia");
 		logger.info(tlDTO.toString());
 		
 		logger.info("kingdom");

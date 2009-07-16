@@ -14,7 +14,7 @@ public class Observation implements Serializable {
 
 	private INBioPerson person;
 
-	private Site site;
+	private INBioSite site;
 
 	private String contents;
 
@@ -68,7 +68,7 @@ public class Observation implements Serializable {
 		this.observationDate = observationDate;
 	}
 
-	public Observation(Integer observationId, INBioPerson person, Site site,
+	public Observation(Integer observationId, INBioPerson person, INBioSite site,
 			String contents, Integer certaintyLevel, Date observationDate,
 			String surroundingsDescription, String observationSiteDescription,
 			Integer precision, Integer elevationLowerBound,
@@ -122,11 +122,11 @@ public class Observation implements Serializable {
 		this.person = person;
 	}
 
-	public Site getSite() {
+	public INBioSite getSite() {
 		return this.site;
 	}
 
-	public void setSite(Site site) {
+	public void setSite(INBioSite site) {
 		this.site = site;
 	}
 

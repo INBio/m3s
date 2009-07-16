@@ -59,7 +59,7 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
 		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100001");
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100050");
 		logger.info(tmDTO.toString());
 	}
 

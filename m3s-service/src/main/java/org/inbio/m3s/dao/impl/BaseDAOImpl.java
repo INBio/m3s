@@ -14,6 +14,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author jgutierrez
  * 
  */
+//public class BaseDAOImpl<E extends Object,I extends Object> extends HibernateDaoSupport implements BaseDAO<E,I> {
 public class BaseDAOImpl extends HibernateDaoSupport implements BaseDAO {
 
 	
@@ -58,7 +59,7 @@ public class BaseDAOImpl extends HibernateDaoSupport implements BaseDAO {
 	@SuppressWarnings("unchecked")
 	public Object findById(Class entityClass, Object Id) throws IllegalArgumentException {
 		HibernateTemplate template = getHibernateTemplate();
-		return template.get(entityClass, (Serializable) Id);
+		return (Object) template.get(entityClass, (Serializable) Id);
 	}
 	
 	/*

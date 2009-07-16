@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="org.inbio.m3s.model.atta.Specimen" table="ATTA.SPECIMEN">
+    <class name="org.inbio.m3s.model.atta.INBioSpecimen" table="ATTA.SPECIMEN">
         <id name="specimenId" type="java.lang.Integer">
             <column name="SPECIMEN_ID" precision="22" scale="0" />
             <generator class="assigned" />
@@ -68,19 +68,5 @@
         <property name="externalSpecimen" type="string">
             <column name="EXTERNAL_SPECIMEN" length="1" />
         </property>
-        <set name="identifications" inverse="true">
-            <key>
-                <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.Identification" />
-        </set>
-        <!-- 
-        <set name="specimenMedias" inverse="true">
-            <key>
-                <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.SpecimenMedia" />
-        </set>
-         -->
     </class>
 </hibernate-mapping>

@@ -7,9 +7,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.SiteDAO;
+import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * ATTA session
  * 
  */
-public class INBioSiteDAOImpl extends HibernateDaoSupport implements SiteDAO  {
+public class INBioSiteDAOImpl extends BaseDAOImpl implements SiteDAO  {
 
 	private static Logger logger = Logger.getLogger(INBioSiteDAOImpl.class);
 

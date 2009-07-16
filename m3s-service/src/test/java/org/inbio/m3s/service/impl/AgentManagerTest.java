@@ -26,7 +26,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 		List<PersonLiteDTO> iList = am.getAllPersonLite();
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		
-		logger.info("Total de persona en el M3S: "+iList.size());
+		logger.info("Total de personas: "+iList.size());
 		
 		logger.info("La primera:");
 		logger.info(iList.get(0).toString());

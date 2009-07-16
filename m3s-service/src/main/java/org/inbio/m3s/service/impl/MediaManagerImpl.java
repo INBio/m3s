@@ -41,10 +41,10 @@ import org.inbio.m3s.dao.core.SpecimenMediaDAO;
 import org.inbio.m3s.dao.core.TaxonMediaDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
-import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.MediaUseLite;
 import org.inbio.m3s.dto.lite.ProjectLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
@@ -95,10 +95,10 @@ public class MediaManagerImpl implements MediaManager {
 	 * @param newUAC
 	 */
 	public void updateUACM(UsesAndCopyrightsDTO newUAC) {
-		logger.info("updating the UACM... mediaId [" + newUAC.getMediaId()
-				+ "]");
+		logger.info("updating the UACM... mediaId [" + newUAC.getMediaKey()+ "]");
+		logger.debug(newUAC.toString());
 
-		UsesAndCopyrightsDTO DBUAC = getUACM(newUAC.getMediaId());
+		UsesAndCopyrightsDTO DBUAC = getUACM(newUAC.getMediaKey());
 	
 		logger.debug("updating the UACM... Iguales? " + DBUAC.equals(newUAC));
 		if (DBUAC.equals(newUAC)) {
@@ -110,22 +110,28 @@ public class MediaManagerImpl implements MediaManager {
 		Media theMedia;		
 
 		try {
-			theMedia = (Media) mediaDAO.findById(Media.class, newUAC.getMediaId());
+			theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(newUAC.getMediaKey()));
 
-			if (DBUAC.getAuthorId().equals(newUAC.getAuthorId()) == false) {
-				logger.debug("updating the UACM... updating authorId");
-				theMedia.setAuthorPersonId(newUAC.getAuthorId());
+			if (DBUAC.getAuthorKey().equals(newUAC.getAuthorKey()) == false) {
+				logger.debug("updating the UACM... updating authorKey");
+				theMedia.setAuthorPersonId(Integer.valueOf(newUAC.getAuthorKey()));
 			}
 			logger.debug("updating the UACM... updating author DONE");
 
 			logger.debug("updating the UACM... updating Owners");
-			theMedia.setOwnerInstitutionId(newUAC.getInstitutionOwnerId());
-			theMedia.setOwnerPersonId(newUAC.getPersonOwnerId());
+			if(newUAC.getInstitutionOwnerKey() != null){
+				theMedia.setOwnerInstitutionId(Integer.valueOf(newUAC.getInstitutionOwnerKey()));
+				theMedia.setOwnerPersonId(null);
+			}
+			if(newUAC.getPersonOwnerKey() != null){
+				theMedia.setOwnerPersonId(Integer.valueOf(newUAC.getPersonOwnerKey()));	
+				theMedia.setOwnerInstitutionId(null);
+			}	
 			logger.debug("updating the UACM... updating Owners DONE");
 
-			if (DBUAC.getUsePolicyID().equals(newUAC.getUsePolicyID()) == false) {
+			if (DBUAC.getUsePolicyKey().equals(newUAC.getUsePolicyKey()) == false) {
 				logger.debug("updating the UACM... updating use policy");
-				UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, newUAC.getUsePolicyID());
+				UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(newUAC.getUsePolicyKey()));
 				theMedia.setUsePolicy(theUsePolicy);
 			}
 			logger.debug("updating the UACM... updating use policy DONE");
@@ -135,10 +141,10 @@ public class MediaManagerImpl implements MediaManager {
 						
 				logger.debug("updating the UACM... updating media uses");
 
-				deleteMediaUses(newUAC.getMediaId(), newUAC.getMediaUsesList());
+				deleteMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
 
 				if (newUAC.getMediaUsesList() != null) {
-					addMediaUses(newUAC.getMediaId(), newUAC.getMediaUsesList());
+					addMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
 				}
 			}
 			logger.debug("updating the UACM... updating media uses DONE");
@@ -299,16 +305,18 @@ public class MediaManagerImpl implements MediaManager {
 	 * 
 	 * @return UsesAndCopyrightsDTO
 	 */
-	public UsesAndCopyrightsDTO getUACM(Integer mediaId) throws IllegalArgumentException {
-		logger.info("getting UACM... for media [" + mediaId + "].");
+	public UsesAndCopyrightsDTO getUACM(String mediaKey) throws IllegalArgumentException {
+		logger.info("getting UACM... for media [" + mediaKey + "].");
 		UsesAndCopyrightsDTO uac = new UsesAndCopyrightsDTO();
-		uac = mediaDAO.getUsesAndCopyrightsDTO(mediaId);
-		uac.setMediaId(mediaId);
+		uac = mediaDAO.getUsesAndCopyrightsDTO(Integer.valueOf(mediaKey));
+		uac.setMediaKey(mediaKey);
 
 		
 		try {
 			// makes the other queries to complete the metadata			
-			uac.setMediaUsesList(mediaUseDAO.getMediaUsesLite(mediaId, MessageManager.DEFAULT_LANGUAGE));
+			//uac.setMediaUsesList(mediaUseDAO.getMediaUsesLite(Integer.valueOf(mediaKey), MessageManager.DEFAULT_LANGUAGE));
+			uac.setMediaUsesList(mediaUseDAO.findAllByMediaAndLanguage(mediaKey, MessageManager.DEFAULT_LANGUAGE_KEY));
+			
 
 			logger.info("getting UACM... done");
 			return uac;
@@ -404,7 +412,7 @@ public class MediaManagerImpl implements MediaManager {
 			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,gm.getMediaTypeId());
 			theMedia.setMediaType(theMediaType);
 
-			UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class,uac.getUsePolicyID());
+			UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class,Integer.valueOf(uac.getUsePolicyKey()));
 			theMedia.setUsePolicy(theUsePolicy);
 
 			// saves the Media Object in the database
@@ -423,7 +431,7 @@ public class MediaManagerImpl implements MediaManager {
 		try {
 			gm.setMediaId(theMedia.getMediaId());
 			insertGM(gm);
-			uac.setMediaId(theMedia.getMediaId());
+			uac.setMediaKey(theMedia.getMediaId().toString());
 			insertUACM(uac);
 			tmDTO.setMediaKey(String.valueOf(theMedia.getMediaId()));
 	    metadataManager.saveTechnicalMetadata(tmDTO);
@@ -524,30 +532,39 @@ public class MediaManagerImpl implements MediaManager {
 	 *            media owner of the new metadata
 	 */
 	private void insertUACM(UsesAndCopyrightsDTO uac) throws IllegalArgumentException {
-		logger.info("inserting UACMetadata... for media: " + uac.getMediaId());
+		logger.info("inserting UACMetadata... for media: " + uac.getMediaKey());
+		logger.info(uac.toString());
 
 		Media theMedia;
 		UsePolicy theUsePolicy;
 
 		try {
 
-			theMedia = (Media) mediaDAO.findById(Media.class, uac.getMediaId());
+			theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(uac.getMediaKey()));
 
 			logger.info("checking insertGM... for media: " + theMedia.getMediaId());
 			logger.info("checking insertGM... for title: " + theMedia.getTitle());
 			logger.info("checking insertGM... for description: " + theMedia.getDescription());
 			
-			theMedia.setAuthorPersonId(uac.getAuthorId());
-			theMedia.setOwnerInstitutionId(uac.getInstitutionOwnerId());
-			theMedia.setOwnerPersonId(uac.getPersonOwnerId());
+			theMedia.setAuthorPersonId(Integer.valueOf(uac.getAuthorKey()));
+			
+			if(uac.getPersonOwnerKey() == null)
+				theMedia.setOwnerPersonId(null);
+			else
+				theMedia.setOwnerPersonId(Integer.valueOf(uac.getPersonOwnerKey()));
+				
+			if(uac.getInstitutionOwnerKey() == null)
+				theMedia.setOwnerInstitutionId(null);
+			else
+				theMedia.setOwnerInstitutionId(Integer.valueOf(uac.getInstitutionOwnerKey()));
 
 			// set usePolicyID
-			theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, uac.getUsePolicyID());
+			theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(uac.getUsePolicyKey()));
 			theMedia.setUsePolicy(theUsePolicy);
 
 			// set mediaUsesIds
 			if(uac.getMediaUsesList()!=null)
-				addMediaUses(uac.getMediaId(), uac.getMediaUsesList());
+				addMediaUses(uac.getMediaKey(), uac.getMediaUsesList());
 
 			theMedia.setIsBackup(uac.getIsBackup());
 			theMedia.setIsPublic(uac.getIsPublic());
@@ -709,10 +726,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addMediaUses(java.lang.Integer, java.util.List)
 	 */
-	public void addMediaUses(Integer mediaId, List<MediaUseLite> mediaUsesList)
+	public void addMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList)
 			throws IllegalArgumentException {
 		logger.debug("setting " + mediaUsesList.size() + " media uses for media:"
-				+ mediaId + ".");
+				+ mediaKey + ".");
 
 		int successful = 0; // for local count of errors
 
@@ -723,14 +740,14 @@ public class MediaManagerImpl implements MediaManager {
 		MediaUseMediaId theMediaUseMediaId = null;
 
 		try {
-			theMedia = (Media) mediaDAO.findById(Media.class, mediaId);
+			theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(mediaKey));
 
-			for (MediaUseLite mul : mediaUsesList) {
+			for (MediaUseDTO muDTO : mediaUsesList) {
 
 				
-				theMediaUse = (MediaUse) mediaUseDAO.findById(MediaUse.class, mul.getMediaUseId());
+				theMediaUse = (MediaUse) mediaUseDAO.findById(MediaUse.class, Integer.valueOf(muDTO.getMediaUseKey()));
 
-				theMediaUseMediaId = new MediaUseMediaId(mediaId, (Integer) theMediaUse
+				theMediaUseMediaId = new MediaUseMediaId(Integer.valueOf(mediaKey), (Integer) theMediaUse
 						.getMediaUseId());
 
 				theMediaUseMedia = new MediaUseMedia(theMediaUseMediaId, theMedia,
@@ -748,7 +765,7 @@ public class MediaManagerImpl implements MediaManager {
 		} catch (Exception e) {
 			logger.error("Couldn't set the mediaUse id '"
 					+ (Integer) theMediaUse.getMediaUseId() + "' to the media with id '"
-					+ mediaId + "'.");
+					+ mediaKey + "'.");
 		}
 
 		logger.info("SetMediaUses finish with " + successful
@@ -997,10 +1014,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteMediaUses(java.lang.Integer, java.util.List)
 	 */
-	public void deleteMediaUses(Integer mediaId, List<MediaUseLite> mediaUsesList)
+	public void deleteMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList)
 			throws IllegalArgumentException {
 		logger.debug("deleting media uses... " + mediaUsesList.size()
-				+ " media uses for media:" + mediaId + ".");
+				+ " media uses for media:" + mediaKey + ".");
 
 		int successful = 0; // for local count of errors
 
@@ -1010,12 +1027,12 @@ public class MediaManagerImpl implements MediaManager {
 		MediaUseMediaId mumId = null;
 
 		try {
-			m = (Media) mediaDAO.findById(Media.class, mediaId);
+			m = (Media) mediaDAO.findById(Media.class, Integer.valueOf(mediaKey));
 
 			// deletes the uses of the MEDIA
-			for (MediaUseLite mul : mediaUsesList) {
+			for (MediaUseDTO muDTO : mediaUsesList) {
 
-				mu = (MediaUse) mediaUseDAO.findById(MediaUse.class, mul.getMediaUseId());
+				mu = (MediaUse) mediaUseDAO.findById(MediaUse.class, Integer.valueOf(muDTO.getMediaUseKey()));
 
 				mumId = new MediaUseMediaId(m.getMediaId(), mu.getMediaUseId());
 
@@ -1029,7 +1046,7 @@ public class MediaManagerImpl implements MediaManager {
 		} catch (Exception he) {
 			logger.error(he.getMessage());
 			logger.error("deleting media uses... Couldn't delete the mediaUse id '"
-					+ (Integer) mu.getMediaUseId() + "' to the media with id '" + mediaId
+					+ (Integer) mu.getMediaUseId() + "' to the media with id '" + mediaKey
 					+ "'.");
 		}
 		logger.info("deleting media uses... finish with " + successful

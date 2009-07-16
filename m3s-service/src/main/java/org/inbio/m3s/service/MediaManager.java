@@ -6,9 +6,9 @@ package org.inbio.m3s.service;
 import java.util.List;
 
 import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
-import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
-import org.inbio.m3s.dto.lite.MediaUseLite;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.lite.ProjectLite;
 import org.inbio.m3s.dto.message.KeywordLiteDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
@@ -26,7 +26,7 @@ public interface MediaManager {
 	
 	public void updateGM(GeneralMetadataDTO newGm) throws IllegalArgumentException;
 	
-	public UsesAndCopyrightsDTO getUACM(Integer mediaId) throws IllegalArgumentException;
+	public UsesAndCopyrightsDTO getUACM(String mediaKey) throws IllegalArgumentException;
 	
 	public GeneralMetadataDTO getGM(Integer mediaId) throws IllegalArgumentException;
 	
@@ -38,9 +38,9 @@ public interface MediaManager {
 
 	public void deleteKeywords(Integer mediaId, List<KeywordLiteDTO> keywordsList) throws IllegalArgumentException;
 
-	public void addMediaUses(Integer mediaId, List<MediaUseLite> mediaUsesList) throws IllegalArgumentException;
+	public void addMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList) throws IllegalArgumentException;
 
-	public void deleteMediaUses(Integer mediaId, List<MediaUseLite> mediaUsesList) throws IllegalArgumentException;
+	public void deleteMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList) throws IllegalArgumentException;
 
 	public void addTaxons(Integer mediaId, List<TaxonLiteDTO> taxonsList) throws IllegalArgumentException;
 

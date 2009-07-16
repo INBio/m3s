@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
 <hibernate-mapping>
-    <class name="org.inbio.m3s.model.ara.Specimen" table="ara.specimen">
+    <class name="org.inbio.m3s.model.ara.ARASpecimen" table="ara.specimen">
         <id name="specimenId" type="java.lang.Integer">
             <column name="specimen_id" precision="22" scale="0" />
             <generator class="assigned" />
@@ -49,9 +49,6 @@
         </property>
         <property name="extractionTypeId" type="java.lang.Integer">
             <column name="extraction_type_id" precision="22" scale="0" />
-        </property>
-        <property name="objVersion" type="java.lang.Integer">
-            <column name="obj_version" precision="22" scale="0" />
         </property>
         <property name="createdBy" type="string">
             <column name="created_by" length="100" />

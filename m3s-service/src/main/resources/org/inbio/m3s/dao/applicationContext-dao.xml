@@ -73,10 +73,8 @@
 	<!-- Ara DAO Implementations -->  
   <bean id="ARAInstitutionDAO" class="org.inbio.m3s.dao.ara.impl.ARAInstitutionDAOImpl" parent="araBaseDAORO"/>
   <bean id="ARAPersonDAO" class="org.inbio.m3s.dao.ara.impl.ARAPersonDAOImpl" parent="araBaseDAORO"/>
-  <!-- 
-  <bean id="ARASiteDAO" class="org.inbio.m3s.dao.atta.impl.INBioSiteDAOImpl" parent="attaBaseDAORO"/>
-  <bean id="ARASpecimenDAO" class="org.inbio.m3s.dao.atta.impl.INBioSpecimenDAOImpl" parent="attaBaseDAORO"/>
-     -->  
+  <bean id="ARASiteDAO" class="org.inbio.m3s.dao.ara.impl.ARASiteDAOImpl" parent="araBaseDAORO"/>
+  <bean id="ARASpecimenDAO" class="org.inbio.m3s.dao.ara.impl.ARASpecimenDAOImpl" parent="araBaseDAORO"/>  
   <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.ara.impl.ARATaxonDAOImpl" parent="araBaseDAORO"/>
   
   

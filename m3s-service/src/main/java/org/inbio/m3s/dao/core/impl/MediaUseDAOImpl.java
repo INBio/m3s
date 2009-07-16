@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
-import org.inbio.m3s.dto.lite.MediaUseLite;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dao.DataCache;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -28,7 +28,7 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 	 * 
 	 * @see org.inbio.m3s.dao.core.MediaUseDAO#getMediaUseLite(java.lang.String)
 	 */
-	public MediaUseLite getMediaUseLite(String mediaUseName, Integer languageId)
+	public MediaUseDTO getMediaUseLite(String mediaUseName, Integer languageId)
 			throws IllegalArgumentException {
 		logger.debug("getMediaUseLite with name = '" + mediaUseName + "'.");
 		String errorMsj = "El nombre de la uso '" + mediaUseName+ "' no fue encontrado.";
@@ -45,7 +45,7 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 
 			logger.debug("get media use... done: "	+ DataCache.mediaUsesDBIds.get(index));
 
-			return new MediaUseLite(DataCache.mediaUsesDBIds.get(index), mediaUseName);
+			return new MediaUseDTO(DataCache.mediaUsesDBIds.get(index).toString(), mediaUseName);
 		} catch (Exception e) {
 			logger.error(errorMsj);
 			logger.error(e.getMessage());
@@ -58,7 +58,7 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 	 * 
 	 * @see org.inbio.m3s.dao.core.MediaUseDAO#getMediaUseLite(java.lang.Integer)
 	 */
-	public MediaUseLite getMediaUseLite(Integer mediaUseId, Integer languageId)
+	public MediaUseDTO getMediaUseLite(Integer mediaUseId, Integer languageId)
 			throws IllegalArgumentException {
 		logger.debug("getMediaUseLite");
 		String errorMsj = "No se encontro ningun uso con el Id #" + mediaUseId
@@ -78,7 +78,7 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 			logger.debug("media use name... done: "
 					+ DataCache.mediaUsesNames.get(index));
 
-			return new MediaUseLite(mediaUseId, DataCache.mediaUsesNames.get(index));
+			return new MediaUseDTO(mediaUseId.toString(), DataCache.mediaUsesNames.get(index));
 		} catch (Exception e) {
 			logger.error(errorMsj);
 			logger.error(e.getMessage());
@@ -92,14 +92,14 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 	 * @see org.inbio.m3s.dao.core.MediaUseDAO#getMediaUsesLite(java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<MediaUseLite> getMediaUsesLite(final Integer mediaId, final Integer languageId)
+	public List<MediaUseDTO> getMediaUsesLite(final Integer mediaId, final Integer languageId)
 			throws IllegalArgumentException {
 		logger.debug("getMediaUsesLite()...");
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<MediaUseLite>) template.execute(new HibernateCallback() {
+		return (List<MediaUseDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.MediaUseLite(mum.mediaUse.mediaUseId, tt.name)"			
+						"select new org.inbio.m3s.dto.metadata.MediaUseDTO(mum.mediaUse.mediaUseId, tt.name)"			
 						+ " from TextTranslation as tt, MediaUseMedia as mum"
 						+ " where mum.media.mediaId = "+ mediaId
 						+ " and tt.language.languageId = " + languageId + ""
@@ -116,14 +116,14 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 	 * @see org.inbio.m3s.dao.core.MediaUseDAO#listAllLite()
 	 */
 	@SuppressWarnings("unchecked")
-	public List<MediaUseLite> listAllLite(final Integer languageId)
+	public List<MediaUseDTO> listAllLite(final Integer languageId)
 			throws IllegalArgumentException {
 		logger.debug("getMediaUsesLite()...");
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<MediaUseLite>) template.execute(new HibernateCallback() {
+		return (List<MediaUseDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.MediaUseLite(mu.mediaUseId, tt.name)"
+						"select new org.inbio.m3s.dto.metadata.MediaUseDTO(mu.mediaUseId, tt.name)"
 						+ " from TextTranslation as tt, MediaUse as mu"
 						+ " where tt.language.languageId = " + languageId + ""
 						+ " and tt.text = mu.textByNameTextId");
@@ -132,5 +132,51 @@ public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
 			}
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<MediaUseDTO> findAllByMediaAndLanguage(final String mediaKey,
+			final String languageKey) throws IllegalArgumentException {
+		logger.debug("getMediaUsesLite()...");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<MediaUseDTO>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select new org.inbio.m3s.dto.metadata.MediaUseDTO(mum.mediaUse.mediaUseId, tt.name)"			
+						+ " from TextTranslation as tt, MediaUseMedia as mum"
+						+ " where mum.media.mediaId = "+ mediaKey
+						+ " and tt.language.languageId = " + languageKey + ""
+						+ " and tt.text = mum.mediaUse.textByNameTextId");
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
+	}
+
+	public MediaUseDTO findByNameAndLanguage(final String mediaUseName,
+			final String languageKey) throws IllegalArgumentException {
+		logger.debug("getMediaUseLite with name = '" + mediaUseName + "'.");
+		String errorMsj = "El nombre de la uso '" + mediaUseName+ "' no fue encontrado.";
+
+		try {
+			if (DataCache.mediaUsesInCache) {
+				logger.debug("getting media uses... were in cache.");
+			} else {
+				logger.debug("getting media uses... weren't in cache!.");
+				DataCache.initMediaUsesInfo();
+			}
+
+			int index = DataCache.mediaUsesNames.indexOf(mediaUseName);
+
+			logger.debug("get media use... done: "	+ DataCache.mediaUsesDBIds.get(index));
+
+			return new MediaUseDTO(DataCache.mediaUsesDBIds.get(index).toString(), mediaUseName);
+		} catch (Exception e) {
+			logger.error(errorMsj);
+			logger.error(e.getMessage());
+			throw new IllegalArgumentException(errorMsj);
+		}
+	}
+
+
 
 }

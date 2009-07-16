@@ -65,31 +65,5 @@
         <property name="secondLastName" type="string">
             <column name="SECOND_LAST_NAME" length="40" />
         </property>
-        <!--
-        <set name="observations" inverse="true">
-            <key>
-                <column name="VALUER_PERSON_ID" precision="22" scale="0" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.Observation" />
-        </set>
-        <set name="gatherings" inverse="true">
-            <key>
-                <column name="RESPONSIBLE_PERSON_ID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.Gathering" />
-        </set>
-        <set name="personProfiles" inverse="true">
-            <key>
-                <column name="PERSON_ID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.PersonProfile" />
-        </set>
-        <set name="identifications" inverse="true">
-            <key>
-                <column name="VALUER_PERSON_ID" precision="22" scale="0" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.Identification" />
-        </set>
-         -->
     </class>
 </hibernate-mapping>

@@ -15,7 +15,7 @@ import org.inbio.m3s.service.SiteManager;
 public class SiteManagerTest extends AbstractServiceTest{
 
 	
-public void testSimpleINBioInstitutionDAO(){
+public void testGetSiteFromGatheringCode(){
 		
 		SiteManager siteManager = (SiteManager) applicationContext.getBean(Properties.SITE_MANAGER);
 		

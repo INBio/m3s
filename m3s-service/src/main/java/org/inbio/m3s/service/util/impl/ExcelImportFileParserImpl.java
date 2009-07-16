@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,6 +27,8 @@ import org.inbio.m3s.service.util.ImportFileParser;
  * @author james
  */
 public class ExcelImportFileParserImpl implements ImportFileParser {
+	
+	private static Logger logger = Logger.getLogger(ExcelImportFileParserImpl.class);
 
 	private String filename;
 
@@ -36,16 +39,20 @@ public class ExcelImportFileParserImpl implements ImportFileParser {
 	/***************************************************************************
 	 * Creates a new instance of ExcelImportFile
 	 **************************************************************************/
-	public ExcelImportFileParserImpl(String filename) throws FileNotFoundException,
-			IOException, IllegalArgumentException {
+	public ExcelImportFileParserImpl(String filename) throws FileNotFoundException,IOException, IllegalArgumentException {
+		
+		logger.debug("filename ["+filename+"]");
+		
 		this.filename = filename;
 		this.fs = new POIFSFileSystem(new FileInputStream(filename));
 		this.wb = new HSSFWorkbook(fs);
+		
+		logger.debug("numero de paginas del Excell: "+this.wb.getNumberOfSheets()+"");
 
 		// check the number of sheets of the document
 		if (this.wb.getNumberOfSheets() == 0) {
-			throw new IllegalArgumentException(
-					"El archivo no contiene información necesaria");
+			logger.error("El archivo no contiene información necesaria");
+			throw new IllegalArgumentException("El archivo no contiene información necesaria");
 		} else if (this.wb.getNumberOfSheets() == 1) {
 			wb.createSheet("resultados");
 			wb.setSheetOrder("resultados", ExcelImportFileParserImpl.OUTPUT_SHEET);

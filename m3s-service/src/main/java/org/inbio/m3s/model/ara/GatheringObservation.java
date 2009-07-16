@@ -17,7 +17,7 @@ public class GatheringObservation implements Serializable {
 
 	private Integer gatheringObservationId;
 
-	private Site site;
+	private ARASite site;
 
 	private ARAPerson responsiblePerson;
 
@@ -79,7 +79,7 @@ public class GatheringObservation implements Serializable {
 	 * @param lastModificationBy
 	 * @param lastModificationDate
 	 */
-	public GatheringObservation(Integer gatheringObservationId, Site site, ARAPerson responsiblePerson, Date initialDate, Date finalDate, Integer collectionId, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate) {
+	public GatheringObservation(Integer gatheringObservationId, ARASite site, ARAPerson responsiblePerson, Date initialDate, Date finalDate, Integer collectionId, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate) {
 		super();
 		this.gatheringObservationId = gatheringObservationId;
 		this.site = site;
@@ -118,7 +118,7 @@ public class GatheringObservation implements Serializable {
 	 * @param maximumDepth
 	 * @param expositionId
 	 */
-	public GatheringObservation(Integer gatheringObservationId, Site site, ARAPerson responsiblePerson, Date initialDate, Date finalDate, String surroundingsDescription, Integer minimumElevation, Integer maximumElevation, Integer collectionId, Integer labelId, Integer originalLabelId, String siteDescription, Integer samplingTypeId, Integer gradientPercentage, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer minimumDepth, Integer maximumDepth, Integer expositionId) {
+	public GatheringObservation(Integer gatheringObservationId, ARASite site, ARAPerson responsiblePerson, Date initialDate, Date finalDate, String surroundingsDescription, Integer minimumElevation, Integer maximumElevation, Integer collectionId, Integer labelId, Integer originalLabelId, String siteDescription, Integer samplingTypeId, Integer gradientPercentage, Integer objVersion, String createdBy, Date creationDate, String lastModificationBy, Date lastModificationDate, Integer minimumDepth, Integer maximumDepth, Integer expositionId) {
 		super();
 		this.gatheringObservationId = gatheringObservationId;
 		this.site = site;
@@ -413,14 +413,14 @@ public class GatheringObservation implements Serializable {
 	/**
 	 * @return the site
 	 */
-	public Site getSite() {
+	public ARASite getSite() {
 		return site;
 	}
 
 	/**
 	 * @param site the site to set
 	 */
-	public void setSite(Site site) {
+	public void setSite(ARASite site) {
 		this.site = site;
 	}
 

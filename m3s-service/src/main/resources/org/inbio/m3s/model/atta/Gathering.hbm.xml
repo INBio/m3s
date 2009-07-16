@@ -8,7 +8,7 @@
             <column name="GATHERING_ID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="site" class="org.inbio.m3s.model.atta.Site" fetch="select">
+        <many-to-one name="site" class="org.inbio.m3s.model.atta.INBioSite" fetch="select">
             <column name="SITE_ID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" fetch="select">
@@ -69,7 +69,7 @@
             <key>
                 <column name="GATHERING_ID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="org.inbio.m3s.model.atta.Specimen" />
+            <one-to-many class="org.inbio.m3s.model.atta.INBioSpecimen" />
         </set>
     </class>
 </hibernate-mapping>

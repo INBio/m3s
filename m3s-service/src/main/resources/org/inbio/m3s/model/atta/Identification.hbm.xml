@@ -18,7 +18,7 @@
         <many-to-one name="taxon" class="org.inbio.m3s.model.atta.INBioTaxon" fetch="select">
             <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <many-to-one name="specimen" class="org.inbio.m3s.model.atta.Specimen" update="false" insert="false" fetch="select">
+        <many-to-one name="specimen" class="org.inbio.m3s.model.atta.INBioSpecimen" update="false" insert="false" fetch="select">
             <column name="SPECIMEN_ID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="person" class="org.inbio.m3s.model.atta.INBioPerson" fetch="select">

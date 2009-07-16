@@ -39,14 +39,5 @@
         <property name="lastModificationBy" type="string">
             <column name="LAST_MODIFICATION_BY" length="20" />
         </property>
-        <!-- 
-        <set name="observedTaxonMedias" inverse="true">
-            <key>
-                <column name="OBSERVATION_ID" precision="22" scale="0" not-null="true" />
-                <column name="TAXON_ID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.model.atta.ObservedTaxonMedia" />
-        </set>
-         -->
     </class>
 </hibernate-mapping>

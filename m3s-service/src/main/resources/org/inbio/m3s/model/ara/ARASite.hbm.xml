@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Feb 2, 2007 10:39:41 AM by Hibernate Tools 3.2.0.b9 -->
 <hibernate-mapping>
-    <class name="org.inbio.m3s.model.ara.Site" table="ara.site">
+    <class name="org.inbio.m3s.model.ara.ARASite" table="ara.site">
         <id name="siteId" type="java.lang.Integer">
             <column name="site_id" precision="22" scale="0" />
             <generator class="assigned" />
@@ -20,9 +20,6 @@
         <property name="precision" type="java.lang.Integer">
             <column name="precision" precision="22" scale="0" />
         </property>
-        <property name="objVersion" type="java.lang.Integer">
-            <column name="obj_version" precision="22" scale="0" not-null="true"/>
-        </property>
         <property name="createdBy" type="string">
             <column name="created_by" length="100" />
         </property>        
@@ -35,17 +32,26 @@
         <property name="lastModificationDate" type="date">
             <column name="last_modification_date" length="7" />
         </property>
-		<property name="name" type="string">
-            <column name="name" length="80" />
+        <property name="longitude" type="string">
+            <column name="longitude" length="15" not-null="true" />
         </property>
-        <property name="originalProjectionId" type="java.lang.Integer">
-            <column name="original_projection_id" precision="22" scale="0" not-null="true" />
+        <property name="latitude" type="string">
+            <column name="latitude" length="15" not-null="true" />
+        </property>        
+        <property name="lambertX" type="java.lang.Integer">
+            <column name="LAMBERT_X" precision="22" scale="0" />
         </property>
-        <property name="geodeticDatum" type="java.lang.Integer">
-            <column name="geodetic_datum" precision="22" scale="0"/>
+        <property name="lambertY" type="java.lang.Integer">
+            <column name="LAMBERT_Y" precision="22" scale="0" />
         </property>
-        <property name="featureTypeId" type="java.lang.Integer">
-            <column name="feature_type_id" precision="22" scale="0" not-null="true" />
-        </property>    
+        <property name="lambertProjection" type="string">
+            <column name="LAMBERT_PROJECTION" length="1" />
+        </property>
+        <property name="crtmEast" type="java.lang.Integer">
+            <column name="CRTM_EAST" precision="22" scale="0" />
+        </property>
+        <property name="crtmNorth" type="java.lang.Integer">
+            <column name="CRTM_NORTH" precision="22" scale="0" />
+        </property>
 	</class>
 </hibernate-mapping>
