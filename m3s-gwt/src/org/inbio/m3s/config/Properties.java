@@ -84,6 +84,7 @@ public class Properties {
 	public static String TAXONOMY_MANAGER = null;
 	public static String IMPORT_FROM_FILE = null;
 	public static String METADATA_MANAGER = null;
+	public static String IMPORT_THREAD = null;
 	
 	public static void init() throws ConfigurationException{
 		
@@ -112,6 +113,7 @@ public class Properties {
 		Properties.TAXONOMY_MANAGER = (String) config.getProperty("taxonomy_manager");
 		Properties.IMPORT_FROM_FILE = (String) config.getProperty("import_from_file");
 		Properties.METADATA_MANAGER = (String)  config.getProperty("metadata_manager");
+		Properties.IMPORT_THREAD = (String) config.getProperty("import_thread");
 
 		System.out.println("LISTO TODO EN EL PROPERTIES");
 		

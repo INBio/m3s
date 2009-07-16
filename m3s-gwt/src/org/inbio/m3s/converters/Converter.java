@@ -23,7 +23,7 @@ public interface Converter<S extends BaseDTO, G extends Object> {
    * @param gwtdto
    * @return
    */
-public S toDTO(G gwtdto);
+	public S toDTO(G gwtdto);
 
 	/**
      *
@@ -37,5 +37,5 @@ public S toDTO(G gwtdto);
   * @param gwtdtoList
   * @return
   */
-public List<S> toDTOList(List<G> gwtdtoList);
+	public List<S> toDTOList(List<G> gwtdtoList);
 }

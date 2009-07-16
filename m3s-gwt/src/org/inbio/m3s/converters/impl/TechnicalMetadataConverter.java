@@ -6,6 +6,7 @@ package org.inbio.m3s.converters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.inbio.m3s.converters.BaseConverter;
 import org.inbio.m3s.converters.Converter;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
@@ -16,7 +17,7 @@ import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataItemGWTDTO;
  * @author jgutierrez
  *
  */
-public class TechnicalMetadataConverter implements Converter<TechnicalMetadataDTO, TechnicalMetadataGWTDTO> {
+public class TechnicalMetadataConverter extends BaseConverter<TechnicalMetadataDTO, TechnicalMetadataGWTDTO> implements Converter<TechnicalMetadataDTO, TechnicalMetadataGWTDTO> {
 
 	public TechnicalMetadataGWTDTO toGWTDTO(TechnicalMetadataDTO dto) {
 		if(dto == null)
@@ -38,29 +39,6 @@ public class TechnicalMetadataConverter implements Converter<TechnicalMetadataDT
 					tmiGWTDTO.getMediaAttributeName(),tmiGWTDTO.getValue()));
 	
 		return new TechnicalMetadataDTO(gwtdto.getMediaKey(),gwtdto.getMediaTypeKey(), tmiDTOList);
-	}
-
-
-	public List<TechnicalMetadataDTO> toDTOList(List<TechnicalMetadataGWTDTO> gwtdtoList) {
-		if(gwtdtoList==null)
-			return null;
-		List<TechnicalMetadataDTO> dtoList = new ArrayList<TechnicalMetadataDTO>();
-		for (TechnicalMetadataGWTDTO gwtdto: gwtdtoList)
-			dtoList.add(toDTO(gwtdto));
-		return dtoList;
-	}
-
-
-	public List<TechnicalMetadataGWTDTO> toGWTDTOList(List<TechnicalMetadataDTO> dtoList) {
-		if(dtoList==null)
-			return null;
-		List<TechnicalMetadataGWTDTO> gwtdtoList = new ArrayList<TechnicalMetadataGWTDTO>();
-		for (TechnicalMetadataDTO dto: dtoList)
-			gwtdtoList.add(toGWTDTO(dto));
-		return gwtdtoList;
-	}
-
-
-	
+	}	
 
 }

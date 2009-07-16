@@ -17,11 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.inbio.gwt.associatedto.client.dto.AssociatedToConstants;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.converters.MetadataConverter;
+import org.inbio.m3s.dto.agent.PersonLiteDTO;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.gwt.client.widgets.galleries.SearchCriteriaTriplet;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.manager.SearchManager;
+import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.ServiceUtil;
@@ -91,7 +93,7 @@ public class GalleryDispatcher extends HttpServlet {
 		List<Integer> mediaIdsList = SearchManager.getResults(sctList, first, last);
 		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
 		GeneralMetadataTV gmtv = null;
-		UsesAndCopyrightsTV uactv = null;
+		UsesAndCopyrightsDTO uacDTO = null;
 				
 			// writting the HTML file
 			out.println("<html><head><title>M3S Auto Generated Gallery</title>");
@@ -112,8 +114,10 @@ public class GalleryDispatcher extends HttpServlet {
 			
 			for (Integer mediaId : mediaIdsList) {
 				gmtv = MetadataConverter.toTextualValues(mediaManager.getGM(mediaId));
-				uactv = MetadataConverter.toTextualValue(mediaManager.getUACM(mediaId));
-				out.println(addItem(gmtv, uactv));
+				uacDTO = mediaManager.getUACM(String.valueOf(mediaId));
+				//uacGWTDTO = uacmConverter.to
+				///uactv = MetadataConverter.toTextualValue(mediaManager.getUACM(mediaId));
+				out.println(addItem(gmtv, uacDTO));
 			}
 			
 			out.println("</tr></tbody></table>");
@@ -173,13 +177,14 @@ public class GalleryDispatcher extends HttpServlet {
 	/**
 	 * 
 	 * @param gmtv
-	 * @param uactv
+	 * @param uacDTO
 	 * @return
 	 */
-	private String addItem(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv){
+	private String addItem(GeneralMetadataTV gmtv, UsesAndCopyrightsDTO uacDTO){
 		String imageSize = "thumb";
 		String baseURL = "/m3sINBio/getImage?";
 		String mediaId = gmtv.getMediaId().toString();
+		AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER);
 		
 		//taxonomia o titulo
 		String info1;
@@ -207,7 +212,9 @@ public class GalleryDispatcher extends HttpServlet {
 			info2 = "Sin información asociada";		
 
 		//autor de la foto.
-		String info3 = "Autor: "+ uactv.getAuthor();
+		//String info3 = "Autor: "+ uacDTO.getAuthor();
+		PersonLiteDTO plDTO =  agentManager.getPersonLite(uacDTO.getAuthorKey());
+		String info3 = "Autor: "+ plDTO.getName();
 		
 		return
 			 "<td style=\"vertical-align: top;\" align=\"left\"/>"
