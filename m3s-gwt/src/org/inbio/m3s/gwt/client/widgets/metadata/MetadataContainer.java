@@ -4,11 +4,11 @@
 package org.inbio.m3s.gwt.client.widgets.metadata;
 
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
 import org.inbio.m3s.gwt.client.widgets.login.LoginManager;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.CategoryAndTypeListener;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.MetadataListener;
 import org.inbio.m3s.gwt.client.widgets.metadata.ui.GeneralMetadataPanel;
@@ -31,8 +31,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author jgutierrez
  * 
  */
-public class MetadataContainer extends VerticalPanel implements
-		CategoryAndTypeListener {
+public class MetadataContainer extends VerticalPanel implements CategoryAndTypeListener {
 
 	// rpc service
 	private MetadataRPCAsync rpc;
@@ -72,30 +71,25 @@ public class MetadataContainer extends VerticalPanel implements
 	 * Sends all the metadata to DB to be persist
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public void saveMetadata() {
-		System.out.println("Guardando metadatos - INICIO");
-		// try {
+		//Window.alert("Guardando metadatos - INICIO");
+		
 		GeneralMetadataTV gmtv = gmPanel.getGeneralMetadataTV();
 
-		UsesAndCopyrightsTV uactv = uacPanel.getUsesAndCopyrightsTV();
+		UsesAndCopyrightsGWTDTO uactv = uacPanel.getUsesAndCopyrightsGWTDTO();
 
 		TechnicalMetadataGWTDTO tmtv = tmPanel.getTechMetadataGWTDTO();
-		// } catch (Exception e) {
-		// System.out
-		// .println("Ocurrio un error inesperado, por favor intente luego.");
-		// }
 
-		System.out.println("hasta aca todo bien");
+		//Window.alert("hasta aca todo bien");
 
 		rpc.saveMetadata(gmtv, uactv, tmtv, LoginManager.getUserName(),
-				new AsyncCallback() {
+				new AsyncCallback<Integer>() {
 					public void onFailure(Throwable caught) {
 						// RPCFailureManager(SAVE_METADATA, caught);
 						Window.alert("Error: " + caught.getMessage());
 					}
 
-					public void onSuccess(Object result) {
+					public void onSuccess(Integer result) {
 						// RPCSuccessManager(SAVE_METADATA, result);
 						/**
 						 * TODO: Debe retornarse un popup donde diga el
@@ -103,7 +97,7 @@ public class MetadataContainer extends VerticalPanel implements
 						 * codigo con el cual se guardara la imagen, el volumen
 						 * y el archivo donde queda almacenada.
 						 */
-						listener.metadataSaved((Integer) result);
+						listener.metadataSaved(result);
 					}
 
 				});
@@ -157,8 +151,8 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mainTab
 	 *            if true will set this tab as the
 	 */
-	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab, UsesAndCopyrightsTV uacTV) {
-		uacPanel = new UsesAndCopyrightsPanel(language, uacTV);
+	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab, UsesAndCopyrightsGWTDTO uacGWTDTO) {
+		uacPanel = new UsesAndCopyrightsPanel(language, uacGWTDTO);
 		tabPanel.add(uacPanel, "Usos y Derechos de Uso");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(uacPanel));
@@ -179,17 +173,16 @@ public class MetadataContainer extends VerticalPanel implements
 	 * @param mainTab
 	 * @param mediaId
 	 */
-	@SuppressWarnings("unchecked")
 	public void initUsesAndCopyrightsTab(final Integer language, final boolean mainTab, Integer mediaId) {
 		System.out.println("initUsesAndCopyrightsTab - INICIO");
-		rpc.getUsesAndCopyrigthsMetadataTV(mediaId, new AsyncCallback() {
+		rpc.getUsesAndCopyrigthsMetadataTV(mediaId, new AsyncCallback<UsesAndCopyrightsGWTDTO>() {
 
 			public void onFailure(Throwable caught) {
 				RPCFailureManager(caught);
 			}
 
-			public void onSuccess(Object result) {
-				initUsesAndCopyrightsTab(language, mainTab, (UsesAndCopyrightsTV) result);
+			public void onSuccess(UsesAndCopyrightsGWTDTO uacGWTDTO) {
+				initUsesAndCopyrightsTab(language, mainTab,  uacGWTDTO);
 				
 				System.out.println("initUsesAndCopyrightsTab - RPC on Success");
 			}

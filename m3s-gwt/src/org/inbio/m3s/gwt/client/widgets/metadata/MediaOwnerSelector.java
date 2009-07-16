@@ -48,7 +48,9 @@ public class MediaOwnerSelector extends Composite {
 	// defaults -- ..:wired:..
 	private int selectedOwnerType = MediaOwnerConstants.OWNER_INSTITUTION;
 
-	private String ownerValue = "INB - Instituto Nacional de Biodiversidad";
+	//private String ownerValue = "INB - Instituto Nacional de Biodiversidad";
+	
+	private String ownerValueKey = "1";
 
 
 	/**
@@ -58,8 +60,8 @@ public class MediaOwnerSelector extends Composite {
 	 *            class constant
 	 */
 	public MediaOwnerSelector(int ownerType) {
-		selectedOwnerType = ownerType;
-		this.initMediaOwnerSelector();
+		this.selectedOwnerType = ownerType;
+		initMediaOwnerSelector();
 	}
 
 	/**
@@ -67,22 +69,21 @@ public class MediaOwnerSelector extends Composite {
 	 * 
 	 * @param ownerType
 	 *            class constant
-	 * @param ownerValue
+	 * @param ownerValueKey
 	 *            String value to be shown
 	 */
-	public MediaOwnerSelector(int ownerType, String ownerValue) {
+	public MediaOwnerSelector(int ownerType, String ownerValueKey) {
 
-		selectedOwnerType = ownerType;
-		this.ownerValue = ownerValue;
+		this.selectedOwnerType = ownerType;
+		this.ownerValueKey = ownerValueKey;
 
-		this.initMediaOwnerSelector();
+		initMediaOwnerSelector();
 	}
 
 	/**
 	 * Core of the constructors
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	private void initMediaOwnerSelector() {
 		initRPC();
 
@@ -91,13 +92,13 @@ public class MediaOwnerSelector extends Composite {
 		institutionRB.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				selectedOwnerType = MediaOwnerConstants.OWNER_INSTITUTION;
-				rpc.getInstitutions(new AsyncCallback() {
+				rpc.getInstitutions(new AsyncCallback<List<InstitutionLiteGWTDTO>>() {
 					public void onFailure(Throwable caught) {
 						RPCFailureManager(caught);
 					}
 
-					public void onSuccess(Object result) {
-						setInstitutionsOnListBox(result);
+					public void onSuccess(List<InstitutionLiteGWTDTO> iGWTDTOList) {
+						setInstitutionsOnListBox(iGWTDTOList);
 					}
 				});
 			}
@@ -108,20 +109,20 @@ public class MediaOwnerSelector extends Composite {
 		personRB.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				selectedOwnerType = MediaOwnerConstants.OWNER_PERSON;
-				rpc.getPeople(new AsyncCallback() {
+				rpc.getPeople(new AsyncCallback<List<PersonGWTDTO>>() {
 					public void onFailure(Throwable caught) {
 						RPCFailureManager(caught);
 					}
 
-					public void onSuccess(Object result) {
-						setPeopleOnListBox(result);
+					public void onSuccess(List<PersonGWTDTO> pGWTDTOList) {
+						setPeopleOnListBox(pGWTDTOList);
 					}
 				});
 			}
 		});
 
 		// inits the widget
-		setValue(selectedOwnerType, ownerValue);
+		setValue(this.selectedOwnerType, this.ownerValueKey);
 
 		// radiobutton to the top and in the bottom
 		radioButtonPanel.setSpacing(15);
@@ -145,48 +146,50 @@ public class MediaOwnerSelector extends Composite {
 	public int getOwnerType() {
 		return selectedOwnerType;
 	}
-
+	
 	/**
 	 * 
 	 * @return thse selected textual owner value
+	 * 
 	 */
-	public String getOwner() {
+	public String getOwnerKey() {
 		int selectedIndex = listBox.getSelectedIndex();
-		return listBox.getItemText(selectedIndex);
+		return listBox.getValue(selectedIndex);
+		
+		
 	}
 
 	/**
 	 * Sets new values to the widget
 	 * 
 	 * @param ownerType
-	 * @param owner
+	 * @param ownerValueKey
 	 */
-	@SuppressWarnings("unchecked")
-	public void setValue(int ownerType, String owner) {
-		selectedOwnerType = ownerType;
-		ownerValue = owner;
+	public void setValue(int ownerType, String ownerValueKey) {
+		this.selectedOwnerType = ownerType;
+		this.ownerValueKey = ownerValueKey;
 
 		// sets the default functionality
 		if (selectedOwnerType == MediaOwnerConstants.OWNER_INSTITUTION) {
 			institutionRB.setChecked(true);
-			rpc.getInstitutions(new AsyncCallback() {
+			rpc.getInstitutions(new AsyncCallback<List<InstitutionLiteGWTDTO>>() {
 				public void onFailure(Throwable caught) {
 					RPCFailureManager(caught);
 				}
 
-				public void onSuccess(Object result) {
+				public void onSuccess(List<InstitutionLiteGWTDTO> result) {
 					setInstitutionsOnListBox(result);
 				}
 			});
 
 		} else if (selectedOwnerType == MediaOwnerConstants.OWNER_PERSON) {
 			personRB.setChecked(true);
-			rpc.getPeople(new AsyncCallback() {
+			rpc.getPeople(new AsyncCallback<List<PersonGWTDTO>>() {
 				public void onFailure(Throwable caught) {
 					RPCFailureManager(caught);
 				}
 
-				public void onSuccess(Object result) {
+				public void onSuccess(List<PersonGWTDTO> result) {
 					setPeopleOnListBox(result);
 				}
 			});
@@ -211,11 +214,15 @@ public class MediaOwnerSelector extends Composite {
 			personRB.setChecked(true);
 		}
 		
-		if (ownerValue.compareTo("") != 0) {
+			
+			System.out.println("Esta seteando como owner Value Key: " + this.ownerValueKey);
+			
+		
+		if (this.ownerValueKey.compareTo("") != 0) {
 			String pivoteValue;
 			for (int i = 0; i < listBox.getItemCount(); i++) {
 				pivoteValue = (String) listBox.getValue(i);
-				if (pivoteValue.compareTo(ownerValue) == 0) {
+				if (pivoteValue.equals(this.ownerValueKey)) {
 					listBox.setSelectedIndex(i);
 					break;
 				}
@@ -249,22 +256,15 @@ public class MediaOwnerSelector extends Composite {
 	/**
 	 * Called by the the method that receives the asyncCallback result
 	 */
-	@SuppressWarnings("unchecked")
-	private void setInstitutionsOnListBox(Object result){
-		
-		List<InstitutionLiteGWTDTO> iList = (List<InstitutionLiteGWTDTO>) result; 
+	private void setInstitutionsOnListBox(List<InstitutionLiteGWTDTO> iList){ 
 		listBox.clear();
 		
 		for(InstitutionLiteGWTDTO iLite : iList)
-			listBox.addItem(iLite.getName());
+			listBox.addItem(iLite.getName(), iLite.getInstitutionKey());
 
 		setWidgetValue();
 	}
-	
-	@SuppressWarnings("unchecked")
-	private void setPeopleOnListBox(Object result){
-		
-		List<PersonGWTDTO> pList = (List<PersonGWTDTO>) result; 
+	private void setPeopleOnListBox(List<PersonGWTDTO> pList){
 		listBox.clear();
 		
 		for(PersonGWTDTO pLite : pList)

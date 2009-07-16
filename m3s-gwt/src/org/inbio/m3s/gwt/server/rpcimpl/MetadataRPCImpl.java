@@ -13,20 +13,24 @@ import org.inbio.m3s.converters.impl.InstitutionConverter;
 import org.inbio.m3s.converters.MetadataConverter;
 import org.inbio.m3s.converters.impl.PersonConverter;
 import org.inbio.m3s.converters.impl.TechnicalMetadataConverter;
+import org.inbio.m3s.converters.impl.UsePolicyConverter;
+import org.inbio.m3s.converters.impl.UsesAndCopyrightsMetadataConverter;
 import org.inbio.m3s.dao.core.SiteDAO;
+import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.ui.UsesAndCopyrightsPanel;
 import org.inbio.m3s.dto.GeneralMetadataDTO;
-import org.inbio.m3s.dto.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dao.DataCache;
 import org.inbio.m3s.service.AgentManager;
@@ -78,13 +82,16 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	 * 
 	 * @param mediaId
 	 *            database id of the media
-	 * @return a UsesAndCopyrightsTV object ready to be used in the GUI
+	 * @return a UsesAndCopyrightsGWTDTO object ready to be used in the GUI
 	 */
-	public UsesAndCopyrightsTV getUsesAndCopyrigthsMetadataTV(Integer mediaId) {
+	public UsesAndCopyrightsGWTDTO getUsesAndCopyrigthsMetadataTV(Integer mediaId) {
 		logger.debug("getting Uses And Copyrigths Metadata...");
-		UsesAndCopyrightsDTO uacm = mediaManager.getUACM(mediaId);
+		UsesAndCopyrightsDTO uacDTO = mediaManager.getUACM(String.valueOf(mediaId));
+		logger.debug(uacDTO.toString());
+		UsesAndCopyrightsMetadataConverter uacmc = new UsesAndCopyrightsMetadataConverter();
+		logger.debug(uacmc.toGWTDTO(uacDTO).toString());
 		logger.debug("getting Uses And Copyrigths Metadata... done.");
-		return MetadataConverter.toTextualValue(uacm);
+		return uacmc.toGWTDTO(uacDTO);
 	}
 
 	/**
@@ -98,7 +105,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 		logger.debug("getting Technical Metadata... done.");
 		//return MetadataConverter.toTextualValues(tm);
 		TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
-		return (TechnicalMetadataGWTDTO) tmc.toGWTDTO(tmDTO);
+		return tmc.toGWTDTO(tmDTO);
 	}
 
 	/**
@@ -168,23 +175,26 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	/**
 	 * @param gmtv
 	 *            the GeneralMetadataTV from the GUI
-	 * @param uactv
-	 *            the UsesAndCopyrightsTV from the GUI
+	 * @param uacGWTDTO
+	 *            the UsesAndCopyrightsGWTDTO from the GUI
 	 * @param tmGWTDTO
-	 *            the TechnicalMetadataTV from the GUI
+	 *            the TechnicalMetadataGWTDTO from the GUI
 	 * @param username
 	 * @return the mediaId of the element the was saved or null in case of error
 	 * 
 	 */
-	public Integer saveMetadata(GeneralMetadataTV gmtv,
-			UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmGWTDTO, String username)
+	public Integer saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsGWTDTO uacGWTDTO, 
+			TechnicalMetadataGWTDTO tmGWTDTO, String username)
 			throws RPCIllegalArgumentException {
+		
+		logger.debug("saveMetadata...start");
 
 		//boolean isPublicBefore;
 		//boolean isPublicAfter;
 		GeneralMetadataDTO gm = null;
 
-		UsesAndCopyrightsDTO uac = null;
+		UsesAndCopyrightsDTO uacDTO = null;
+		UsesAndCopyrightsMetadataConverter uacmc = new UsesAndCopyrightsMetadataConverter();
 
 		TechnicalMetadataDTO tmDTO = null;
 		TechnicalMetadataConverter tmc = new TechnicalMetadataConverter();
@@ -199,7 +209,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 			gm = MetadataConverter.toDBValues(gmtv);
 			logger.debug("listos los general metadata");
 			
-			uac = MetadataConverter.toDBValues(uactv);
+			uacDTO = uacmc.toDTO(uacGWTDTO);
 			logger.debug("listos los uses and copyrigth metadata");
 			
 			tmDTO = tmc.toDTO(tmGWTDTO);
@@ -213,10 +223,10 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 
 		logger.debug("iniciando el guardado de los datos");
 		// if no media Id, this is a new reccord
-		if (gmtv.getMediaId() == null && uactv.getMediaId() == null
+		if (gmtv.getMediaId() == null && uacGWTDTO.getMediaKey() == null
 				&& tmGWTDTO.getMediaKey() == null) {
 			logger.debug("saving Metadata... insert");
-			Integer mediaId = getMediaManager().insertNewMedia(gm, uac, tmDTO);
+			Integer mediaId = getMediaManager().insertNewMedia(gm, uacDTO, tmDTO);
 
 			logger.debug("saving Metadata... done");
 			return mediaId;
@@ -230,9 +240,8 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 			getMediaManager().updateGM(gm);
 			logger.debug("saving Metadata... general metadata saved");
 
-			getMediaManager().updateUACM(uac);
-			logger.debug("saving Metadata... "
-					+ "uses and copyrigths metadata saved");
+			getMediaManager().updateUACM(uacDTO);
+			logger.debug("saving Metadata... uses and copyrigths metadata saved");
 			
 			metadataManager.saveTechnicalMetadata(tmDTO);
 			logger.debug("saving Metadata... technical metadata saved");
@@ -602,18 +611,14 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	 * @return List of TextAndValue items.
 	 */
 
-	public List<String> getUsePolicies() {
+	public List<UsePolicyGWTDTO> getUsePolicies() {
+		
 		logger.debug("getting use policies...");
-		if (DataCache.usePoliciesInCache) {
-			logger.debug("use policies... were in cache.");
-		} else {
-			logger.debug("use policies... weren't in cache!.");
-			DataCache.initUsePoliciesInfo();
-		}
-
-		logger.debug("getting use policies... done");
-
-		return DataCache.usePoliciesNames;
+		
+		UsePolicyConverter upc = new UsePolicyConverter();
+		List<UsePolicyDTO> upDTOList =  messageManager.getAllUsePolicies();
+		
+		return upc.toGWTDTOList(upDTOList);
 	}
 	
 	/**
@@ -656,6 +661,20 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	 */
 	public AgentManager getAgentManager() {
 		return agentManager;
+	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 

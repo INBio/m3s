@@ -5,12 +5,13 @@ package org.inbio.m3s.gwt.client.rpcinterface;
 
 import java.util.List;
 
+import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -32,7 +33,7 @@ public interface MetadataRPC extends RemoteService {
  * @param mediaId
  * @return
  */
-	public UsesAndCopyrightsTV getUsesAndCopyrigthsMetadataTV(Integer mediaId);
+	public UsesAndCopyrightsGWTDTO getUsesAndCopyrigthsMetadataTV(Integer mediaId);
 
 	/**
 	 * @gwt.args
@@ -71,7 +72,7 @@ public interface MetadataRPC extends RemoteService {
 	 * @param username
 	 * @return the database Id of the media owner of the metadata
 	 */
-	public Integer saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmtv, String username)
+	public Integer saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsGWTDTO uactv, TechnicalMetadataGWTDTO tmtv, String username)
 			throws RPCIllegalArgumentException;
 
 	/**
@@ -168,6 +169,6 @@ public interface MetadataRPC extends RemoteService {
 	 * Used in the UsesAndCopyrightsPanel class
 	 * 
 	 */
-	public List<String> getUsePolicies();
+	public List<UsePolicyGWTDTO> getUsePolicies();
 
 }

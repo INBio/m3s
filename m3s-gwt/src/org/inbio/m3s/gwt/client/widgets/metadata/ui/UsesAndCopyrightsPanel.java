@@ -3,15 +3,18 @@
  */
 package org.inbio.m3s.gwt.client.widgets.metadata.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.inbio.m3s.gwt.client.config.ClientProperties;
+import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.MediaUseGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
 import org.inbio.m3s.gwt.client.widgets.metadata.MediaOwnerSelector;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.MediaOwnerConstants;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -37,15 +40,13 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 
 	private FlexTable main = new FlexTable();
 
-	// this two variables are for be used in the edit mode
-	private Integer mediaId = null;
-
-	//private String defaultAuthorName = "";
-	//"Cristian Granados"
-
-	private String defaultUsePolicy = "Uso institucional";
+	//default values
+	private String defaultAuthorKey = "13798";
+	private int defaultOwnerType = MediaOwnerConstants.OWNER_INSTITUTION;
+	private String defaultOwnerKey = "1";
+	private String defaultUsePolicyKey = "2";
 	
-	UsesAndCopyrightsTV editUAC = null;
+	UsesAndCopyrightsGWTDTO uacGWTDTO = null;
 	
 
 	/**
@@ -57,7 +58,7 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 	 */
 	public UsesAndCopyrightsPanel(Integer language) {
 		initRPC();
-		
+		this.uacGWTDTO = null;
 		initTable();
 	}
 	
@@ -68,9 +69,9 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 	 *            this param its ignored!!!! always its using the
 	 *            default_language constant\
 	 */
-	public UsesAndCopyrightsPanel(Integer language, UsesAndCopyrightsTV uactv) {
+	public UsesAndCopyrightsPanel(Integer language, UsesAndCopyrightsGWTDTO uacGWTDTO) {
 		initRPC();
-		this.editUAC = uactv;
+		this.uacGWTDTO = uacGWTDTO;
 		initTable();
 	}
 	
@@ -81,11 +82,8 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 
 	/**
 	 * Constructor he --private UsesAndCopyrigths usesAndCopyrigths;lper
-	 * 
-	 * 
 	 */
-	@SuppressWarnings("unchecked")
-	public void initTable() {
+	private void initTable() {
 		System.out.println("Init table... inicia @ UACMetadataPanel");
 
 		main.setCellSpacing(5);
@@ -94,60 +92,63 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 		main.setText(AUTHOR, TEXT, "Autor:");
 		main.setWidget(AUTHOR, WIDGET, new ListBox());
 
-		rpc.getPeople(new AsyncCallback() {
+		rpc.getPeople(new AsyncCallback<List<PersonGWTDTO>>() {
 			public void onFailure(Throwable caught) {
 				RPCFailureManager(caught);
 			}
 
-			public void onSuccess(Object result) {
+			public void onSuccess(List<PersonGWTDTO> pList) {
 				ListBox listBox = (ListBox) main.getWidget(AUTHOR, WIDGET);
 				listBox.clear();
 				
-				List<PersonGWTDTO> pList = (List<PersonGWTDTO>) result; 
-				
 				for(PersonGWTDTO pLite : pList)
-					//listBox.addItem(pLite.getName(), pLite.getPersonKey());
-					listBox.addItem(pLite.getName());
+					listBox.addItem(pLite.getName(), pLite.getPersonKey());
 				
-				if(editUAC != null){
-					//Window.alert("Esta seteando como default person> "+editUAC.getAuthor().toString());
-					System.out.println("Esta seteando como default person> "+editUAC.getAuthor().toString());
-					setListBoxValue(editUAC.getAuthor().getName(), AUTHOR);
-					//listBox.setSelectedIndex(new Integer(editUAC.getAuthor().getPersonKey()).intValue());
+				if(uacGWTDTO != null){
+					System.out.println("Esta seteando como default person Id: "+uacGWTDTO.getAuthorKey());
+					setListBoxValue(uacGWTDTO.getAuthorKey(), AUTHOR);
+				} else {
+					System.out.println("Esta seteando como default person Id: "+defaultAuthorKey);
+					setListBoxValue(defaultAuthorKey, AUTHOR);
 				}
 			}
 		});
 
 		// owner
 		main.setText(OWNER, TEXT, "Propietario:");
-		System.out.println("Esta seteando propietario con UAC > "+editUAC);
-		if(editUAC != null){
+		//System.out.println("Esta seteando propietario con UAC > "+uacGWTDTO.get);
+		if(uacGWTDTO != null){
 			// set owner value
-			main.setWidget(OWNER, WIDGET, new MediaOwnerSelector(editUAC.getOwnerType(), editUAC.getOwner()));
+			if(uacGWTDTO.getInstitutionOwnerKey() != null)
+				main.setWidget(OWNER, WIDGET, new MediaOwnerSelector(MediaOwnerConstants.OWNER_INSTITUTION, uacGWTDTO.getInstitutionOwnerKey()));
+			else
+				main.setWidget(OWNER, WIDGET, new MediaOwnerSelector(MediaOwnerConstants.OWNER_PERSON, uacGWTDTO.getPersonOwnerKey()));
 		} else{
-		main.setWidget(OWNER, WIDGET, new MediaOwnerSelector(
-				MediaOwnerConstants.OWNER_INSTITUTION));
+			main.setWidget(OWNER, WIDGET, new MediaOwnerSelector(defaultOwnerType,defaultOwnerKey));
 		}
 
 		// use policy
 		main.setText(USE_POLICY, TEXT, "Política de Uso:");
 		main.setWidget(USE_POLICY, WIDGET, new ListBox());
-		rpc.getUsePolicies(new AsyncCallback() {
+		rpc.getUsePolicies(new AsyncCallback<List<UsePolicyGWTDTO>>() {
 			public void onFailure(Throwable caught) {
 				RPCFailureManager(caught);
 			}
 
-			public void onSuccess(Object result) {
-			// this.setListBoxValues((List) result, USE_POLICY);
+			public void onSuccess(List<UsePolicyGWTDTO> upGWTDTOList) {
 				ListBox listBox = (ListBox) main.getWidget(USE_POLICY, WIDGET);
-				for (int i = 0; i < ((List) result).size(); i++) {
-					listBox.addItem((String) ((List) result).get(i));
+				listBox.clear();
+
+				for(UsePolicyGWTDTO upGWTDTO : upGWTDTOList)
+					listBox.addItem(upGWTDTO.getName(), upGWTDTO.getUsePolicyKey());
+				
+				if(uacGWTDTO != null){
+					System.out.println("Esta seteando como default use policy Id: "+uacGWTDTO.getUsePolicyKey());
+					setListBoxValue(uacGWTDTO.getUsePolicyKey(), USE_POLICY);
+				} else{
+					setListBoxValue(defaultUsePolicyKey, USE_POLICY);
 				}
-				if (defaultUsePolicy.compareTo("") != 0) {
-					setListBoxValue(defaultUsePolicy, USE_POLICY);
-				}
-			}
-		});
+		}});
 
 		// multimediaUses
 		main.setText(MULTIMEDIA_USE, TEXT, "Usos del Multimedio:");
@@ -186,65 +187,29 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 		System.out.println("Init table... cool @ UACMetadataPanel");
 	}
 
+	
+	
 	/**
 	 * Shows the uses and copyrigts metadata given as parameter
 	 * 
 	 * @param usesAndCopyrigths
 	 */
-	public void setUACMetadata(UsesAndCopyrightsTV uac) {
+	public void setUACMetadata(UsesAndCopyrightsGWTDTO uacGWTDTO) {
 		
-		editUAC = uac;
-		mediaId = uac.getMediaId();
-		//defaultAuthorName = uac.getAuthor().getName();
-		defaultUsePolicy = uac.getUsePolicy();
+		this.uacGWTDTO = uacGWTDTO;
+		setDefaultUsePolicyKey(uacGWTDTO.getUsePolicyKey());
 		
 		this.initTable();
 
 		// set media Uses
-		((TextBox) main.getWidget(MULTIMEDIA_USE, WIDGET)).setText(uac
-				.getMultimediaUses());
+		//((TextBox) main.getWidget(MULTIMEDIA_USE, WIDGET)).setText(uac.getMultimediaUses());
 
 		// sets the is backup value
-		((CheckBox) main.getWidget(IS_BACKUP, WIDGET)).setChecked(uac
-				.getIsBackup());
+		((CheckBox) main.getWidget(IS_BACKUP, WIDGET)).setChecked(uacGWTDTO.getIsBackup());
 
 		// set is Public
-		((CheckBox) main.getWidget(IS_PUBLIC, WIDGET)).setChecked(uac
-				.getIsPublic());
+		((CheckBox) main.getWidget(IS_PUBLIC, WIDGET)).setChecked(uacGWTDTO.getIsPublic());
 		
-/*
-		// set author
-		this.defaultAuthor = uac.getAuthor();
-		rpc.getPeople(new AsyncCallback() {
-			public void onFailure(Throwable caught) {
-				RPCFailureManager(GET_PEOPLE, caught);
-			}
-
-			public void onSuccess(Object result) {
-				RPCSuccessManager(GET_PEOPLE, result);
-			}
-		});
-		//this.setListBoxValue(uac.getAuthor(), AUTHOR);
-
-		// set owner value
-		((MediaOwnerSelector) main.getWidget(OWNER, WIDGET)).setValue(uac
-				.getOwnerType(), uac.getOwner());
-
-		// set use policy
-		this.setListBoxValue(uac.getUsePolicy(), USE_POLICY);
-
-		// set media Uses
-		((TextBox) main.getWidget(MULTIMEDIA_USE, WIDGET)).setText(uac
-				.getMultimediaUses());
-
-		// sets the is backup value
-		((CheckBox) main.getWidget(IS_BACKUP, WIDGET)).setChecked(uac
-				.getIsBackup());
-
-		// set is Public
-		((CheckBox) main.getWidget(IS_PUBLIC, WIDGET)).setChecked(uac
-				.getIsPublic());
-				*/
 	}
 
 
@@ -252,49 +217,65 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 	 * 
 	 * @return
 	 */
-	public UsesAndCopyrightsTV getUsesAndCopyrightsTV() {
-		UsesAndCopyrightsTV uacTV = new UsesAndCopyrightsTV();
+	public UsesAndCopyrightsGWTDTO getUsesAndCopyrightsGWTDTO() {
 		ListBox temporal;
 		int selectedIndex;
 
-		uacTV.setMediaId(mediaId);
-
+		if(uacGWTDTO==null){
+			uacGWTDTO = new UsesAndCopyrightsGWTDTO();
+			uacGWTDTO.setMediaKey(null);
+		}
+		
 		// set author
 		temporal = (ListBox) main.getWidget(AUTHOR, WIDGET);
 		selectedIndex = temporal.getSelectedIndex();
-		PersonGWTDTO plDTOGWT = new PersonGWTDTO(String.valueOf(selectedIndex),temporal.getItemText(selectedIndex));
-		//uacTV.setAuthor(temporal.getItemText(selectedIndex));
-		uacTV.setAuthor(plDTOGWT);
+		//Window.alert("temporal.getValue(selectedIndex):"+temporal.getValue(selectedIndex));
+		uacGWTDTO.setAuthorKey(String.valueOf(temporal.getValue(selectedIndex)));
+		//Window.alert("getAuthorKey:"+uacGWTDTO.getAuthorKey());
 
 		// set owerValue
-		// TODO
-		MediaOwnerSelector mos = (MediaOwnerSelector) main.getWidget(OWNER,
-				WIDGET);
-		uacTV.setOwnerType(mos.getOwnerType());
-		uacTV.setOwner(mos.getOwner());
+		MediaOwnerSelector mos = (MediaOwnerSelector) main.getWidget(OWNER,WIDGET);
+		if(mos.getOwnerType() == MediaOwnerConstants.OWNER_INSTITUTION){
+			uacGWTDTO.setPersonOwnerKey(null);
+			uacGWTDTO.setInstitutionOwnerKey(mos.getOwnerKey());
+		} else {
+			uacGWTDTO.setPersonOwnerKey(mos.getOwnerKey());
+			uacGWTDTO.setInstitutionOwnerKey(null);
+		}
+		//Window.alert("getPersonOwnerKey:"+uacGWTDTO.getPersonOwnerKey()
+		//		+"\n getInstitutionOwnerKey:"+uacGWTDTO.getInstitutionOwnerKey());
+		
 
 		// use policy
 		temporal = (ListBox) main.getWidget(USE_POLICY, WIDGET);
 		selectedIndex = temporal.getSelectedIndex();
-		uacTV.setUsePolicy(temporal.getItemText(selectedIndex));
+		//uacTV.setUsePolicy(temporal.getItemText(selectedIndex));
+		uacGWTDTO.setUsePolicyKey(String.valueOf(temporal.getValue(selectedIndex)));
+		//Window.alert("getUsePolicyKey:"+uacGWTDTO.getUsePolicyKey());
 
 		// mediaUses
-		uacTV.setMultimediaUses(((TextBox) main.getWidget(MULTIMEDIA_USE,
-				WIDGET)).getText());
+		//uacTV.setMultimediaUses(((TextBox) main.getWidget(MULTIMEDIA_USE,
+		//		WIDGET)).getText());
+		List<MediaUseGWTDTO> muGWTDTOList = new ArrayList<MediaUseGWTDTO>();
+		uacGWTDTO.setMediaUsesList(muGWTDTOList);
 
 		// backup value
 		if (((CheckBox) main.getWidget(IS_BACKUP, WIDGET)).isChecked())
-			uacTV.setIsBackup(true);
+			uacGWTDTO.setIsBackup(true);
 		else
-			uacTV.setIsBackup(false);
+			uacGWTDTO.setIsBackup(false);
+		//Window.alert("getIsBackup:"+uacGWTDTO.getIsBackup());
 
 		// set is Public
 		if (((CheckBox) main.getWidget(IS_PUBLIC, WIDGET)).isChecked())
-			uacTV.setIsPublic(true);
+			uacGWTDTO.setIsPublic(true);
 		else
-			uacTV.setIsPublic(false);
+			uacGWTDTO.setIsPublic(false);
+		//Window.alert("getIsPublic:"+uacGWTDTO.getIsPublic());
 
-		return uacTV;
+		//Window.alert(uacGWTDTO.toString());
+		
+		return uacGWTDTO;
 	}
 
 	/**
@@ -357,6 +338,20 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 		ServiceDefTarget endpoint = (ServiceDefTarget) rpc;
 		String moduleRelativeURL = GWT.getModuleBaseURL() + "metadataRPC";
 		endpoint.setServiceEntryPoint(moduleRelativeURL);
+	}
+
+	/**
+	 * @param defaultUsePolicyKey the defaultUsePolicyKey to set
+	 */
+	public void setDefaultUsePolicyKey(String defaultUsePolicyKey) {
+		this.defaultUsePolicyKey = defaultUsePolicyKey;
+	}
+
+	/**
+	 * @return the defaultUsePolicyKey
+	 */
+	public String getDefaultUsePolicyKey() {
+		return defaultUsePolicyKey;
 	}
 
 	/***************************************************************************

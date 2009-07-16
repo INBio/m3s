@@ -12,11 +12,11 @@ import org.apache.log4j.Logger;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.config.UserProfile;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOFull;
+import org.inbio.m3s.dto.metadata.util.ImportationFileEntity;
 import org.inbio.m3s.gwt.client.rpcinterface.ImportRPC;
 import org.inbio.m3s.gwt.client.widgets.importation.dto.ImportInfo;
 import org.inbio.m3s.service.ImportationManager;
-import org.inbio.m3s.usecases.imports.ImportFromFile;
-import org.inbio.m3s.usecases.imports.ImportThread;
+import org.inbio.m3s.service.util.ImportThread;
 import org.inbio.m3s.util.OSCommand;
 import org.inbio.m3s.util.ServiceUtil;
 
@@ -36,7 +36,7 @@ public class ImportRPCImpl extends RemoteServiceServlet implements ImportRPC {
 	private static Logger logger = Logger.getLogger(ImportRPCImpl.class);
 	
 	private ImportationManager importationManager = (ImportationManager) ServiceUtil.appContext.getBean(Properties.IMPORTATION_MANAGER);
-	
+	private ImportThread importThread = (ImportThread) ServiceUtil.appContext.getBean(Properties.IMPORT_THREAD);
 	
 	/**
 	 * @param username
@@ -85,9 +85,8 @@ public class ImportRPCImpl extends RemoteServiceServlet implements ImportRPC {
 		String[] cmd = { "mv", tempFileAddress, systemFileAddress };
 		OSCommand.run(cmd);
 
-		ImportThread it = new ImportThread(ImportFromFile.MS_EXCEL_FILE,
+		importThread.run(ImportationFileEntity.MS_EXCEL_FILE,
 				UserProfile.getUsername(), systemFileName, tempFileId);
-		it.run();
 
 	}
 
@@ -103,5 +102,19 @@ public class ImportRPCImpl extends RemoteServiceServlet implements ImportRPC {
 	 */
 	public ImportationManager getImportationManager() {
 		return importationManager;
+	}
+
+	/**
+	 * @return the importThread
+	 */
+	public ImportThread getImportThread() {
+		return importThread;
+	}
+
+	/**
+	 * @param importThread the importThread to set
+	 */
+	public void setImportThread(ImportThread importThread) {
+		this.importThread = importThread;
 	}
 }

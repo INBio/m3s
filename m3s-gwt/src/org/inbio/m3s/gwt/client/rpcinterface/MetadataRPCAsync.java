@@ -3,9 +3,14 @@
  */
 package org.inbio.m3s.gwt.client.rpcinterface;
 
+import java.util.List;
+
+import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
+import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.UsesAndCopyrightsTV;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -27,8 +32,7 @@ public interface MetadataRPCAsync {
 	 * @param mediaId
 	 * @param callback
 	 */
-	public void getUsesAndCopyrigthsMetadataTV(Integer mediaId,
-			AsyncCallback callback);
+	public void getUsesAndCopyrigthsMetadataTV(Integer mediaId, AsyncCallback<UsesAndCopyrightsGWTDTO> callback);
 
 	/**
 	 * 
@@ -60,7 +64,7 @@ public interface MetadataRPCAsync {
 	 * @param username
 	 * @param callback
 	 */
-	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsTV uactv, TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback callback);
+	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsGWTDTO uactv, TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback<Integer> callback);
 
 	/**
 	 * 
@@ -129,13 +133,13 @@ public interface MetadataRPCAsync {
 	 * Used in the UsesAndCopyrightsPanel class *
 	 * 
 	 */
-	public void getPeople(AsyncCallback callback);
+	public void getPeople(AsyncCallback<List<PersonGWTDTO>> callback);
 
 	/**
 	 * Used in the UsesAndCopyrightsPanel class
 	 * 
 	 */
-	public void getInstitutions(AsyncCallback callback);
+	public void getInstitutions(AsyncCallback<List<InstitutionLiteGWTDTO>> callback);
 
 	/**
 	 * Used in the UsesAndCopyrightsPanel class
@@ -148,6 +152,6 @@ public interface MetadataRPCAsync {
 	 * @param language
 	 * @param callback
 	 */
-	public void getUsePolicies(AsyncCallback callback);
+	public void getUsePolicies(AsyncCallback<List<UsePolicyGWTDTO>> callback);
 
 }

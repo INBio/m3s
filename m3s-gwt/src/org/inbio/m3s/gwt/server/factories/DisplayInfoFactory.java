@@ -11,7 +11,6 @@ import org.inbio.gwt.galleries.client.dto.DisplayInfo;
 import org.inbio.gwt.galleries.client.dto.DisplayType;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
-import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.gwt.client.config.ClientProperties;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MessageManager;
@@ -21,7 +20,7 @@ import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.lite.MediaCategoryLite;
 import org.inbio.m3s.dto.lite.MediaLite;
-import org.inbio.m3s.dto.lite.UsePolicyLite;
+import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 
 /**
@@ -62,6 +61,7 @@ public class DisplayInfoFactory {
 		DisplayInfo di = new DisplayInfo();
 		
 		try{
+		MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean(Properties.MESSAGE_MANAGER);
 		AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER); 
 		PersonLiteDTO pLite = null;
 		InstitutionLiteDTO il = null;
@@ -70,8 +70,7 @@ public class DisplayInfoFactory {
 		TaxonLiteDTO tlDTO = null;
 		MediaCategoryDAO mcDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
 		MediaCategoryLite mcl = null;
-		UsePolicyDAO usePolicyDAO = (UsePolicyDAO) ServiceUtil.appContext.getBean("usePolicyDAO"); //
-		UsePolicyLite upl = null;
+		UsePolicyDTO upDTO = null;
 		
 		//id
 		di.setId(String.valueOf(ml.getMediaId()));
@@ -123,8 +122,8 @@ public class DisplayInfoFactory {
 		}
 		
 		//info3 -> use policy
-		upl = usePolicyDAO.getUsePolicyLite(ml.getUsePolicyId());
-		di.setInfo3("Politica de Uso: "+upl.getName());
+		upDTO = messageManager.getUsePolicy(String.valueOf(ml.getUsePolicyId()));
+		di.setInfo3("Politica de Uso: "+upDTO.getName());
 		logger.debug("seteado info.");
 		
 		di.setInfo4("");
