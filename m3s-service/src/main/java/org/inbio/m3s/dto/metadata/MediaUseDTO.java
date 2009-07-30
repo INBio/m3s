@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author jgutierrez
  *
  */
-public class MediaUseDTO implements Serializable{
+public class MediaUseDTO implements Serializable {
 
 	/**
 	 * 

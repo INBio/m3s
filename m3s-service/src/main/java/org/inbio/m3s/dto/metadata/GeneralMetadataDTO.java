@@ -1,17 +1,17 @@
 /**
  * 
  */
-package org.inbio.m3s.dto;
+package org.inbio.m3s.dto.metadata;
 
-import java.io.Serializable;
 import java.util.List;
 
-import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.BaseDTO;
+import org.inbio.m3s.dto.message.KeywordDTO;
+import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
-import org.inbio.m3s.dto.lite.ProjectLite;
 
 /**
  * This class is intended to be useful in the metadata parameters pass beetwen
@@ -21,21 +21,21 @@ import org.inbio.m3s.dto.lite.ProjectLite;
  * @author jgutierrez
  * 
  */
-public class GeneralMetadataDTO implements Serializable{
+public class GeneralMetadataDTO extends BaseDTO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Integer mediaId;
+	private String mediaKey;
 
 	private String title;
 
 	private String description;
 
 	// TODO: look in what table is this attribute....
-	private Integer mediaTypeId;
+	private String mediaTypeKey;
 	
 	private List<SpecimenLiteDTO> associatedSpecimensList;
 	
@@ -43,7 +43,7 @@ public class GeneralMetadataDTO implements Serializable{
 	
 	private List<GatheringLiteDTO> associatedGatheringsList;
 
-	private List<ProjectLite> projectsList;
+	private List<ProjectDTO> projectsList;
 	
 
 	// TODO:
@@ -55,12 +55,12 @@ public class GeneralMetadataDTO implements Serializable{
 	// private List synapticCollections;
 
 	//private List keywords;
-	private List<KeywordLiteDTO> keywordsList;
+	private List<KeywordDTO> keywordsList;
 
 	// For the site the metadata could be the ID of a previously registered site
 	// or could be a String variable, thats why there are two variables to
 	// manage that
-	private Integer siteId;
+	private String siteKey;
 
 	private String siteDescription;
 
@@ -70,17 +70,17 @@ public class GeneralMetadataDTO implements Serializable{
 	@Override
 	public String toString(){
 		return "El General Metadata DTO tiene:" +
-				"\n\tMediaID: " + this.getMediaId() +
+				"\n\tMedia Key: " + this.getMediaKey() +
 				"\n\tTitle: " + this.getTitle() +
 				"\n\tDescription: " + this.getDescription() +
-				"\n\tMedia Type Id: "+ this.getMediaTypeId() +
+				"\n\tMedia Type Id: "+ this.getMediaTypeKey() +
 				"\n\tAssociated Specimens: "+ this.getAssociatedSpecimensList().size() +
 				"\n\tAssociated Observations: "+ this.getAssociatedObservationsList().size() +
 				"\n\tAssociated Gatherings: "+ this.getAssociatedGatheringsList().size() +
 				"\n\tProjects: "+ this.getProjectsList().size() +
 				"\n\tTaxons: "+ this.getTaxonsList().size() +
 				"\n\tKeywords: "+ this.getKeywordsList().size() +
-				"\n\tSite Id: "+ this.getSiteId() +
+				"\n\tSite Id: "+ this.getSiteKey() +
 				"\n\tSite Description: "+ this.getSiteDescription() +
 				"";
 	}
@@ -102,62 +102,86 @@ public class GeneralMetadataDTO implements Serializable{
 			Integer mediaTypeId, Integer siteId, String siteDescription) {
 		this.title = title;
 		this.description = description;
-		this.mediaTypeId = mediaTypeId;
-		this.siteId = siteId;
+		this.mediaTypeKey = String.valueOf(mediaTypeId);
+		
+		if(siteId == null)
+			this.siteKey = null;
+		else
+			this.siteKey = String.valueOf(siteId);
+		
+		this.siteDescription = siteDescription;
+	}
+	
+	/**
+	 * @param title
+	 * @param description
+	 * @param mediaTypeKey
+	 * @param siteKey
+	 * @param siteDescription
+	 */
+	public GeneralMetadataDTO(String title, String description,
+			String mediaTypeKey, String siteKey, String siteDescription) {
+		this.title = title;
+		this.description = description;
+		this.mediaTypeKey = mediaTypeKey;
+		this.setSiteKey(siteKey);
+		this.siteDescription = siteDescription;
+	}
+	
+	/**
+	 * @param mediaKey
+	 * @param title
+	 * @param description
+	 * @param mediaTypeKey
+	 * @param siteKey
+	 * @param siteDescription
+	 */
+	public GeneralMetadataDTO(String mediaKey, String title, String description,
+			String mediaTypeKey, String siteKey, String siteDescription) {
+		this.mediaKey = mediaKey;
+		this.title = title;
+		this.description = description;
+		this.mediaTypeKey = mediaTypeKey;
+		this.setSiteKey(siteKey);
 		this.siteDescription = siteDescription;
 	}
 	
 	
 	/**
-	 * @param mediaId
+	 * @param mediaKey
 	 * @param title
 	 * @param description
-	 * @param mediaTypeId
+	 * @param mediaTypeKey
 	 * @param associatedSpecimensList
 	 * @param associatedObservationsList
 	 * @param associatedGatheringsList
 	 * @param projectsList
 	 * @param taxonsList
 	 * @param keywordsList
-	 * @param siteId
+	 * @param siteKey
 	 * @param siteDescription
 	 */
-	public GeneralMetadataDTO(Integer mediaId, String title, String description,
-			Integer mediaTypeId, List<SpecimenLiteDTO> associatedSpecimensList,
+	public GeneralMetadataDTO(String mediaKey, String title, String description,
+			String mediaTypeKey, List<SpecimenLiteDTO> associatedSpecimensList,
 			List<ObservationLiteDTO> associatedObservationsList,
 			List<GatheringLiteDTO> associatedGatheringsList,
-			List<ProjectLite> projectsList, List<TaxonLiteDTO> taxonsList,
-			List<KeywordLiteDTO> keywordsList, Integer siteId, String siteDescription) {
-		this.mediaId = mediaId;
+			List<ProjectDTO> projectsList, List<TaxonLiteDTO> taxonsList,
+			List<KeywordDTO> keywordsList, String siteKey, String siteDescription) {
+		this.mediaKey = mediaKey;
 		this.title = title;
 		this.description = description;
-		this.mediaTypeId = mediaTypeId;
+		this.mediaTypeKey = mediaTypeKey;
 		this.associatedSpecimensList = associatedSpecimensList;
 		this.associatedObservationsList = associatedObservationsList;
 		this.associatedGatheringsList = associatedGatheringsList;
 		this.projectsList = projectsList;
 		this.taxonsList = taxonsList;
 		this.keywordsList = keywordsList;
-		this.siteId = siteId;
+		this.setSiteKey(siteKey);
 		this.siteDescription = siteDescription;
 	}
 
 
-
-	/**
-	 * @param mediaId
-	 *            the mediaId to set
-	 */
-	public void setMediaId(Integer mediaId) {
-		this.mediaId = mediaId;
-	}
-
-	/**
-	 * @return the mediaId
-	 */
-	public Integer getMediaId() {
-		return mediaId;
-	}
 
 	/**
 	 * @param title
@@ -189,35 +213,7 @@ public class GeneralMetadataDTO implements Serializable{
 		return description;
 	}
 
-	/**
-	 * @param mediaTypeId
-	 *            the mediaTypeId to set
-	 */
-	public void setMediaTypeId(Integer mediaTypeId) {
-		this.mediaTypeId = mediaTypeId;
-	}
 
-	/**
-	 * @return the mediaTypeId
-	 */
-	public Integer getMediaTypeId() {
-		return mediaTypeId;
-	}
-
-	/**
-	 * @param siteId
-	 *            the siteId to set
-	 */
-	public void setSiteId(Integer siteId) {
-		this.siteId = siteId;
-	}
-
-	/**
-	 * @return the siteId
-	 */
-	public Integer getSiteId() {
-		return siteId;
-	}
 
 	/**
 	 * @param siteDescription
@@ -238,28 +234,28 @@ public class GeneralMetadataDTO implements Serializable{
 	/**
 	 * @return the projectsList
 	 */
-	public List<ProjectLite> getProjectsList() {
+	public List<ProjectDTO> getProjectsList() {
 		return projectsList;
 	}
 
 	/**
 	 * @param projectsList the projectsList to set
 	 */
-	public void setProjectsList(List<ProjectLite> projectsList) {
+	public void setProjectsList(List<ProjectDTO> projectsList) {
 		this.projectsList = projectsList;
 	}
 
 	/**
 	 * @return the keywordsList
 	 */
-	public List<KeywordLiteDTO> getKeywordsList() {
+	public List<KeywordDTO> getKeywordsList() {
 		return keywordsList;
 	}
 
 	/**
 	 * @param keywordsList the keywordsList to set
 	 */
-	public void setKeywordsList(List<KeywordLiteDTO> keywordsList) {
+	public void setKeywordsList(List<KeywordDTO> keywordsList) {
 		this.keywordsList = keywordsList;
 	}
 
@@ -320,6 +316,48 @@ public class GeneralMetadataDTO implements Serializable{
 	public void setAssociatedObservationsList(
 			List<ObservationLiteDTO> associatedObservationsList) {
 		this.associatedObservationsList = associatedObservationsList;
+	}
+
+	/**
+	 * @param mediaKey the mediaKey to set
+	 */
+	public void setMediaKey(String mediaKey) {
+		this.mediaKey = mediaKey;
+	}
+
+	/**
+	 * @return the mediaKey
+	 */
+	public String getMediaKey() {
+		return mediaKey;
+	}
+
+	/**
+	 * @param mediaTypeKey the mediaTypeKey to set
+	 */
+	public void setMediaTypeKey(String mediaTypeKey) {
+		this.mediaTypeKey = mediaTypeKey;
+	}
+
+	/**
+	 * @return the mediaTypeKey
+	 */
+	public String getMediaTypeKey() {
+		return mediaTypeKey;
+	}
+
+	/**
+	 * @param siteKey the siteKey to set
+	 */
+	public void setSiteKey(String siteKey) {
+		this.siteKey = siteKey;
+	}
+
+	/**
+	 * @return the siteKey
+	 */
+	public String getSiteKey() {
+		return siteKey;
 	}
 
 }

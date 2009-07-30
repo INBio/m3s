@@ -4,12 +4,12 @@
 package org.inbio.m3s.dto.message;
 
 
-import java.io.Serializable;
+import org.inbio.m3s.dto.BaseDTO;
 /**
  * @author jgutierrez
  *
  */
-public class KeywordLiteDTO  implements Serializable {
+public class KeywordDTO extends BaseDTO {
 
 	private static final long serialVersionUID = -7969495353905529327L;
 
@@ -20,7 +20,7 @@ public class KeywordLiteDTO  implements Serializable {
 	/**
 	 * 
 	 */
-	public KeywordLiteDTO(){
+	public KeywordDTO(){
 		super();
 	}
 	
@@ -28,7 +28,7 @@ public class KeywordLiteDTO  implements Serializable {
 	 * @param keywordKey
 	 * @param name
 	 */
-	public KeywordLiteDTO(String keywordKey, String name) {
+	public KeywordDTO(String keywordKey, String name) {
 		super();
 		this.setKeywordKey(keywordKey);
 		this.name = name;
@@ -38,7 +38,7 @@ public class KeywordLiteDTO  implements Serializable {
 	 * @param keywordId
 	 * @param name
 	 */
-	public KeywordLiteDTO(Integer keywordId, String name) {
+	public KeywordDTO(Integer keywordId, String name) {
 		super();
 		this.setKeywordKey(keywordId.toString());
 		this.name = name;
