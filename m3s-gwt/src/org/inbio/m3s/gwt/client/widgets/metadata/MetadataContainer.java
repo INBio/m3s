@@ -3,12 +3,12 @@
  */
 package org.inbio.m3s.gwt.client.widgets.metadata;
 
+import org.inbio.m3s.gwt.client.dto.metadata.GeneralMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
 import org.inbio.m3s.gwt.client.widgets.login.LoginManager;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.CategoryAndTypeListener;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.MetadataListener;
 import org.inbio.m3s.gwt.client.widgets.metadata.ui.GeneralMetadataPanel;
@@ -74,7 +74,7 @@ public class MetadataContainer extends VerticalPanel implements CategoryAndTypeL
 	public void saveMetadata() {
 		//Window.alert("Guardando metadatos - INICIO");
 		
-		GeneralMetadataTV gmtv = gmPanel.getGeneralMetadataTV();
+		GeneralMetadataGWTDTO gmtv = gmPanel.getGeneralMetadataGWTDTO();
 
 		UsesAndCopyrightsGWTDTO uactv = uacPanel.getUsesAndCopyrightsGWTDTO();
 
@@ -118,26 +118,25 @@ public class MetadataContainer extends VerticalPanel implements CategoryAndTypeL
 	 *            if true will set this tab as the
 	 */
 	public void initGeneralMetadata(Integer language, boolean mainTab) {
-		gmPanel = new GeneralMetadataPanel(language, this);
+		gmPanel = new GeneralMetadataPanel(this);
 		tabPanel.add(gmPanel, "Información General");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(gmPanel));
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void initGeneralMetadata(final Integer language, final boolean mainTab, Integer mediaId) {
 		// loading generalMetadata
 		System.out.println("initGeneralMetadata - INICIO");
-		rpc.getGeneralMetadataTV(mediaId, new AsyncCallback() {
+		rpc.getGeneralMetadataTV(mediaId, new AsyncCallback<GeneralMetadataGWTDTO>() {
 
 			public void onFailure(Throwable caught) {
 				RPCFailureManager(caught);
 			}
 
-			public void onSuccess(Object result) {
+			public void onSuccess(GeneralMetadataGWTDTO gmGWTDTO) {
 				initGeneralMetadata(language, mainTab);
-				gmPanel.setGeneralMetadataTV((GeneralMetadataTV) result);
+				gmPanel.setGeneralMetadataGWTDTO(gmGWTDTO);
 				System.out.println("initGeneralMetadata - RPC on Success");
 			}
 
@@ -152,7 +151,7 @@ public class MetadataContainer extends VerticalPanel implements CategoryAndTypeL
 	 *            if true will set this tab as the
 	 */
 	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab, UsesAndCopyrightsGWTDTO uacGWTDTO) {
-		uacPanel = new UsesAndCopyrightsPanel(language, uacGWTDTO);
+		uacPanel = new UsesAndCopyrightsPanel(uacGWTDTO);
 		tabPanel.add(uacPanel, "Usos y Derechos de Uso");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(uacPanel));
@@ -160,7 +159,7 @@ public class MetadataContainer extends VerticalPanel implements CategoryAndTypeL
 	}
 	
 	public void initUsesAndCopyrightsTab(Integer language, boolean mainTab) {
-		uacPanel = new UsesAndCopyrightsPanel(language, null);
+		uacPanel = new UsesAndCopyrightsPanel(null);
 		tabPanel.add(uacPanel, "Usos y Derechos de Uso");
 		if (mainTab) {
 			tabPanel.selectTab(tabPanel.getWidgetIndex(uacPanel));

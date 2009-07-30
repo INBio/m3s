@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.inbio.gwt.galleries.client.dto.DisplayInfo;
 import org.inbio.gwt.galleries.client.dto.DisplayType;
 import org.inbio.m3s.config.Properties;
-import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.gwt.client.config.ClientProperties;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MessageManager;
@@ -18,8 +17,8 @@ import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.ServiceUtil;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.MediaCategoryLite;
 import org.inbio.m3s.dto.lite.MediaLite;
+import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 
@@ -68,8 +67,7 @@ public class DisplayInfoFactory {
 		TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
 		List<TaxonLiteDTO> taxonLiteList = new ArrayList<TaxonLiteDTO>(); //lista de TaxonLite
 		TaxonLiteDTO tlDTO = null;
-		MediaCategoryDAO mcDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
-		MediaCategoryLite mcl = null;
+		MediaCategoryDTO mcDTO = null;
 		UsePolicyDTO upDTO = null;
 		
 		//id
@@ -77,8 +75,8 @@ public class DisplayInfoFactory {
 		logger.debug("id seteado");
 		
 		//type: actually sets the media category as the DisplayInfo.type
-		mcl = mcDAO.getMediaCategoryLiteFromMediaType(ml.getMediaTypeId(), MessageManager.DEFAULT_LANGUAGE);
-		di.setType(getDisplayType(mcl.getMediaCategoryId()));
+		mcDTO =  messageManager.getMediaCategoryByType(String.valueOf(ml.getMediaTypeId()));
+		di.setType(getDisplayType(Integer.valueOf(mcDTO.getMediaCategoryKey())));
 		logger.debug("type seteado");
 		
 		//url -> should be set latter

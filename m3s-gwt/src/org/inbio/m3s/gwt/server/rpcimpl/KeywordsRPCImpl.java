@@ -10,8 +10,7 @@ import org.inbio.gwt.controlledtext.client.dto.TextInfo;
 import org.inbio.gwt.controlledtext.client.exception.ControlledTextException;
 import org.inbio.gwt.controlledtext.client.rpc.ControlledTextRPC;
 import org.inbio.m3s.config.Properties;
-import org.inbio.m3s.dao.core.KeywordDAO;
-import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.util.ServiceUtil;
 
@@ -28,12 +27,15 @@ public class KeywordsRPCImpl extends RemoteServiceServlet implements ControlledT
 
 	private MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean(Properties.MESSAGE_MANAGER);
 	
+
 	/**
-	 * @deprecated parece que no se usa!
+	 * 
 	 */
 	public TextInfo getTextInfo(String text) throws ControlledTextException {
-		KeywordDAO kDAO = (KeywordDAO) ServiceUtil.appContext.getBean("keywordDAO");
-		KeywordLiteDTO klDTO = kDAO.getKeywordLite(text, MessageManager.DEFAULT_LANGUAGE);
+		//KeywordDAO kDAO = (KeywordDAO) ServiceUtil.appContext.getBean("keywordDAO");
+		//KeywordLiteDTO klDTO = kDAO.getKeywordLite(text, MessageManager.DEFAULT_LANGUAGE);
+		
+		KeywordDTO klDTO = messageManager.getKeywordLite(text, MessageManager.DEFAULT_LANGUAGE);
 
 		if (klDTO != null){
 			return new TextInfo(new Integer(klDTO.getKeywordKey()),klDTO.getName());
@@ -50,11 +52,11 @@ public class KeywordsRPCImpl extends RemoteServiceServlet implements ControlledT
 	 */
 	public List<String> getAllTexts() {
 		
-		List<KeywordLiteDTO> keywords = messageManager.getAllKeywordLite(MessageManager.ESPANYOL);
+		List<KeywordDTO> keywords = messageManager.getAllKeywordLite(MessageManager.ESPANYOL);
 		
 		List<String> result = new ArrayList<String>();
 
-		for(KeywordLiteDTO kl : keywords)
+		for(KeywordDTO kl : keywords)
 			result.add(kl.getName());
 
 		return result;

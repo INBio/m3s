@@ -3,19 +3,22 @@
  */
 package org.inbio.m3s.gwt.client.widgets.metadata.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.inbio.gwt.associatedto.client.dto.AssociatedToConstants;
 import org.inbio.gwt.associatedto.client.listener.AssociatedToListener;
 import org.inbio.gwt.associatedto.client.ui.AssociatedTo;
+import org.inbio.gwt.controlledtext.client.dto.TextInfo;
 import org.inbio.gwt.controlledtext.client.ui.TextSelector;
 import org.inbio.gwt.taxonomy.client.widget.TaxonSelector;
 import org.inbio.m3s.gwt.client.config.ClientProperties;
+import org.inbio.m3s.gwt.client.dto.metadata.GeneralMetadataGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.KeywordGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.ProjectGWTDTO;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPCAsync;
-import org.inbio.m3s.gwt.client.widgets.login.LoginManager;
 import org.inbio.m3s.gwt.client.widgets.metadata.CategoryAndTypeSelector;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.listener.CategoryAndTypeListener;
 
 import com.google.gwt.core.client.GWT;
@@ -48,10 +51,8 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 
 	// rpc service
 	private MetadataRPCAsync rpc;
-
-	private Integer language;
-
-	private Integer mediaId = null;
+	
+	private GeneralMetadataGWTDTO gmGWTDTO = null;
 
 	/**
 	 * Class constructor, creates an empty table with all the text in the selected
@@ -59,10 +60,9 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @param language
 	 */
-	public GeneralMetadataPanel(Integer language,	CategoryAndTypeListener catListener) {
+	public GeneralMetadataPanel(CategoryAndTypeListener catListener) {
 		initRPC();
 		listener = catListener;
-		this.language = language;
 		initPanel();
 	}
 
@@ -70,9 +70,9 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * Methods
 	 ****************************************************************************/
 
-	public GeneralMetadataPanel(Integer language, CategoryAndTypeListener catListener, GeneralMetadataTV gmtv) {
-		this(language,	catListener);
-		this.setGeneralMetadataTV(gmtv);
+	public GeneralMetadataPanel(CategoryAndTypeListener catListener, GeneralMetadataGWTDTO gmtv) {
+		this(catListener);
+		this.setGeneralMetadataGWTDTO(gmtv);
 	}
 
 	/**
@@ -110,15 +110,14 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 		main.setText(ASSOCIATED_TO, TEXT, "Asociado a:");
 		// main.setWidget(ASSOCIATED_TO, WIDGET, new AssociatedToSelector(
 		// language, this));
-		main.setWidget(ASSOCIATED_TO, WIDGET, new AssociatedTo(language, this,
-				AssociatedToConstants.NO_ASSOCIATION, ""));
+		main.setWidget(ASSOCIATED_TO, WIDGET, new AssociatedTo(null, this,AssociatedToConstants.NO_ASSOCIATION, ""));
 
-		// this.setProjectsRow("Proyectos:");
+		
+		//Projects
 		main.setText(PROJECT, TEXT, "Proyectos:");
-		TextBox projectTB = new TextBox();
-		projectTB.setWidth(ClientProperties.DEFAULT_TEXTBOX_WIDTH);
-		projectTB.setText(LoginManager.getUserName());
-		main.setWidget(PROJECT, WIDGET, projectTB);
+		TextSelector projects = new TextSelector("projectsRPC");
+		main.setWidget(PROJECT, WIDGET, projects);
+		
 
 		// this.setSeriesRow("Series:");
 		main.setText(SERIES, TEXT, "Series:");
@@ -145,10 +144,7 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 		main.setText(KEY_WORDS, TEXT, "Palabras Clave:");
 		TextSelector keywords = new TextSelector("keywordsRPC");
 		main.setWidget(KEY_WORDS, WIDGET, keywords);
-		//TextBox keyWordsTB = new TextBox();
-		//keyWordsTB.setWidth(ClientProperties.DEFAULT_TEXTBOX_WIDTH);
-		//keyWordsTB.setEnabled(true);
-		//main.setWidget(KEY_WORDS, WIDGET, keyWordsTB);
+		
 
 		// this.setSiteRow("Sitio");
 		TextArea site = new TextArea();
@@ -165,42 +161,53 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * 
 	 * @return generarlMetadataTV object
 	 */
-	public GeneralMetadataTV getGeneralMetadataTV() {
-		GeneralMetadataTV gmtv = new GeneralMetadataTV();
+	public GeneralMetadataGWTDTO getGeneralMetadataGWTDTO() {
 
-		gmtv.setMediaId(mediaId);
-		gmtv.setTitle(((TextBox) main.getWidget(TITLE, WIDGET)).getText());
-		gmtv.setDescription(((TextArea) main.getWidget(DESCRIPTION, WIDGET))
+		if(this.gmGWTDTO==null){
+			this.gmGWTDTO = new GeneralMetadataGWTDTO();
+			this.gmGWTDTO.setMediaKey(null);
+		}
+			
+		
+		
+		this.gmGWTDTO.setTitle(((TextBox) main.getWidget(TITLE, WIDGET)).getText());
+		this.gmGWTDTO.setDescription(((TextArea) main.getWidget(DESCRIPTION, WIDGET))
 				.getText());
 
 		// media category and type
-		gmtv.setMediaCategory(((CategoryAndTypeSelector) main.getWidget(
+		this.gmGWTDTO.setMediaCategory(((CategoryAndTypeSelector) main.getWidget(
 				CATEGORY_AND_TYPE, WIDGET)).getMediaCategory());
-		gmtv.setMediaType(((CategoryAndTypeSelector) main.getWidget(
+		this.gmGWTDTO.setMediaType(((CategoryAndTypeSelector) main.getWidget(
 				CATEGORY_AND_TYPE, WIDGET)).getMediaType());
 
 		// asociation
-		gmtv.setAssociatedToInfo(((AssociatedTo) main
+		this.gmGWTDTO.setAssociatedToInfo(((AssociatedTo) main
 				.getWidget(ASSOCIATED_TO, WIDGET)).getAssociatedToInfo());
 
 		// projects
-		gmtv.setProjects(((TextBox) main.getWidget(PROJECT, WIDGET)).getText());
+		List<ProjectGWTDTO> pGWTDTOList = new ArrayList<ProjectGWTDTO>();
+		for(TextInfo ti : ((TextSelector) main.getWidget(PROJECT, WIDGET)).getSelecetedTexts())
+			pGWTDTOList.add(new ProjectGWTDTO(String.valueOf(ti.getId()),ti.getName()));
+		this.gmGWTDTO.setProjectsList(pGWTDTOList);
 
 		// taxonomy
-		gmtv.setTaxonomyInfo(((TaxonSelector) main.getWidget(TAXONOMY, WIDGET))
+		this.gmGWTDTO.setTaxonomyInfo(((TaxonSelector) main.getWidget(TAXONOMY, WIDGET))
 				.getTaxonomy());
 
 		// this.setSynapticCollectionListValue(generalMetadata
 		// .getSynopticColletion());
 
 		// keywords
-		gmtv.setKeyWords(((TextSelector) main.getWidget(KEY_WORDS, WIDGET)).getSelecetedTexts());
+		List<KeywordGWTDTO> kGWTDTOList = new ArrayList<KeywordGWTDTO>();
+		for(TextInfo ti : ((TextSelector) main.getWidget(KEY_WORDS, WIDGET)).getSelecetedTexts())
+			kGWTDTOList.add(new KeywordGWTDTO(String.valueOf(ti.getId()),ti.getName()));
+		this.gmGWTDTO.setKeywordsList(kGWTDTOList);
 		//gmtv.setKeyWords(((TextBox) main.getWidget(KEY_WORDS, WIDGET)).getText());
 
 		// TODO: has to fix the siteId stuff
-		gmtv.setSiteDescription(((TextArea) main.getWidget(SITE, WIDGET)).getText());
+		this.gmGWTDTO.setSiteDescription(((TextArea) main.getWidget(SITE, WIDGET)).getText());
 
-		return gmtv;
+		return this.gmGWTDTO;
 	}
 
 	/**
@@ -210,39 +217,41 @@ public class GeneralMetadataPanel extends VerticalPanel implements
 	 * @param gmtv
 	 *          with the elements to be displayed
 	 */
-	public void setGeneralMetadataTV(GeneralMetadataTV gmtv) {
+	public void setGeneralMetadataGWTDTO(GeneralMetadataGWTDTO gmtv) {
 
-		mediaId = gmtv.getMediaId();
+		this.gmGWTDTO = gmtv;
+		List<TextInfo> tiList;
 
 		// this.setMediaTitleValue(gmtv.getTitle());
-		((TextBox) main.getWidget(TITLE, WIDGET)).setText(gmtv.getTitle());
+		((TextBox) main.getWidget(TITLE, WIDGET)).setText(this.gmGWTDTO.getTitle());
 
 		// this.setDescriptionValue(gmtv.getDescription());
-		((TextArea) main.getWidget(DESCRIPTION, WIDGET)).setText(gmtv
-				.getDescription());
+		((TextArea) main.getWidget(DESCRIPTION, WIDGET)).setText(this.gmGWTDTO.getDescription());
 
 		// media category and media type
-		((CategoryAndTypeSelector) main.getWidget(CATEGORY_AND_TYPE, WIDGET))
-				.setMediaCategoryAndType(gmtv.getMediaCategory(), gmtv.getMediaType());
+		((CategoryAndTypeSelector) main.getWidget(CATEGORY_AND_TYPE, WIDGET)).setMediaCategoryAndType(this.gmGWTDTO.getMediaCategory(), this.gmGWTDTO.getMediaType());
 
 		//associated to
-		((AssociatedTo) main.getWidget(ASSOCIATED_TO, WIDGET))
-			  .setAssociatedToInfo(gmtv .getAssociatedToInfo());
+		((AssociatedTo) main.getWidget(ASSOCIATED_TO, WIDGET)).setAssociatedToInfo(this.gmGWTDTO.getAssociatedToInfo());
 
 		// projects
-		((TextBox) main.getWidget(PROJECT, WIDGET)).setText(gmtv.getProjects());
+		tiList = new ArrayList<TextInfo>();
+		for(ProjectGWTDTO pGWTDTO : this.gmGWTDTO.getProjectsList())
+			tiList.add(new TextInfo(Integer.valueOf(pGWTDTO.getProjectKey()),pGWTDTO.getName()));
+		((TextSelector) main.getWidget(PROJECT, WIDGET)).setSelectedTexts(tiList);
 
 		// taxonomy
-		((TaxonSelector) main.getWidget(TAXONOMY, WIDGET)).setTaxonomy(gmtv
-				.getTaxonomyInfo());
+		((TaxonSelector) main.getWidget(TAXONOMY, WIDGET)).setTaxonomy(this.gmGWTDTO.getTaxonomyInfo());
 
 		// keywords
-		//((TextBox) main.getWidget(KEY_WORDS, WIDGET)).setText(gmtv.getKeyWords());
-		((TextSelector) main.getWidget(KEY_WORDS, WIDGET)).setSelectedTexts(gmtv.getKeyWords());
+		tiList = new ArrayList<TextInfo>();
+		for(KeywordGWTDTO kGWTDTO : this.gmGWTDTO.getKeywordsList())
+			tiList.add(new TextInfo(Integer.valueOf(kGWTDTO.getKeywordKey()),kGWTDTO.getName()));
+		((TextSelector) main.getWidget(KEY_WORDS, WIDGET)).setSelectedTexts(tiList);
 
 		// site description
-		if (gmtv.getSiteId() == null) {
-			this.setSiteValue(gmtv.getSiteDescription());
+		if (this.gmGWTDTO.getSiteKey() == null) {
+			this.setSiteValue(this.gmGWTDTO.getSiteDescription());
 		}
 		// else
 		//

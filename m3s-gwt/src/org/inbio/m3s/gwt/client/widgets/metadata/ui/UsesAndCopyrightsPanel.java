@@ -52,11 +52,8 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 	/**
 	 * Constructor
 	 * 
-	 * @param language
-	 *            this param its ignored!!!! always its using the
-	 *            default_language constant\
 	 */
-	public UsesAndCopyrightsPanel(Integer language) {
+	public UsesAndCopyrightsPanel() {
 		initRPC();
 		this.uacGWTDTO = null;
 		initTable();
@@ -65,11 +62,8 @@ public class UsesAndCopyrightsPanel extends VerticalPanel {
 	/**
 	 * Constructor
 	 * 
-	 * @param language
-	 *            this param its ignored!!!! always its using the
-	 *            default_language constant\
 	 */
-	public UsesAndCopyrightsPanel(Integer language, UsesAndCopyrightsGWTDTO uacGWTDTO) {
+	public UsesAndCopyrightsPanel(UsesAndCopyrightsGWTDTO uacGWTDTO) {
 		initRPC();
 		this.uacGWTDTO = uacGWTDTO;
 		initTable();

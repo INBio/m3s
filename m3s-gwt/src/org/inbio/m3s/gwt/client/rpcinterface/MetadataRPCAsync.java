@@ -6,11 +6,11 @@ package org.inbio.m3s.gwt.client.rpcinterface;
 import java.util.List;
 
 import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.GeneralMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -25,7 +25,7 @@ public interface MetadataRPCAsync {
 	 * @param mediaId
 	 * @param callback
 	 */
-	public void getGeneralMetadataTV(Integer mediaId, AsyncCallback callback);
+	public void getGeneralMetadataTV(Integer mediaId, AsyncCallback<GeneralMetadataGWTDTO> callback);
 
 	/**
 	 * 
@@ -58,13 +58,13 @@ public interface MetadataRPCAsync {
 
 	/**
 	 * 
-	 * @param gmtv
+	 * @param gmGWTDTO
 	 * @param uactv
 	 * @param tmtv
 	 * @param username
 	 * @param callback
 	 */
-	public void saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsGWTDTO uactv, TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback<Integer> callback);
+	public void saveMetadata(GeneralMetadataGWTDTO gmGWTDTO, UsesAndCopyrightsGWTDTO uactv, TechnicalMetadataGWTDTO tmtv, String username, AsyncCallback<Integer> callback);
 
 	/**
 	 * 

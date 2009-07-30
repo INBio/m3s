@@ -10,22 +10,22 @@ import org.apache.log4j.Logger;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.config.UserProfile;
 import org.inbio.m3s.converters.impl.InstitutionConverter;
-import org.inbio.m3s.converters.MetadataConverter;
+import org.inbio.m3s.converters.impl.GeneralMetadataConverter;
 import org.inbio.m3s.converters.impl.PersonConverter;
 import org.inbio.m3s.converters.impl.TechnicalMetadataConverter;
 import org.inbio.m3s.converters.impl.UsePolicyConverter;
 import org.inbio.m3s.converters.impl.UsesAndCopyrightsMetadataConverter;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.gwt.client.dto.UsePolicyGWTDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.GeneralMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.TechnicalMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.dto.metadata.UsesAndCopyrightsGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.InstitutionLiteGWTDTO;
 import org.inbio.m3s.gwt.client.dto.util.PersonGWTDTO;
 import org.inbio.m3s.gwt.client.exception.RPCIllegalArgumentException;
 import org.inbio.m3s.gwt.client.rpcinterface.MetadataRPC;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.gwt.client.widgets.metadata.ui.UsesAndCopyrightsPanel;
-import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
@@ -66,14 +66,17 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	 * Looks for the textual values that have to be display.
 	 * 
 	 * @param mediaId
-	 * @return a GeneralMetadataTV object ready to be used on the GUI
+	 * @return a GeneralMetadataGWTDTO object ready to be used on the GUI
 	 * 
 	 */
-	public GeneralMetadataTV getGeneralMetadataTV(Integer mediaId) {
+	public GeneralMetadataGWTDTO getGeneralMetadataTV(Integer mediaId) {
 		logger.debug("getting General Metadata...");
-		GeneralMetadataDTO gm =  mediaManager.getGM(mediaId);
+		GeneralMetadataDTO gmDTO =  mediaManager.getGeneralMetadataByMedia(String.valueOf(mediaId));
+		logger.debug(gmDTO.toString());
+		GeneralMetadataConverter gmmc = new GeneralMetadataConverter();
+		logger.debug(gmmc.toGWTDTO(gmDTO).toString());
 		logger.debug("getting General Metadata... done");
-		return MetadataConverter.toTextualValues(gm);
+		return gmmc.toGWTDTO(gmDTO);
 	}
 
 	/**
@@ -173,7 +176,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	}
 
 	/**
-	 * @param gmtv
+	 * @param gmGWTDTO
 	 *            the GeneralMetadataTV from the GUI
 	 * @param uacGWTDTO
 	 *            the UsesAndCopyrightsGWTDTO from the GUI
@@ -183,7 +186,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 	 * @return the mediaId of the element the was saved or null in case of error
 	 * 
 	 */
-	public Integer saveMetadata(GeneralMetadataTV gmtv, UsesAndCopyrightsGWTDTO uacGWTDTO, 
+	public Integer saveMetadata(GeneralMetadataGWTDTO gmGWTDTO, UsesAndCopyrightsGWTDTO uacGWTDTO, 
 			TechnicalMetadataGWTDTO tmGWTDTO, String username)
 			throws RPCIllegalArgumentException {
 		
@@ -191,7 +194,8 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 
 		//boolean isPublicBefore;
 		//boolean isPublicAfter;
-		GeneralMetadataDTO gm = null;
+		GeneralMetadataDTO gmDTO = null;
+		GeneralMetadataConverter gmmc = new GeneralMetadataConverter();
 
 		UsesAndCopyrightsDTO uacDTO = null;
 		UsesAndCopyrightsMetadataConverter uacmc = new UsesAndCopyrightsMetadataConverter();
@@ -206,7 +210,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 		try {
 			logger.debug("iniciando conversion de datos");
 			
-			gm = MetadataConverter.toDBValues(gmtv);
+			gmDTO = gmmc.toDTO(gmGWTDTO);
 			logger.debug("listos los general metadata");
 			
 			uacDTO = uacmc.toDTO(uacGWTDTO);
@@ -223,10 +227,10 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 
 		logger.debug("iniciando el guardado de los datos");
 		// if no media Id, this is a new reccord
-		if (gmtv.getMediaId() == null && uacGWTDTO.getMediaKey() == null
+		if (gmGWTDTO.getMediaKey() == null && uacGWTDTO.getMediaKey() == null
 				&& tmGWTDTO.getMediaKey() == null) {
 			logger.debug("saving Metadata... insert");
-			Integer mediaId = getMediaManager().insertNewMedia(gm, uacDTO, tmDTO);
+			Integer mediaId = getMediaManager().insertNewMedia(gmDTO, uacDTO, tmDTO);
 
 			logger.debug("saving Metadata... done");
 			return mediaId;
@@ -237,7 +241,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 			// corresponding folder
 			logger.debug("saving Metadata... update");
 
-			getMediaManager().updateGM(gm);
+			getMediaManager().updateGM(gmDTO);
 			logger.debug("saving Metadata... general metadata saved");
 
 			getMediaManager().updateUACM(uacDTO);
@@ -248,7 +252,7 @@ public class MetadataRPCImpl extends RemoteServiceServlet implements MetadataRPC
 
 			logger.debug("saving Metadata... done");
 
-			return gmtv.getMediaId();
+			return Integer.valueOf(gmGWTDTO.getMediaKey());
 		}
 
 	}

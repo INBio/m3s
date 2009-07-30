@@ -58,7 +58,10 @@
 		class='org.inbio.m3s.gwt.server.rpcimpl.TaxonSelectorRPCImpl' />
 	<!-- keywords -->
 	<servlet path="/keywordsRPC"
-		class="org.inbio.m3s.gwt.server.rpcimpl.KeywordsRPCImpl" />		
+		class="org.inbio.m3s.gwt.server.rpcimpl.KeywordsRPCImpl" />
+	<!-- projects -->
+	<servlet path="/projectsRPC"
+		class="org.inbio.m3s.gwt.server.rpcimpl.ProjectsRPCImpl" />			
 
 	<!-- The upload servlet -->
 	<servlet path="/uploadFile"
