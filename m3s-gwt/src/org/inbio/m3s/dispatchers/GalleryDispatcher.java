@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.inbio.gwt.associatedto.client.dto.AssociatedToConstants;
 import org.inbio.m3s.config.Properties;
-import org.inbio.m3s.converters.MetadataConverter;
+import org.inbio.m3s.converters.impl.GeneralMetadataConverter;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.gwt.client.dto.metadata.GeneralMetadataGWTDTO;
 import org.inbio.m3s.gwt.client.widgets.galleries.SearchCriteriaTriplet;
-import org.inbio.m3s.gwt.client.widgets.metadata.dto.GeneralMetadataTV;
 import org.inbio.m3s.manager.SearchManager;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
@@ -92,7 +92,8 @@ public class GalleryDispatcher extends HttpServlet {
 		totalResults = SearchManager.getTotalResults(sctList); 
 		List<Integer> mediaIdsList = SearchManager.getResults(sctList, first, last);
 		MediaManager mediaManager = (MediaManager) ServiceUtil.appContext.getBean(Properties.MEDIA_MANAGER);
-		GeneralMetadataTV gmtv = null;
+		GeneralMetadataGWTDTO gmGWTDTO;
+		GeneralMetadataConverter gmmc = new GeneralMetadataConverter();
 		UsesAndCopyrightsDTO uacDTO = null;
 				
 			// writting the HTML file
@@ -113,11 +114,11 @@ public class GalleryDispatcher extends HttpServlet {
 			
 			
 			for (Integer mediaId : mediaIdsList) {
-				gmtv = MetadataConverter.toTextualValues(mediaManager.getGM(mediaId));
+				gmGWTDTO = gmmc.toGWTDTO(mediaManager.getGeneralMetadataByMedia(String.valueOf(mediaId)));
 				uacDTO = mediaManager.getUACM(String.valueOf(mediaId));
 				//uacGWTDTO = uacmConverter.to
 				///uactv = MetadataConverter.toTextualValue(mediaManager.getUACM(mediaId));
-				out.println(addItem(gmtv, uacDTO));
+				out.println(addItem(gmGWTDTO, uacDTO));
 			}
 			
 			out.println("</tr></tbody></table>");
@@ -176,38 +177,38 @@ public class GalleryDispatcher extends HttpServlet {
 	
 	/**
 	 * 
-	 * @param gmtv
+	 * @param gmGWTDTO
 	 * @param uacDTO
 	 * @return
 	 */
-	private String addItem(GeneralMetadataTV gmtv, UsesAndCopyrightsDTO uacDTO){
+	private String addItem(GeneralMetadataGWTDTO gmGWTDTO, UsesAndCopyrightsDTO uacDTO){
 		String imageSize = "thumb";
 		String baseURL = "/m3sINBio/getImage?";
-		String mediaId = gmtv.getMediaId().toString();
+		String mediaId = gmGWTDTO.getMediaKey();
 		AgentManager agentManager = (AgentManager) ServiceUtil.appContext.getBean(Properties.AGENT_MANAGER);
 		
 		//taxonomia o titulo
 		String info1;
-		if(gmtv.getTaxonomyInfo()!=null){
-			if(gmtv.getTaxonomyInfo().size() > 0){
+		if(gmGWTDTO.getTaxonomyInfo()!=null){
+			if(gmGWTDTO.getTaxonomyInfo().size() > 0){
 			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
-			TaxonLiteDTO tlDTO = (TaxonLiteDTO) taxonomyManager.getTaxonLiteById((String) gmtv.getTaxonomyInfo().get(0));
+			TaxonLiteDTO tlDTO = (TaxonLiteDTO) taxonomyManager.getTaxonLiteById((String) gmGWTDTO.getTaxonomyInfo().get(0));
 			info1 = tlDTO.getDefaultName();
 			} else
 				info1="";
-		} else if (gmtv.getTitle()!=null)
-			info1= "Titulo: "+gmtv.getTitle();
+		} else if (gmGWTDTO.getTitle()!=null)
+			info1= "Titulo: "+gmGWTDTO.getTitle();
 		else
 			info1="";
 		
 		//bio information
 		String info2;
-		if(gmtv.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.GATHERING_CODE.intValue())
-			info2 = "Código de Colecta: "+gmtv.getAssociatedToInfo().getValue();
-		else if(gmtv.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.SPECIMEN_NUMBER.intValue())
-			info2 = "Número de Especimen: "+gmtv.getAssociatedToInfo().getValue();
-		else if(gmtv.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.OBSERVATION_NUMBER.intValue())
-			info2 = "Número de Observación: "+gmtv.getAssociatedToInfo().getValue();
+		if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.GATHERING_CODE.intValue())
+			info2 = "Código de Colecta: "+gmGWTDTO.getAssociatedToInfo().getValue();
+		else if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.SPECIMEN_NUMBER.intValue())
+			info2 = "Número de Especimen: "+gmGWTDTO.getAssociatedToInfo().getValue();
+		else if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.OBSERVATION_NUMBER.intValue())
+			info2 = "Número de Observación: "+gmGWTDTO.getAssociatedToInfo().getValue();
 		else //if(gmtv.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.NO_ASSOCIATION.intValue())
 			info2 = "Sin información asociada";		
 

@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.inbio.m3s.config.Properties;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.lite.MediaCategoryLite;
 import org.inbio.m3s.dto.lite.MediaLite;
+import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.TaxonomyManager;
@@ -66,7 +66,7 @@ public class InfoDispatcher extends HttpServlet {
 		MediaCategoryDAO mcDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
 		TaxonLiteDTO tl = null;
 		List<MediaLite> mlList = new ArrayList<MediaLite>();
-		MediaCategoryLite mcl = null;
+		MediaCategoryDTO mcl = null;
 
 		try {
 			// buscar los valores reales;
@@ -93,7 +93,7 @@ public class InfoDispatcher extends HttpServlet {
 
 		for (MediaLite ml : mlList) {
 			mcl = mcDAO.getMediaCategoryLiteFromMediaType(ml.getMediaTypeId(), MessageManager.ENGLISH);
-			out.println("<media id=\"" + ml.getMediaId() + "\" category=\"" + mcl.getMediaCategoryId()	+ "\"/>");
+			out.println("<media id=\"" + ml.getMediaId() + "\" category=\"" + mcl.getMediaCategoryKey()	+ "\"/>");
 		}
 
 		out.println("</multimedia>");
