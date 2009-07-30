@@ -10,7 +10,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
-import org.inbio.m3s.dto.lite.ProjectLite;
+import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.model.core.Project;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -24,13 +25,13 @@ public class ProjectDAOImpl extends BaseDAOImpl implements ProjectDAO{
 	
 	
 
-	public ProjectLite getProjectLite(final Integer projectId) throws IllegalArgumentException {
+	public ProjectDTO getProjectLite(final Integer projectId) throws IllegalArgumentException {
 		logger.debug("getProjectLite for projectId[" + projectId +"]");
 		HibernateTemplate template = getHibernateTemplate();
-		return (ProjectLite) template.execute(new HibernateCallback() {
+		return (ProjectDTO) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.ProjectLite(p.projectId, p.name)"
+						"select new org.inbio.m3s.dto.message.ProjectDTO(p.projectId, p.name)"
 						+ " from Project as p" 
 						+ " where p.projectId = " + projectId);
 				query.setCacheable(true);
@@ -42,13 +43,13 @@ public class ProjectDAOImpl extends BaseDAOImpl implements ProjectDAO{
 	}
 
 	
-	public ProjectLite getProjectLite(final String projectName) throws IllegalArgumentException {
+	public ProjectDTO getProjectLite(final String projectName) throws IllegalArgumentException {
 		logger.debug("getProjectLite for projectName[" + projectName +"]");
 		HibernateTemplate template = getHibernateTemplate();
-		return (ProjectLite) template.execute(new HibernateCallback() {
+		return (ProjectDTO) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.ProjectLite(p.projectId, p.name)"
+						"select new org.inbio.m3s.dto.message.ProjectDTO(p.projectId, p.name)"
 						+ " from Project as p" 
 						+ " where p.name = '" + projectName+"'");
 				query.setCacheable(true);
@@ -61,13 +62,13 @@ public class ProjectDAOImpl extends BaseDAOImpl implements ProjectDAO{
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ProjectLite> getAllLite() throws IllegalArgumentException {
+	public List<ProjectDTO> getAllLite() throws IllegalArgumentException {
 		logger.debug("listAllLite");
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<ProjectLite>) template.execute(new HibernateCallback() {
+		return (List<ProjectDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.dto.lite.ProjectLite(p.projectId, p.name)"
+						"select new org.inbio.m3s.dto.message.ProjectDTO(p.projectId, p.name)"
 						+ " from Project as p");
 				query.setCacheable(true);
 				return query.list();
@@ -77,18 +78,33 @@ public class ProjectDAOImpl extends BaseDAOImpl implements ProjectDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ProjectLite> getAllProjectLiteForMedia(final Integer mediaId) throws IllegalArgumentException {
+	public List<ProjectDTO> getAllProjectLiteForMedia(final Integer mediaId) throws IllegalArgumentException {
 		logger.debug("getAllProjectLiteForMedia with param ["+mediaId+"]");
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<ProjectLite>) template.execute(new HibernateCallback() {
+		return (List<ProjectDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.ProjectLite(p.projectId, p.name)"
+						"select new org.inbio.m3s.dto.message.ProjectDTO(p.projectId, p.name)"
 						+ " from Project as p, MediaProject as mp"
 						+ " where mp.id.mediaId = "+ mediaId
 						+ " and mp.id.projectId = p.projectId");
 				query.setCacheable(true);
 				return query.list();
+			}
+		});
+	}
+
+
+	public Project findByName(final String projectName) throws IllegalArgumentException {
+		logger.debug("findByName with[" + projectName +"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (Project) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select p from Project as p" 
+						+ " where p.name = '" + projectName+"'");
+				query.setCacheable(true);
+				return query.uniqueResult();
 			}
 		});
 	}

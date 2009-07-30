@@ -5,20 +5,25 @@ package org.inbio.m3s.dao.core;
 
 import java.util.List;
 
-import org.inbio.m3s.dto.lite.MediaCategoryLite;
+import org.inbio.m3s.dao.BaseDAO;
+import org.inbio.m3s.dto.message.MediaCategoryDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public interface MediaCategoryDAO {
+public interface MediaCategoryDAO extends BaseDAO{
 	
-	public MediaCategoryLite getMediaCategoryLiteFromMediaType(Integer mediaTypeId, int language) throws IllegalArgumentException;
+	@Deprecated
+	public MediaCategoryDTO getMediaCategoryLiteFromMediaType(Integer mediaTypeId, int language) throws IllegalArgumentException;
 	
-	public MediaCategoryLite getMediaCategoryLite(Integer mediaCategoryId) throws IllegalArgumentException;
+	@Deprecated
+	public MediaCategoryDTO getMediaCategoryLite(Integer mediaCategoryId) throws IllegalArgumentException;
 	
-	public MediaCategoryLite getMediaCategoryLite(String categoryName) throws IllegalArgumentException;
+	@Deprecated
+	public MediaCategoryDTO getMediaCategoryLite(String categoryName) throws IllegalArgumentException;
 
-	public List<MediaCategoryLite> listAllLite() throws Exception;
+	@Deprecated
+	public List<MediaCategoryDTO> listAllLite() throws Exception;
 
 }

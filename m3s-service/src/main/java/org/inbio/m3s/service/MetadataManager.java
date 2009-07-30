@@ -11,8 +11,6 @@ import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
  *
  */
 public interface MetadataManager {
-	
-
 
 	/**
 	 * 
@@ -36,5 +34,6 @@ public interface MetadataManager {
 	 * @return
 	 */
 	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress);
+	
 
 }

@@ -11,8 +11,8 @@ import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaTypeDAO;
 import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
-import org.inbio.m3s.dto.lite.MediaCategoryLite;
-import org.inbio.m3s.dto.lite.MediaTypeLite;
+import org.inbio.m3s.dto.message.MediaCategoryDTO;
+import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.service.MessageManager;
@@ -196,14 +196,14 @@ public class DataCache {
 		MediaCategoryDAO mediaCategoryDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
 		
 		try {
-			List<MediaCategoryLite> mediaCategoryInfo = mediaCategoryDAO.listAllLite();
+			List<MediaCategoryDTO> mediaCategoryInfo = mediaCategoryDAO.listAllLite();
 
 			mediaCategoriesDBIds = new ArrayList<Integer>();
 			mediaCategoriesNames = new ArrayList<String>();
 			
-			for(MediaCategoryLite mcl: mediaCategoryInfo){
+			for(MediaCategoryDTO mcl: mediaCategoryInfo){
 				mediaCategoriesNames.add(mcl.getMediaCategoryName());
-				mediaCategoriesDBIds.add(mcl.getMediaCategoryId());
+				mediaCategoriesDBIds.add(Integer.valueOf(mcl.getMediaCategoryKey()));
 	
 			}
 
@@ -228,18 +228,18 @@ public class DataCache {
 				+ categoryName + "'.");
 
 		MediaCategoryDAO mediaCategoryDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
-		MediaCategoryLite mediaCategoryLite = mediaCategoryDAO.getMediaCategoryLite(categoryName);
+		MediaCategoryDTO mediaCategoryLite = mediaCategoryDAO.getMediaCategoryLite(categoryName);
 		MediaTypeDAO mediaTypeDAO = (MediaTypeDAO) ServiceUtil.appContext.getBean("mediaTypeDAO");
-		List<MediaTypeLite> mediaTypeList = mediaTypeDAO.listAllForMediaCategoryLite(mediaCategoryLite.getMediaCategoryId());
+		List<MediaTypeDTO> mediaTypeList = mediaTypeDAO.listAllForMediaCategoryLite(Integer.valueOf(mediaCategoryLite.getMediaCategoryKey()));
 
 		// If both queries go ok, then set the new iniformation in their
 		// adecuate place
 		mediaTypesNames = new ArrayList<String>();
 		mediaTypesDBIds = new ArrayList<Integer>();
 		
-		for(MediaTypeLite mtl : mediaTypeList){
+		for(MediaTypeDTO mtl : mediaTypeList){
 			mediaTypesNames.add(mtl.getMediaTypeName());
-			mediaTypesDBIds.add(mtl.getMediaTypeId());
+			mediaTypesDBIds.add(Integer.valueOf(mtl.getMediaTypeKey()));
 		}
 		
 		logger.debug("getting Media Types Info...  mediaTypes info for category '"

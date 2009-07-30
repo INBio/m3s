@@ -9,25 +9,25 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
-import org.inbio.m3s.dto.lite.MediaCategoryLite;
+import org.inbio.m3s.dao.impl.BaseDAOImpl;
+import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dao.DataCache;
 import org.inbio.m3s.service.MessageManager;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
  *
  */
-public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCategoryDAO{
+public class MediaCategoryDAOImpl  extends BaseDAOImpl implements MediaCategoryDAO{
 	
 	private static Logger logger = Logger.getLogger(MediaCategoryDAOImpl.class);
 
 	/**
 	 * 
 	 */
-	public MediaCategoryLite getMediaCategoryLite(Integer mediaCategoryId) throws IllegalArgumentException {
+	public MediaCategoryDTO getMediaCategoryLite(Integer mediaCategoryId) throws IllegalArgumentException {
 		logger.debug("getMediaCategoryLite");
 		String errorMsj = "No se encontro ninguna categoria con el Id #"
 				+ mediaCategoryId + ". ";
@@ -45,7 +45,7 @@ public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCa
 
 			logger.debug("media category name... done: "+ DataCache.mediaCategoriesNames.get(index));
 
-			return new MediaCategoryLite(mediaCategoryId, DataCache.mediaCategoriesNames.get(index));
+			return new MediaCategoryDTO(mediaCategoryId, DataCache.mediaCategoriesNames.get(index));
 		} catch (Exception e) {
 			logger.error(errorMsj);
 			logger.error(e.getMessage());
@@ -56,7 +56,7 @@ public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCa
 	/**
 	 * 
 	 */
-	public MediaCategoryLite getMediaCategoryLite(String categoryName) throws IllegalArgumentException {
+	public MediaCategoryDTO getMediaCategoryLite(String categoryName) throws IllegalArgumentException {
 		logger.debug("getMediaCategoryLite with name = '" + categoryName + "'.");
 		String errorMsj = "El nombre de la categoria '" + categoryName+ "' no fue encontrado.";
 
@@ -72,7 +72,7 @@ public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCa
 
 			logger.debug("get media category... done: "	+ DataCache.mediaCategoriesDBIds.get(index));
 
-			return new MediaCategoryLite(DataCache.mediaCategoriesDBIds.get(index), categoryName);
+			return new MediaCategoryDTO(DataCache.mediaCategoriesDBIds.get(index), categoryName);
 		} catch (Exception e) {
 			logger.error(errorMsj);
 			logger.error(e.getMessage());
@@ -84,13 +84,13 @@ public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCa
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public List<MediaCategoryLite> listAllLite() throws Exception {
+	public List<MediaCategoryDTO> listAllLite() throws Exception {
 		logger.debug("listAllLite()...");
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<MediaCategoryLite>) template.execute(new HibernateCallback() {
+		return (List<MediaCategoryDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.MediaCategoryLite(mc.mediaCategoryId, tt.name)"
+						"select new org.inbio.m3s.dto.message.MediaCategoryDTO(mc.mediaCategoryId, tt.name)"
 						+ " from TextTranslation as tt, MediaCategory as mc"
 						+ " where tt.text.textId = mc.textByNameTextId.textId"
 						+ " and tt.language.languageId = "+ MessageManager.DEFAULT_LANGUAGE);
@@ -107,13 +107,13 @@ public class MediaCategoryDAOImpl extends HibernateDaoSupport implements MediaCa
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public MediaCategoryLite getMediaCategoryLiteFromMediaType(final Integer mediaTypeId, final int language) throws IllegalArgumentException {
+	public MediaCategoryDTO getMediaCategoryLiteFromMediaType(final Integer mediaTypeId, final int language) throws IllegalArgumentException {
 		logger.debug("getMediaCategoryLiteFromMediaType()...");
 		HibernateTemplate template = getHibernateTemplate();
-		return (MediaCategoryLite) template.execute(new HibernateCallback() {
+		return (MediaCategoryDTO) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.lite.MediaCategoryLite(mc.mediaCategoryId, tt.name)"
+						"select new org.inbio.m3s.dto.message.MediaCategoryDTO(mc.mediaCategoryId, tt.name)"
 						+ " from TextTranslation as tt, MediaCategory as mc"
 						+ " where tt.text.textId = mc.textByNameTextId.textId"
 						+ " and tt.language.languageId = "+ language

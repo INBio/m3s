@@ -68,10 +68,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 		
 		else if (standardAttributeId == EXIFStandardAttributeEntity.F_NUMBER.getId()){
 			String fNumber = exifDirectory.getString(ExifDirectory.TAG_FNUMBER);
-			if (fNumber.equals(""))
-				return "";
-			fNumber = fixNumericValue(fNumber, 2);
-			return "f/" + fNumber;
+			return "f/" + fixNumericValue(fNumber, 2);
 		}
 		else if (standardAttributeId == EXIFStandardAttributeEntity.FOCAL_LENGTH.getId()){
 			// according to the EXIF2-2 Spec: "The actual focal length of
@@ -79,10 +76,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 			// lens, in mm. Conversion is not made to the focal length of a
 			// 35 mm film camera."
 			String focalLength = exifDirectory.getString(ExifDirectory.TAG_FOCAL_LENGTH);
-			if (focalLength.equals(""))
-				return "";
-			focalLength = fixNumericValue(focalLength, 2);
-			return focalLength + " mm";
+			return fixNumericValue(focalLength, 2) + " mm";
 			
 		}
 		else if (standardAttributeId == EXIFStandardAttributeEntity.EXPOSURE_BIAS.getId()){
@@ -90,10 +84,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 			// is the APEX value. Ordinarily it is given in the range of
 			// –99.99 to 99.99."
 			String exposureBias = exifDirectory.getString(ExifDirectory.TAG_EXPOSURE_BIAS);
-			if (exposureBias.equals(""))
-				return "";
-			exposureBias = fixNumericValue(exposureBias, 2);
-			return exposureBias + " APEX";
+			return fixNumericValue(exposureBias, 2) + " APEX";
 		}
 		else if (standardAttributeId == EXIFStandardAttributeEntity.WHITE_BALANCE.getId())
 			return getWhiteBalance(exifDirectory.getString(ExifDirectory.TAG_WHITE_BALANCE));
@@ -114,10 +105,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 			// according to the EXIF2-2 Spec: "Exposure time, given in seconds
 			// (sec)."
 			String exposureTime = exifDirectory.getString(ExifDirectory.TAG_EXPOSURE_TIME);
-			if (exposureTime.equals(""))
-				return "";
-			exposureTime = fixNumericValue(exposureTime, 2);
-			return exposureTime + " sec";
+			return fixNumericValue(exposureTime, 2) + " sec";
 		}
 		else if (standardAttributeId == EXIFStandardAttributeEntity.PRODUCTION_DATE.getId())
 			return exifDirectory.getString(ExifDirectory.TAG_DATETIME_ORIGINAL);
@@ -396,6 +384,12 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 	 *         fired
 	 */
 	private String fixNumericValue(String numericValue, int decimals) {
+		
+		if(numericValue == null)
+			return "";
+		if(numericValue.equals(""))
+			return "";
+		
 		try {
 			String params[] = numericValue.split("/");
 			Float param1 = new Float(params[0]);

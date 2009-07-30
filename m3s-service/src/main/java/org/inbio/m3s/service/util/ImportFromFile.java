@@ -16,12 +16,12 @@ import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
-import org.inbio.m3s.dto.GeneralMetadataDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.MediaTypeLite;
-import org.inbio.m3s.dto.lite.ProjectLite;
-import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.message.KeywordDTO;
+import org.inbio.m3s.dto.message.MediaTypeDTO;
+import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
@@ -153,7 +153,7 @@ public class ImportFromFile {
 				for (String fileName : fileNames) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '"
 							+ fileName + "'");
-					tmDTO = metadataManager.getTechMetadataFromFile(String.valueOf(gm.getMediaTypeId()), fileName);
+					tmDTO = metadataManager.getTechMetadataFromFile(gm.getMediaTypeKey(), fileName);
 
 					if (MediaFileManagement.isFileReadable(fileName))
 						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
@@ -168,7 +168,7 @@ public class ImportFromFile {
 					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",
 					// mediaId);
 
-					MediaFileManagement.organizeAndCleanFiles(fileName, mediaId, gm.getMediaTypeId());
+					MediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()));
 
 					resultStatus = resultStatus.concat("Medio guardado con exito, ID #"	+ mediaId.toString() + ".");
 				}
@@ -243,7 +243,7 @@ public class ImportFromFile {
 		List<TaxonLiteDTO> taxonsList = new ArrayList<TaxonLiteDTO>();
 		TaxonLiteDTO tlDTO = null;
 
-		gmDTO.setMediaId(null);
+		gmDTO.setMediaKey(null);
 
 		logger.debug("\nGetting general metadata");
 
@@ -258,9 +258,9 @@ public class ImportFromFile {
 					ImportFileParser.SUCCESFUL);
 			logger.debug("Description: '" + gmDTO.getDescription() + "'");
 
-			MediaTypeLite mtl = mediaTypeDAO.getMediaTypeLite(info.read(rowNumber, ImportFileParser.MEDIA_TYPE_DATA));
-			gmDTO.setMediaTypeId(mtl.getMediaTypeId());
-			logger.debug("Media Type: '" + gmDTO.getMediaTypeId() + "'");
+			MediaTypeDTO mtl = mediaTypeDAO.getMediaTypeLite(info.read(rowNumber, ImportFileParser.MEDIA_TYPE_DATA));
+			gmDTO.setMediaTypeKey(mtl.getMediaTypeKey());
+			logger.debug("Media Type: '" + gmDTO.getMediaTypeKey() + "'");
 
 			// asociation type and value
 			associationTypeCode = getAssociationTypeCode(info.read(rowNumber,ImportFileParser.ASOCIATION_TYPE_DATA));
@@ -400,11 +400,11 @@ public class ImportFromFile {
 	 *TODO revisar que este bien, fue hecho a la carrera
 	 */
 	@SuppressWarnings("unchecked")
-	private List<ProjectLite> getProjectLiteList(String projects) {
+	private List<ProjectDTO> getProjectLiteList(String projects) {
 
 		List<String> projectsTextualNameList = (List) StringUtil.getIndividualItems(projects, String.class);
-		List<ProjectLite> projectsList = new ArrayList<ProjectLite>();
-		ProjectLite pl;
+		List<ProjectDTO> projectsList = new ArrayList<ProjectDTO>();
+		ProjectDTO pl;
 		
 		logger.debug("Translating GMTV to DBValues... [" + projectsTextualNameList.size() + "] projects found");
 		
@@ -412,7 +412,7 @@ public class ImportFromFile {
 		for(String projectName : projectsTextualNameList){
 			pl = projectDAO.getProjectLite(projectName);
 			projectsList.add(pl);
-			logger.debug("Translating GMTV to DBValues... adding project id: '" + pl.getProjectId() + "'.");
+			logger.debug("Translating GMTV to DBValues... adding project id: '" + pl.getProjectKey() + "'.");
 		}
 		
 		return projectsList;
@@ -426,11 +426,11 @@ public class ImportFromFile {
 	 *          String values separated by the default delimiter. (probably ';')
 	 * @return
 	 */
-	private List<KeywordLiteDTO> getKeywords(String textualKeywords) {
+	private List<KeywordDTO> getKeywords(String textualKeywords) {
 		
 		
-		KeywordLiteDTO klDTO;
-		List<KeywordLiteDTO> klDTOList = new ArrayList<KeywordLiteDTO>();
+		KeywordDTO klDTO;
+		List<KeywordDTO> klDTOList = new ArrayList<KeywordDTO>();
 		
 		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,
 				java.lang.String.class);

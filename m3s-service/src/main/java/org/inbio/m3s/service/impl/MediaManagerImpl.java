@@ -40,13 +40,13 @@ import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.SpecimenMediaDAO;
 import org.inbio.m3s.dao.core.TaxonMediaDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
-import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.ProjectLite;
-import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.message.KeywordDTO;
+import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
@@ -184,8 +184,8 @@ public class MediaManagerImpl implements MediaManager {
 	 */
 	public void updateGM(GeneralMetadataDTO newGm)
 			throws IllegalArgumentException {
-		logger.info("updating the GM... mediaId [" + newGm.getMediaId() + "]");
-		GeneralMetadataDTO DBGm = getGM(newGm.getMediaId());
+		logger.info("updating the GM... mediaId [" + newGm.getMediaKey() + "]");
+		GeneralMetadataDTO DBGm = getGeneralMetadataByMedia(newGm.getMediaKey());
 
 		logger.debug("updating the GM... Iguales? " + DBGm.equals(newGm));
 		if (DBGm.equals(newGm)) {
@@ -198,7 +198,7 @@ public class MediaManagerImpl implements MediaManager {
 		Media theMedia;
 
 		try {
-			theMedia = (Media) mediaDAO.findById(Media.class, newGm.getMediaId());
+			theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(newGm.getMediaKey()));
 
 			logger.debug("updating the GM... 00");
 			if (DBGm.getTitle() == null
@@ -215,9 +215,9 @@ public class MediaManagerImpl implements MediaManager {
 			}
 
 			logger.debug("updating the GM... 02");
-			if (DBGm.getMediaTypeId().equals(newGm.getMediaTypeId()) == false) {
+			if (DBGm.getMediaTypeKey().equals(newGm.getMediaTypeKey()) == false) {
 				logger.debug("updating the GM... updating mediaType");
-				MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class, newGm.getMediaTypeId());
+				MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class, Integer.valueOf(newGm.getMediaTypeKey()));
 				theMedia.setMediaType(theMediaType);
 			}
 
@@ -225,9 +225,9 @@ public class MediaManagerImpl implements MediaManager {
 			if (DBGm.getAssociatedSpecimensList().equals(
 					newGm.getAssociatedSpecimensList()) == false) {
 				logger.debug("updating the GM... updating AssociatedSpecimens");
-				deleteSpecimens(newGm.getMediaId(), DBGm.getAssociatedSpecimensList());
+				deleteSpecimens(newGm.getMediaKey(), DBGm.getAssociatedSpecimensList());
 				if (newGm.getAssociatedSpecimensList() != null) {
-					addSpecimens(newGm.getMediaId(), newGm.getAssociatedSpecimensList());
+					addSpecimens(newGm.getMediaKey(), newGm.getAssociatedSpecimensList());
 				}
 			}
 
@@ -236,18 +236,18 @@ public class MediaManagerImpl implements MediaManager {
 					newGm.getAssociatedObservationsList()) == false) {
 				logger
 						.debug("updating the GM... updating AssociatedObservations");
-				deleteObservations(newGm.getMediaId(), DBGm.getAssociatedObservationsList());
+				deleteObservations(newGm.getMediaKey(), DBGm.getAssociatedObservationsList());
 				if (newGm.getAssociatedObservationsList() != null) {
-					addObservations(newGm.getMediaId(), newGm.getAssociatedObservationsList());
+					addObservations(newGm.getMediaKey(), newGm.getAssociatedObservationsList());
 				}
 			}
 
 			logger.debug("updating the GM... 04.1");
 			if(DBGm.getAssociatedGatheringsList().equals(newGm.getAssociatedGatheringsList()) == false){
 				logger.debug("updating the GM... updating getAssociatedGatherings");
-				deleteGatherings(newGm.getMediaId(), DBGm.getAssociatedGatheringsList());
+				deleteGatherings(newGm.getMediaKey(), DBGm.getAssociatedGatheringsList());
 				if (newGm.getAssociatedGatheringsList() != null) {
-					addGatherings(newGm.getMediaId(), newGm.getAssociatedGatheringsList());
+					addGatherings(newGm.getMediaKey(), newGm.getAssociatedGatheringsList());
 				}
 			}
 
@@ -255,9 +255,9 @@ public class MediaManagerImpl implements MediaManager {
 			if (DBGm.getTaxonsList().equals(newGm.getTaxonsList()) == false) {
 				logger.debug("updating the GM... updating taxonomy");
 
-				deleteTaxons(newGm.getMediaId(), DBGm.getTaxonsList());
+				deleteTaxons(newGm.getMediaKey(), DBGm.getTaxonsList());
 				if (newGm.getTaxonsList() != null) {
-					addTaxons(newGm.getMediaId(), newGm.getTaxonsList());
+					addTaxons(newGm.getMediaKey(), newGm.getTaxonsList());
 				}
 
 			}
@@ -268,9 +268,9 @@ public class MediaManagerImpl implements MediaManager {
 			// keywords
 			if(DBGm.getKeywordsList().equals(newGm.getKeywordsList()) == false) {
 				logger.debug("updating the GM... updating keywords");
-				deleteKeywords(newGm.getMediaId(), DBGm.getKeywordsList());
+				deleteKeywords(newGm.getMediaKey(), DBGm.getKeywordsList());
 				if (newGm.getKeywordsList() != null) {
-					addKeywordsList(newGm.getMediaId(), newGm.getKeywordsList());
+					addKeywordsList(newGm.getMediaKey(), newGm.getKeywordsList());
 				}
 			}
 
@@ -284,6 +284,16 @@ public class MediaManagerImpl implements MediaManager {
 							newGm.getSiteDescription()) == false)) {
 				logger.debug("updating the GM... updating site description");
 				theMedia.setSiteDescription(newGm.getSiteDescription());
+			}
+			
+			logger.debug("updating the GM... 08 - projects");
+			// Projects
+			if(DBGm.getProjectsList().equals(newGm.getProjectsList()) == false) {
+				logger.debug("updating the GM... updating projects");
+				deleteProjects(newGm.getMediaKey(), DBGm.getProjectsList());
+				if (newGm.getProjectsList() != null) {
+					addProjectsList(newGm.getMediaKey(), newGm.getProjectsList());
+				}
 			}
 
 			logger.debug("updating the GM... execute the update");
@@ -334,41 +344,41 @@ public class MediaManagerImpl implements MediaManager {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public GeneralMetadataDTO getGM(Integer mediaId)
+	public GeneralMetadataDTO getGeneralMetadataByMedia(String mediaKey)
 			throws IllegalArgumentException {
-		logger.info("getting GM... mediaId [" + mediaId + "]");
+		logger.info("getting GM... mediaId [" + mediaKey + "]");
 		
 		
 		GeneralMetadataDTO gm = new GeneralMetadataDTO();
 		
 		try {
-			gm = mediaDAO.getGeneralMetadataDTO(mediaId);
-			gm.setMediaId(mediaId);
+			gm = mediaDAO.getGeneralMetadataDTO(mediaKey);
+			gm.setMediaKey(mediaKey);
 
 			// makes the other queries to complete the metadata
-			List<SpecimenLiteDTO> slDTOList = taxonomyManager.getAllSpecimensLiteForMedia(mediaId.toString());
+			List<SpecimenLiteDTO> slDTOList = taxonomyManager.getAllSpecimensLiteForMedia(mediaKey);
 			gm.setAssociatedSpecimensList(slDTOList);
-			List<ObservationLiteDTO> observationsList = taxonomyManager.getAllObservationsLiteForMedia(mediaId.toString());
+			List<ObservationLiteDTO> observationsList = taxonomyManager.getAllObservationsLiteForMedia(mediaKey);
 			gm.setAssociatedObservationsList(observationsList);
 			
-			List<GatheringLiteDTO> glDTOList = taxonomyManager.getAllGatheringsLiteForMedia(mediaId.toString());
+			List<GatheringLiteDTO> glDTOList = taxonomyManager.getAllGatheringsLiteForMedia(mediaKey);
 			gm.setAssociatedGatheringsList(glDTOList);
 	
 			// projects
-			List<ProjectLite> projectLiteList = null;
-			projectLiteList = projectDAO.getAllProjectLiteForMedia(mediaId);
+			List<ProjectDTO> projectLiteList = null;
+			projectLiteList = projectDAO.getAllProjectLiteForMedia(Integer.valueOf(mediaKey));
 			gm.setProjectsList(projectLiteList);
 
 			// TODO: setSeries
 			// TODO: setSynapticCollections
 			
 			// setKeyWords
-			List<KeywordLiteDTO> keywordLiteList = null;
-			keywordLiteList = keywordDAO.getAllKeywordLiteForMedia(mediaId, new Integer(MessageManager.DEFAULT_LANGUAGE));
+			List<KeywordDTO> keywordLiteList = null;
+			keywordLiteList = keywordDAO.getAllKeywordLiteForMedia(Integer.valueOf(mediaKey), new Integer(MessageManager.DEFAULT_LANGUAGE));
 			gm.setKeywordsList(keywordLiteList);
 				
 			//taxons
-			List<TaxonLiteDTO> taxonLiteList = taxonomyManager.getTaxonLiteForMediaId(mediaId.toString());
+			List<TaxonLiteDTO> taxonLiteList = taxonomyManager.getTaxonLiteForMediaId(mediaKey);
 			gm.setTaxonsList(taxonLiteList);
 
 			logger.info("getting GM... done");
@@ -409,7 +419,7 @@ public class MediaManagerImpl implements MediaManager {
 		try {
 
 			// sets the Media elements that need DB conection
-			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,gm.getMediaTypeId());
+			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
 			theMedia.setMediaType(theMediaType);
 
 			UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class,Integer.valueOf(uac.getUsePolicyKey()));
@@ -429,7 +439,7 @@ public class MediaManagerImpl implements MediaManager {
 
 		// saves the rest of metadata
 		try {
-			gm.setMediaId(theMedia.getMediaId());
+			gm.setMediaKey(String.valueOf(theMedia.getMediaId()));
 			insertGM(gm);
 			uac.setMediaKey(theMedia.getMediaId().toString());
 			insertUACM(uac);
@@ -453,13 +463,13 @@ public class MediaManagerImpl implements MediaManager {
 	 */
 	private Integer insertGM(GeneralMetadataDTO gm) throws IllegalArgumentException {
 		logger.info("inserting the GeneralMetadataDTO Info for the media>"
-				+ gm.getMediaId() + "<");
+				+ gm.getMediaKey() + "<");
 
 		Media theMedia;
 
 		try {
 
-			theMedia = (Media) mediaDAO.findById(Media.class, gm.getMediaId());
+			theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(gm.getMediaKey()));
 			// sets the Media elements that need DB conection
 			logger.info("seting GeneralMetadataDTO... Media loaded");
 
@@ -469,45 +479,50 @@ public class MediaManagerImpl implements MediaManager {
 			logger.info("seting GeneralMetadataDTO... description set["+theMedia.getDescription()+"]");
 
 			// sets the Media type
-			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,gm.getMediaTypeId());
+			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
 			theMedia.setMediaType(theMediaType);
 			logger.info("seting GeneralMetadataDTO... mediaType set");
 
 			// set the associatedSpecimens
 			if(gm.getAssociatedSpecimensList()!=null)
-				addSpecimens(gm.getMediaId(), gm.getAssociatedSpecimensList());
+				addSpecimens(gm.getMediaKey(), gm.getAssociatedSpecimensList());
 			logger.info("seting GeneralMetadataDTO... AsociatedSpecimens set");
 
 			// set the associatedObservations
 			if(gm.getAssociatedObservationsList()!=null)
-				addObservations(gm.getMediaId(), gm.getAssociatedObservationsList());
+				addObservations(gm.getMediaKey(), gm.getAssociatedObservationsList());
 			logger.info("seting GeneralMetadataDTO... AsociatedObservations set");
 
 			// set the associatedCollections
 			if(gm.getAssociatedGatheringsList()!=null)
-				addGatherings(gm.getMediaId(), gm.getAssociatedGatheringsList());
+				addGatherings(gm.getMediaKey(), gm.getAssociatedGatheringsList());
 			logger.info("seting GeneralMetadataDTO... AsociatedCollects set");
 
 			if(gm.getProjectsList()!=null)
-				addProjectsList(gm.getMediaId(), gm.getProjectsList());
+				addProjectsList(gm.getMediaKey(), gm.getProjectsList());
 			logger.info("seting GeneralMetadataDTO... Projects set");
 
 			// TODO: set the series
 
 			// set the associatedTaxonomy
 			if(gm.getTaxonsList()!=null)
-				addTaxons(gm.getMediaId(), gm.getTaxonsList());
+				addTaxons(gm.getMediaKey(), gm.getTaxonsList());
 			logger.info("seting GeneralMetadataDTO... Taxonomy set");
 
 			// TODO set the synapticCollections
 
 			// keyWords
 			if(gm.getKeywordsList()!=null)
-				addKeywordsList(gm.getMediaId(), gm.getKeywordsList());
+				addKeywordsList(gm.getMediaKey(), gm.getKeywordsList());
 			logger.info("seting GeneralMetadataDTO... Keywords set");
 
 			// Site information
-			theMedia.setSiteId(gm.getSiteId());
+			if(gm.getSiteKey()== null)
+				theMedia.setSiteId(null);
+			else
+				theMedia.setSiteId(Integer.valueOf(gm.getSiteKey()));
+			
+			
 			logger.info("seting GeneralMetadataDTO... SiteId set");
 			theMedia.setSiteDescription(gm.getSiteDescription());
 			logger.info("seting GeneralMetadataDTO... Site Description set");
@@ -584,10 +599,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addProjectsList(java.lang.Integer, java.util.List)
 	 */
-	public void addProjectsList(Integer mediaId, List<ProjectLite> projectLiteList)
+	public void addProjectsList(String mediaKey, List<ProjectDTO> projectLiteList)
 			throws IllegalArgumentException {
 		logger.debug("addProjectsList, params: projectList.size["
-				+ projectLiteList.size() + "], mediaId[" + mediaId + "].");
+				+ projectLiteList.size() + "], mediaId[" + mediaKey + "].");
 		
 		int successful = 0; // for local count of errors
 		Media theMedia = null;
@@ -595,14 +610,14 @@ public class MediaManagerImpl implements MediaManager {
 		MediaProjectId theMediaProjectId = null;
 		MediaProject theMediaProject = null;
 
-		theMedia = (Media) mediaDAO.findById(Media.class, mediaId);
+		theMedia = (Media) mediaDAO.findById(Media.class, Integer.valueOf(mediaKey));
 
 		try{ 
-		for (ProjectLite pl : projectLiteList) {
+		for (ProjectDTO pl : projectLiteList) {
 
-			theProject = (Project) projectDAO.findById(Project.class, pl.getProjectId());
+			theProject = (Project) projectDAO.findById(Project.class, Integer.valueOf(pl.getProjectKey()));
 
-			theMediaProjectId = new MediaProjectId(mediaId, (Integer) theProject
+			theMediaProjectId = new MediaProjectId(Integer.valueOf(mediaKey), (Integer) theProject
 					.getProjectId());
 
 			theMediaProject = new MediaProject(theMediaProjectId, theMedia,
@@ -626,10 +641,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addKeywordsList(java.lang.Integer, java.util.List)
 	 */
-	public void addKeywordsList(Integer mediaId, List<KeywordLiteDTO> keywordsList)
+	public void addKeywordsList(String mediaKey, List<KeywordDTO> keywordsList)
 			throws IllegalArgumentException {
 		logger.debug("addKeywordsList, params: keywordsList.size["
-				+ keywordsList.size() + "], mediaId[" + mediaId + "].");
+				+ keywordsList.size() + "], mediaId[" + mediaKey + "].");
 
 		int successful = 0; // for local count of errors
 		// Taxon theTaxon;
@@ -637,14 +652,14 @@ public class MediaManagerImpl implements MediaManager {
 		MediaKeyword theMediaKeyword;
 
 		// sets the taxons of the MEDIA HibernateUtil.closeSession(attaSession);
-		for (KeywordLiteDTO klDTO : keywordsList) {
+		for (KeywordDTO klDTO : keywordsList) {
 			logger.debug("Asociandolo con el keywordId=" + klDTO.getKeywordKey());
 			theMediaKeyword = null;
 			theMediaKeywordId = null;
 
 			try {
 
-				theMediaKeywordId = new MediaKeywordId(mediaId, new Integer(klDTO.getKeywordKey()));
+				theMediaKeywordId = new MediaKeywordId(Integer.valueOf(mediaKey), new Integer(klDTO.getKeywordKey()));
 
 				// sets the Taxon to the media
 				theMediaKeyword = new MediaKeyword();
@@ -654,11 +669,11 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.info("The keyword id '" + klDTO.getKeywordKey()
-						+ "'is set with the media with id '" + mediaId + "'.");
+						+ "'is set with the media with id '" + mediaKey + "'.");
 
 			} catch (Exception he) {
 				logger.error("Couldn't set the keyword id '" + klDTO.getKeywordKey()
-						+ "' to the media with id '" + mediaId + "'.");
+						+ "' to the media with id '" + mediaKey + "'.");
 			}
 
 		} // for
@@ -671,10 +686,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteKeywords(java.lang.Integer, java.util.List)
 	 */
-	public void deleteKeywords(Integer mediaId, List<KeywordLiteDTO> keywordsList)
+	public void deleteKeywords(String mediaKey, List<KeywordDTO> keywordsList)
 			throws IllegalArgumentException {
 		logger.debug("deleteKeywords, params: keywordsList.size["
-				+ keywordsList.size() + "], mediaId[" + mediaId + "].");
+				+ keywordsList.size() + "], mediaId[" + mediaKey + "].");
 
 		int successful = 0; // for local count of errors
 
@@ -682,7 +697,7 @@ public class MediaManagerImpl implements MediaManager {
 		MediaKeywordId theMediaKeywordId;
 		MediaKeyword theMediaKeyword;
 
-		for (KeywordLiteDTO klDTO : keywordsList) {
+		for (KeywordDTO klDTO : keywordsList) {
 			logger.debug("deleting associated keywords...  deleting keyword:"+ klDTO.getKeywordKey());
 
 			// theTaxon = null;
@@ -691,7 +706,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			try {
 
-				theMediaKeywordId = new MediaKeywordId(mediaId, new Integer(klDTO.getKeywordKey()));
+				theMediaKeywordId = new MediaKeywordId(Integer.valueOf(mediaKey), new Integer(klDTO.getKeywordKey()));
 
 				// sets the keywords to the media
 				theMediaKeyword = new MediaKeyword();
@@ -703,7 +718,7 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.debug("deleting associated keywords... The keyword id '"
-						+ klDTO.getKeywordKey() + "' is now deleted from media '" + mediaId
+						+ klDTO.getKeywordKey() + "' is now deleted from media '" + mediaKey
 						+ "'.");
 
 			} catch (Exception e) {
@@ -711,12 +726,62 @@ public class MediaManagerImpl implements MediaManager {
 						.error("deleting associated keywords... Couldn't delete the taxon id '"
 								+ klDTO.getKeywordKey()
 								+ "' to the media with id '"
-								+ mediaId
+								+ mediaKey
 								+ "'.");
 			}
 
 		} // for
 		logger.debug("deleting associated keywords... delete finish finish with "
+				+ successful + " successful results.");
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.inbio.m3s.service.MediaManager#deleteProjects(java.lang.Integer, java.util.List)
+	 */
+	private void deleteProjects(String mediaKey, List<ProjectDTO> projectsList)
+			throws IllegalArgumentException {
+		logger.debug("deleteProjects, params: projectsList.size["
+				+ projectsList.size() + "], mediaId[" + mediaKey + "].");
+
+		int successful = 0; // for local count of errors
+
+		MediaProjectId theMediaProjectId;
+		MediaProject theMediaProject;
+
+		for (ProjectDTO pDTO : projectsList) {
+			logger.debug("deleting associated projects...  deleting project:"+ pDTO.getProjectKey());
+
+			theMediaProject = null;
+			theMediaProjectId = null;
+
+			try {
+
+				theMediaProjectId = new MediaProjectId(Integer.valueOf(mediaKey), new Integer(pDTO.getProjectKey()));
+
+				// sets the keywords to the media
+				theMediaProject = new MediaProject();
+				theMediaProject.setId(theMediaProjectId);
+
+				// saves changes and closes session
+				mediaProjectDAO.delete(theMediaProject);
+
+
+				successful = successful + 1;
+				logger.debug("deleting associated projects... The project id '"
+						+ pDTO.getProjectKey() + "' is now deleted from media '" + mediaKey
+						+ "'.");
+
+			} catch (Exception e) {
+				logger
+						.error("deleting associated projects... Couldn't delete the taxon id '"
+								+ pDTO.getProjectKey()
+								+ "' to the media with id '"
+								+ mediaKey
+								+ "'.");
+			}
+
+		} // for
+		logger.debug("deleting associated projects... delete finish finish with "
 				+ successful + " successful results.");
 
 
@@ -775,9 +840,9 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addGatherings(java.lang.Integer, java.util.List)
 	 */
-	public void addGatherings(Integer mediaId, List<GatheringLiteDTO> gatheringsList)
+	public void addGatherings(String mediaKey, List<GatheringLiteDTO> gatheringsList)
 			throws IllegalArgumentException {
-		logger.debug("addGatherings for media:" + mediaId + ".");
+		logger.debug("addGatherings for media:" + mediaKey + ".");
 
 		int successful = 0;
 		GatheringMedia theGatheringMedia;
@@ -795,7 +860,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			try {
 
-				theGatheringMediaId = new GatheringMediaId(mediaId, new Integer (pLite
+				theGatheringMediaId = new GatheringMediaId(Integer.valueOf(mediaKey), new Integer (pLite
 						.getPersonKey()), new Integer(glDTO.getGatheringKey()));
 
 				// sets the gatherings to the media
@@ -809,12 +874,12 @@ public class MediaManagerImpl implements MediaManager {
 				successful = successful + 1;
 				logger.info("The gatheringNumber '" + glDTO.getGatheringKey()
 						+ "' of the INBioPerson ID'" + pLite.getPersonKey()
-						+ "'is set with the media with id '" + mediaId + "'.");
+						+ "'is set with the media with id '" + mediaKey + "'.");
 
 			} catch (Exception he) {
 				logger.error("Couldn't set The gatheringNumber '" + glDTO.getGatheringKey()
 						+ "' of the INBioPerson ID'" + pLite.getPersonKey()
-						+ "' to the media [id" + mediaId + "].");
+						+ "' to the media [id" + mediaKey + "].");
 			}
 		} // for
 		logger.info("setAssociatedGatherings finish with " + successful
@@ -827,10 +892,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addObservations(java.lang.Integer, java.util.List)
 	 */
-	public void addObservations(Integer mediaId,
+	public void addObservations(String mediaKey,
 			List<ObservationLiteDTO> observationsList) throws IllegalArgumentException {
 		logger.debug("setting " + observationsList.size()
-				+ " associated observations for media:" + mediaId + ".");
+				+ " associated observations for media:" + mediaKey + ".");
 
 		int successful = 0;
 		ObservedTaxonMedia theOTM;
@@ -847,7 +912,7 @@ public class MediaManagerImpl implements MediaManager {
 			try {
 
 				// observationTaxonMediaId
-				theOTMId = new ObservedTaxonMediaId(new Integer(olDTO.getObservationKey()), mediaId);
+				theOTMId = new ObservedTaxonMediaId(new Integer(olDTO.getObservationKey()), Integer.valueOf(mediaKey));
 
 				theOTM = new ObservedTaxonMedia();
 				theOTM.setId(theOTMId);
@@ -858,7 +923,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			} catch (Exception he) {
 				logger.error("Couldn't set the Observation["
-						+ olDTO.getObservationKey()	+ "] to the media [id" + mediaId + "].");
+						+ olDTO.getObservationKey()	+ "] to the media [id" + mediaKey + "].");
 			}
 
 		} // for
@@ -872,9 +937,9 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addSpecimens(java.lang.Integer, java.util.List)
 	 */
-	public void addSpecimens(Integer mediaId, List<SpecimenLiteDTO> specimensList)
+	public void addSpecimens(String mediaKey, List<SpecimenLiteDTO> specimensList)
 			throws IllegalArgumentException {
-		logger.debug("setting associated specimens for media:" + mediaId + ".");
+		logger.debug("setting associated specimens for media:" + mediaKey + ".");
 
 		int successful = 0;
 		SpecimenMedia theSpecimenMedia;
@@ -889,7 +954,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			try {
 
-				theSpecimenMediaId = new SpecimenMediaId(new Integer(slDTO.getSpecimenKey()), mediaId);
+				theSpecimenMediaId = new SpecimenMediaId(new Integer(slDTO.getSpecimenKey()), Integer.valueOf(mediaKey));
 
 				// sets the Specimen to the media
 				theSpecimenMedia = new SpecimenMedia();
@@ -902,11 +967,11 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.debug("The Specimen id '" + slDTO.getSpecimenKey()
-						+ "'is set with the media with id '" + mediaId + "'.");
+						+ "'is set with the media with id '" + mediaKey + "'.");
 
 			} catch (Exception e) {
 				logger.error("Couldn't set the Speciemen [id=" + slDTO.getSpecimenKey()
-						+ "] to the media [id" + mediaId + "].");
+						+ "] to the media [id" + mediaKey + "].");
 			}
 
 		} // for
@@ -919,10 +984,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#addTaxons(java.lang.Integer, java.util.List)
 	 */
-	public void addTaxons(Integer mediaId, List<TaxonLiteDTO> taxonsList)
+	public void addTaxons(String mediaKey, List<TaxonLiteDTO> taxonsList)
 			throws IllegalArgumentException {
 		logger.debug("setting " + taxonsList.size()
-				+ " associated taxons for media:" + mediaId + ".");
+				+ " associated taxons for media:" + mediaKey + ".");
 
 		int successful = 0; // for local count of errors
 
@@ -938,7 +1003,7 @@ public class MediaManagerImpl implements MediaManager {
 			theTaxonMediaId = null;
 
 			try {
-				theTaxonMediaId = new TaxonMediaId(new Integer(tlDTO.getTaxonKey()), mediaId);
+				theTaxonMediaId = new TaxonMediaId(new Integer(tlDTO.getTaxonKey()), Integer.valueOf(mediaKey));
 
 				// sets the Taxon to the media
 				theTaxonMedia = new TaxonMedia();
@@ -949,11 +1014,11 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.debug("The taxon id '" + tlDTO.getTaxonKey()
-						+ "'is set with the media with id '" + mediaId + "'.");
+						+ "'is set with the media with id '" + mediaKey + "'.");
 
 			} catch (Exception he) {
 				logger.error("Couldn't set the taxon id '" + tlDTO.getTaxonKey()
-						+ "' to the media with id '" + mediaId + "'.");
+						+ "' to the media with id '" + mediaKey + "'.");
 			}
 		} // for
 		logger.info("SetTaxonMedias finish with " + successful
@@ -964,9 +1029,9 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteGatherings(java.lang.Integer, java.util.List)
 	 */
-	public void deleteGatherings(Integer mediaId,
+	public void deleteGatherings(String mediaKey,
 			List<GatheringLiteDTO> gatheringsList) throws IllegalArgumentException {
-		logger.debug("deleteAssociatedGatherings for media:" + mediaId + ".");
+		logger.debug("deleteAssociatedGatherings for media:" + mediaKey + ".");
 
 		int successful = 0;
 		GatheringMedia oldGatheringMedia;
@@ -984,7 +1049,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			try {
 				
-				oldGatheringMediaId = new GatheringMediaId(mediaId, new Integer(pLite
+				oldGatheringMediaId = new GatheringMediaId(Integer.valueOf(mediaKey), new Integer(pLite
 						.getPersonKey()), new Integer(glDTO.getGatheringKey()));
 
 				// sets the Gathering to the media
@@ -997,12 +1062,12 @@ public class MediaManagerImpl implements MediaManager {
 				successful = successful + 1;
 				logger.info("The GatheringNumber '" + glDTO.getGatheringKey()
 						+ "' of userId '" + pLite.getPersonKey()
-						+ "' was deleted from the media '" + mediaId + "'.");
+						+ "' was deleted from the media '" + mediaKey + "'.");
 
 			} catch (Exception he) {
 				logger.error("Couldn't delet The GatheringNumber '"
 						+ glDTO.getGatheringKey() + "' of userId '" + pLite.getPersonKey()
-						+ "' from the media [id" + mediaId + "].");
+						+ "' from the media [id" + mediaKey + "].");
 
 			}
 		} // for
@@ -1056,9 +1121,9 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteObservations(java.lang.Integer, java.util.List)
 	 */
-	public void deleteObservations(Integer mediaId,
+	public void deleteObservations(String mediaKey,
 			List<ObservationLiteDTO> observationsList) throws IllegalArgumentException {
-		logger.debug("deleting associated observations for media:" + mediaId
+		logger.debug("deleting associated observations for media:" + mediaKey
 				+ ".");
 
 		int successful = 0;
@@ -1078,7 +1143,7 @@ public class MediaManagerImpl implements MediaManager {
 			try {
 
 				// observationTaxonMediaId
-				oldOTMId = new ObservedTaxonMediaId(new Integer(olDTO.getObservationKey()), mediaId);
+				oldOTMId = new ObservedTaxonMediaId(new Integer(olDTO.getObservationKey()), Integer.valueOf(mediaKey));
 
 				oldOTM = new ObservedTaxonMedia();
 				oldOTM.setId(oldOTMId);
@@ -1092,7 +1157,7 @@ public class MediaManagerImpl implements MediaManager {
 				logger.error("deleting associated observations... "
 						+ "Couldn't delete the Observation["
 						+ olDTO.getObservationKey()
-						+ "] from the media [id" + mediaId + "].");
+						+ "] from the media [id" + mediaKey + "].");
 			}
 
 		} // for
@@ -1105,9 +1170,9 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteSpecimens(java.lang.Integer, java.util.List)
 	 */
-	public void deleteSpecimens(Integer mediaId, List<SpecimenLiteDTO> specimensList)
+	public void deleteSpecimens(String mediaKey, List<SpecimenLiteDTO> specimensList)
 			throws IllegalArgumentException {
-		logger.debug("deleting associated specimens for media:" + mediaId + ".");
+		logger.debug("deleting associated specimens for media:" + mediaKey + ".");
 
 		int successful = 0;
 		SpecimenMedia oldSpecimenMedia;
@@ -1123,7 +1188,7 @@ public class MediaManagerImpl implements MediaManager {
 			try {
 
 				oldSpecimenMediaId = new SpecimenMediaId(
-						new Integer(slDTO.getSpecimenKey()), mediaId);
+						new Integer(slDTO.getSpecimenKey()), Integer.valueOf(mediaKey));
 
 				// sets the Specimen to the media
 				oldSpecimenMedia = new SpecimenMedia();
@@ -1134,11 +1199,11 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.debug("The Specimen id '" + slDTO.getSpecimenKey()
-						+ "' was deleted from the media '" + mediaId + "'.");
+						+ "' was deleted from the media '" + mediaKey + "'.");
 
 			} catch (Exception he) {
 				logger.error("Couldn't delet the Speciemen [id="
-						+ slDTO.getSpecimenKey() + "] from the media [id" + mediaId	+ "].");
+						+ slDTO.getSpecimenKey() + "] from the media [id" + mediaKey	+ "].");
 
 			}
 		} // for
@@ -1151,10 +1216,10 @@ public class MediaManagerImpl implements MediaManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MediaManager#deleteTaxons(java.lang.Integer, java.util.List)
 	 */
-	public void deleteTaxons(Integer mediaId, List<TaxonLiteDTO> taxonsList)
+	public void deleteTaxons(String mediaKey, List<TaxonLiteDTO> taxonsList)
 			throws IllegalArgumentException {
 		logger.debug("deleting [" + taxonsList.size()
-				+ "] associated taxons for media:" + mediaId + ".");
+				+ "] associated taxons for media:" + mediaKey + ".");
 
 		int successful = 0; // for local count of errors
 
@@ -1174,7 +1239,7 @@ public class MediaManagerImpl implements MediaManager {
 
 			try {
 
-				theTaxonMediaId = new TaxonMediaId(new Integer(tlDTO.getTaxonKey()), mediaId);
+				theTaxonMediaId = new TaxonMediaId(new Integer(tlDTO.getTaxonKey()), Integer.valueOf(mediaKey));
 
 				// sets the Taxon to the media
 				theTaxonMedia = new TaxonMedia();
@@ -1185,13 +1250,13 @@ public class MediaManagerImpl implements MediaManager {
 
 				successful = successful + 1;
 				logger.info("deleting associated taxons... The taxon id '"
-						+ tlDTO.getTaxonKey() + "' is now deleted from media '" + mediaId
+						+ tlDTO.getTaxonKey() + "' is now deleted from media '" + mediaKey
 						+ "'.");
 
 			} catch (Exception he) {
 				logger
 						.error("deleting associated taxons... Couldn't delete the taxon id '"
-								+ tlDTO.getTaxonKey() + "' to the media with id '" + mediaId + "'.");
+								+ tlDTO.getTaxonKey() + "' to the media with id '" + mediaKey + "'.");
 			}
 		} // for
 		logger.info("deleting associated taxons... delete finish finish with "

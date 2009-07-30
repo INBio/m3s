@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
-import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.lite.MediaLite;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -97,13 +97,13 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
 		});
 	}
 
-	public GeneralMetadataDTO getGeneralMetadataDTO(final Integer mediaId) {
+	public GeneralMetadataDTO getGeneralMetadataDTO(final String mediaId) {
 		logger.debug("getGeneralMetadataDTO with param [" + mediaId + "]");
 		HibernateTemplate template = getHibernateTemplate();
 		return (GeneralMetadataDTO) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select new org.inbio.m3s.dto.GeneralMetadataDTO(" +
+						"select new org.inbio.m3s.dto.metadata.GeneralMetadataDTO(" +
 						"m.title, m.description, m.mediaType.mediaTypeId, m.siteId, "
 						+ "m.siteDescription)"
 						+ " from Media as m"

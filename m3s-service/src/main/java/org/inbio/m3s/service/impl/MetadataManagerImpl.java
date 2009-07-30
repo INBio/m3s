@@ -114,7 +114,7 @@ public class MetadataManagerImpl implements MetadataManager {
 	 */
 	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) {
 		
-		logger.debug("getTechMetadataFromFile with mediaId [" + mediaTypeKey + "] for:"+fileAddress);
+		logger.debug("getTechMetadataFromFile with mediaTypeKey [" + mediaTypeKey + "] for:"+fileAddress);
 		
 		TechnicalMetadataDTO tmDTO = new TechnicalMetadataDTO(null,mediaTypeKey);
 		TechnicalMetadataItemDTO tmiDTO;
@@ -311,7 +311,5 @@ public class MetadataManagerImpl implements MetadataManager {
 			MediaAttributeValueDAO mediaAttributeValueDAO) {
 		this.mediaAttributeValueDAO = mediaAttributeValueDAO;
 	}
-
-
 
 }
