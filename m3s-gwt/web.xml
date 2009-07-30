@@ -151,7 +151,12 @@
 			org.inbio.m3s.gwt.server.rpcimpl.KeywordsRPCImpl
 		</servlet-class>
 	</servlet>
-
+ 	<servlet>
+		<servlet-name>projectsRPC</servlet-name>
+		<servlet-class>
+			org.inbio.m3s.gwt.server.rpcimpl.ProjectsRPCImpl
+		</servlet-class>
+	</servlet>
 
 	<!-- file upload servlet -->
 	<servlet-mapping>
@@ -214,13 +219,17 @@
 		<url-pattern>/taxonSelectorRPC</url-pattern>
 	</servlet-mapping>
 	 -->
-	 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>taxonomyRPC</servlet-name>
 		<url-pattern>/taxonomyRPC</url-pattern>
 	</servlet-mapping>
-	 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>keywordsRPC</servlet-name>
 		<url-pattern>/keywordsRPC</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>projectsRPC</servlet-name>
+		<url-pattern>/projectsRPC</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>metadataRPC</servlet-name>
