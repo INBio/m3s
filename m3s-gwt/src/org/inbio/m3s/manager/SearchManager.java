@@ -20,15 +20,15 @@ import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.ServiceUtil;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.ProjectLite;
-import org.inbio.m3s.dto.message.KeywordLiteDTO;
+import org.inbio.m3s.dto.message.KeywordDTO;
+import org.inbio.m3s.dto.message.ProjectDTO;
 
 /**
  * @author jgutierrez
  * 
  */
 public class SearchManager {
-
+	
 	private static Logger logger = Logger.getLogger(SearchManager.class);
 
 	/**
@@ -214,7 +214,7 @@ public class SearchManager {
 		String value = triplete.getValue();
 		
 		KeywordDAO keywordDAO = (KeywordDAO) ServiceUtil.appContext.getBean("keywordDAO");
-		KeywordLiteDTO klDTO = keywordDAO.getKeywordLite(value, MessageManager.DEFAULT_LANGUAGE);
+		KeywordDTO klDTO = keywordDAO.getKeywordLite(value, MessageManager.DEFAULT_LANGUAGE);
 		
 		return " m.mediaId in ( select mk.id.mediaId" +
 				" from MediaKeyword as mk" +
@@ -230,16 +230,17 @@ public class SearchManager {
 	private static String projectWhere(SearchCriteriaTriplet triplete) 
 	throws IllegalArgumentException {
 		
-	
+		MessageManager messageManager = (MessageManager) ServiceUtil.appContext.getBean(Properties.MESSAGE_MANAGER);
+			
 		Integer criteria = triplete.getCriteria();
 		String value = triplete.getValue();
 		
 		ProjectDAO projectDAO = (ProjectDAO) ServiceUtil.appContext.getBean("projectDAO");
-		ProjectLite projectLite = projectDAO.getProjectLite(value);
+		ProjectDTO projectLite = messageManager.getProjectByName(value);
 		
 		return " m.mediaId in ( select mp.id.mediaId" +
 				" from MediaProject as mp" +
-				" where mp.id.projectId" + getCriteria(criteria) +" "+ projectLite.getProjectId()+" )";
+				" where mp.id.projectId" + getCriteria(criteria) +" "+ projectLite.getProjectKey()+" )";
 	}
 	
 	/**
