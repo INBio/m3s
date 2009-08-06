@@ -6,8 +6,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * 
- * @author james TODO: This variables must be configured via software, using a
- *         config file an a program that loads the default values
  */
 public class Properties {
 
