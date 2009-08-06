@@ -9,6 +9,7 @@ import java.util.List;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaTypeDAO;
+import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.TextTranslationDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
@@ -16,6 +17,8 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.dto.message.ProjectDTOFactory;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.model.core.Keyword;
 import org.inbio.m3s.model.core.MediaCategory;
@@ -37,6 +40,10 @@ public class MessageManagerImpl implements MessageManager {
 	private UsePolicyDAO usePolicyDAO;
 	private MediaCategoryDAO mediaCategoryDAO;
 	private ProjectDAO projectDAO;
+	private MediaUseDAO mediaUseDAO;
+	
+	//dto Factory
+	private ProjectDTOFactory projectDTOFactory;
 	
 
 	/**
@@ -133,6 +140,10 @@ public class MessageManagerImpl implements MessageManager {
 		return upDTOList;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MessageManager#getUsePolicy(java.lang.String)
+	 */
 	public UsePolicyDTO getUsePolicy(String usePolicyKey) throws IllegalArgumentException {
 		UsePolicy up = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(usePolicyKey));
 		TextTranslation tt;
@@ -140,6 +151,16 @@ public class MessageManagerImpl implements MessageManager {
 		return new UsePolicyDTO(usePolicyKey, tt.getName());
 		
 	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MessageManager#getUsePolicyByName(java.lang.String)
+	 */
+	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws IllegalArgumentException {
+		UsePolicy up = (UsePolicy) usePolicyDAO.findByName(usePolicyName);
+		TextTranslation tt;
+		tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		return new UsePolicyDTO(up.getUsePolicyId() , tt.getName());
+}
 	
 
 	public List<MediaCategoryDTO> getAllMediaCategories() {
@@ -154,8 +175,6 @@ public class MessageManagerImpl implements MessageManager {
 		
 		return mcDTOList;
 	}
-
-
 
 	public MediaCategoryDTO getMediaCategoryByType(String mediaTypeKey) {
 		
@@ -213,7 +232,7 @@ public class MessageManagerImpl implements MessageManager {
 		List<Object> pList =   projectDAO.findAll(Project.class);
 		
 		for(Object project : pList)
-			pDTOList.add(new ProjectDTO( ((Project) project).getProjectId().toString(), ((Project) project).getName() ));
+			pDTOList.add((ProjectDTO) projectDTOFactory.createDTO((Project) project));
 		
 		return pDTOList;
 	}
@@ -222,14 +241,19 @@ public class MessageManagerImpl implements MessageManager {
 
 	public ProjectDTO getProjectById(String projectKey) {
 		Project project = (Project) projectDAO.findById(UsePolicy.class, Integer.valueOf(projectKey));
-		return new ProjectDTO(projectKey, project.getName());
+		return (ProjectDTO) projectDTOFactory.createDTO((Project) project);
 	}
 
 
 
 	public ProjectDTO getProjectByName(String projectName) throws IllegalArgumentException{
 		Project project = (Project) projectDAO.findByName(projectName);
-		return new ProjectDTO(String.valueOf(project.getProjectId()), project.getName());
+		return 	(ProjectDTO) projectDTOFactory.createDTO(project);
+	}
+	
+
+	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String languageKey) {
+		return mediaUseDAO.findByNameAndLanguage(mediaUseName, languageKey);
 	}
 	
 	/**
@@ -302,6 +326,41 @@ public class MessageManagerImpl implements MessageManager {
 		return projectDAO;
 	}
 
+
+
+	/**
+	 * @param projectDTOFactory the projectDTOFactory to set
+	 */
+	public void setProjectDTOFactory(ProjectDTOFactory projectDTOFactory) {
+		this.projectDTOFactory = projectDTOFactory;
+	}
+
+
+
+	/**
+	 * @return the projectDTOFactory
+	 */
+	public ProjectDTOFactory getProjectDTOFactory() {
+		return projectDTOFactory;
+	}
+
+
+
+	/**
+	 * @param mediaUseDAO the mediaUseDAO to set
+	 */
+	public void setMediaUseDAO(MediaUseDAO mediaUseDAO) {
+		this.mediaUseDAO = mediaUseDAO;
+	}
+
+
+
+	/**
+	 * @return the mediaUseDAO
+	 */
+	public MediaUseDAO getMediaUseDAO() {
+		return mediaUseDAO;
+	}
 
 
 }

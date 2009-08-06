@@ -32,11 +32,9 @@ public class ImportThread extends Thread {
 	public void run(ImportationFileEntity fileType, String username, String systemFileName, String userFileName) {
 
 		// set the status to ...
-		//ImportControlDAO icDAO = ImportControlDAOFactory.createImportControlDAOImpl();
 		ImportControlDTOLite icLite = new ImportControlDTOLite(systemFileName,ImportationManager.IMPORT_SCHEDULED_FOR+"hoy", username,userFileName);
 
 		importationManager.createImportControl(icLite);
-		//icDAO.createImportControl(icLite);
 		
 		logger.debug("el hilo bretando...");
 		// set the status to procesando...
@@ -46,7 +44,7 @@ public class ImportThread extends Thread {
 
 		try {
 
-			importFromFile.ImportMedia(ImportFromFile.REAL_IMPORT_FILES_DIR + systemFileName, fileType);
+			importFromFile.ImportMedia(importFromFile.getRealImportFilesDir() + systemFileName, fileType);
 
 			// sets the status to terminado...
 			// set the status to procesando...

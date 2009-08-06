@@ -39,6 +39,16 @@ public class PersonLiteDTO extends BaseDTO {
 		this.setName(name);
 	}
 	
+	/**
+	 * @param personId
+	 * @param name
+	 */
+	public PersonLiteDTO(Integer personId, String name) {
+		super();
+		this.setPersonKey(String.valueOf(personId));
+		this.setName(name);
+	}
+	
 	@Override
 	public String toString(){
 		return "La Person Lite DTO tiene:" +

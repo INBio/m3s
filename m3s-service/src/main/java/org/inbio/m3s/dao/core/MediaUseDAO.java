@@ -21,9 +21,9 @@ public interface MediaUseDAO extends BaseDAO{
 	public List<MediaUseDTO> listAllLite(Integer languageId) throws IllegalArgumentException;
 	@Deprecated
 	public List<MediaUseDTO> getMediaUsesLite(Integer mediaId, Integer languageId) throws IllegalArgumentException;
-	
+	@Deprecated
 	public List<MediaUseDTO> findAllByMediaAndLanguage(String mediaKey, String languageKey) throws IllegalArgumentException;
-	
+	@Deprecated
 	public MediaUseDTO findByNameAndLanguage(String mediaUseName, String languageKey) throws IllegalArgumentException;
 	
 }

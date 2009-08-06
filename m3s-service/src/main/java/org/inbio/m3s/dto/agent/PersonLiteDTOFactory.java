@@ -19,22 +19,7 @@ public class PersonLiteDTOFactory extends BaseDTOFactory {
 		if(entity == null)
 				return null;
 		Person p = (Person) entity;
-		PersonLiteDTO dto = new PersonLiteDTO();
-		populatePersonLite(p, dto);
-		return dto;
+		return new PersonLiteDTO(p.getPersonId(), p.getFirstName()+" "+ p.getLastName());
 	}
-
-	/**
-	 * Copy properties from model object to dto.
-	 * @param i
-	 * @param dto
-	 */
-	public void populatePersonLite(Person p, PersonLiteDTO dto){
-		
-		dto.setPersonKey(p.getPersonId().toString());
-		dto.setName(p.getFirstName() + " " + p.getLastName());
-				
-	}
-	
 
 }

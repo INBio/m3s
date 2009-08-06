@@ -51,8 +51,7 @@ public class MediaFileManagement {
 	 *          Data Base media Identifier
 	 * @throws IllegalArgumentExcption
 	 */
-	public static void organizeAndCleanFiles(String tempFileName,
-			Integer mediaId, Integer mediaTypeId) throws IllegalArgumentException {
+	public static void organizeAndCleanFiles(String tempFileName, Integer mediaId, Integer mediaTypeId) throws IllegalArgumentException {
 		logger.debug("organizeAndCleanFiles");
 		logger.debug("params: [tempFileName=" + tempFileName + "], " + "[mediaId="
 				+ mediaId + "] " + "[mediaTypeId=" + mediaTypeId + "].");

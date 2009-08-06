@@ -5,6 +5,8 @@ package org.inbio.m3s.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.InstitutionDAO;
 import org.inbio.m3s.dao.core.PersonDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
@@ -28,6 +30,8 @@ public class AgentManagerImpl implements AgentManager {
 	private InstitutionLiteDTOFactory institutionLiteDTOFactory;
 	
 	private PersonLiteDTOFactory personLiteDTOFactory;
+	
+	protected static Log logger = LogFactory.getLog(AgentManagerImpl.class);
 	
 
 	/*
@@ -68,8 +72,9 @@ public class AgentManagerImpl implements AgentManager {
 	 * @see org.inbio.m3s.service.AgentManager#getPersonLiteByName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public PersonLiteDTO getPersonLiteByName(String name)
-			throws IllegalArgumentException {
+	public PersonLiteDTO getPersonLiteByName(String name) throws IllegalArgumentException {
+		
+		logger.debug("getPersonLiteByName["+name+"]");
 		
 		List<Object> pList = personDAO.findAll(Person.class);
 		List<PersonLiteDTO> pLiteDTOList = personLiteDTOFactory.createDTOList(pList);

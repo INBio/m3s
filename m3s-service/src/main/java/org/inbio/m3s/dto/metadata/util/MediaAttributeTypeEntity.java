@@ -5,9 +5,7 @@ package org.inbio.m3s.dto.metadata.util;
 
 /**
  * @author jgutierrez
- *
  * @deprecated
- * @NIUS
  */
 public enum MediaAttributeTypeEntity {
 
@@ -26,6 +24,10 @@ public enum MediaAttributeTypeEntity {
 	private MediaAttributeTypeEntity(Character value) {
 		this.value = value;
 	}
+	
+	private MediaAttributeTypeEntity(char value) {
+		this.value = new Character(value);
+	}
 
 	/**
 	 * @return the value
@@ -39,5 +41,11 @@ public enum MediaAttributeTypeEntity {
 	 */
 	public void setValue(Character value) {
 		this.value = value;
+		
 	}
+	
+	public boolean equals(char mediaAttributeType){
+		return this.value.charValue() == mediaAttributeType;
+	}
+	
 }

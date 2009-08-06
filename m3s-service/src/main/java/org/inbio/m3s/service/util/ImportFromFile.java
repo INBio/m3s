@@ -11,11 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.inbio.m3s.dao.core.MediaTypeDAO;
-import org.inbio.m3s.dao.core.MediaUseDAO;
-import org.inbio.m3s.dao.core.ProjectDAO;
 import org.inbio.m3s.dao.core.SiteDAO;
-import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
@@ -33,6 +29,7 @@ import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.exception.TaxonNotFoundException;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
@@ -53,25 +50,21 @@ import org.inbio.m3s.util.StringUtil;
  */
 public class ImportFromFile {
 
+	//DAO's... deben desaparecer de aca
+	SiteDAO siteDAO;
+	
+	//managers
 	MediaManager mediaManager;
 	TaxonomyManager taxonomyManager;
-	SiteDAO siteDAO;
 	SiteManager siteManager;
-	MediaTypeDAO mediaTypeDAO;
 	AgentManager agentManager;
-	ProjectDAO projectDAO;
 	MessageManager messageManager;
-	UsePolicyDAO usePolicyDAO;
-	MediaUseDAO mediaUseDAO;
 	MetadataManager metadataManager;
 	
-	
-	private final static String M3S_BASE_DIR = "/home/jgutierrez/SoftwareTools/m3sINBio/";
-	public static String REAL_BATCH_MEDIA_DIR = M3S_BASE_DIR + "TEMP_IMPORT_IMAGES/";
-	private final static String CATALINA_HOME = "/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16";
-	private final static String REAL_WEB_DIR = CATALINA_HOME + "/webapps/m3sINBioFiles/";
-	private final static String IMPORT_FILES = "IMPORT_FILES";
-	public static String REAL_IMPORT_FILES_DIR = REAL_WEB_DIR + IMPORT_FILES+ "/";
+	//constants
+	private String realBatchMediaDir;
+	private String realWebDir;
+	private String realImportFilesDir;
 	
 	private static Logger logger = Logger.getLogger(ImportFromFile.class);
 
@@ -89,8 +82,7 @@ public class ImportFromFile {
 	 */
 	public void ImportMedia(String importFileName, ImportationFileEntity fileType)
 			throws FileNotFoundException, IOException, IllegalArgumentException {
-		logger.debug("\nImportacion de archivos en lote con archivo: "
-				+ importFileName);
+		logger.debug("\nImportacion de archivos en lote con archivo: " + importFileName);
 
 		GeneralMetadataDTO gm;
 		UsesAndCopyrightsDTO uacm;
@@ -99,11 +91,9 @@ public class ImportFromFile {
 		String mediaFileName;
 		Integer mediaId = null;
 
-		logger.debug("Total minimo de elementos a importar:"
-				+ fileParser.getTotalEntries());
+		logger.debug("Total minimo de elementos a importar:" + fileParser.getTotalEntries());
 
-		for (int i = fileParser.getFistEntryIdex(); i <= fileParser
-				.getTotalEntries(); i++) {
+		for (int i = fileParser.getFistEntryIdex(); i <= fileParser.getTotalEntries(); i++) {
 			try {
 				logger.debug("Importando la fila#:" + i);
 				mediaFileName = fileParser.read(i, ImportFileParser.FILE_NAME_DATA);
@@ -115,27 +105,25 @@ public class ImportFromFile {
 				logger.debug("Ya se obtuvieron los metadatos Generales.");
 				
 				uacm = getUAC(fileParser, i);
-				logger
-						.debug("Ya se obtuvieron los metadatos De Autoría y Derechos de Uso.");
+				logger.debug("Ya se obtuvieron los metadatos De Autoría y Derechos de Uso.");
 
 				// if true means uses wildcard. This means the general metadata and the
 				// uses and copyrigth
 				// values will be shared for various registries. The image will change.
 				if (mediaFileName.lastIndexOf("*") != -1) {
 					logger.debug("Use wildcard.");
-					String folderName = REAL_BATCH_MEDIA_DIR;
+					String folderName = realBatchMediaDir;
 					if (mediaFileName.lastIndexOf(File.separator) != -1) {
 						folderName = folderName.concat(mediaFileName);
-						folderName = folderName.substring(0, folderName
-								.lastIndexOf(File.separator) + 1);
+						folderName = folderName.substring(0, folderName.lastIndexOf(File.separator) + 1);
 					}
 					logger.debug("Folder: '" + folderName + "'.");
-					String pattern = mediaFileName.substring(mediaFileName
-							.lastIndexOf("*") + 1);
+					String pattern = mediaFileName.substring(mediaFileName.lastIndexOf("*") + 1);
 					logger.debug("pattern: '" + pattern + "'.");
 
 					File folder = new File(folderName);
 					String[] listOfFiles = folder.list();
+					logger.debug("List of files:"+listOfFiles.length);
 
 					for (int j = 0; j < listOfFiles.length; j++) {
 						if (listOfFiles[j].endsWith(pattern)) {
@@ -146,13 +134,11 @@ public class ImportFromFile {
 					logger.debug("Total de coincidencias: " + fileNames.size());
 
 				} else
-					fileNames.add(REAL_BATCH_MEDIA_DIR + mediaFileName);
-				logger.debug("Importando " + fileNames.size()
-						+ " elementos correspondientes a la fila");
+					fileNames.add(realBatchMediaDir + mediaFileName);
+				logger.debug("Importando " + fileNames.size() + " elementos correspondientes a la fila");
 				// for init
 				for (String fileName : fileNames) {
-					logger.debug("Extrayendo metadatos técnicos del archivo: '"
-							+ fileName + "'");
+					logger.debug("Extrayendo metadatos técnicos del archivo: '" + fileName + "'");
 					tmDTO = metadataManager.getTechMetadataFromFile(gm.getMediaTypeKey(), fileName);
 
 					if (MediaFileManagement.isFileReadable(fileName))
@@ -163,10 +149,8 @@ public class ImportFromFile {
 					
 					
 					// FIXME: only for jpg's... not really a bug! ;).
-					// organizeAndCleanFiles(mediaFileName, mediaId.toString() + ".jpg",
-					// mediaId);
-					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",
-					// mediaId);
+					// organizeAndCleanFiles(mediaFileName, mediaId.toString() + ".jpg",mediaId);
+					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",mediaId);
 
 					MediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()));
 
@@ -178,11 +162,10 @@ public class ImportFromFile {
 				fileParser.writeFinalResult(i, resultStatus);
 
 			} catch (Exception e) {
-				logger.error("La información presenta errores.");
+				logger.error("La informacion presenta errores.");
 				logger.error(e.getMessage());
 				logger.error(e.getCause());
-				fileParser.writeFinalResult(i, "La información presenta "
-						+ "errores, revisar hoja de resultados.");
+				fileParser.writeFinalResult(i, "La información presenta errores, revisar hoja de resultados.");
 			}
 		}
 
@@ -204,7 +187,7 @@ public class ImportFromFile {
 		logger.debug("importFileName ["+importFileName+"], ImportationFileEntity ["+fileType.getId()+"]");
 		try {
 			if (fileType == ImportationFileEntity.MS_EXCEL_FILE) {
-				logger.debug("Importacion desde un archivo de Excel");
+				logger.debug("Importacion desde un archivo de Excel ["+importFileName+"]");
 				return new ExcelImportFileParserImpl(importFileName);
 			} else {
 				logger.error("Tipo de archivo desconocido para la importacion.");
@@ -213,6 +196,7 @@ public class ImportFromFile {
 		} catch (Exception e) {
 			logger.error("Error grave intentando abrir el archivo de importacion.");
 			logger.error(e.getMessage());
+			logger.error(e.toString());
 			throw new IllegalArgumentException();
 		}
 
@@ -232,8 +216,7 @@ public class ImportFromFile {
 	 * @throws IllegalArgumentException
 	 *           if some information is wrong or in bad format
 	 */
-	private GeneralMetadataDTO getGM(ImportFileParser info, int rowNumber)
-			throws IllegalArgumentException {
+	private GeneralMetadataDTO getGM(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
 		GeneralMetadataDTO gmDTO = new GeneralMetadataDTO();
 		Integer associationTypeCode;
 		String associatedToValue = null;
@@ -243,25 +226,39 @@ public class ImportFromFile {
 		List<TaxonLiteDTO> taxonsList = new ArrayList<TaxonLiteDTO>();
 		TaxonLiteDTO tlDTO = null;
 
+		//Media Key
 		gmDTO.setMediaKey(null);
 
 		logger.debug("\nGetting general metadata");
 
 		try {
+			//Title
 			gmDTO.setTitle(info.read(rowNumber, ImportFileParser.TITLE_DATA));
-			info.writeResult(rowNumber, ImportFileParser.TITLE_DATA,
-					ImportFileParser.SUCCESFUL);
+			info.writeResult(rowNumber, ImportFileParser.TITLE_DATA,ImportFileParser.SUCCESFUL);
 			logger.debug("Title: '" + gmDTO.getTitle() + "'");
 
+			//Description
 			gmDTO.setDescription(info.read(rowNumber, ImportFileParser.DESCRIPTION_DATA));
-			info.writeResult(rowNumber, ImportFileParser.DESCRIPTION_DATA,
-					ImportFileParser.SUCCESFUL);
+			info.writeResult(rowNumber, ImportFileParser.DESCRIPTION_DATA,ImportFileParser.SUCCESFUL);
 			logger.debug("Description: '" + gmDTO.getDescription() + "'");
 
-			MediaTypeDTO mtl = mediaTypeDAO.getMediaTypeLite(info.read(rowNumber, ImportFileParser.MEDIA_TYPE_DATA));
-			gmDTO.setMediaTypeKey(mtl.getMediaTypeKey());
+			//Media Type
+			MediaTypeDTO mtDTO =  messageManager.getMediaTypeByName(info.read(rowNumber, ImportFileParser.MEDIA_TYPE_DATA));
+			gmDTO.setMediaTypeKey(mtDTO.getMediaTypeKey());
 			logger.debug("Media Type: '" + gmDTO.getMediaTypeKey() + "'");
 
+			//Projects
+			String projects = info.read(rowNumber, ImportFileParser.PROJECTS_DATA);
+			gmDTO.setProjectsList(getProjectLiteList(projects));
+			info.writeResult(rowNumber, ImportFileParser.PROJECTS_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Projects: '" + gmDTO.getProjectsList().size() + "'");
+
+			// keywords
+			String keywords = info.read(rowNumber, ImportFileParser.KEYWORDS_DATA);
+			gmDTO.setKeywordsList(getKeywords(keywords));
+			info.writeResult(rowNumber, ImportFileParser.KEYWORDS_DATA,	ImportFileParser.SUCCESFUL);
+			logger.debug("Keywords: '" + gmDTO.getKeywordsList().size() + "'");
+			
 			// asociation type and value
 			associationTypeCode = getAssociationTypeCode(info.read(rowNumber,ImportFileParser.ASOCIATION_TYPE_DATA));
 			associatedToValue = info.read(rowNumber,ImportFileParser.ASOCIATED_TO_DATA);
@@ -269,8 +266,11 @@ public class ImportFromFile {
 
 			//AssociatedTo....			
 			List<SpecimenLiteDTO> associatedSpecimensList = new ArrayList<SpecimenLiteDTO>();
+			gmDTO.setAssociatedSpecimensList(associatedSpecimensList);
 			List<ObservationLiteDTO> associatedObservationsList =  new ArrayList<ObservationLiteDTO>();
+			gmDTO.setAssociatedObservationsList(associatedObservationsList);
 			List<GatheringLiteDTO> associatedGatheringsList = new ArrayList<GatheringLiteDTO>();
+			gmDTO.setAssociatedGatheringsList(associatedGatheringsList);
 			
 			if (associationTypeCode.equals(AssociatedToEntity.SPECIMEN_NUMBER.getId())) {
 				logger.debug("Associated to Specimen Number");
@@ -305,13 +305,6 @@ public class ImportFromFile {
 			}
 			info.writeResult(rowNumber, ImportFileParser.ASOCIATION_TYPE_DATA,ImportFileParser.SUCCESFUL);
 			info.writeResult(rowNumber, ImportFileParser.ASOCIATED_TO_DATA,ImportFileParser.SUCCESFUL);
-
-
-			// projects
-			String projects = info.read(rowNumber, ImportFileParser.PROJECTS_DATA);
-			gmDTO.setProjectsList(getProjectLiteList(projects));
-			info.writeResult(rowNumber, ImportFileParser.PROJECTS_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Projects: '" + gmDTO.getProjectsList().size() + "'");
 
 			
 			// taxonomy
@@ -359,13 +352,6 @@ public class ImportFromFile {
 			// .getSynopticColletion());
 
 			
-			// keywords
-			String keywords = info.read(rowNumber, ImportFileParser.KEYWORDS_DATA);
-			gmDTO.setKeywordsList(getKeywords(keywords));
-			info.writeResult(rowNumber, ImportFileParser.KEYWORDS_DATA,	ImportFileParser.SUCCESFUL);
-			logger.debug("Keywords: '" + gmDTO.getKeywordsList().size() + "'");
-
-			
 			// TODO: has to fix the siteId stuff
 			// site Description
 			siteDescription = info.read(rowNumber, ImportFileParser.SITE_DATA);
@@ -380,39 +366,45 @@ public class ImportFromFile {
 				}
 			}
 			gmDTO.setSiteDescription(siteDescription);
+			gmDTO.setSiteKey(null);
 			info.writeResult(rowNumber, ImportFileParser.SITE_DATA,ImportFileParser.SUCCESFUL);
 			logger.debug("Site Description: '" + gmDTO.getSiteDescription() + "'");
-
-			logger.debug("Getting general metadata TV its done\n");
+			logger.debug("Site Key: '" + gmDTO.getSiteKey() + "'");
+			
+			
+			logger.debug("Getting general metadataDTO its done\n");
+			logger.info(gmDTO.toString());
+			
 			return gmDTO;
 
+		} catch (TaxonNotFoundException tnfe) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(tnfe.getMessage());
 		} catch (Exception e) {
-			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,
-					ImportFileParser.ERROR + " '" + e.getMessage() + "'");
-			logger.debug(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
-
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " '" + e.getMessage() + "'");
+			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
 			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
 
 	
-	/*
-	 *TODO revisar que este bien, fue hecho a la carrera
+	/**
+	 * 
+	 * @param projects
+	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private List<ProjectDTO> getProjectLiteList(String projects) {
 
-		List<String> projectsTextualNameList = (List) StringUtil.getIndividualItems(projects, String.class);
+		List<Object> projectsTextualNameList = StringUtil.getIndividualItems(projects, String.class);
 		List<ProjectDTO> projectsList = new ArrayList<ProjectDTO>();
-		ProjectDTO pl;
 		
 		logger.debug("Translating GMTV to DBValues... [" + projectsTextualNameList.size() + "] projects found");
 		
 		
-		for(String projectName : projectsTextualNameList){
-			pl = projectDAO.getProjectLite(projectName);
-			projectsList.add(pl);
-			logger.debug("Translating GMTV to DBValues... adding project id: '" + pl.getProjectKey() + "'.");
+		for(Object projectName : projectsTextualNameList){
+			projectsList.add(messageManager.getProjectByName((String)projectName));
+			logger.debug("Translating GMTV to DBValues... adding project name: '" + (String)projectName + "'.");
 		}
 		
 		return projectsList;
@@ -432,8 +424,7 @@ public class ImportFromFile {
 		KeywordDTO klDTO;
 		List<KeywordDTO> klDTOList = new ArrayList<KeywordDTO>();
 		
-		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,
-				java.lang.String.class);
+		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,java.lang.String.class);
 		
 		for(Object elem : separatedValues){
 			klDTO = messageManager.getKeywordLite((String)elem, MessageManager.DEFAULT_LANGUAGE);
@@ -491,8 +482,7 @@ public class ImportFromFile {
 		logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
 
 		// use policy
-		String usePolicyText = info.read(rowNumber, ImportFileParser.USE_POLICY_DATA);
-		UsePolicyDTO upDTO = usePolicyDAO.getUsePolicyLite(usePolicyText);
+		UsePolicyDTO upDTO = messageManager.getUsePolicyByName(info.read(rowNumber, ImportFileParser.USE_POLICY_DATA));
 		uacDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
 		info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
 		logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
@@ -534,22 +524,20 @@ public class ImportFromFile {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<MediaUseDTO> getMediaUsesList(String mediaUsesText) {
-		logger.debug("getMediaUsesList... start");
-		List<String> mediaUseTextualNameList = (List) StringUtil.getIndividualItems(mediaUsesText, String.class);
-		logger.debug("Translating UACDTextualValues to UACDBValues... ["+ mediaUseTextualNameList.size() + "] media uses found");
-
+		logger.debug("getMediaUsesList... start");		
 		MediaUseDTO muDTO;
-		List<MediaUseDTO> mediaUsesList = new ArrayList<MediaUseDTO>();
+		List<MediaUseDTO> muDTOList = new ArrayList<MediaUseDTO>();
+
+		List<String> mediaUseTextualNameList = (List) StringUtil.getIndividualItems(mediaUsesText, String.class);
+		logger.debug("...["+ mediaUseTextualNameList.size() + "] media uses found");
 		
 		for(String mediaUseName : mediaUseTextualNameList){
-			//muDTO = mediaUseDAO.getMediaUseLite(mediaUseName, MessageManager.DEFAULT_LANGUAGE);
-			muDTO = mediaUseDAO.findByNameAndLanguage(mediaUseName, MessageManager.DEFAULT_LANGUAGE_KEY);
-			mediaUsesList.add(muDTO);
-			logger.debug("Translating UACDTextualValues to UACDBValues... adding mediaUse id: '"
-					+ muDTO.getMediaUseKey() + "'.");
+			muDTO = messageManager.getMediaUseByNameAndLanguage(mediaUseName, MessageManager.DEFAULT_LANGUAGE_KEY);
+			muDTOList.add(muDTO);
+			logger.debug("...adding mediaUse id: '"+ muDTO.getMediaUseKey() + "'.");
 		}
-		
-		return mediaUsesList;
+				
+		return muDTOList;
 	}
 
 	/**
@@ -713,20 +701,6 @@ public class ImportFromFile {
 	}
 
 	/**
-	 * @return the mediaTypeDAO
-	 */
-	public MediaTypeDAO getMediaTypeDAO() {
-		return mediaTypeDAO;
-	}
-
-	/**
-	 * @param mediaTypeDAO the mediaTypeDAO to set
-	 */
-	public void setMediaTypeDAO(MediaTypeDAO mediaTypeDAO) {
-		this.mediaTypeDAO = mediaTypeDAO;
-	}
-
-	/**
 	 * @return the agentManager
 	 */
 	public AgentManager getAgentManager() {
@@ -738,20 +712,6 @@ public class ImportFromFile {
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
-	}
-
-	/**
-	 * @return the projectDAO
-	 */
-	public ProjectDAO getProjectDAO() {
-		return projectDAO;
-	}
-
-	/**
-	 * @param projectDAO the projectDAO to set
-	 */
-	public void setProjectDAO(ProjectDAO projectDAO) {
-		this.projectDAO = projectDAO;
 	}
 
 	/**
@@ -769,34 +729,6 @@ public class ImportFromFile {
 	}
 
 	/**
-	 * @return the usePolicyDAO
-	 */
-	public UsePolicyDAO getUsePolicyDAO() {
-		return usePolicyDAO;
-	}
-
-	/**
-	 * @param usePolicyDAO the usePolicyDAO to set
-	 */
-	public void setUsePolicyDAO(UsePolicyDAO usePolicyDAO) {
-		this.usePolicyDAO = usePolicyDAO;
-	}
-
-	/**
-	 * @return the mediaUseDAO
-	 */
-	public MediaUseDAO getMediaUseDAO() {
-		return mediaUseDAO;
-	}
-
-	/**
-	 * @param mediaUseDAO the mediaUseDAO to set
-	 */
-	public void setMediaUseDAO(MediaUseDAO mediaUseDAO) {
-		this.mediaUseDAO = mediaUseDAO;
-	}
-
-	/**
 	 * @return the metadataManager
 	 */
 	public MetadataManager getMetadataManager() {
@@ -809,6 +741,49 @@ public class ImportFromFile {
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
 	}
+
+	/**
+	 * @return the realBatchMediaDir
+	 */
+	public String getRealBatchMediaDir() {
+		return realBatchMediaDir;
+	}
+
+	/**
+	 * @param realBatchMediaDir the realBatchMediaDir to set
+	 */
+	public void setRealBatchMediaDir(String realBatchMediaDir) {
+		this.realBatchMediaDir = realBatchMediaDir;
+	}
+
+	/**
+	 * @return the realWebDir
+	 */
+	public String getRealWebDir() {
+		return realWebDir;
+	}
+
+	/**
+	 * @param realWebDir the realWebDir to set
+	 */
+	public void setRealWebDir(String realWebDir) {
+		this.realWebDir = realWebDir;
+	}
+
+	/**
+	 * @return the realImportFilesDir
+	 */
+	public String getRealImportFilesDir() {
+		return realImportFilesDir;
+	}
+
+	/**
+	 * @param realImportFilesDir the realImportFilesDir to set
+	 */
+	public void setRealImportFilesDir(String realImportFilesDir) {
+		this.realImportFilesDir = realImportFilesDir;
+	}
+
 
 
 

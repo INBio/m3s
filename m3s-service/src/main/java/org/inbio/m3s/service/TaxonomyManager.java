@@ -10,6 +10,7 @@ import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
+import org.inbio.m3s.exception.TaxonNotFoundException;
 
 /**
  * @author jgutierrez
@@ -78,7 +79,7 @@ public interface TaxonomyManager {
 	 * @return 
 	 * @throws IllegalArgumentException 
 	 */
-	public TaxonLiteDTO getTaxonLite(String defaultName, String kingdomName) throws IllegalArgumentException;
+	public TaxonLiteDTO getTaxonLite(String defaultName, String kingdomName) throws TaxonNotFoundException;
 	
 	/**
 	 *  -List de manera correcta

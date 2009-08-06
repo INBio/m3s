@@ -26,7 +26,7 @@ public interface MetadataExtractorDAO {
 	 *          of the file in the file System
 	 * 
 	 */
-	public void init(String fileAddress);
+	public void init(String fileAddress) throws IllegalArgumentException;
 
 
 	/**

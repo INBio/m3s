@@ -12,6 +12,7 @@ import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.dao.DataCache;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.service.MessageManager;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -97,6 +98,25 @@ public class UsePolicyDAOImpl extends BaseDAOImpl implements UsePolicyDAO {
 				//query.setParameter(0, nomenclaturalGroupId);
 				query.setCacheable(true);
 				return query.list();
+			}
+		});
+	}
+
+
+	public UsePolicy findByName(final String usePolicyText) {
+		logger.debug("findByName");
+		HibernateTemplate template = getHibernateTemplate();
+		return (UsePolicy) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select up"
+						+ " from TextTranslation as tt, UsePolicy as up"
+						+ " where tt.language.languageId = "	+ MessageManager.DEFAULT_LANGUAGE
+						+ " and tt.name = '"+usePolicyText+"'"
+						+ " and tt.text = up.textByNameTextId");
+				//query.setParameter(0, nomenclaturalGroupId);
+				query.setCacheable(true);
+				return query.uniqueResult();
 			}
 		});
 	}

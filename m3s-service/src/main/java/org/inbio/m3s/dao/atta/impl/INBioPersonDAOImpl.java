@@ -36,7 +36,7 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select pp.person"
-						+ " from PersonProfile as pp"
+						+ " from org.inbio.m3s.model.atta.PersonProfile as pp"
 						+ " where pp.profile.profileId = " + IMAGES_PROCESOR_PROFILE_ID
 						+ " or pp.profile.profileId = " 	+ IMAGES_AUTHOR_PROFILE_ID
 						+ " and pp.person.firstName is not null "
@@ -57,7 +57,7 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select pp.person"
-						+ " from PersonProfile as pp"
+						+ " from org.inbio.m3s.model.atta.PersonProfile as pp"
 						+ " where pp.profile.profileId = " + GATHERING_PROFILE_ID
 						+ " and pp.person.firstName is not null "
 						+ " and pp.person.lastName is not null "
@@ -76,7 +76,7 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select pp.person"
-						+ " from PersonProfile as pp"
+						+ " from org.inbio.m3s.model.atta.PersonProfile as pp"
 						+ " where pp.profile.profileId = " + GATHERING_PROFILE_ID
 						+ " and pp.person.personId = "+ responsiblePersonId);
 				//query.setParameter(0, nomenclaturalGroupId);

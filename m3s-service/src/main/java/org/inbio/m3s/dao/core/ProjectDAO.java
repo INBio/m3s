@@ -18,8 +18,8 @@ public interface ProjectDAO extends BaseDAO {
 	@Deprecated
 	public ProjectDTO getProjectLite(Integer projectId) throws IllegalArgumentException;
 	
-	@Deprecated
-	public ProjectDTO getProjectLite(String projectName) throws IllegalArgumentException;
+	//@Deprecated
+	//public ProjectDTO getProjectLite(String projectName) throws IllegalArgumentException;
 	
 	@Deprecated
 	public List<ProjectDTO> getAllLite() throws IllegalArgumentException;

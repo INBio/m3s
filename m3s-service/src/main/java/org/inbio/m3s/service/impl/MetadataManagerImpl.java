@@ -72,7 +72,10 @@ public class MetadataManagerImpl implements MetadataManager {
 					tmiDTO.setValue(mav.getValueVarchar());
 					break;
 				case 'N' :
-					tmiDTO.setValue(mav.getValueNumber().toString());
+					if(mav.getValueNumber()!=null)
+						tmiDTO.setValue(mav.getValueNumber().toString());
+					else
+						tmiDTO.setValue(null);
 					break;
 				case 'D' :
 					tmiDTO.setValue(mav.getValueDate().toString());
@@ -112,7 +115,7 @@ public class MetadataManagerImpl implements MetadataManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.MetadataManager#getTechMetadataFromFile(java.lang.String, java.lang.String)
 	 */
-	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) {
+	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) throws IllegalArgumentException{
 		
 		logger.debug("getTechMetadataFromFile with mediaTypeKey [" + mediaTypeKey + "] for:"+fileAddress);
 		
@@ -143,6 +146,7 @@ public class MetadataManagerImpl implements MetadataManager {
 			tmDTO.addItem(tmiDTO);
 		}
 		
+		logger.info(tmDTO.toString());
 		return tmDTO;
 	}
 	
@@ -153,27 +157,41 @@ public class MetadataManagerImpl implements MetadataManager {
 	 */
 	public void saveTechnicalMetadata(TechnicalMetadataDTO techMetadataDTO) {
 		logger.info("saveTechnicalMetadata for mediaId = " + techMetadataDTO.getMediaKey());
-		logger.debug(techMetadataDTO.toString());
+		logger.info(techMetadataDTO.toString());
 		
 		MediaAttribute ma;
 		MediaAttributeValue mav;
 		MediaAttributeValueId mavId;
 
 		for(TechnicalMetadataItemDTO tmiDTO : techMetadataDTO.getItems()){
+			logger.info(tmiDTO.toString());
 			mavId = new MediaAttributeValueId(tmiDTO.getMediaAttributeKey(), techMetadataDTO.getMediaKey());
 			mav = (MediaAttributeValue) mediaAttributeValueDAO.findById(MediaAttributeValue.class, mavId);
+			
+			
 			if(mav==null)
 				mav = saveEmptyMediaAttributeValue(tmiDTO.getMediaAttributeKey(), techMetadataDTO.getMediaKey());
 			ma = mav.getMediaAttribute();
 			
 			switch(ma.getMediaAttributeValueType()){
-			case 'V' :
+			case 'V' : {
+				logger.info("varchar");
 				mav.setValueVarchar(tmiDTO.getValue());
+				logger.info("salvando: "+mav.getId()+" con el valor:"+mav.getValueVarchar());
 				break;
-			case 'N' :
-				mav.setValueNumber(Integer.valueOf(tmiDTO.getValue()));
+			}
+			case 'N' : {
+				logger.info("number");
+				try{
+					mav.setValueNumber(Integer.valueOf(tmiDTO.getValue()));
+				} catch(Exception e){
+					mav.setValueNumber(null);
+				}
+				logger.info("salvando: "+mav.getId()+" con el valor:"+mav.getValueNumber());
 				break;
+			}
 			case 'D' :
+				logger.info("date");
 				// dateFormat for metadata from the camara
 				SimpleDateFormat dateFormat;
 				Date date = null;
@@ -191,13 +209,18 @@ public class MetadataManagerImpl implements MetadataManager {
 						date = dateFormat.parse(tmiDTO.getValue());
 				} catch (Exception e) {
 					logger.error(e.getMessage());
+					logger.info("salvando: "+mav.getId()+" con el valor:"+mav.getValueDate());
 					mav.setValueDate(null);
 				}
 				
-				if(date==null)
-					mav.setValueDate(null);
-				else
+				if(date==null){
+					mav.setValueDate(new Date());
+					logger.info("salvando: "+mav.getId()+" con el valor:"+mav.getValueDate());
+				}
+				else{
 					mav.setValueDate(new Timestamp(date.getTime()));
+					logger.info("salvando: "+mav.getId()+" con el valor:"+mav.getValueDate());
+				}
 				break;
 			}
 			

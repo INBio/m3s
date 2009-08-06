@@ -9,6 +9,7 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 
 /**
@@ -67,6 +68,8 @@ public interface MessageManager {
 	 */
 	public UsePolicyDTO getUsePolicy(String usePolicyKey) throws IllegalArgumentException;
 	
+	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws IllegalArgumentException;
+	
 	/**
 	 * 
 	 * @param mediaTypeKey
@@ -102,6 +105,7 @@ public interface MessageManager {
 	 */
 	public MediaTypeDTO getMediaType(String mediaTypeKey) throws IllegalArgumentException;
 	
+	
 	public MediaTypeDTO getMediaTypeByName(String mediaTypeName) throws IllegalArgumentException;
 	
 	/**
@@ -121,4 +125,12 @@ public interface MessageManager {
 	 * @return
 	 */
 	public List<ProjectDTO> getAllProjects();
+
+	/**
+	 * 
+	 * @param mediaUseName
+	 * @param defaultLanguageKey
+	 * @return
+	 */
+	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String defaultLanguageKey);
 }

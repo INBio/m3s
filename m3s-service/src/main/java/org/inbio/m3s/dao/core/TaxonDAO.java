@@ -6,6 +6,7 @@ package org.inbio.m3s.dao.core;
 import java.util.List;
 
 import org.inbio.m3s.dao.BaseDAO;
+import org.inbio.m3s.exception.TaxonNotFoundException;
 import org.inbio.m3s.model.taxonomy.Taxon;
 
 /**
@@ -18,7 +19,7 @@ public interface TaxonDAO extends BaseDAO {
 	public List<Taxon> findAllByName(String defaultName) throws IllegalArgumentException;
 	
 
-	public Taxon findByDefaultNameAndKingdomId(String defaultName, Integer kingdomTaxonId) throws IllegalArgumentException;
+	public Taxon findByDefaultNameAndKingdomId(String defaultName, Integer kingdomTaxonId) throws TaxonNotFoundException;
 
 	public Taxon findBySpecimenId(Integer specimenId) throws IllegalArgumentException;
 	

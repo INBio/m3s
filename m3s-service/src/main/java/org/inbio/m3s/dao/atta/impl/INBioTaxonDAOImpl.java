@@ -12,6 +12,7 @@ import org.inbio.m3s.dao.core.SpecimenDAO;
 import org.inbio.m3s.dao.core.TaxonDAO;
 import org.inbio.m3s.dao.core.TaxonMediaDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
+import org.inbio.m3s.exception.TaxonNotFoundException;
 import org.inbio.m3s.model.atta.INBioTaxon;
 import org.inbio.m3s.model.taxonomy.Taxon;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -33,8 +34,7 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	 */
 	//atta
 	@SuppressWarnings("unchecked")
-	public List<Taxon> findAllByName(final String defaultName)
-			throws IllegalArgumentException {
+	public List<Taxon> findAllByName(final String defaultName) throws IllegalArgumentException {
 		logger.debug("getTaxonLite for default name: '" + defaultName + "'.");
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<Taxon>) template.execute(new HibernateCallback() {
@@ -55,10 +55,9 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	 * 
 	 */
 	//atta
-	public Taxon findByDefaultNameAndKingdomId(final String defaultName, final Integer kingdomTaxonId)
-			throws IllegalArgumentException {
-		logger.debug("getTaxonLite for default name: '" + defaultName
-				+ "' and kingdomTaxonId: '" + kingdomTaxonId + "'.");
+	public Taxon findByDefaultNameAndKingdomId(final String defaultName, final Integer kingdomTaxonId) throws TaxonNotFoundException {
+		logger.debug("getTaxonLite for default name: '" + defaultName + "' and kingdomTaxonId: '" + kingdomTaxonId + "'.");
+		try{
 		HibernateTemplate template = getHibernateTemplate();
 		return (INBioTaxon) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
@@ -72,6 +71,12 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				return query.uniqueResult();
 			}
 		});
+		} catch(Exception e){
+			logger.error(e.getClass());
+			logger.error(e.getLocalizedMessage());
+			logger.error(e.getMessage());
+			throw new TaxonNotFoundException(e.getMessage(), e.getCause(), defaultName);
+		}
 	}
 
 

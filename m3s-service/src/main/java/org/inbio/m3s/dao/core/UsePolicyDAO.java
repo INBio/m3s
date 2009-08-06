@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.inbio.m3s.dao.BaseDAO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.model.core.UsePolicy;
 
 /**
  * @author jgutierrez
@@ -22,5 +23,7 @@ public interface UsePolicyDAO extends BaseDAO{
 
 	@Deprecated
 	public List<UsePolicyDTO> listAllLite() throws IllegalArgumentException;
+
+	public UsePolicy findByName(String usePolicyText);
 	
 }

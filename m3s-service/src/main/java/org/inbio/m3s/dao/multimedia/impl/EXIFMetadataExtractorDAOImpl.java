@@ -5,8 +5,10 @@ package org.inbio.m3s.dao.multimedia.impl;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.dto.metadata.util.EXIFStandardAttributeEntity;
+import org.inbio.m3s.util.ImageMagickAPI;
 
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
@@ -20,20 +22,27 @@ import com.drew.metadata.exif.ExifDirectory;
  */
 public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 	
+	private static Logger logger = Logger.getLogger(EXIFMetadataExtractorDAOImpl.class);
 	
 	Directory exifDirectory = null;
+	String fileAddress = null;
 	
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.multimedia.MetadataExtractorDAO#init(java.lang.String)
 	 */
-	public void init(String fileAddress) {
-    	try {
-    		File jpegFile = new File(fileAddress);
-			Metadata metadata = JpegMetadataReader.readMetadata(jpegFile);
-			exifDirectory = metadata.getDirectory(ExifDirectory.class); 
-		} catch (JpegProcessingException e) {
+	public void init(String fileAddress) throws IllegalArgumentException {
+		logger.info("using the fileAddress:"+fileAddress);
+		this.fileAddress =fileAddress;
+    
+		try {
+    	File jpegFile = new File(fileAddress);
+    	Metadata metadata = JpegMetadataReader.readMetadata(jpegFile);
+    	this.exifDirectory = metadata.getDirectory(ExifDirectory.class); 
+    
+    } catch (JpegProcessingException e) {
 			e.printStackTrace();
+			throw new IllegalArgumentException("The fileAddress["+fileAddress+"] doesn't exist. ",e.getCause());
 		}
 
 	}
@@ -43,10 +52,9 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 	 * @see org.inbio.m3s.dao.multimedia.MetadataExtractorDAO#getAttributeValue(int)
 	 * @param standardAttribute ExifDirectory.TAG_MAKE
 	 */
-	public String getAttributeValue(int standardAttributeId)
-			throws IllegalArgumentException, IllegalStateException {
+	public String getAttributeValue(int standardAttributeId) throws IllegalArgumentException, IllegalStateException {
 		
-		if (exifDirectory == null)
+		if (this.exifDirectory == null)
 			throw new IllegalStateException("Debe invocar el metodo init.");
 		
 		//int i = ExifDirectory.TAG_MAKE;
@@ -95,11 +103,19 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 		else if (standardAttributeId == EXIFStandardAttributeEntity.FLASH.getId())
 			return getFlash(exifDirectory.getString(ExifDirectory.TAG_FLASH));
 		
-		else if (standardAttributeId == EXIFStandardAttributeEntity.PIXELS_HEIGHT.getId())
-			return exifDirectory.getString(ExifDirectory.TAG_EXIF_IMAGE_HEIGHT);
+		else if (standardAttributeId == EXIFStandardAttributeEntity.PIXELS_HEIGHT.getId()){
+			String height =exifDirectory.getString(ExifDirectory.TAG_EXIF_IMAGE_HEIGHT);
+			if(height==null || height.compareTo("")==0)
+				height= String.valueOf(ImageMagickAPI.getHeight(this.fileAddress));
+			return height;
+		}
 
-		else if (standardAttributeId == EXIFStandardAttributeEntity.PIXELS_WIDTH.getId())
-			return exifDirectory.getString(ExifDirectory.TAG_EXIF_IMAGE_WIDTH);
+		else if (standardAttributeId == EXIFStandardAttributeEntity.PIXELS_WIDTH.getId()){
+			String width = exifDirectory.getString(ExifDirectory.TAG_EXIF_IMAGE_WIDTH);
+			if(width==null || width.compareTo("")==0)
+				width = String.valueOf(ImageMagickAPI.getWidth(this.fileAddress));
+			return width;
+		}
 		
 		else if (standardAttributeId == EXIFStandardAttributeEntity.EXPOSURE_TIME.getId()){
 			// according to the EXIF2-2 Spec: "Exposure time, given in seconds
