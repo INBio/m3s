@@ -7,7 +7,7 @@ package org.inbio.m3s.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.config.Properties;
-import org.inbio.m3s.dto.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.service.AbstractServiceTest;
 import org.inbio.m3s.service.MediaManager;
@@ -98,7 +98,7 @@ public void testGetTaxonLite(){
 		logger.info("Usando el TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
 		TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
 		//TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
-		TaxonLiteDTO tlDTO = tm.getTaxonLite("Eleutherodactylus pardalis","Animalia");
+		TaxonLiteDTO tlDTO = tm.getTaxonLite("Pristimantis caryophyllaceus","Animalia");
 		logger.info(tlDTO.toString());
 		
 		logger.info("kingdom");

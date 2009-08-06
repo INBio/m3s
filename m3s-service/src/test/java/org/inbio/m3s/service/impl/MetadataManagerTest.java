@@ -18,7 +18,7 @@ public class MetadataManagerTest extends AbstractServiceTest{
 	
 	protected static Log logger = LogFactory.getLog(MetadataManagerTest.class);
 
-	
+	/*
 	public void testGetTechMetadataByMediaType(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
@@ -27,17 +27,20 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMediaType("1");
 		logger.info(tmDTO.toString());
 	}
+	*/
 	
 	
-	
+	/*
 	public void testGetTechMetadataFromFile(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
 		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/Desktop/Foto.jpg");
+		//TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/Desktop/Foto.jpg");
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/20090730-122053-75DE823CB57784B15DC524EABD8B181B1-Norops-capito.jpg");
 		logger.info(tmDTO.toString());
 	}
+	*/
 	
 	/*
 	public void testSaveTechnicalMetadata(){
@@ -54,13 +57,15 @@ public class MetadataManagerTest extends AbstractServiceTest{
 	}
 	*/
 	
+	
 	public void testGetTechMetadataByMedia(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
 		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100050");
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100096");
 		logger.info(tmDTO.toString());
 	}
+	
 
 }

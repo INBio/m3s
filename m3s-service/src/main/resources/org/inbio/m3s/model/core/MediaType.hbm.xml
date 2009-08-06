@@ -17,11 +17,13 @@
 			class="org.inbio.m3s.model.core.Text" fetch="select">
 			<column name="name_text_id" not-null="true" />
 		</many-to-one>
-		<many-to-one name="mediaCategory"
-			class="org.inbio.m3s.model.core.MediaCategory"
-			fetch="select">
+		
+		<property name="mediaCategoryId" column="media_category_id" not-null="true" insert="false" update="false"/>
+		<many-to-one name="mediaCategory" class="org.inbio.m3s.model.core.MediaCategory" fetch="select">
 			<column name="media_category_id" not-null="true" />
 		</many-to-one>
+		
+		
 		<property name="creationDate" type="date">
 			<column name="creation_date" length="4" />
 		</property>
