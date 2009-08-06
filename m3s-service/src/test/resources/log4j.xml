@@ -10,7 +10,7 @@
 
 	<!-- Alter the logging of known libs -->
 	<category name="org.inbio">
-		<priority value="INFO"/>
+		<priority value="ALL"/>
 	</category>
 	<category name="org.inbio.m3s.service.impl">
 		<priority value="DEBUG"/>
