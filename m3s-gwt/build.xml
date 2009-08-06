@@ -31,8 +31,8 @@
 	<!-- <property name="ImagesDir" value="ImagesDir" /> -->
 
 	<!-- path of the tomcat webapplications dir -->
-	<!--	<property name="tomcat.home" value="/usr/share/tomcat5.5" />-->
-	<property name="tomcat.home" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16"/>
+	<property name="tomcat.home" value="/usr/share/tomcat5.5" />
+	<!--<property name="tomcat.home" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16"/>-->
 	<property name="webappspdir" value="${tomcat.home}\webapps" />
 
 	<!-- ubicacion de los directorios -->
@@ -102,6 +102,9 @@
 		<!-- WEB-INF folder, with the web.xml file and the libs folder -->
 		<mkdir dir="${webdir}/WEB-INF" />
 		<copy file="${basedir}/web.xml" todir="${webdir}/WEB-INF" />
+		<!-- the Classes folder -->
+		<mkdir dir="${webdir}/WEB-INF/classes" />
+		<copy file="${sourcedir}/log4j.xml" todir="${webdir}/WEB-INF/classes" />
 		<!-- the libraries folder -->
 		<mkdir dir="${webdir}/WEB-INF/lib" />
 		<copy todir="${webdir}/WEB-INF/lib">
@@ -255,6 +258,5 @@
     		<arg line="stop"/>
     	</java>
     </target>
-	
 
 </project>
