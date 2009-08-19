@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Defines the Spring Configuration for the Service Layer Managers -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+<!-- MediaFileManagement (1 version)-->
+  <bean id="mediaFileManagement" class="org.inbio.m3s.util.MediaFileManagement"> 
+  	<property name="fileSeparator" value="/"/>
+  	<property name="thumbFolder" value="THUMB"/>
+  	<property name="bigFolder" value="BIG"/>
+  	<property name="originalFolder" value="ORIGINAL"/>
+  	<property name="m3sMediaBaseDir" value="/mnt/m3sImages/INBio/MEDIA"/>
+  </bean>	
+	
+</beans>

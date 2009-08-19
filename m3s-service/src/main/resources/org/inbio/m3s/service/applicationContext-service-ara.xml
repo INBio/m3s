@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Defines the Spring Configuration for the Service Layer Managers -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+<!-- Agent Manager's (3 versiones)-->
+  <bean id="ARAAgentManager" class="org.inbio.m3s.service.impl.AgentManagerImpl">
+    <property name="institutionDAO" ref="ARAInstitutionDAO"/>
+    <property name="institutionLiteDTOFactory" ref="institutionLiteDTOFactory"/>
+    <property name="personDAO" ref="ARAPersonDAO"/>
+    <property name="personLiteDTOFactory" ref="personLiteDTOFactory"/>    
+  </bean>
+
+<!-- Media Attribute (3 versiones)-->  
+  <bean id="ARAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
+    <property name="mediaKeywordDAO" ref="mediaKeywordDAO"/>
+    <property name="mediaUseDAO" ref="mediaUseDAO"/>
+    <property name="mediaUseMediaDAO" ref="mediaUseMediaDAO"/>
+    <property name="mediaTypeDAO" ref="mediaTypeDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="usePolicyDAO" ref="usePolicyDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/> 
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>
+    
+  <!-- SiteManager (2 version)-->
+  <bean id="ARASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
+  	<property name="taxonomyManager" ref="ARATaxonomyManager"/>
+  	<property name="siteDAO" ref="ARASiteDAO"/>
+  </bean>    
+  
+
+<!-- taxonomy Manager (3 versiones)-->
+  <bean id="ARATaxonomyManager" class="org.inbio.m3s.service.impl.TaxonomyManagerImpl">
+    <property name="taxonDAO" ref="ARATaxonDAO"/>
+    <property name="tlDTOFactory" ref="taxonLiteDTOFactory"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+	<property name="personDAO" ref="ARAPersonDAO"/>
+    <property name="plDTOFactory" ref="personLiteDTOFactory"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="specimenDAO" ref="ARASpecimenDAO"/>
+    <property name="slDTOFactory" ref="specimenLiteDTOFactory"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="olDTOFactory" ref="observationLiteDTOFactory"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>    
+  
+<!-- importFromFile (3 versiones, ¿¿seran mas??)-->  
+  <bean id="ARAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
+  	<property name="realBatchMediaDir" value="/root/m3sTempImages/INBio/"/>
+  	<property name="realWebDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/"/>
+  	<property name="realImportFilesDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+  	<property name="mediaFileManagement" ref="mediaFileManagement"/>
+  	<property name="mediaManager" ref="ARAMediaManager"/>
+  	<property name="taxonomyManager" ref="ARATaxonomyManager"/>
+  	<property name="siteDAO" ref="ARASiteDAO"/>
+  	<property name="siteManager" ref="ARASiteManager"/>
+  	<property name="agentManager" ref="ARAAgentManager"/>
+  	<property name="messageManager" ref="messageManager"/>  
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>  
+
+  
+<!-- importThread (1 versiones, seran 3)-->  
+  <bean id="ARAImportThread" class="org.inbio.m3s.service.util.ImportThread">
+    <property name="importationManager" ref="importationManager"/>
+    <property name="importFromFile" ref="ARAImportFromFile"/>
+  </bean>	
+	
+</beans>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Defines the Spring Configuration for the Service Layer Managers -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+<!-- Agent Manager's (3 versiones)-->
+  <bean id="ATTAAgentManager" class="org.inbio.m3s.service.impl.AgentManagerImpl">
+    <property name="institutionDAO" ref="INBioInstitutionDAO"/>
+    <property name="institutionLiteDTOFactory" ref="institutionLiteDTOFactory"/>
+    <property name="personDAO" ref="INBioPersonDAO"/>
+    <property name="personLiteDTOFactory" ref="personLiteDTOFactory"/>    
+  </bean>
+
+<!-- Media Attribute (3 versiones)-->  
+  <bean id="ATTAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
+    <property name="mediaKeywordDAO" ref="mediaKeywordDAO"/>
+    <property name="mediaUseDAO" ref="mediaUseDAO"/>
+    <property name="mediaUseMediaDAO" ref="mediaUseMediaDAO"/>
+    <property name="mediaTypeDAO" ref="mediaTypeDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="usePolicyDAO" ref="usePolicyDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>
+  <bean id="M3SMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
+    <property name="mediaKeywordDAO" ref="mediaKeywordDAO"/>
+    <property name="mediaUseDAO" ref="mediaUseDAO"/>
+    <property name="mediaUseMediaDAO" ref="mediaUseMediaDAO"/>
+    <property name="mediaTypeDAO" ref="mediaTypeDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="usePolicyDAO" ref="usePolicyDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
+    <property name="agentManager" ref="M3SAgentManager"/>
+    <property name="taxonomyManager" ref="M3STaxonomyManager"/> 
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>
+    
+  <!-- SiteManager (2 version)-->
+  <bean id="ATTASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
+  	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+  	<property name="siteDAO" ref="INBioSiteDAO"/>
+  </bean>
+
+  <!-- statisticsManager (1 version)-->
+  <bean id="statisticsManager" class="org.inbio.m3s.service.impl.StatisticsManagerImpl">
+    <property name="statisticsDAO" ref="statisticsDAO"/>
+  </bean>
+
+<!-- taxonomy Manager (3 versiones)-->
+  <bean id="ATTATaxonomyManager" class="org.inbio.m3s.service.impl.TaxonomyManagerImpl">
+    <property name="taxonDAO" ref="INBioTaxonDAO"/>
+    <property name="tlDTOFactory" ref="taxonLiteDTOFactory"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+	<property name="personDAO" ref="INBioPersonDAO"/>
+    <property name="plDTOFactory" ref="personLiteDTOFactory"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    <property name="specimenDAO" ref="INBioSpecimenDAO"/>
+    <property name="slDTOFactory" ref="specimenLiteDTOFactory"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="olDTOFactory" ref="observationLiteDTOFactory"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>
+  <!-- este es para el museo nacional!!! -->
+  <bean id="M3STaxonomyManager" class="org.inbio.m3s.service.impl.TaxonomyManagerImpl">
+    <property name="taxonDAO" ref="INBioTaxonDAO"/>
+    <property name="tlDTOFactory" ref="taxonLiteDTOFactory"/>
+    <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
+	<property name="personDAO" ref="M3SPersonDAO"/>
+    <property name="plDTOFactory" ref="personLiteDTOFactory"/>
+    <property name="agentManager" ref="M3SAgentManager"/>
+    <property name="specimenDAO" ref="INBioSpecimenDAO"/>
+    <property name="slDTOFactory" ref="specimenLiteDTOFactory"/>
+    <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+    <property name="observationMediaDAO" ref="observationMediaDAO"/>
+    <property name="olDTOFactory" ref="observationLiteDTOFactory"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>  
+
+<!-- importFromFile (2 versiones, ¿¿seran mas??)-->  
+  <bean id="ATTAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
+  	<property name="realBatchMediaDir" value="/root/m3sTempImages/INBio/"/>
+  	<property name="realWebDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/"/>
+  	<property name="realImportFilesDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+  	<property name="mediaFileManagement" ref="mediaFileManagement"/>
+  	<property name="mediaManager" ref="ATTAMediaManager"/>
+  	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+  	<property name="siteDAO" ref="INBioSiteDAO"/>
+  	<property name="siteManager" ref="ATTASiteManager"/>
+  	<property name="agentManager" ref="ATTAAgentManager"/>
+  	<property name="messageManager" ref="messageManager"/>  
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>  
+  <bean id="M3SImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
+  	<property name="realBatchMediaDir" value="/home/jgutierrez/SoftwareTools/m3sINBio/TEMP_IMPORT_IMAGES/"/>
+  	<property name="realWebDir" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/"/>
+  	<property name="realImportFilesDir" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/IMPORT_FILES/"/>  	
+  	<property name="mediaFileManagement" ref="mediaFileManagement"/>
+  	<property name="mediaManager" ref="M3SMediaManager"/>
+  	<property name="taxonomyManager" ref="M3STaxonomyManager"/>
+  	<property name="siteDAO" ref="INBioSiteDAO"/>
+  	<property name="siteManager" ref="ATTASiteManager"/>
+  	<property name="agentManager" ref="M3SAgentManager"/>
+  	<property name="messageManager" ref="messageManager"/>
+    <property name="metadataManager" ref="metadataManager"/>
+  </bean>  
+  
+<!-- importThread (1 versiones, seran 3)-->  
+  <bean id="ATTAImportThread" class="org.inbio.m3s.service.util.ImportThread">
+    <property name="importationManager" ref="importationManager"/>
+    <property name="importFromFile" ref="ATTAImportFromFile"/>
+  </bean>
+  
+	<!-- DTO Factories -->
+	<bean id="institutionLiteDTOFactory" class="org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory"/>
+	<bean id="personLiteDTOFactory" class="org.inbio.m3s.dto.agent.PersonLiteDTOFactory"/>
+	<bean id="importControlFullDTOFactory" class="org.inbio.m3s.dto.importcontrol.ImportControlDTOFullFactory"/>
+	<bean id="importControlLiteDTOFactory" class="org.inbio.m3s.dto.importcontrol.ImportControlDTOLiteFactory"/>
+	<bean id="mediaAttributeValueFullDTOFactory" class="org.inbio.m3s.dto.mediaattribute.MediaAttributeValueFullDTOFactory"/>
+	<bean id="specimenLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.SpecimenLiteDTOFactory"/>
+	<bean id="taxonLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.TaxonLiteDTOFactory"/>
+	<bean id="observationLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.ObservationLiteDTOFactory"/>
+	<bean id="projectDTOFactory" class="org.inbio.m3s.dto.message.ProjectDTOFactory"/>
+		
+	
+</beans>

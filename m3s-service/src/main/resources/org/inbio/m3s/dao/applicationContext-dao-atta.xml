@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- DAO Layer for Service Layer -->	
+	
+	<!-- DB Connection settings - Hibernate SessionFactory -->
+  	<bean id="attaBaseDAORO" abstract="true">
+		<property name="sessionFactory" ref="attaSessionFactory"/>
+  	</bean>  	
+	<bean id="attaSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- use the shared resource data source definition -->
+		<property name="dataSource" ref="attaDataSource"/>
+		<property name="configLocation" value="classpath:ORACLE[atta]-hibernate.cfg.xml"/>
+	</bean>
+	<bean id="attaDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@10.0.0.38:1521:atta"/>			
+		<property name="username" value="m3s"/>
+		<property name="password" value="m3sinbio"/>
+		<property name="initialSize" value="1"/>
+		<property name="maxActive" value="25"/>
+		<property name="maxIdle" value="10"/>
+		<property name="maxWait" value="10000"/>
+		<property name="poolPreparedStatements" value="true"/>
+	</bean>	
+
+  <!-- Atta oracle DAO Implementations -->
+  <bean id="INBioInstitutionDAO" class="org.inbio.m3s.dao.atta.impl.INBioInstitutionDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioPersonDAO" class="org.inbio.m3s.dao.atta.impl.INBioPersonDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioSiteDAO" class="org.inbio.m3s.dao.atta.impl.INBioSiteDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioSpecimenDAO" class="org.inbio.m3s.dao.atta.impl.INBioSpecimenDAOImpl" parent="attaBaseDAORO"/>
+  <bean id="INBioTaxonDAO" class="org.inbio.m3s.dao.atta.impl.INBioTaxonDAOImpl" parent="attaBaseDAORO">
+    <property name="specimenDAO" ref="INBioSpecimenDAO"/>
+    <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
+  </bean>  
+  
+</beans>

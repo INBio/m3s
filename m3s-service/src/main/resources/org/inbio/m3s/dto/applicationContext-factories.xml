@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Defines the Spring Configuration for the Service Layer Managers -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- DTO Factories -->
+	<bean id="institutionLiteDTOFactory" class="org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory"/>
+	<bean id="personLiteDTOFactory" class="org.inbio.m3s.dto.agent.PersonLiteDTOFactory"/>
+	<bean id="importControlFullDTOFactory" class="org.inbio.m3s.dto.importcontrol.ImportControlDTOFullFactory"/>
+	<bean id="importControlLiteDTOFactory" class="org.inbio.m3s.dto.importcontrol.ImportControlDTOLiteFactory"/>
+	<bean id="mediaAttributeValueFullDTOFactory" class="org.inbio.m3s.dto.mediaattribute.MediaAttributeValueFullDTOFactory"/>
+	<bean id="specimenLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.SpecimenLiteDTOFactory"/>
+	<bean id="taxonLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.TaxonLiteDTOFactory"/>
+	<bean id="observationLiteDTOFactory" class="org.inbio.m3s.dto.taxonomy.ObservationLiteDTOFactory"/>
+	<bean id="projectDTOFactory" class="org.inbio.m3s.dto.message.ProjectDTOFactory"/>
+		
+	
+</beans>

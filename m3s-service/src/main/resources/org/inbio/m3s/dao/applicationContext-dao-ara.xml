@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+  <!-- DAO Layer for Service Layer -->	
+  
+	<!-- DB Connection settings - Hibernate SessionFactory -->
+  	<bean id="araBaseDAORO" abstract="true">
+		<property name="sessionFactory" ref="araSessionFactory"/>
+  	</bean>  
+  	<bean id="araSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- use the shared resource data source definition -->
+		<property name="dataSource" ref="ARACoffeaDataSource"/>
+		<property name="configLocation" value="classpath:ARA[localhost]-hibernate.cfg.xml"/>
+	</bean>	
+	<bean id="ARACoffeaDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver"/>
+		<property name="url" value="jdbc:postgresql://localhost:5432/ara_leon"/>			
+			
+		<property name="username" value="postgres"/>
+		<property name="password" value="postgresadmin"/>
+		<property name="initialSize" value="1"/>
+		<property name="maxActive" value="25"/>
+		<property name="maxIdle" value="10"/>
+		<property name="maxWait" value="10000"/>
+		<property name="poolPreparedStatements" value="true"/>
+	</bean>	
+
+	<!-- Ara DAO Implementations -->  
+  <bean id="ARAInstitutionDAO" class="org.inbio.m3s.dao.ara.impl.ARAInstitutionDAOImpl" parent="araBaseDAORO"/>
+  <bean id="ARAPersonDAO" class="org.inbio.m3s.dao.ara.impl.ARAPersonDAOImpl" parent="araBaseDAORO"/>
+  <bean id="ARASiteDAO" class="org.inbio.m3s.dao.ara.impl.ARASiteDAOImpl" parent="araBaseDAORO"/>
+  <bean id="ARASpecimenDAO" class="org.inbio.m3s.dao.ara.impl.ARASpecimenDAOImpl" parent="araBaseDAORO"/>  
+  <bean id="ARATaxonDAO" class="org.inbio.m3s.dao.ara.impl.ARATaxonDAOImpl" parent="araBaseDAORO"/>
+    
+</beans>
