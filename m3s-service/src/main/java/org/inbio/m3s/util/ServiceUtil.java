@@ -15,7 +15,8 @@ public class ServiceUtil {
 	private static String[] locations = {
 		"classpath*:org/inbio/m3s/dao/applicationContext-dao.xml",
 		"classpath*:org/inbio/m3s/dao/applicationContext-factories.xml",
-		"classpath*:org/inbio/m3s/service/applicationContext-service.xml"
+		"classpath*:org/inbio/m3s/service/applicationContext-service.xml",
+		"classpath*:org/inbio/m3s/util/applicationContext-util.xml"
 	};
 	
 	public static ApplicationContext appContext = new ClassPathXmlApplicationContext(locations);

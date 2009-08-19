@@ -38,10 +38,8 @@ public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 					Query query = session.createQuery(
 							"select pp.person"
 							+ " from "+PERSON_PROFILE_CLASS+" as pp"
-							+ " where pp.profile.profileId ="
-							+ IMAGES_PROCESOR_PROFILE_ID
-							+ " or pp.profile.profileId ="
-							+ IMAGES_AUTHOR_PROFILE_ID
+							+ " where pp.profile.profileId =" + IMAGES_PROCESOR_PROFILE_ID
+							+ " or pp.profile.profileId =" + IMAGES_AUTHOR_PROFILE_ID
 							+ " and pp.person.firstName is not null "
 							+ " and pp.person.lastName is not null "
 							+ " order by pp.person.firstName asc, pp.person.lastName asc");

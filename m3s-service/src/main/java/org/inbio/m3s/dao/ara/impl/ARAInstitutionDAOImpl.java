@@ -34,8 +34,8 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 				Query query = session.createQuery(
 						"select i"
 						+ " from ARAInstitution as i "
-						+ " where i.name = '"+ institutionName +"'");
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where i.name = :institutionName");
+				query.setParameter("institutionName", institutionName);
 				query.setCacheable(true);
 				return query.uniqueResult();
 			}

@@ -32,7 +32,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 	 * @see org.inbio.m3s.dao.multimedia.MetadataExtractorDAO#init(java.lang.String)
 	 */
 	public void init(String fileAddress) throws IllegalArgumentException {
-		logger.info("using the fileAddress:"+fileAddress);
+		logger.info("using the fileAddress: '"+fileAddress+"'");
 		this.fileAddress =fileAddress;
     
 		try {
@@ -42,7 +42,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
     
     } catch (JpegProcessingException e) {
 			e.printStackTrace();
-			throw new IllegalArgumentException("The fileAddress["+fileAddress+"] doesn't exist. ",e.getCause());
+			throw new IllegalArgumentException("The fileAddress ["+fileAddress+"] doesn't exist. ",e.getCause());
 		}
 
 	}

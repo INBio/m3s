@@ -41,6 +41,4 @@ public interface AgentManager {
 	public List<PersonLiteDTO> getAllGatheringResponsibleLite() throws IllegalArgumentException;
 	
 
-
-
 }

@@ -24,10 +24,8 @@ public class ImageMagickAPI {
 	 * @param originalFileName
 	 * @param destinyFileName
 	 */
-	public static void createThumb(String originalFileName,
-			String destinyFileName) {
-		logger.debug("on createThumb[originalFileName]: "
-				+ originalFileName);
+	public static void createThumb(String originalFileName, String destinyFileName) {
+		logger.debug("on createThumb[originalFileName]: "+ originalFileName);
 
 		int scaledWidth = 0;
 		int scaledHeight = 0;

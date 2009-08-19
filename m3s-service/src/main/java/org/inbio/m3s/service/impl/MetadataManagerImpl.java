@@ -115,7 +115,7 @@ public class MetadataManagerImpl implements MetadataManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.MetadataManager#getTechMetadataFromFile(java.lang.String, java.lang.String)
 	 */
-	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) throws IllegalArgumentException{
+	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) {
 		
 		logger.debug("getTechMetadataFromFile with mediaTypeKey [" + mediaTypeKey + "] for:"+fileAddress);
 		
@@ -128,26 +128,33 @@ public class MetadataManagerImpl implements MetadataManager {
 		String value;
 		String id;
 		
-		for(MediaAttributeType mat : mediaAttributeTypeDAO.findAllByMediaType(mediaTypeKey)){
+		try{
 			
-			metadataStandardEntity = MetadataStandardEntity.getById(mat.getMetadataStandard().getMetadataStandardId().intValue());
-			logger.debug("Metadata Standard Implementation Class: "+ metadataStandardEntity.getImplementingClass());
-			metadataExtractorDAO = metadataStandardEntity.getMetadataExtractorDAOImpl();
-			metadataExtractorDAO.init(fileAddress);
-			value = metadataExtractorDAO.getAttributeValue(mat.getStandardAttributeId());
+			for(MediaAttributeType mat : mediaAttributeTypeDAO.findAllByMediaType(mediaTypeKey)){
+				
+				metadataStandardEntity = MetadataStandardEntity.getById(mat.getMetadataStandard().getMetadataStandardId().intValue());
+				logger.debug("Metadata Standard Implementation Class: "+ metadataStandardEntity.getImplementingClass());
+				metadataExtractorDAO = metadataStandardEntity.getMetadataExtractorDAOImpl();
+				metadataExtractorDAO.init(fileAddress);
+				value = metadataExtractorDAO.getAttributeValue(mat.getStandardAttributeId());
+				
+				ma = (MediaAttribute) mediaAttributeDAO.findById(MediaAttribute.class, mat.getMediaAttribute().getMediaAttributeId());			
+				id = String.valueOf(ma.getMediaAttributeId()); 
+				
+				tt = getTextTranslationDAO().finByIdAndLanguage(ma.getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+				name = tt.getName(); 
+	
+				tmiDTO = new TechnicalMetadataItemDTO(id,name,value);
+				tmDTO.addItem(tmiDTO);
+			}
 			
-			ma = (MediaAttribute) mediaAttributeDAO.findById(MediaAttribute.class, mat.getMediaAttribute().getMediaAttributeId());			
-			id = String.valueOf(ma.getMediaAttributeId()); 
+			logger.info(tmDTO.toString());
+			return tmDTO;
 			
-			tt = getTextTranslationDAO().finByIdAndLanguage(ma.getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
-			name = tt.getName(); 
-
-			tmiDTO = new TechnicalMetadataItemDTO(id,name,value);
-			tmDTO.addItem(tmiDTO);
+		} catch(Exception e){
+			return null;
+			
 		}
-		
-		logger.info(tmDTO.toString());
-		return tmDTO;
 	}
 	
 

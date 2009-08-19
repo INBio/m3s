@@ -19,24 +19,25 @@ import org.apache.log4j.Logger;
 public class MediaFileManagement {
 	
 	private static Logger logger = Logger.getLogger(MediaFileManagement.class);
-	
-//FIXME: esto no deberia estar aca
-	public final static Integer DSC_MEDIA_TYPE_ID = new Integer(1);
-//FIXME: esto no deberia estar aca	
-	public final static Integer MOV_VIDEO_MEDIA_TYPE_ID = new Integer(4);
-	
-	private final static String M3S_BASE_DIR = "/home/jgutierrez/SoftwareTools/m3sINBio/";
-	public static String IMAGES_ORIGINAL_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/ORIGINAL";
-	public static String FILE_SEPARATOR = "/";
-	public static String MEDIA_REAL_BASE_ADDRESS = M3S_BASE_DIR + "MEDIA/";
-	public static String THUMB_IMAGES = "THUMB";
-	public static String BIG_IMAGES = "BIG";
+
+	/* Inyected values*/
+	private String fileSeparator = "/";
+	private String thumbFolder = "THUMB";
+	private String bigFolder = "BIG";
+	private String originalFolder = "ORIGINAL";
+	private String m3sMediaBaseDir = "/mnt/m3sImages/INBio/MEDIA"; 
+
 	
 	// Media Size
-	public final static int ORIGINAL = 0;
-	public  final static int THUMB = 1;
-	public static int BIG = 2;
+	public int ORIGINAL = 0;
+	public int THUMB = 1;
+	public int BIG = 2;
+//FIXME: esto no deberia estar aca
+	public Integer DSC_MEDIA_TYPE_ID = new Integer(1);
+//FIXME: esto no deberia estar aca	
+	public Integer MOV_VIDEO_MEDIA_TYPE_ID = new Integer(4);
 
+	
 	/**
 	 * Takes the temporal media and moves it to the ORIGINAL MEDIA folder.,
 	 * removes the tempFileName and Creates the THUMB and BIG media. Everything on
@@ -51,7 +52,7 @@ public class MediaFileManagement {
 	 *          Data Base media Identifier
 	 * @throws IllegalArgumentExcption
 	 */
-	public static void organizeAndCleanFiles(String tempFileName, Integer mediaId, Integer mediaTypeId) throws IllegalArgumentException {
+	public void organizeAndCleanFiles(String tempFileName, Integer mediaId, Integer mediaTypeId) throws IllegalArgumentException {
 		logger.debug("organizeAndCleanFiles");
 		logger.debug("params: [tempFileName=" + tempFileName + "], " + "[mediaId="
 				+ mediaId + "] " + "[mediaTypeId=" + mediaTypeId + "].");
@@ -63,10 +64,10 @@ public class MediaFileManagement {
 		String todaysDate = (dateFormat.format(new Date())).toString();
 
 		// address of the high quality image
-		String orignalMediaFilePath = IMAGES_ORIGINAL_REAL_BASE_ADDRESS
-				+ FILE_SEPARATOR + todaysDate + FILE_SEPARATOR
+		String orignalMediaFilePath = getM3sMediaBaseDir() + getFileSeparator() + getOriginalFolder()
+				+ getFileSeparator() + todaysDate + getFileSeparator()
 				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, MediaFileManagement.ORIGINAL);
+				+ getFileExtension(mediaTypeId, ORIGINAL);
 
 		String thumbMediaFilePath;
 		String bigMediaFilePath;
@@ -83,14 +84,14 @@ public class MediaFileManagement {
 			FileUtils.moveFile(file, newFile);
 
 			// the path of this media depends on the visibility -> ya no!
-			thumbMediaFilePath = MEDIA_REAL_BASE_ADDRESS
-					+ FILE_SEPARATOR + THUMB_IMAGES;
-			bigMediaFilePath = MEDIA_REAL_BASE_ADDRESS
-					+ FILE_SEPARATOR + BIG_IMAGES;
+			thumbMediaFilePath = getM3sMediaBaseDir()
+					+ getFileSeparator() + getThumbFolder();
+			bigMediaFilePath = getM3sMediaBaseDir()
+					+ getFileSeparator() + getBigFolder();
 
-			thumbMediaFilePath = thumbMediaFilePath + FILE_SEPARATOR
+			thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
 					+ todaysDate;
-			bigMediaFilePath = bigMediaFilePath + FILE_SEPARATOR
+			bigMediaFilePath = bigMediaFilePath + getFileSeparator()
 					+ todaysDate;
 			// creates the folder with the date to keep media organized(in case its
 			// not created before)
@@ -101,17 +102,18 @@ public class MediaFileManagement {
 		} catch (Exception e) {
 			logger.error("algo salio MAL moviendo los archivos.");
 			logger.error(e.getMessage());
-			throw new IllegalArgumentException(
-					"Error Grave: Problemas moviendo los archivos.");
+			throw new IllegalArgumentException("Error Grave: Problemas moviendo los archivos.");
 		}
 		logger.debug("Fin prueba de mover archivo con apache commons-io");
 
-		thumbMediaFilePath = thumbMediaFilePath + FILE_SEPARATOR
+		thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
 				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, MediaFileManagement.THUMB);
-		bigMediaFilePath = bigMediaFilePath + FILE_SEPARATOR
+				+ getFileExtension(mediaTypeId, THUMB);
+		
+		bigMediaFilePath = bigMediaFilePath + getFileSeparator()
 				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, MediaFileManagement.BIG);
+				+ getFileExtension(mediaTypeId, BIG);
+		
 		// create the thumb and big media files
 		createLowResFiles(mediaTypeId, orignalMediaFilePath, thumbMediaFilePath,
 				bigMediaFilePath);
@@ -150,7 +152,7 @@ public class MediaFileManagement {
 	 *          with the full path and the file name. ie: /media/thumb/7.flv
 	 * @throws IllegalArgumentException
 	 */
-	private static void createLowResFiles(Integer mediaTypeId,
+	private void createLowResFiles(Integer mediaTypeId,
 			String originalMediaFilePath, String thumbMediaFilePath,
 			String bigMediaFilePath) throws IllegalArgumentException {
 
@@ -182,7 +184,7 @@ public class MediaFileManagement {
 	 * @return la extension apropiada para el multimedio
 	 * @throws IllegalArgumentException
 	 */
-	private static String getFileExtension(Integer mediaTypeId, int mediaSize)
+	private String getFileExtension(Integer mediaTypeId, int mediaSize)
 			throws IllegalArgumentException {
 
 		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
@@ -190,9 +192,9 @@ public class MediaFileManagement {
 
 		} else if (mediaTypeId.equals(MOV_VIDEO_MEDIA_TYPE_ID)) {
 
-			if (mediaSize == MediaFileManagement.ORIGINAL)
+			if (mediaSize == ORIGINAL)
 				return ".mov";
-			else if (mediaSize == MediaFileManagement.THUMB)
+			else if (mediaSize == THUMB)
 				return ".jpg";
 			else
 				// if(mediaSize == ImportFromFile.BIG)
@@ -203,6 +205,76 @@ public class MediaFileManagement {
 			throw new IllegalArgumentException(
 					"No se puede reconocer el mediaTypeId recibido como parametro");
 		}
+	}
+
+	/**
+	 * @param fileSeparator the fileSeparator to set
+	 */
+	public void setFileSeparator(String fileSeparator) {
+		this.fileSeparator = fileSeparator;
+	}
+
+	/**
+	 * @return the fileSeparator
+	 */
+	public String getFileSeparator() {
+		return fileSeparator;
+	}
+
+	/**
+	 * @param thumbFolder the thumbFolder to set
+	 */
+	public void setThumbFolder(String thumbFolder) {
+		this.thumbFolder = thumbFolder;
+	}
+
+	/**
+	 * @return the thumbFolder
+	 */
+	public String getThumbFolder() {
+		return thumbFolder;
+	}
+
+	/**
+	 * @param bigFolder the bigFolder to set
+	 */
+	public void setBigFolder(String bigFolder) {
+		this.bigFolder = bigFolder;
+	}
+
+	/**
+	 * @return the bigFolder
+	 */
+	public String getBigFolder() {
+		return bigFolder;
+	}
+
+	/**
+	 * @param originalFolder the originalFolder to set
+	 */
+	public void setOriginalFolder(String originalFolder) {
+		this.originalFolder = originalFolder;
+	}
+
+	/**
+	 * @return the originalFolder
+	 */
+	public String getOriginalFolder() {
+		return originalFolder;
+	}
+
+	/**
+	 * @param m3sMediaBaseDir the m3sMediaBaseDir to set
+	 */
+	public void setM3sMediaBaseDir(String m3sMediaBaseDir) {
+		this.m3sMediaBaseDir = m3sMediaBaseDir;
+	}
+
+	/**
+	 * @return the m3sMediaBaseDir
+	 */
+	public String getM3sMediaBaseDir() {
+		return m3sMediaBaseDir;
 	}
 
 }

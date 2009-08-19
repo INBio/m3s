@@ -61,6 +61,9 @@ public class ImportFromFile {
 	MessageManager messageManager;
 	MetadataManager metadataManager;
 	
+	//util clases
+	MediaFileManagement mediaFileManagement;
+	
 	//constants
 	private String realBatchMediaDir;
 	private String realWebDir;
@@ -88,7 +91,7 @@ public class ImportFromFile {
 		UsesAndCopyrightsDTO uacm;
 		TechnicalMetadataDTO tmDTO;
 		ImportFileParser fileParser = getImportFileParser(importFileName, fileType);
-		String mediaFileName;
+		String fileNameColumnValue;
 		Integer mediaId = null;
 
 		logger.debug("Total minimo de elementos a importar:" + fileParser.getTotalEntries());
@@ -96,9 +99,8 @@ public class ImportFromFile {
 		for (int i = fileParser.getFistEntryIdex(); i <= fileParser.getTotalEntries(); i++) {
 			try {
 				logger.debug("Importando la fila#:" + i);
-				mediaFileName = fileParser.read(i, ImportFileParser.FILE_NAME_DATA);
+				fileNameColumnValue = fileParser.read(i, ImportFileParser.FILE_NAME_DATA);
 				String resultStatus = "";
-				List<String> fileNames = new ArrayList<String>();
 
 				
 				gm = getGM(fileParser, i);
@@ -107,52 +109,26 @@ public class ImportFromFile {
 				uacm = getUAC(fileParser, i);
 				logger.debug("Ya se obtuvieron los metadatos De Autoría y Derechos de Uso.");
 
-				// if true means uses wildcard. This means the general metadata and the
-				// uses and copyrigth
-				// values will be shared for various registries. The image will change.
-				if (mediaFileName.lastIndexOf("*") != -1) {
-					logger.debug("Use wildcard.");
-					String folderName = realBatchMediaDir;
-					if (mediaFileName.lastIndexOf(File.separator) != -1) {
-						folderName = folderName.concat(mediaFileName);
-						folderName = folderName.substring(0, folderName.lastIndexOf(File.separator) + 1);
-					}
-					logger.debug("Folder: '" + folderName + "'.");
-					String pattern = mediaFileName.substring(mediaFileName.lastIndexOf("*") + 1);
-					logger.debug("pattern: '" + pattern + "'.");
-
-					File folder = new File(folderName);
-					String[] listOfFiles = folder.list();
-					logger.debug("List of files:"+listOfFiles.length);
-
-					for (int j = 0; j < listOfFiles.length; j++) {
-						if (listOfFiles[j].endsWith(pattern)) {
-							logger.debug("File " + folderName + listOfFiles[j]);
-							fileNames.add(folderName + listOfFiles[j]);
-						}
-					}
-					logger.debug("Total de coincidencias: " + fileNames.size());
-
-				} else
-					fileNames.add(realBatchMediaDir + mediaFileName);
-				logger.debug("Importando " + fileNames.size() + " elementos correspondientes a la fila");
+				logger.debug("Importando " + getFileNamesToImport(fileNameColumnValue).size() + " elementos correspondientes a la fila");
 				// for init
-				for (String fileName : fileNames) {
+				for (String fileName : getFileNamesToImport(fileNameColumnValue)) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '" + fileName + "'");
 					tmDTO = metadataManager.getTechMetadataFromFile(gm.getMediaTypeKey(), fileName);
+					if(tmDTO==null)
+						tmDTO = metadataManager.getTechMetadataByMediaType(gm.getMediaTypeKey());
 
 					if (MediaFileManagement.isFileReadable(fileName))
 						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
-						
-					else
-						throw new IllegalArgumentException("file '" + fileName + "' is not accesible.");
+					else{
+						fileParser.writeResult(i, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede abrir el archivo: '" + fileName + "'.");
+						throw new IllegalArgumentException("file '" + fileName + "' is not readable.");
+					}
 					
 					
 					// FIXME: only for jpg's... not really a bug! ;).
 					// organizeAndCleanFiles(mediaFileName, mediaId.toString() + ".jpg",mediaId);
 					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",mediaId);
-
-					MediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()));
+					mediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()));
 
 					resultStatus = resultStatus.concat("Medio guardado con exito, ID #"	+ mediaId.toString() + ".");
 				}
@@ -171,6 +147,53 @@ public class ImportFromFile {
 
 		fileParser.closeFile();
 		logger.info("Importacion concluida.");
+	}
+	
+	
+	/**
+	 * Get the names of the files to be imported.
+	 * 
+	 * If the row of the importation file uses a wild card this method will return a list
+	 * with many filenames, but if the row only contains a single file that will be returned.
+   *
+	 * @param fileNameColumnValue
+	 * @return
+	 */
+	private List<String> getFileNamesToImport(String fileNameColumnValue){
+		
+		List<String> fileNames = new ArrayList<String>();
+		
+		// if true means uses wildcard. This means the general metadata and the
+		// uses and copyrigth values will be shared for various registries. The image will change.
+		if (fileNameColumnValue.lastIndexOf("*") != -1) {
+			logger.debug("Use wildcard.");
+			String folderName = realBatchMediaDir;
+			if (fileNameColumnValue.lastIndexOf(File.separator) != -1) {
+				folderName = folderName.concat(fileNameColumnValue);
+				folderName = folderName.substring(0, folderName.lastIndexOf(File.separator) + 1);
+			}
+			logger.debug("Folder: '" + folderName + "'.");
+			String pattern = fileNameColumnValue.substring(fileNameColumnValue.lastIndexOf("*") + 1);
+			logger.debug("pattern: '" + pattern + "'.");
+
+			File folder = new File(folderName);
+			String[] listOfFiles = folder.list();
+			logger.debug("List of files:"+listOfFiles.length);
+
+			for (int j = 0; j < listOfFiles.length; j++) {
+				if (listOfFiles[j].endsWith(pattern)) {
+					logger.debug("File " + folderName + listOfFiles[j]);
+					fileNames.add(folderName + listOfFiles[j]);
+				}
+			}
+			logger.debug("Total de coincidencias: " + fileNames.size());
+
+		} else {
+			fileNames.add(realBatchMediaDir + fileNameColumnValue);
+		}
+		
+		
+		return fileNames;
 	}
 
 	/**
@@ -783,6 +806,23 @@ public class ImportFromFile {
 	public void setRealImportFilesDir(String realImportFilesDir) {
 		this.realImportFilesDir = realImportFilesDir;
 	}
+
+
+	/**
+	 * @return the mediaFileManagement
+	 */
+	public MediaFileManagement getMediaFileManagement() {
+		return mediaFileManagement;
+	}
+
+
+	/**
+	 * @param mediaFileManagement the mediaFileManagement to set
+	 */
+	public void setMediaFileManagement(MediaFileManagement mediaFileManagement) {
+		this.mediaFileManagement = mediaFileManagement;
+	}
+
 
 
 

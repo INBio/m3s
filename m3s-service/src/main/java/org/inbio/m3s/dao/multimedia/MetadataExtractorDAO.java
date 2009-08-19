@@ -43,7 +43,6 @@ public interface MetadataExtractorDAO {
 	 *           if the method is called without initializing the implementing
 	 *           class.
 	 */
-	public String getAttributeValue(int standardAttributeId)
-			throws IllegalArgumentException, IllegalStateException;
+	public String getAttributeValue(int standardAttributeId) throws IllegalArgumentException, IllegalStateException;
 
 }
