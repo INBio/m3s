@@ -3,9 +3,10 @@
 <!--  Configuration of the controller beans -->
 <beans>
 
+  <!-- view reolver -->
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
   	<property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesJstlView"/>
-  </bean>
+  </bean>  
 
   <!-- home page -->
   <bean name="/home.html" class="org.inbio.m3s.web.controller.HomePageController">
@@ -35,4 +36,14 @@
       </list>
     </property>
   </bean>
+  
+  <!--Resolves the theme-->
+  <bean id="themeResolver" class="org.springframework.web.servlet.theme.CookieThemeResolver">
+    <property name="defaultThemeName" value="inbio"/>
+    <property name="cookieName" value="m3sTheme"/>
+    <property name="cookieMaxAge" value ="2147483647"/>
+  </bean>
+  <bean id="themeSource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+    <property name="basenamePrefix" value="theme-"/>
+  </bean>  
 </beans>
