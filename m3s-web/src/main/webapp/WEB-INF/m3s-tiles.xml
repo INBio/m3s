@@ -1,0 +1,19 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN" "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+<!--  Configuration of the controller beans -->
+
+<tiles-definitions>
+  
+  <definition name="mainTemplate" page="/layouts/m3sMainTemplate.jsp">
+    <put name="title" value="M3S"/> <!-- will be overwritten -->
+    <put name="header" value="/common/header.jsp"/>
+    <put name="content" value="/WEB-INF/jsp/defaultContentPage.jsp"/> <!-- will be overwritten -->
+    <put name="footer" value="/common/footer.jsp"></put>
+  </definition>
+  
+  <definition name="home" extends="mainTemplate">
+    <put name="title" value="Welcome to M3S"/>
+    <put name="content" value="/WEB-INF/jsp/home.jsp"/>
+  </definition>
+
+</tiles-definitions>
