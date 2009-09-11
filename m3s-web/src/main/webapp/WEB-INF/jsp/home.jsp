@@ -36,9 +36,16 @@
 		        <ul>
 		          <c:forEach items="${medias}" var="media">
 		            <li>
-		              <c:out value="${media.mediaId}"/>
-		              <c:out value="${media.authorPersonId}"/>
-		              <c:out value="${media.title}"/>
+		              <div class="imagesRightPanel">
+		                <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=big&id=<c:out value="${media.mediaId}"/>">
+		                  <div class="thumb-image">
+		                   <img src="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=thumb&id=<c:out value="${media.mediaId}"/>">
+		                  </div>
+						  <div class="gwt-Label imaName"><c:out value="${media.authorPersonId}"/></div>
+						  <div class="imaInfo"><c:out value="${media.title}"/></div>
+						  <div class="imaInfo"><c:out value="${media.title}"/></div>
+						</a>
+				      </div>
 		            </li>
 		          </c:forEach>
 		        </ul>
