@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>m3s</groupId>
-  <artifactId>m3s-web</artifactId>
-  <packaging>war</packaging>
-  <version>2.1-SNAPSHOT</version>
-  <name>m3s-web Maven Webapp</name>
-  <url>http://larus.inbio.ac.cr/m3sINBio</url>
+    <groupId>m3s</groupId>
+    <artifactId>m3s-web</artifactId>
+    <packaging>war</packaging>
+    <version>2.1-SNAPSHOT</version>
+    <name>m3s-web Maven Webapp</name>
+    <url>http://lucina.inbio.ac.cr/m3sINBio</url>
   <dependencies>
     <dependency>
       <groupId>m3s</groupId>
@@ -117,8 +117,6 @@
 	  </dependency>	      
 
   </dependencies>
-
-
   <build>
     <finalName>m3sINBio</finalName>
       <plugins>
