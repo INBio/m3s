@@ -18,7 +18,7 @@
 	      <td width="51%" height="65" align="left" valign="top">
 		      <div class="contenido" id="layer1">
 		        <p>
-		          <a href="#">Ayuda*</a><br>
+		          <a href="http://larus.inbio.ac.cr:8090/multimedios/doku.php"><spring:message code="home.help"/></a><br>
 		          <a href="#">Pol&iacute;ticas de uso*</a><br>
 		          <a href="#">Protocolo de captura de informaci&oacute;n*</a>
 		        </p>
