@@ -19,8 +19,7 @@
 		      <div class="contenido" id="layer1">
 		        <p>
 		          <a href="http://larus.inbio.ac.cr:8090/multimedios/doku.php"><spring:message code="home.help"/></a><br>
-		          <a href="#">Pol&iacute;ticas de uso*</a><br>
-		          <a href="#">Protocolo de captura de informaci&oacute;n*</a>
+		          <a href="#"><spring:message code="home.use.policies"/></a><br>
 		        </p>
 		        <div id="leftPanelContentDiv"></div>
 		      </div>
@@ -32,23 +31,19 @@
 		        <p class="Home-RightPanelTitle">
 		          <strong><spring:message code="home.preview.subtitle"/></strong>
 		        </p>
-		        <div id="rightPanelTitleDiv"></div>
-		        <ul>
+		        <div id="thumb">
 		          <c:forEach items="${medias}" var="media">
-		            <li>
-		              <div class="imagesRightPanel">
-		                <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=big&id=<c:out value="${media.mediaId}"/>">
-		                  <div class="thumb-image">
-		                   <img src="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=thumb&id=<c:out value="${media.mediaId}"/>">
-		                  </div>
-						  <div class="gwt-Label imaName"><c:out value="${media.authorPersonId}"/></div>
-						  <div class="imaInfo"><c:out value="${media.title}"/></div>
-						  <div class="imaInfo"><c:out value="${media.title}"/></div>
-						</a>
-				      </div>
-		            </li>
+		            <div class="imagesRightPanel">
+		              <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=big&id=<c:out value="${media.mediaId}"/>">
+		                <div class="thumb-image" style="background-image: url(<c:out value="${pageContext.request.contextPath}"/>/getImage?size=thumb&id=<c:out value="${media.mediaId}"/>);">
+		                </div>
+				        <div class="gwt-Label imaName"><c:out value="${media.authorPersonId}"/></div>
+				        <div class="imaInfo"><c:out value="${media.title}"/></div>
+						<div class="imaInfo"><c:out value="${media.title}"/></div>
+				      </a>
+				    </div>
 		          </c:forEach>
-		        </ul>
+		        </div>
 		      </div>
 		    </td>
 		      
