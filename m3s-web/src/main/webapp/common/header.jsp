@@ -14,11 +14,6 @@
     <td align="right" valign="bottom" >
       <table border="0" cellspacing="0" cellpadding="0">
         <tr align="center">
-          <td>
-            <a href="#" class="LoginBar-NormalText">
-              <strong>Personalizar</strong>
-            </a>
-          </td>
           <td bgcolor="#C3D9FF">
             <a href="#" class="LoginBar-NormalText">
               <strong>Iniciar Sesion</strong>
