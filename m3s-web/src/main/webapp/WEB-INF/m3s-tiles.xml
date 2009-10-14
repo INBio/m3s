@@ -7,6 +7,8 @@
   <definition name="mainTemplate" page="/layouts/m3sMainTemplate.jsp">
     <put name="title" value="M3S"/> <!-- will be overwritten -->
     <put name="header" value="/common/header.jsp"/>
+    <put name="menu" value="/common/menu.jsp"/>
+    <put name="userInfo" value="/common/userInfo.jsp"/>
     <put name="content" value="/WEB-INF/jsp/defaultContentPage.jsp"/> <!-- will be overwritten -->
     <put name="footer" value="/common/footer.jsp"></put>
   </definition>
@@ -15,5 +17,19 @@
     <put name="title" value="Welcome to M3S"/>	    
     <put name="content" value="/WEB-INF/jsp/home.jsp"/>
   </definition>
+  
+  <!--  insert image -->
+  <definition name="insertStep1" extends="mainTemplate">
+    <put name="title" value="Uploading Images"/>	    
+    <put name="content" value="/WEB-INF/jsp/insert/step1.jsp"/>
+  </definition>
+  <definition name="insertStep2" extends="mainTemplate">
+    <put name="title" value="Inserting Metadata"/>	    
+    <put name="content" value="/WEB-INF/jsp/insert/step2.jsp"/>
+  </definition>
+  <definition name="insertStep3" extends="mainTemplate">
+    <put name="title" value="Process Done"/>	    
+    <put name="content" value="/WEB-INF/jsp/insert/step3.jsp"/>
+  </definition>  
 
 </tiles-definitions>

@@ -4,7 +4,6 @@
   <tr>
     <td width="85%" align="left" valign="top" class="MainPanel">
       
-      <!-- Titulo de la Pagina-->
       <table width="100%"  border="0" cellpadding="10" cellspacing="0">
         <tr>
           <td height="28" colspan="2" class="MainPanel-Title">
@@ -12,9 +11,7 @@
           </td>
         </tr>
 
-	    <!-- Zona de los paneles centrales -->
 	    <tr>
-	      <!-- Panel Izquierdo -->
 	      <td width="51%" height="65" align="left" valign="top">
 		      <div class="contenido" id="layer1">
 		        <p>
@@ -25,7 +22,6 @@
 		      </div>
 		    </td>
 		      
-		    <!-- Panel derecho -->
 		    <td width="49%" align="left" valign="top">
 		      <div class="contenido" id="layer1">
 		        <p class="Home-RightPanelTitle">
@@ -43,11 +39,12 @@
 				      </a>
 				    </div>
 		          </c:forEach>
+		          <div class="clear">
 		        </div>
 		      </div>
 		    </td>
 		      
-		  </tr> <!-- FIN de Zona de los paneles centrales -->
+		  </tr>
 </table>
 
     </td>

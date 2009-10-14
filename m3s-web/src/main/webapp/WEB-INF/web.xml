@@ -19,10 +19,46 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>	
+      <!-- ARA-->
+      classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml,	  
+      classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml,
+      <!-- ATTA
+	  classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml, 
+	  classpath*:org/inbio/m3s/service/applicationContext-service-atta.xml,
+	   -->
       classpath*:org/inbio/m3s/dao/applicationContext-dao.xml,
-      classpath*:org/inbio/m3s/dao/applicationContext-factories.xml
+      classpath*:org/inbio/m3s/dao/applicationContext-factories.xml,
+      classpath*:org/inbio/m3s/dto/applicationContext-factories.xml,
+      classpath*:org/inbio/m3s/service/applicationContext-service.xml,
+	  classpath*:org/inbio/m3s/util/applicationContext-util.xml
+	  
   	</param-value>
   </context-param>
+
+
+  <!-- Loads configuration files -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+<filter>
+<filter-name>charsetFilter</filter-name>
+<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+<init-param>
+<param-name>encoding</param-name>
+<param-value>UTF-8</param-value>
+</init-param>
+<init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+
+<filter-mapping>
+<filter-name>charsetFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>   
+
 
   
   <servlet>
@@ -35,16 +71,15 @@
   	<servlet-name>m3s-main</servlet-name>
   	<url-pattern>*.html</url-pattern>
   </servlet-mapping>
-  <!-- The images dispatcher servet -->
+  <!-- The images dispatcher serlvet -->
   <servlet-mapping>
     <servlet-name>m3s-main</servlet-name>
     <url-pattern>/getImage</url-pattern>
-  </servlet-mapping>	
-  
-  <!-- Loads configuration files -->
-  <listener>
-  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-
+  </servlet-mapping>
+  <!-- The images uploader servlet -->
+  <servlet-mapping>
+    <servlet-name>m3s-main</servlet-name>
+    <url-pattern>/uploadImage</url-pattern>
+  </servlet-mapping>	  	
 
 </web-app>

@@ -12,11 +12,88 @@
   <bean name="/home.html" class="org.inbio.m3s.web.controller.HomePageController">
     <property name="mediaDAO" ref="mediaDAO"/>
   </bean>
+  <!-- insert page -->
+  <bean name="/insert.html" class="org.inbio.m3s.web.controller.InsertPageController"/>
+  <!-- insert page -->
+  <bean name="/saveImage.html" class="org.inbio.m3s.web.controller.SaveImagePageController">
+    <property name="messageManager" ref="messageManager"/>
+  </bean>
+  
+  <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.SaveMetadataController">
+    <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <property name="fileNameCode" value="fileName"/>
+    <property name="metadataTitle" value="title"/>  
+    <property name="metadataDescription" value="description"/>
+    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="metadataProjects" value="projects"/>
+    <property name="metadataKeywords" value="keywords"/>
+    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
+    <property name="metadataAssociatedToValue" value="associatedToValue"/>
+    <property name="metadataTaxonomy" value="taxonomy"/>
+    <property name="metadataKingdom" value="taxonomyKingdom"/>
+    <property name="metadataSiteDescription" value="siteDescription"/>
+    <property name="metadataMediaAuthor" value="mediaAuthor"/>
+    <property name="metadataOwnerType" value="ownerType"/>
+    <property name="metadataOwnerValue" value="ownerValue"/>
+    <property name="metadataUsePolicy" value="usePolicy"/>
+    <property name="metadataMediaVisible" value="mediaVisible"/>    
+    <!-- View -->
+    <property name="viewName" value="insertStep3"/>
+    <!-- Managers -->
+    <property name="metadataManager" ref="metadataManager"/>
+    <property name="messageManager" ref="messageManager"/>
+    <!--  de ATTA 
+    <property name="mediaManager" ref="ATTAMediaManager"/>    
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="siteManager" ref="ATTASiteManager"/>
+    <property name="siteDAO" ref="INBioSiteDAO"/>
+    -->
+    <!--  de ARA -->
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    <property name="siteManager" ref="ARASiteManager"/>
+    <property name="siteDAO" ref="ARASiteDAO"/>
+    
+    <!-- Util Class -->
+    <property name="mediaFileManagement" ref="mediaFileManagement"/>
+    
+  </bean>
+  
+  
+  <!-- image upload controller -->
+  <bean name="/uploadImage" class="org.inbio.m3s.web.controller.ImageUploadController">
+    <property name="commandClass" value="org.inbio.m3s.FileUploadBean"/>
+    <property name="formView" value="insertStep1"/>
+    <property name="successView" value="redirect:saveImage.html"/>
+    
+    <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <property name="fileName" value="laPrueba2.jpg"/>
+  </bean>
   
   <!-- image dispatcher -->
   <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>
   </bean>
+  
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!-- one of the properties available; the maximum file size in bytes -->
+    <property name="maxUploadSize">
+      <value>10485760</value>
+    </property>
+  </bean>  
+  <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/> -->
+  <!-- 
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/upload.form">fileUploadController</prop>
+            </props>
+        </property>
+    </bean>
+ -->
+  
 	
   <!-- externalized messages -->
   <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -39,11 +116,12 @@
   
   <!--Resolves the theme-->
   <bean id="themeResolver" class="org.springframework.web.servlet.theme.CookieThemeResolver">
-    <property name="defaultThemeName" value="inbio"/>
+    <property name="defaultThemeName" value="inbio2"/>
     <property name="cookieName" value="m3sTheme"/>
     <property name="cookieMaxAge" value ="2147483647"/>
   </bean>
   <bean id="themeSource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
     <property name="basenamePrefix" value="theme-"/>
   </bean>  
+  
 </beans>

@@ -1,32 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/taglibs.jsp"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='m3s.css'/>"/>
     <link rel="stylesheet" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='galleries.css'/>"/>    
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><tiles:getAsString name="title"/></title>
   </head>
   
   <body>
-    <tiles:insert name="header"/>
-    
-    <table width="100%"  border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="85%" align="left" valign="top" class="MainPanel">
-          <tiles:insert name="content"/>
-        </td>
-      </tr>
-    </table>
+    <div id="wrapper">
+      <div id="inner-wrap">
       
-      <tr>
-        <td>
-          <tiles:insert name="footer"/>
-        </td>
-      </tr>
-    
-    </table>
+        <tiles:insert name="header"/>  
+        
+        <tiles:insert name="menu"/>
+        
+        <tiles:insert name="userInfo"/>
+        
+        <div id="content">
+          <tiles:insert name="content"/>
+        </div>
+        
+        <div id="clear"><!--limpia los float en caso de ser utilizados arriba --></div>
+        
+        <tiles:insert name="footer"/>
+        
+      </div>
+    </div>
   </body>
   
 </html>

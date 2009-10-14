@@ -1,3 +1,3 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<div id="footer">pie pagina</div>
+<div id="user-info">info usuario</div>

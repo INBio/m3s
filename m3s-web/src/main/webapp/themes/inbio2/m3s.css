@@ -1,0 +1,44 @@
+
+div { 
+	border:solid 1px #ccc;	
+	margin: 10px;
+}
+
+body { 
+	margin:0; 
+	font:Verdana, Arial, Helvetica, sans-serif;
+}
+
+#wrapper {}
+
+#inner-wrap { 
+	margin:0 auto; 
+	width: 960px;
+}
+	
+#banner-img {
+	height: 137px;
+	background: url('images/banner1.jpg') no-repeat left top;
+}
+
+#banner-txt { 
+	height: 120px;
+}
+
+#menu { 
+}
+
+
+#user-info { 
+	text-align:right;
+}
+
+#content {}
+
+#footer { 
+	text-align:center;
+}
+
+.clear {
+	clear: both;
+}
