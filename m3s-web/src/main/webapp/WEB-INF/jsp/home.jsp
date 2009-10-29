@@ -7,8 +7,15 @@
       <table width="100%"  border="0" cellpadding="10" cellspacing="0">
         <tr>
           <td height="28" colspan="2" class="MainPanel-Title">
-            <spring:message code="home.title"/>
+            <h2><spring:message code="home.title"/></h2>
           </td>
+          <%--
+          <td>
+            <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+              <p><spring:message code="m3s.login.welcome"/> <sec:authentication property="principal.username"/></p>
+            </sec:authorize>              
+          </td>
+          --%>
         </tr>
 
 	    <tr>
@@ -27,20 +34,9 @@
 		        <p class="Home-RightPanelTitle">
 		          <strong><spring:message code="home.preview.subtitle"/></strong>
 		        </p>
-		        <div id="thumb">
-		          <c:forEach items="${medias}" var="media">
-		            <div class="imagesRightPanel">
-		              <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=big&id=<c:out value="${media.mediaId}"/>">
-		                <div class="thumb-image" style="background-image: url(<c:out value="${pageContext.request.contextPath}"/>/getImage?size=thumb&id=<c:out value="${media.mediaId}"/>);">
-		                </div>
-				        <div class="gwt-Label imaName"><c:out value="${media.authorPersonId}"/></div>
-				        <div class="imaInfo"><c:out value="${media.title}"/></div>
-						<div class="imaInfo"><c:out value="${media.title}"/></div>
-				      </a>
-				    </div>
-		          </c:forEach>
-		          <div class="clear">
-		        </div>
+		        
+                <tiles:insert page="/WEB-INF/jsp/displayThumbs.jsp"/>
+		      
 		      </div>
 		    </td>
 		      

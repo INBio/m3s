@@ -1,7 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<spring:message code="insert.title"/>
+<div id="insert-metadata-form">
+  <h2><spring:message code="insert.title"/></h2>
+  
+  <tiles:insert page="imagePreview.jsp"/>
+  
+  <tiles:insert page="/WEB-INF/jsp/insert/metadata.jsp"/>
+  
+</div>
 
-<tiles:insert page="/WEB-INF/jsp/insert/metadata.jsp"/>
-
-<tiles:insert page="imagePreview.jsp"/>

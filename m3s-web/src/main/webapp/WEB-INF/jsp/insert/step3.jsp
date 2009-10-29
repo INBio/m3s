@@ -1,7 +1,7 @@
 
 <%@ include file="/common/taglibs.jsp"%>
 
-<spring:message code="insert.title"/>
+<h2><spring:message code="insert.title"/></h2>
 
 <h1>Insertado con éxito</h1>
 
