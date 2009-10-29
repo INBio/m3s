@@ -1,44 +1,33 @@
 
-div { 
-	border:solid 1px #ccc;	
-	margin: 10px;
-}
+xdiv { border:solid 1px #ccc; margin: 10px;}
+* { font-family: Arial, Helvetica, sans-serif;}
+body { 	margin:0;}
+#wrapper {background:url(images/deg-back.jpg) repeat-x top center}
+#bor-der { margin: 0 10px; background:url(images/deg-der.jpg) no-repeat 988px 137px }
+#bor-izq {background:url(images/deg-izq.jpg) no-repeat 0 137px}
+#inner-wrap { margin:0 auto; width: 1028px; background:url(images/banner.jpg) no-repeat top center;}
+#banner-txt { height: 120px; font-size: 20px; color:#FFFFFF; margin: 0 20px;}
+#user-info { text-align:right; background:#FFFFFF; margin:0 20px; font-size:10px; font-weight: bold; padding: 8px;}
+#content { background:#FFFFFF; margin:0 20px; }
+#footer { text-align:center; background: url(images/pie-back.jpg) repeat-x center bottom;}
+#footer-in { text-align:center; background: url(images/pie-der.jpg) no-repeat bottom right; height: 80px; vertical-align:bottom;}
+#footer-out { text-align:center; background: url(images/pie-izq.jpg) no-repeat bottom left;}
+#footer-in p { line-height:80px; font-size:12px;}
 
-body { 
-	margin:0; 
-	font:Verdana, Arial, Helvetica, sans-serif;
-}
+.clear {clear: both;}
+h2 {margin: 0; padding:0; line-height: 35px; display:block; border-bottom: solid 1px #006699; color:#006699; font-size: 24px;}
+/*formulario*/
+label { padding:10px; float:left;}
+label b { margin:0 15px 0 0; width:165px;float:left;}
+textarea, select, input {float:left; font-size:12px;}
+br { clear:both;}
 
-#wrapper {}
+#menu { height:36px; border-bottom: 3px solid #006699; font-size: 12px; background:url(images/menu.gif) bottom left repeat-x; padding: 0 20px; margin: 0 20px;}
+#menu ul{ margin:0; padding:0;}
+#menu li { margin:0; padding:0 5px; list-style:none; display:inline; height:36px;}
+#menu li a { text-decoration:none;  line-height: 36px; color:#000; font-weight: bold;}
+#menu li a:hover { color: #fff;}
+.active-item a { background:url(images/menu.gif) top left repeat-x; padding:11px 10px; -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;}
 
-#inner-wrap { 
-	margin:0 auto; 
-	width: 960px;
-}
-	
-#banner-img {
-	height: 137px;
-	background: url('images/banner1.jpg') no-repeat left top;
-}
-
-#banner-txt { 
-	height: 120px;
-}
-
-#menu { 
-}
-
-
-#user-info { 
-	text-align:right;
-}
-
-#content {}
-
-#footer { 
-	text-align:center;
-}
-
-.clear {
-	clear: both;
-}
+#insert-preview-thumbs { float: right; width: 150px; padding:8px; position: absolute; margin: 0 0 0 740px;}
+.thumb-image { width:120px; height:120px; background-position:center center; background-repeat: no-repeat; border: 1px solid #efefef;}
