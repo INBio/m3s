@@ -1,35 +1,52 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
     <groupId>m3s</groupId>
     <artifactId>m3s-web</artifactId>
-    <packaging>war</packaging>
     <version>2.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>m3s-web Maven Webapp</name>
-    <url>http://lucina.inbio.ac.cr/m3sINBio</url>
+    
+    <properties>
+      <spring.version>2.5.6</spring.version>
+      <spring.security.version>2.0.3</spring.security.version>
+      <aspectj.version>1.6.1</aspectj.version>
+	  <slf4j.version>1.5.5</slf4j.version>
+	  <tiles.version>2.0.6</tiles.version>
+	  <jstl.version>1.1.2</jstl.version>
+	</properties>
+	
+	<inceptionYear>2009</inceptionYear>
+	
+	<organization>
+		<name>Instituto Nacional de Biodiversidad</name>
+		<url>http://www.inbio.ac.cr</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<id>jgutierrez</id>
+			<name>Jaime Gutiérrez</name>
+			<email>jgutierrez at inbio dot ac dot cr</email>
+			<organization>INBio</organization>
+			<organizationUrl>http://www.inbio.ac.cr</organizationUrl>
+			<roles>
+			  <role>Developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>	
+    
   <dependencies>
     <dependency>
       <groupId>m3s</groupId>
       <artifactId>m3s-service</artifactId>
       <version>2.1-SNAPSHOT</version>
     </dependency>
- <!-- 
- <dependency>
-   <groupId>org.gwtwidgets</groupId>
-   <artifactId>gwt-sl</artifactId>
-   <version>1.0</version>
- </dependency>   
- <dependency>
-   <groupId>com.google.gwt</groupId>
-   <artifactId>gwt-servlet</artifactId>
-   <version>1.7.1</version>
- </dependency> 
- <dependency>
-  <groupId>com.google.gwt</groupId>
-  <artifactId>gwt-user</artifactId>
-  <version>1.7.1</version>
- </dependency>    
--->
+    
+ 
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -54,7 +71,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>2.5.2</version>
-    </dependency>
+    </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
@@ -69,7 +86,34 @@
       <groupId>org.apache.struts</groupId>
       <artifactId>struts-tiles</artifactId>
       <version>1.3.9</version>
-    </dependency>    
+    </dependency> 
+       
+<!-- dependencies bringing in spring-security-acl and spring-security-core -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core-tiger</artifactId>
+            <version>${spring.security.version}</version>
+            <!-- Bringing in Spring 2.0.8 -->     
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring.security.version}</version>
+            <!-- Bringing in Spring 2.0.8 -->     
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+               
 <!-- JSP libraries-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -130,11 +174,11 @@
 			<artifactId>xfire-spring</artifactId>
 			<version>1.2.3</version>
 	    <exclusions>
-        <exclusion>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring</artifactId>
-        </exclusion>
-      </exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+          </exclusion>
+        </exclusions>
 	  </dependency>	      
 
   </dependencies>
@@ -147,9 +191,17 @@
           <configuration>
             <source>1.5</source>
             <target>1.5</target>
+            <encoding>UTF-8</encoding>                    
           </configuration>
         </plugin>
-
+	        <plugin>
+	            <groupId>org.mortbay.jetty</groupId>
+	            <artifactId>maven-jetty-plugin</artifactId>
+	            <configuration>
+	                <scanIntervalSeconds>10</scanIntervalSeconds>
+	                <contextPath>/m3s-web</contextPath>
+	            </configuration>
+	        </plugin>
       </plugins>	  
   </build>
 </project>
