@@ -1,14 +1,15 @@
 package org.inbio.m3s.model.atta;
 
 import java.util.Date;
-import java.util.Set;
+
+import org.inbio.m3s.model.general.Specimen;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class INBioSpecimen extends org.inbio.m3s.model.general.Specimen {
+public class INBioSpecimen extends Specimen {
 
 	private static final long serialVersionUID = 1212115617854666568L;
 
@@ -32,8 +33,7 @@ public class INBioSpecimen extends org.inbio.m3s.model.general.Specimen {
 			String createdBy, Date lastModificationDate,
 			String lastModificationBy, Integer collectionId,
 			Integer extractionTypeId, Integer numberWhole,
-			Integer numberFragments, String externalSpecimen,
-			Set<Identification> identifications) {
+			Integer numberFragments, String externalSpecimen) {
 		
 		super(specimenId,specimenCategoryId,specimenTypeId,storageTypeId,substrateId,
 				originId,preservationMediumId,discarded,gatheringDetailPersonId,gatheringNumber,

@@ -42,20 +42,25 @@ import org.inbio.m3s.util.BotanyUtils;
  */
 public class TaxonomyManagerImpl implements TaxonomyManager {
 	
+	protected static Log logger = LogFactory.getLog(TaxonomyManagerImpl.class);
+	
+	//DAO's
 	TaxonDAO taxonDAO;
-	TaxonLiteDTOFactory tlDTOFactory;
 	GatheringMediaDAO gatheringMediaDAO;
 	PersonDAO personDAO;
-	PersonLiteDTOFactory plDTOFactory;
-	AgentManager agentManager;
 	SpecimenDAO specimenDAO;
-	SpecimenLiteDTOFactory slDTOFactory;
 	SpecimenMediaDAO specimenMediaDAO;
 	ObservationMediaDAO observationMediaDAO;
+	TaxonMediaDAO taxonMediaDAO;	
+	
+	//DTO Factories
+	TaxonLiteDTOFactory tlDTOFactory;
+	PersonLiteDTOFactory plDTOFactory;
+	SpecimenLiteDTOFactory slDTOFactory;
 	ObservationLiteDTOFactory olDTOFactory;
-	TaxonMediaDAO taxonMediaDAO;
-
-	protected static Log logger = LogFactory.getLog(TaxonomyManagerImpl.class);
+	
+	//Managers
+	AgentManager agentManager;
 	
 	/**
 	 * 
@@ -125,8 +130,7 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * @see org.inbio.m3s.service.TaxonomyManager#getSpecimenLiteForGatheringCode(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<SpecimenLiteDTO> getSpecimenLiteForGatheringCode(
-			String gatheringCode) throws IllegalArgumentException {
+	public List<SpecimenLiteDTO> getSpecimenLiteForGatheringCode(String gatheringCode) throws IllegalArgumentException {
 		logger.debug("getSpecimenLiteForGatheringCode... start");
 		GatheringLiteDTO glDTO = BotanyUtils.getGatheringLiteDTOFromCode(gatheringCode);
 		logger.debug(glDTO.toString());
@@ -134,6 +138,7 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 		logger.debug(plDTO.toString());
 		
 		List<Specimen> sList = specimenDAO.findByGatheringNumberAndGatheringPersonId(new Integer(plDTO.getPersonKey()), new Integer(glDTO.getGatheringKey()));
+		logger.debug("number of results: "+ sList.size());
 		
 		return slDTOFactory.createDTOList(sList);
 	}

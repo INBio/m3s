@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.inbio.m3s.dao.core.TaxonDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.ara.ARATaxon;
-import org.inbio.m3s.model.atta.INBioTaxon;
 import org.inbio.m3s.model.taxonomy.Taxon;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -34,8 +33,8 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				Query query = session.createQuery(
 						"select t"
 						+ " from ARATaxon as t" 
-						+ " where t.defaultName = '" + defaultName+ "' ");
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.defaultName = :defaultName");
+				query.setParameter("defaultName", defaultName);
 				query.setCacheable(true);
 				return query.list();
 			}
@@ -50,14 +49,15 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 		logger.debug("getTaxonLite for default name: '" + defaultName
 				+ "' and kingdomTaxonId: '" + kingdomTaxonId + "'.");
 		HibernateTemplate template = getHibernateTemplate();
-		return (INBioTaxon) template.execute(new HibernateCallback() {
+		return (Taxon) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select t"
 						+ " from ARATaxon as t" 
-						+ " where t.defaultName = '" + defaultName
-						+ "'" + " and t.kingdomId = '"+ kingdomTaxonId + "' ");
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.defaultName = :defaultName"
+						+" and t.kingdomId = :kingdomTaxonId");
+				query.setParameter("defaultName", defaultName);
+				query.setParameter("kingdomTaxonId", kingdomTaxonId);
 				query.setCacheable(true);
 				return query.uniqueResult();
 			}
@@ -76,9 +76,10 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				Query query = session.createQuery(
 						"select t"
 						+ " from ARATaxon as t"
-						+ " where t.familyId = " + familyTaxonId
-						+	" or t.taxonId = " + familyTaxonId );
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.familyId = :familyTaxonId"
+						+	" or t.taxonId = :taxonId");
+				query.setParameter("familyTaxonId", familyTaxonId);
+				query.setParameter("taxonId", familyTaxonId);
 				query.setCacheable(true);
 				return query.list();
 			}
@@ -97,9 +98,10 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				Query query = session.createQuery(
 						"select t"
 						+ " from ARATaxon as t"
-						+ " where t.genusId = " + genusTaxonId
-						+	" or t.taxonId = " + genusTaxonId );
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.genusId = :genusTaxonId"
+						+	" or t.taxonId = :taxonId" );
+				query.setParameter("genusTaxonId", genusTaxonId);
+				query.setParameter("taxonId", genusTaxonId);
 				query.setCacheable(true);
 				return query.list();
 			}
@@ -109,17 +111,17 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.TaxonDAO#findByNameAndRange(java.lang.String, java.lang.Integer)
 	 */
-	public Taxon findByNameAndRange(final String taxonDefaultName,
-			final Integer taxonomicalRangeId) {
+	public Taxon findByNameAndRange(final String taxonDefaultName,final Integer taxonomicalRangeId) {
 		logger.debug("findByNameAndRange with taxonDefaultName["+taxonDefaultName+"] and Range["+taxonomicalRangeId+"]");
 		HibernateTemplate template = getHibernateTemplate();
-		return (INBioTaxon) template.execute(new HibernateCallback() {
+		return (Taxon) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select t from ARATaxon as t"
-						+ " where t.defaultName = '"+taxonDefaultName+"'"
-						+ " and t.taxonomicalRangeId = " + taxonomicalRangeId);
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.defaultName = :taxonDefaultName"
+						+ " and t.taxonomicalRangeId = :taxonomicalRangeId");
+				query.setParameter("taxonDefaultName", taxonDefaultName);
+				query.setParameter("taxonomicalRangeId", taxonomicalRangeId);				
 				query.setCacheable(true);
 				return query.uniqueResult();
 			}
@@ -147,9 +149,10 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				Query query = session.createQuery(
 						"select t"
 						+ " from ARATaxon as t"
-						+ " where t.speciesId = " + speciesTaxonId 
-						+	" or t.taxonId = " + speciesTaxonId );
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where t.speciesId = :speciesTaxonId" 
+						+	" or t.taxonId = :taxonId");
+				query.setParameter("speciesTaxonId", speciesTaxonId);
+				query.setParameter("taxonId", speciesTaxonId);
 				query.setCacheable(true);
 				return query.list();
 			}

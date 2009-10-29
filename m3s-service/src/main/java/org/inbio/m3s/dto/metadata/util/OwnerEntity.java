@@ -9,19 +9,22 @@ package org.inbio.m3s.dto.metadata.util;
  */
 public enum OwnerEntity {
 
-	INSTITUTION(new Integer(0), "Institucion"),
-	PERSON(new Integer(1), "Persona");
+	INSTITUTION(new Integer(0), "Institucion", "metadata.owner.insitution"),
+	PERSON(new Integer(1), "Persona","metadata.owner.person");
 		
 	
 	private Integer id;
 	
 	private String name;
 	
+	private String nameKey;
+	
 	/**
 	 */
-	private OwnerEntity(Integer id, String name) {
+	private OwnerEntity(Integer id, String name, String nameKey) {
 		this.id = id;
 		this.name = name;
+		this.nameKey = nameKey;
 	}
 
 	/**
@@ -50,5 +53,19 @@ public enum OwnerEntity {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @param nameKey the nameKey to set
+	 */
+	public void setNameKey(String nameKey) {
+		this.nameKey = nameKey;
+	}
+
+	/**
+	 * @return the nameKey
+	 */
+	public String getNameKey() {
+		return nameKey;
 	}
 }

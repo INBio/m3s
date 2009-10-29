@@ -426,6 +426,8 @@ public class MediaManagerImpl implements MediaManager {
 			theMedia.setUsePolicy(theUsePolicy);
 
 			// saves the Media Object in the database
+			theMedia.setCreatedBy(gm.getUsername());
+			theMedia.setLastModificationBy(gm.getUsername());
 			mediaDAO.create(theMedia);
 
 

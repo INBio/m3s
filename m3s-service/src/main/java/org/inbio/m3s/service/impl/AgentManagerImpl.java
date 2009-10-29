@@ -13,6 +13,8 @@ import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTOFactory;
+import org.inbio.m3s.exception.InstitutionNotFoundException;
+import org.inbio.m3s.exception.PersonNotFoundException;
 import org.inbio.m3s.model.general.Institution;
 import org.inbio.m3s.model.general.Person;
 import org.inbio.m3s.service.AgentManager;
@@ -23,25 +25,26 @@ import org.inbio.m3s.service.AgentManager;
  */
 public class AgentManagerImpl implements AgentManager {
 
-	private InstitutionDAO institutionDAO;
-	
-	private PersonDAO personDAO;
-	
-	private InstitutionLiteDTOFactory institutionLiteDTOFactory;
-	
-	private PersonLiteDTOFactory personLiteDTOFactory;
-	
 	protected static Log logger = LogFactory.getLog(AgentManagerImpl.class);
+	
+	// DAO's
+	private InstitutionDAO institutionDAO;
+	private PersonDAO personDAO;
+
+	// DTO Factories
+	private InstitutionLiteDTOFactory institutionLiteDTOFactory;
+	private PersonLiteDTOFactory personLiteDTOFactory;
 	
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getInstitutionLiteByName(java.lang.String)
 	 */
-	public InstitutionLiteDTO getInstitutionLiteByName(String institutionName)
-			throws IllegalArgumentException {
+	public InstitutionLiteDTO getInstitutionLiteByName(String institutionName) throws InstitutionNotFoundException {
 		
 		Institution i = (Institution) institutionDAO.findByName(institutionName);
+		if(i==null)
+			throw new InstitutionNotFoundException("The institution ["+institutionName+"] cannot be found the database", null, institutionName);
 		return (InstitutionLiteDTO) institutionLiteDTOFactory.createDTO(i);
 	}
 	
@@ -72,11 +75,13 @@ public class AgentManagerImpl implements AgentManager {
 	 * @see org.inbio.m3s.service.AgentManager#getPersonLiteByName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public PersonLiteDTO getPersonLiteByName(String name) throws IllegalArgumentException {
+	public PersonLiteDTO getPersonLiteByName(String name) throws PersonNotFoundException {
 		
 		logger.debug("getPersonLiteByName["+name+"]");
 		
 		List<Object> pList = personDAO.findAll(Person.class);
+		if(pList==null)
+			throw new PersonNotFoundException("The person ["+name+"] cannot be found the database", null, name);
 		List<PersonLiteDTO> pLiteDTOList = personLiteDTOFactory.createDTOList(pList);
 		
 		for(PersonLiteDTO plDTO : pLiteDTOList){
@@ -84,7 +89,7 @@ public class AgentManagerImpl implements AgentManager {
 				return plDTO;
 		}
 		
-		return null;
+		throw new PersonNotFoundException("The person ["+name+"] cannot be found the database", null, name);
 	}
 	
 	/*

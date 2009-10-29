@@ -58,8 +58,7 @@ public class BotanyUtils {
 		String errorMsj = "Se espera un código de colecta de la forma LETRAS ; NUMEROS";
 		
 		try {
-			List<String> temp = (List) StringUtil.getIndividualItems(gatheringCode,
-					java.lang.String.class);
+			List<String> temp = (List) StringUtil.getIndividualItems(gatheringCode,java.lang.String.class);
 
 			if (temp.size() != 2) {
 				throw new IllegalArgumentException(errorMsj);

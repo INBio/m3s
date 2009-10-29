@@ -43,12 +43,13 @@ public class DBLogEntity {
 	 */
 	public void setSaveValues() {
 		Date actualDate = getLogDate();
-		//String user = UserProfile.getUsername();
-		String user =userName;
 		this.setCreationDate(actualDate);
-		this.setCreatedBy(user);
 		this.setLastModificationDate(actualDate);
-		this.setLastModificationBy(user);
+		
+		if(createdBy == null)
+			this.setCreatedBy(userName);
+		if(lastModificationBy == null)
+			this.setLastModificationBy(userName);
 	}
 
 	/**
@@ -59,7 +60,8 @@ public class DBLogEntity {
 	 */
 	public void setUpdateValues() {
 		this.setLastModificationDate(getLogDate());
-		this.setLastModificationBy(userName);
+		if(lastModificationBy == null)
+			this.setLastModificationBy(userName);
 	}
 
 	/**

@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO{
+public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO {
 	
 	private static Logger logger = Logger.getLogger(INBioSpecimenDAOImpl.class);
 	
@@ -28,10 +28,8 @@ public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO{
 	 * @see org.inbio.m3s.dao.core.SpecimenDAO#findByGatheringNumberAndGatheringPersonId(java.lang.Integer, java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Specimen> findByGatheringNumberAndGatheringPersonId(
-			final Integer gatheringPersonId, final Integer gatheringNumber)
-			throws IllegalArgumentException {
-		logger.debug("getSpecimenLiteFromGathering... start");
+	public List<Specimen> findByGatheringNumberAndGatheringPersonId(final Integer gatheringPersonId, final Integer gatheringNumber) throws IllegalArgumentException {
+		logger.debug("findByGatheringNumberAndGatheringPersonId... gatheringPersonId["+gatheringPersonId+"] and gatheringNumber["+gatheringNumber+"]");
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<Specimen>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
@@ -42,11 +40,11 @@ public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO{
 				 */
 				Integer gatheringNumberMin = gatheringNumber - 1;
 				Integer gatheringNumberMax = gatheringNumber + 1;
-				Query query = session.createQuery("select s" + " from INBioSpecimen as s "
+				Query query = session.createQuery("select s from INBioSpecimen as s "
 						+ " where s.gatheringDetailPersonId = " + gatheringPersonId
 						+ " and s.gatheringNumber > " + gatheringNumberMin
 						+ " and s.gatheringNumber < " + gatheringNumberMax);
-				query.setCacheable(true);
+				query.setCacheable(false);
 				return query.list();
 			}
 		});

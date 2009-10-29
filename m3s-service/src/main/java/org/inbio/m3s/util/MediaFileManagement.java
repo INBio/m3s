@@ -125,7 +125,7 @@ public class MediaFileManagement {
 	 * @param fileName
 	 * @return
 	 */
-	public static boolean isFileReadable(String fileName){
+	public boolean isFileReadable(String fileName){
 		logger.debug("isFileReadable");
 		logger.debug("params: [fileName=" + fileName + "].");
 		
@@ -133,8 +133,11 @@ public class MediaFileManagement {
 			File f =new File(fileName);
 			return f.canRead();
 		
+		} catch(NullPointerException npe){
+			logger.error("file '" + fileName + "' doesnt exist!.");
+			return false;
 		} catch(Exception e){
-			logger.error("file '" + fileName + "' is not accesible.");
+			logger.error("file '" + fileName + "' is not accesible [pero si existe].");
 			return false;
 		}
 		
@@ -152,9 +155,8 @@ public class MediaFileManagement {
 	 *          with the full path and the file name. ie: /media/thumb/7.flv
 	 * @throws IllegalArgumentException
 	 */
-	private void createLowResFiles(Integer mediaTypeId,
-			String originalMediaFilePath, String thumbMediaFilePath,
-			String bigMediaFilePath) throws IllegalArgumentException {
+	private void createLowResFiles(Integer mediaTypeId, String originalMediaFilePath, 
+			String thumbMediaFilePath, String bigMediaFilePath) throws IllegalArgumentException {
 
 		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
 			ImageMagickAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
@@ -165,10 +167,8 @@ public class MediaFileManagement {
 			VideoAPI.createFLV(originalMediaFilePath, bigMediaFilePath);
 
 		} else {
-			logger
-					.error("No se puede reconocer el mediaTypeId recibido como parametro");
-			throw new IllegalArgumentException(
-					"No se puede reconocer el mediaTypeId recibido como parametro");
+			logger.error("No se puede reconocer el mediaTypeId recibido como parametro");
+			throw new IllegalArgumentException("No se puede reconocer el mediaTypeId recibido como parametro");
 		}
 
 	}

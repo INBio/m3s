@@ -6,6 +6,7 @@ package org.inbio.m3s.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
 import org.inbio.m3s.dao.core.MediaTypeDAO;
@@ -20,6 +21,14 @@ import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.message.ProjectDTOFactory;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
+import org.inbio.m3s.dto.metadata.util.OwnerEntity;
+import org.inbio.m3s.dto.util.KeyValueDTO;
+import org.inbio.m3s.exception.KeywordNotFoundException;
+import org.inbio.m3s.exception.MediaTypeNotFoundException;
+import org.inbio.m3s.exception.MediaUseNotFoundException;
+import org.inbio.m3s.exception.ProjectNotFoundException;
+import org.inbio.m3s.exception.UsePolicyNotFoundException;
 import org.inbio.m3s.model.core.Keyword;
 import org.inbio.m3s.model.core.MediaCategory;
 import org.inbio.m3s.model.core.MediaType;
@@ -27,6 +36,8 @@ import org.inbio.m3s.model.core.Project;
 import org.inbio.m3s.model.core.TextTranslation;
 import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.service.util.ImportFromFile;
+import org.inbio.m3s.util.StringUtil;
 
 /**
  * @author jgutierrez
@@ -45,29 +56,15 @@ public class MessageManagerImpl implements MessageManager {
 	//dto Factory
 	private ProjectDTOFactory projectDTOFactory;
 	
-
-	/**
-	 * @return the mediaTypeDAO
-	 */
-	public MediaTypeDAO getMediaTypeDAO() {
-		return mediaTypeDAO;
-	}
-
-
-
-	/**
-	 * @param mediaTypeDAO the mediaTypeDAO to set
-	 */
-	public void setMediaTypeDAO(MediaTypeDAO mediaTypeDAO) {
-		this.mediaTypeDAO = mediaTypeDAO;
-	}
-
+	private static Logger logger = Logger.getLogger(ImportFromFile.class);
+	
 
 	
-	public KeywordDTO getKeywordLite(String keywordName, Integer languageId)
-			throws IllegalArgumentException {
+	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws KeywordNotFoundException {
 	
 		KeywordDTO klDTO = keywordDAO.getKeywordLite(keywordName, languageId);
+		if(klDTO==null)
+			throw new KeywordNotFoundException("The keyword ["+keywordName+"] cannot be found the database", null, keywordName);
 		
 		return new KeywordDTO(klDTO.getKeywordKey(), klDTO.getName());
 	}
@@ -90,6 +87,29 @@ public class MessageManagerImpl implements MessageManager {
 		
 		return kDTOList;
 	}
+	/**
+	 * Parsea el texto que viene del archivo excell, que tiene una estructura de
+	 * valores separados por ';' y devuelve una lista de objetos TextInfo.
+	 * 
+	 * @param textualKeywords
+	 *          String values separated by the default delimiter. (probably ';')
+	 * @return
+	 */
+	public List<KeywordDTO> getKeywordsFromStringList(String textualKeywords) throws KeywordNotFoundException {
+		
+		
+		KeywordDTO klDTO;
+		List<KeywordDTO> klDTOList = new ArrayList<KeywordDTO>();
+		
+		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,java.lang.String.class);
+		
+		for(Object elem : separatedValues){
+			klDTO = getKeywordLite((String)elem, MessageManager.DEFAULT_LANGUAGE);
+			klDTOList.add(klDTO);
+		}
+		
+		return klDTOList;
+	}	
 	
 	
 	
@@ -155,11 +175,13 @@ public class MessageManagerImpl implements MessageManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.MessageManager#getUsePolicyByName(java.lang.String)
 	 */
-	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws IllegalArgumentException {
+	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws UsePolicyNotFoundException {
 		UsePolicy up = (UsePolicy) usePolicyDAO.findByName(usePolicyName);
-		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
-		return new UsePolicyDTO(up.getUsePolicyId() , tt.getName());
+		if(up==null)
+			throw new KeywordNotFoundException("The use policy ["+usePolicyName+"] cannot be found the database", null, usePolicyName);
+		//TextTranslation tt;
+		//tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		return new UsePolicyDTO(up.getUsePolicyId() , usePolicyName);
 }
 	
 
@@ -200,7 +222,7 @@ public class MessageManagerImpl implements MessageManager {
 		TextTranslation tt;
 		
 		for(Object mt : mtList){
-			tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+			tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
 			mtDTOList.add(new MediaTypeDTO(((MediaType) mt).getMediaTypeId(), tt.getName()));
 		}
 		
@@ -209,20 +231,21 @@ public class MessageManagerImpl implements MessageManager {
 
 
 
-	public MediaTypeDTO getMediaType(String mediaTypeKey)
-			throws IllegalArgumentException {
+	public MediaTypeDTO getMediaType(String mediaTypeKey) throws IllegalArgumentException {
 		MediaType mt = (MediaType) mediaTypeDAO.findById(MediaType.class, Integer.valueOf(mediaTypeKey));
 		TextTranslation tt;
 		tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
 		return new MediaTypeDTO(mediaTypeKey, tt.getName());
 	}
 	
-	public MediaTypeDTO getMediaTypeByName(String mediaTypeName)
-	throws IllegalArgumentException {
+	public MediaTypeDTO getMediaTypeByName(String mediaTypeName) throws MediaTypeNotFoundException {
 		MediaType mt = (MediaType) mediaTypeDAO.findByName(mediaTypeName);
-		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
-		return new MediaTypeDTO(mt.getMediaTypeId(), tt.getName());
+		if(mt==null)
+			throw new MediaTypeNotFoundException("The media type ["+mediaTypeName+"] cannot be found the database", null, mediaTypeName);
+		
+		//TextTranslation tt;
+		//tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		return new MediaTypeDTO(mt.getMediaTypeId(), mediaTypeName);
 }
 
 
@@ -246,14 +269,41 @@ public class MessageManagerImpl implements MessageManager {
 
 
 
-	public ProjectDTO getProjectByName(String projectName) throws IllegalArgumentException{
+	public ProjectDTO getProjectByName(String projectName) throws ProjectNotFoundException{
 		Project project = (Project) projectDAO.findByName(projectName);
+		if(project==null)
+			throw new ProjectNotFoundException("The project ["+projectName+"] cannot be found the database", null, projectName);
 		return 	(ProjectDTO) projectDTOFactory.createDTO(project);
 	}
 	
+	/**
+	 * 
+	 * @param projects
+	 * @return
+	 */
+	public List<ProjectDTO> getProjectsFromStringList(String projects) {
 
-	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String languageKey) {
-		return mediaUseDAO.findByNameAndLanguage(mediaUseName, languageKey);
+		List<Object> projectsTextualNameList = StringUtil.getIndividualItems(projects, String.class);
+		List<ProjectDTO> projectsList = new ArrayList<ProjectDTO>();
+		
+		logger.debug("Translating GMTV to DBValues... [" + projectsTextualNameList.size() + "] projects found");
+		
+		
+		for(Object projectName : projectsTextualNameList){
+			projectsList.add(getProjectByName((String)projectName));
+			logger.debug("Translating GMTV to DBValues... adding project name: '" + (String)projectName + "'.");
+		}
+		
+		return projectsList;
+	}
+	
+	
+
+	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String languageKey) throws MediaUseNotFoundException {
+		MediaUseDTO muDTO = mediaUseDAO.findByNameAndLanguage(mediaUseName, languageKey);
+		if(muDTO==null)
+			throw new MediaUseNotFoundException("The media use ["+mediaUseName+"] cannot be found the database", null, mediaUseName);
+		return muDTO;
 	}
 	
 	/**
@@ -362,5 +412,49 @@ public class MessageManagerImpl implements MessageManager {
 		return mediaUseDAO;
 	}
 
+
+
+	/**
+	 * 
+	 */
+	public List<KeyValueDTO> getAllAssociatedToValues() {
+		
+		List<KeyValueDTO> atDTOList = new ArrayList<KeyValueDTO>();
+		
+		AssociatedToEntity[] associatedToEntities = AssociatedToEntity.values();
+		for(AssociatedToEntity ate : associatedToEntities)
+			atDTOList.add(new KeyValueDTO(String.valueOf(ate.getId()), ate.getNameKey()));
+		 
+		return atDTOList;
+	}
+
+	/**
+	 * 
+	 */
+	public List<KeyValueDTO> getAllMediaOwnerValues() {
+		List<KeyValueDTO> atDTOList = new ArrayList<KeyValueDTO>();
+		OwnerEntity[] ownerEntities = OwnerEntity.values();
+		for(OwnerEntity oe : ownerEntities)
+			atDTOList.add(new KeyValueDTO(String.valueOf(oe.getId()), oe.getNameKey()));
+		 
+		return atDTOList;
+	}
+
+	
+	/**
+	 * @return the mediaTypeDAO
+	 */
+	public MediaTypeDAO getMediaTypeDAO() {
+		return mediaTypeDAO;
+	}
+
+
+
+	/**
+	 * @param mediaTypeDAO the mediaTypeDAO to set
+	 */
+	public void setMediaTypeDAO(MediaTypeDAO mediaTypeDAO) {
+		this.mediaTypeDAO = mediaTypeDAO;
+	}
 
 }

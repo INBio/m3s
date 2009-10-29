@@ -5,7 +5,6 @@ package org.inbio.m3s.dao.ara.impl;
 
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
-import org.inbio.m3s.model.ara.ARASite;
 
 /**
  * @author jgutierrez

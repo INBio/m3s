@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.inbio.m3s.dto.message.KeywordDTO;
@@ -11,6 +12,13 @@ import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
+import org.inbio.m3s.dto.util.KeyValueDTO;
+import org.inbio.m3s.exception.KeywordNotFoundException;
+import org.inbio.m3s.exception.MediaTypeNotFoundException;
+import org.inbio.m3s.exception.MediaUseNotFoundException;
+import org.inbio.m3s.exception.ProjectNotFoundException;
+import org.inbio.m3s.exception.UsePolicyNotFoundException;
+import org.inbio.m3s.util.StringUtil;
 
 /**
  * @author jgutierrez
@@ -34,9 +42,9 @@ public interface MessageManager {
 	 * @param keywordName
 	 * @param languageId
 	 * @return
-	 * @throws IllegalArgumentException
+	 * @throws KeywordNotFoundException
 	 */
-	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws IllegalArgumentException;
+	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws KeywordNotFoundException;
 	
 	/**
 	 * 
@@ -46,6 +54,15 @@ public interface MessageManager {
 	 */
 	public List<KeywordDTO> getAllKeywordLite(Integer languageId) throws IllegalArgumentException;
 	
+	/**
+	 * Parsea el texto que viene del archivo excell, que tiene una estructura de
+	 * valores separados por ';' y devuelve una lista de objetos TextInfo.
+	 * 
+	 * @param textualKeywords
+	 *          String values separated by the default delimiter. (probably ';')
+	 * @return
+	 */
+	public List<KeywordDTO> getKeywordsFromStringList(String textualKeywords) throws KeywordNotFoundException;
 	/**
 	 * @deprecated
 	 * @param mediaTypeName
@@ -68,7 +85,7 @@ public interface MessageManager {
 	 */
 	public UsePolicyDTO getUsePolicy(String usePolicyKey) throws IllegalArgumentException;
 	
-	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws IllegalArgumentException;
+	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws UsePolicyNotFoundException;
 	
 	/**
 	 * 
@@ -101,12 +118,12 @@ public interface MessageManager {
 	 * 
 	 * @param mediaTypeName
 	 * @return
-	 * @throws IllegalArgumentException
+	 * @throws MediaTypeNotFoundException
 	 */
-	public MediaTypeDTO getMediaType(String mediaTypeKey) throws IllegalArgumentException;
+	public MediaTypeDTO getMediaType(String mediaTypeKey);
 	
 	
-	public MediaTypeDTO getMediaTypeByName(String mediaTypeName) throws IllegalArgumentException;
+	public MediaTypeDTO getMediaTypeByName(String mediaTypeName) throws MediaTypeNotFoundException;
 	
 	/**
 	 * 
@@ -117,8 +134,10 @@ public interface MessageManager {
 	/**
 	 * 
 	 * @return
+	 * @throws ProjectNotFoundException
+	 * 
 	 */
-	public ProjectDTO getProjectByName(String projectName) throws IllegalArgumentException;
+	public ProjectDTO getProjectByName(String projectName) throws ProjectNotFoundException;
 	
 	/**
 	 * 
@@ -127,10 +146,33 @@ public interface MessageManager {
 	public List<ProjectDTO> getAllProjects();
 
 	/**
+	 * The parameter should be a lis of projects separated using
+	 * a delimiter defined in the StringUtil.getIndividualItems() method
+	 * 
+	 * @param projects
+	 * @return
+	 */
+	public List<ProjectDTO> getProjectsFromStringList(String projects);
+	
+
+	/**
 	 * 
 	 * @param mediaUseName
 	 * @param defaultLanguageKey
 	 * @return
 	 */
-	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String defaultLanguageKey);
+	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String defaultLanguageKey) throws MediaUseNotFoundException ;
+	
+	/**
+	 * The options for the associated to values
+	 * 
+	 * @return
+	 */
+	public List<KeyValueDTO> getAllAssociatedToValues();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<KeyValueDTO> getAllMediaOwnerValues();
 }

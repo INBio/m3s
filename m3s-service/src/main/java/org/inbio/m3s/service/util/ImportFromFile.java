@@ -29,7 +29,16 @@ import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.exception.AssociationTypeNotFoundException;
+import org.inbio.m3s.exception.InstitutionNotFoundException;
+import org.inbio.m3s.exception.KeywordNotFoundException;
+import org.inbio.m3s.exception.MediaTypeNotFoundException;
+import org.inbio.m3s.exception.MediaUseNotFoundException;
+import org.inbio.m3s.exception.OwnerTypeNotFoundException;
+import org.inbio.m3s.exception.PersonNotFoundException;
+import org.inbio.m3s.exception.ProjectNotFoundException;
 import org.inbio.m3s.exception.TaxonNotFoundException;
+import org.inbio.m3s.exception.YesNoValueNotFoundException;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
@@ -117,7 +126,7 @@ public class ImportFromFile {
 					if(tmDTO==null)
 						tmDTO = metadataManager.getTechMetadataByMediaType(gm.getMediaTypeKey());
 
-					if (MediaFileManagement.isFileReadable(fileName))
+					if (mediaFileManagement.isFileReadable(fileName))
 						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
 					else{
 						fileParser.writeResult(i, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede abrir el archivo: '" + fileName + "'.");
@@ -272,13 +281,15 @@ public class ImportFromFile {
 
 			//Projects
 			String projects = info.read(rowNumber, ImportFileParser.PROJECTS_DATA);
-			gmDTO.setProjectsList(getProjectLiteList(projects));
+			//gmDTO.setProjectsList(getProjectLiteList(projects));
+			gmDTO.setProjectsList(messageManager.getProjectsFromStringList(projects));
 			info.writeResult(rowNumber, ImportFileParser.PROJECTS_DATA,ImportFileParser.SUCCESFUL);
 			logger.debug("Projects: '" + gmDTO.getProjectsList().size() + "'");
 
 			// keywords
 			String keywords = info.read(rowNumber, ImportFileParser.KEYWORDS_DATA);
-			gmDTO.setKeywordsList(getKeywords(keywords));
+			//gmDTO.setKeywordsList(getKeywords(keywords));
+			gmDTO.setKeywordsList(messageManager.getKeywordsFromStringList(keywords));
 			info.writeResult(rowNumber, ImportFileParser.KEYWORDS_DATA,	ImportFileParser.SUCCESFUL);
 			logger.debug("Keywords: '" + gmDTO.getKeywordsList().size() + "'");
 			
@@ -400,11 +411,32 @@ public class ImportFromFile {
 			
 			return gmDTO;
 
+		} catch (MediaTypeNotFoundException mtnfe) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Medio: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(mtnfe.getMessage());
+		
+		} catch (ProjectNotFoundException pnfe) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Proyecto: '" + pnfe.getNotFoundProject() + "' en la Base de Datos.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Proyecto: '" + pnfe.getNotFoundProject() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(pnfe.getMessage());
+		
+		} catch (KeywordNotFoundException knfe) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Palabra Clave: '" + knfe.getNotFoundKeyword() + "' en la Base de Datos.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Palabra Clave: '" + knfe.getNotFoundKeyword() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(knfe.getMessage());
+			
 		} catch (TaxonNotFoundException tnfe) {
 			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(tnfe.getMessage());
-		} catch (Exception e) {
+		
+		} catch (AssociationTypeNotFoundException atnfe){
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Asociación: '" + atnfe.getNotFoundAssociationType()  + "'.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + atnfe.getNotFoundAssociationType() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(atnfe.getMessage());
+
+		}	catch (Exception e) {
 			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " '" + e.getMessage() + "'");
 			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
 			throw new IllegalArgumentException(e.getMessage());
@@ -416,6 +448,8 @@ public class ImportFromFile {
 	 * 
 	 * @param projects
 	 * @return
+	 * @deprecated
+	 * @use MessageManager.getProjectsFromStringList()
 	 */
 	private List<ProjectDTO> getProjectLiteList(String projects) {
 
@@ -440,8 +474,9 @@ public class ImportFromFile {
 	 * @param textualKeywords
 	 *          String values separated by the default delimiter. (probably ';')
 	 * @return
+	 * @deprecated
 	 */
-	private List<KeywordDTO> getKeywords(String textualKeywords) {
+	private List<KeywordDTO> getKeywords(String textualKeywords) throws KeywordNotFoundException {
 		
 		
 		KeywordDTO klDTO;
@@ -472,72 +507,101 @@ public class ImportFromFile {
 	private UsesAndCopyrightsDTO getUAC(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
 		UsesAndCopyrightsDTO uacDTO = new UsesAndCopyrightsDTO();
 		String booleanLiteralValue;
-		
 
 		uacDTO.setMediaKey(null);
 
 		logger.debug("\nGetting uses and copyrigths metadata TV");
-
-		// set author
-		String authorName = info.read(rowNumber,	ImportFileParser.AUTHOR_PERSON_NAME_DATA);
-		PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
-		uacDTO.setAuthorKey(plDTO.getPersonKey());
-		info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Author Key: '" + uacDTO.getAuthorKey() + "'");
 		
-		// owner type: institutionOwnerId and AuthorOwnerId
-		String ownerTypeText = info.read(rowNumber, ImportFileParser.OWNER_TYPE_DATA);
-		String ownerNameText = info.read(rowNumber, ImportFileParser.OWNER_FIRST_DATA);
-		Integer ownerTypeId = getOwnerType(ownerTypeText);
-		if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
-			InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerNameText);
-			uacDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
-			uacDTO.setPersonOwnerKey(null);
-		} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
-			PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerNameText);
-			uacDTO.setPersonOwnerKey(oplDTO.getPersonKey());
-			uacDTO.setInstitutionOwnerKey(null);
-		} else {
-			logger.error("No valid owner Type... debería tirarse una excepcion");	
-		}
-		info.writeResult(rowNumber, ImportFileParser.OWNER_TYPE_DATA, ImportFileParser.SUCCESFUL);
-		logger.debug("Author Owner Type: '" + uacDTO.getAuthorKey() + "'");
-		logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
-
-		// use policy
-		UsePolicyDTO upDTO = messageManager.getUsePolicyByName(info.read(rowNumber, ImportFileParser.USE_POLICY_DATA));
-		uacDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
-		info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
+		try{
+	
+			// set author
+			String authorName = info.read(rowNumber,	ImportFileParser.AUTHOR_PERSON_NAME_DATA);
+			PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
+			uacDTO.setAuthorKey(plDTO.getPersonKey());
+			info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Author Key: '" + uacDTO.getAuthorKey() + "'");
+			
+			// owner type: institutionOwnerId and AuthorOwnerId
+			String ownerTypeText = info.read(rowNumber, ImportFileParser.OWNER_TYPE_DATA);
+			String ownerNameText = info.read(rowNumber, ImportFileParser.OWNER_FIRST_DATA);
+			Integer ownerTypeId = getOwnerType(ownerTypeText);
+			if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
+				InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerNameText);
+				uacDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
+				uacDTO.setPersonOwnerKey(null);
+			} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
+				PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerNameText);
+				uacDTO.setPersonOwnerKey(oplDTO.getPersonKey());
+				uacDTO.setInstitutionOwnerKey(null);
+			} else {
+				logger.error("No valid owner Type... debería tirarse una excepcion");	
+			}
+			info.writeResult(rowNumber, ImportFileParser.OWNER_TYPE_DATA, ImportFileParser.SUCCESFUL);
+			logger.debug("Author Owner Type: '" + uacDTO.getAuthorKey() + "'");
+			logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
+	
+			// use policy
+			UsePolicyDTO upDTO = messageManager.getUsePolicyByName(info.read(rowNumber, ImportFileParser.USE_POLICY_DATA));
+			uacDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
+			info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
+			
+			// mediaUses
+			String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
+			uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
+			info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
+	
+			// backup value
+			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_BACKUP_DATA);
+			if(isAfirmativeText(booleanLiteralValue))
+				uacDTO.setIsBackup(new Character('Y'));
+			else
+				uacDTO.setIsBackup(new Character('N'));
+			info.writeResult(rowNumber, ImportFileParser.IS_BACKUP_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Is backup: '" + uacDTO.getIsBackup() + "'");
+	
+			// set is Public
+			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_PUBLIC_DATA);
+			if(isAfirmativeText(booleanLiteralValue))
+				uacDTO.setIsPublic(new Character('Y'));
+			else
+				uacDTO.setIsPublic(new Character('N'));
+			info.writeResult(rowNumber, ImportFileParser.IS_PUBLIC_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
+	
+			logger.debug("\nGetting uses and copyrigths metadata its done");
+			return uacDTO;
 		
-		// mediaUses
-		String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
-		uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
-		info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
+		}  catch (PersonNotFoundException pnfe) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(pnfe.getMessage());
+		
+		} catch (InstitutionNotFoundException infe) {
+		  info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Institucion: '" + infe.getNotFoundInstitution()+ "' en la Base de Datos.");
+		  logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Institucion: '" + infe.getNotFoundInstitution() + "' en la Base de Datos.");
+		  throw new IllegalArgumentException(infe.getMessage());
+		  
+		} catch (OwnerTypeNotFoundException otnfe){
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Dueño: '" + otnfe.getNotFoundOwnerType()  + "'.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de dueño: '" + otnfe.getNotFoundOwnerType() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(otnfe.getMessage());
+		
+		} catch (MediaUseNotFoundException munfe){
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Uso para el Medio: '" + munfe.getNotFoundMediaUse()  + "'.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Uso para el Medio: '" + munfe.getNotFoundMediaUse() + "' en la Base de Datos.");
+			throw new IllegalArgumentException(munfe.getMessage());
 
-		// backup value
-		booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_BACKUP_DATA);
-		if(isAfirmativeText(booleanLiteralValue))
-			uacDTO.setIsBackup(new Character('Y'));
-		else
-			uacDTO.setIsBackup(new Character('N'));
-		info.writeResult(rowNumber, ImportFileParser.IS_BACKUP_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Is backup: '" + uacDTO.getIsBackup() + "'");
-
-		// set is Public
-		booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_PUBLIC_DATA);
-		if(isAfirmativeText(booleanLiteralValue))
-			uacDTO.setIsPublic(new Character('Y'));
-		else
-			uacDTO.setIsPublic(new Character('N'));
-		info.writeResult(rowNumber, ImportFileParser.IS_PUBLIC_DATA,ImportFileParser.SUCCESFUL);
-		logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
-
-		logger.debug("\nGetting uses and copyrigths metadata its done");
-		return uacDTO;
+		} catch (YesNoValueNotFoundException ynvnfe){
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede reconoger el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo.");
+			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo..");
+			throw new IllegalArgumentException(ynvnfe.getMessage());
+		}				
+		
 	}
 
+	
 	/**
 	 * 
 	 * TODO: revisar fue hecho a la carrera
@@ -570,12 +634,11 @@ public class ImportFromFile {
 	 * @return true is the text is equal to "ImportFromFile.POSITIVE_TEXT"
 	 * @throws IllegalArgumentException
 	 */
-	private static boolean isAfirmativeText(String text)
-			throws IllegalArgumentException {
+	private static boolean isAfirmativeText(String text) throws YesNoValueNotFoundException {
 
 		if (text == null) {
 			// logger.error("Falta valor de SI/NO");
-			throw new IllegalArgumentException("Falta valor de SI/NO");
+			throw new MediaUseNotFoundException("The value ["+text+"] cannot be recognized as a yes or no", null, text);
 		} else if (text.compareToIgnoreCase(ImportFromFile.POSITIVE_TEXT) == 0) {
 			// logger.debug("text = true");
 			return true;
@@ -584,7 +647,7 @@ public class ImportFromFile {
 			return false;
 		} else {
 			// logger.error("Falta valor de SI/NO");
-			throw new IllegalArgumentException("Falta valor de SI/NO");
+			throw new MediaUseNotFoundException("The value ["+text+"] cannot be recognized as a yes or no", null, text);
 		}
 	}
 
@@ -601,21 +664,17 @@ public class ImportFromFile {
 	 * constants file
 	 * 
 	 */
-	private static Integer getOwnerType(String literalOwnerType)
-			throws IllegalArgumentException {
+	private static Integer getOwnerType(String literalOwnerType)throws OwnerTypeNotFoundException {
 
-		if (literalOwnerType == null) {
-			// info.writeResult(entryNum, "Falta el tipo de propietario");
-			throw new IllegalArgumentException("Falta el tipo de propietario");
-		}
+		if (literalOwnerType == null)
+			throw new OwnerTypeNotFoundException("the Association Type ["+literalOwnerType+"] is not valid", null, literalOwnerType);
 
 		if (literalOwnerType.compareToIgnoreCase(OwnerEntity.INSTITUTION.getName()) == 0)
 			return OwnerEntity.INSTITUTION.getId();
 		else if (literalOwnerType.compareToIgnoreCase(OwnerEntity.PERSON.getName()) == 0)
 			return OwnerEntity.PERSON.getId();
 		else {
-			// info.writeResult(entryNum, "Tipo de propietario invalido");
-			throw new IllegalArgumentException("Tipo de propietario invalido");
+			throw new OwnerTypeNotFoundException("the Association Type ["+literalOwnerType+"] is not valid", null, literalOwnerType);
 		}
 	}
 
@@ -632,12 +691,10 @@ public class ImportFromFile {
 	 * TODO: inlude the language in this method. Language should be get from the
 	 * constants file
 	 */
-	private static Integer getAssociationTypeCode(String literalAssociationType)
-			throws IllegalArgumentException {
+	private static Integer getAssociationTypeCode(String literalAssociationType) throws AssociationTypeNotFoundException {
 
-		if (literalAssociationType == null) {
-			throw new IllegalArgumentException("invalid Association Type");
-		}
+		if (literalAssociationType == null)
+			throw new AssociationTypeNotFoundException("the Association Type ["+literalAssociationType+"] is not valid", null, literalAssociationType);
 
 		if (literalAssociationType.compareToIgnoreCase(ImportFromFile.SPECIMEN_NUMBER_TEXT) == 0) {
 			return AssociatedToEntity.SPECIMEN_NUMBER.getId();
@@ -648,7 +705,7 @@ public class ImportFromFile {
 		} else if (literalAssociationType.compareToIgnoreCase(ImportFromFile.NO_ASSOCIATION_TEXT) == 0) {
 			return AssociatedToEntity.NO_ASSOCIATION.getId();
 		} else {
-			throw new IllegalArgumentException("invalid Association Type");
+			throw new AssociationTypeNotFoundException("the Association Type ["+literalAssociationType+"] is not valid", null, literalAssociationType);
 		}
 	}
 

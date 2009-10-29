@@ -10,6 +10,12 @@ import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.SecurityUserDAO;
 import org.inbio.m3s.model.core.SecurityUsers;
 import org.inbio.m3s.service.SecurityManager;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.GrantedAuthority;
+import org.springframework.security.GrantedAuthorityImpl;
+import org.springframework.security.userdetails.User;
+import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.userdetails.UsernameNotFoundException;
 
 /**
  * @author jgutierrez
@@ -38,6 +44,18 @@ public class SecurityManagerImpl implements SecurityManager {
 		
 		logger.debug("isValidUser... done with negative result");
 		return false;
+	}
+	
+	/**
+	 * 
+	 */
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+
+		GrantedAuthority[] authorities = {
+				new GrantedAuthorityImpl("ROLE_USER")
+		}; 
+		User user = new User("jgutierrez", "prueba",true, true, true, true, authorities);
+		return user;
 	}
 
 	/**
