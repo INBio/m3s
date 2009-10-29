@@ -19,6 +19,7 @@
 	</bean>
 	<bean id="attaDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<!-- Lepiota = 10.0.0.38 -->
 		<property name="url" value="jdbc:oracle:thin:@10.0.0.38:1521:atta"/>			
 		<property name="username" value="m3s"/>
 		<property name="password" value="m3sinbio"/>

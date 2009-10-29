@@ -22,7 +22,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 	
 	protected static Log logger = LogFactory.getLog(AgentManagerTest.class);
 	
-	protected static String testInstitutionName = "Museo Entomológico de León";
+	protected static String testInstitutionName = "BM - Herbarium, British Museum (Natural History). London";
 	protected static String testInstitutionKey = "1";
 	//protected static String testPersonName = "Eduardo Boza";
 	protected static String testPersonName = "Jaime Gutiérrez";
@@ -35,7 +35,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		logger.info(iDTO.toString());
 	}
-	
+
 	public void testGetInstitutionLite(){
 		logger.info("testGetInstitutionLite");
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);

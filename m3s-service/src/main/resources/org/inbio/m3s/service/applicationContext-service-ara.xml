@@ -35,6 +35,16 @@
     <property name="metadataManager" ref="metadataManager"/>
   </bean>
     
+  <!--  SearchManager -->
+  <bean id="ARASearchManager" class="org.inbio.m3s.service.impl.SearchManagerImpl">
+    <property name="genericSearchDAO" ref="genericSearchDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="messageManager" ref="messageManager"/>  
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+  </bean>     
+    
   <!-- SiteManager (2 version)-->
   <bean id="ARASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
   	<property name="taxonomyManager" ref="ARATaxonomyManager"/>

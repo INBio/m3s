@@ -42,7 +42,7 @@ public abstract class AbstractServiceTest extends AbstractDependencyInjectionSpr
 		}
 		
 		return new String [] {
-				"classpath*:org/inbio/m3s/*.xml",
+				//"classpath*:org/inbio/m3s/*.xml",
 				//"classpath*:org/inbio/m3s/**/log4j.xml",
 				"classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml",
 				//"classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml",

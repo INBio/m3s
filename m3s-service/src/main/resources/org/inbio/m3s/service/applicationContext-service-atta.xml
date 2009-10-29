@@ -55,6 +55,16 @@
     <property name="taxonomyManager" ref="M3STaxonomyManager"/> 
     <property name="metadataManager" ref="metadataManager"/>
   </bean>
+  
+  <!--  SearchManager -->
+  <bean id="ATTASearchManager" class="org.inbio.m3s.service.impl.SearchManagerImpl">
+    <property name="genericSearchDAO" ref="genericSearchDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    <property name="messageManager" ref="messageManager"/>  
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+  </bean>  
     
   <!-- SiteManager (2 version)-->
   <bean id="ATTASiteManager" class="org.inbio.m3s.service.impl.SiteManagerImpl">
@@ -101,8 +111,8 @@
 <!-- importFromFile (2 versiones, ¿¿seran mas??)-->  
   <bean id="ATTAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="realBatchMediaDir" value="/root/m3sTempImages/INBio/"/>
-  	<property name="realWebDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/"/>
-  	<property name="realImportFilesDir" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+  	<property name="realWebDir" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/"/>
+  	<property name="realImportFilesDir" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/IMPORT_FILES/"/>
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
   	<property name="mediaManager" ref="ATTAMediaManager"/>
   	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>

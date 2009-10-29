@@ -91,14 +91,13 @@ public class TaxonomyManagerTest extends AbstractServiceTest{
 		assertTrue( true );
 	}
 	*/
-	
-public void testGetTaxonLite(){
-		
+	/*
+	public void testGetTaxonLite(){
 		
 		logger.info("Usando el TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
 		TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
 		//TaxonLiteDTO tlDTO = tm.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getTaxonKey()); 
-		TaxonLiteDTO tlDTO = tm.getTaxonLite("Pristimantis caryophyllaceus","Animalia");
+		TaxonLiteDTO tlDTO = tm.getTaxonLite("Aulacocyclus papuanus","Animalia");
 		logger.info(tlDTO.toString());
 		
 		logger.info("kingdom");
@@ -107,19 +106,21 @@ public void testGetTaxonLite(){
 		
 		assertTrue( true );
 	}
+	*/
 	
 	
-	/*
 	public void testGetSpecimenLiteForGatheringCode(){
 		
 	TaxonomyManager tm = (TaxonomyManager) getBean(Properties.TAXONOMY_MANAGER);
 		
 		
-		String gatheringCode1  ="Alexander Rodríguez;11370";
-		String gatheringCode2  ="Daniel Solano;4177";
-		String gatheringCode3  ="Daniel Santamaría;7839";
-		String gatheringCode4  ="A. K. Monro;6380";
-		String gatheringCode5  ="Laurencio Martínez;341";
+		String gatheringCode1  ="Alexander Rodríguez;9421";
+		String gatheringCode2  ="A. K. Monro;4925";
+		String gatheringCode3  ="Alexander Rodríguez;11120";
+		String gatheringCode4  ="A. K. Monro;4871";
+		String gatheringCode5  ="A. K. Monro;4725";
+		
+		logger.info("Usando el TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
 		
 		try {
 			System.out.println(gatheringCode1+":");
@@ -130,7 +131,7 @@ public void testGetTaxonLite(){
 			//assertTrue( false );
 		}
 			
-
+/*
 		try {
 			System.out.println(gatheringCode2+":");
 			System.out.println("\n\t"+tm.getSpecimenLiteForGatheringCode(gatheringCode2).get(0).getSpecimenKey());
@@ -167,12 +168,11 @@ public void testGetTaxonLite(){
 			System.out.println(e.getMessage());
 			//assertTrue( false );
 		}			
-
-		
+	*/
 			assertTrue( true );
 		
 	}
-	*/
+	
 
 
 }
