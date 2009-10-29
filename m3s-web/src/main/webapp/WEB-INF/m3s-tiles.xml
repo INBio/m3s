@@ -31,5 +31,27 @@
     <put name="title" value="Process Done"/>	    
     <put name="content" value="/WEB-INF/jsp/insert/step3.jsp"/>
   </definition>  
+  
+  <!--  edit image -->
+  <definition name="editStep1" extends="mainTemplate">
+    <put name="title" value="Edit Multimedia Metadata"/>	    
+    <put name="content" value="/WEB-INF/jsp/edit/step1.jsp"/>
+  </definition>  
+  <definition name="editStep2" extends="mainTemplate">
+    <put name="title" value="Edit Multimedia Metadata"/>	    
+    <put name="content" value="/WEB-INF/jsp/edit/step2.jsp"/>
+  </definition>  
+  
+  <!-- search media -->
+  <definition name="searchFilter" extends="mainTemplate">
+    <put name="title" value="Search Multimedia"/>        
+    <put name="content" value="/WEB-INF/jsp/search/searchFilter.jsp"/>
+  </definition>
+  
+  <!-- login -->
+  <definition name="login" extends="mainTemplate">
+    <put name="title" value="Please Login"/>	    
+    <put name="content" value="/WEB-INF/jsp/login.jsp"/>
+  </definition>  
 
 </tiles-definitions>

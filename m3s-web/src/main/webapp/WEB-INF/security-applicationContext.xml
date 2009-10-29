@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.4.xsd"> 
+                           
+ 
+  <http>
+    <intercept-url pattern="/login.html*" filters="none"/>
+    <intercept-url pattern="/home.html*" filters="none"/>
+    <intercept-url pattern="/index.*" filters="none"/>
+    <intercept-url pattern="/search.*" filters="none" />
+    <intercept-url pattern="/insert.*" access="ROLE_USER" />
+    <intercept-url pattern="/edit.*" access="ROLE_USER" />
+    <intercept-url pattern="/import.*" access="ROLE_USER" />
+    <anonymous username="guest" granted-authority="ROLE_GUEST"/>
+    <form-login login-page="/login.html" default-target-url="/home.html" authentication-failure-url="/login.html?error=true" />
+    <logout/> 
+    <concurrent-session-control max-sessions="1" />
+    <!-- <remember-me key="m3sUserKey"/> -->
+    <!--  <http-basic/>-->
+  </http>
+  
+  <!-- 
+  <authentication-provider>
+    <user-service>
+      <user name="jgutierrez" password="inbiom3s" authorities="ROLE_USER, ROLE_ADMIN" />
+      <user name="ccoloma" password="1234" authorities="ROLE_USER" />
+    </user-service>
+  </authentication-provider>
+   -->
+  <authentication-provider>
+    <user-service id="userDetailsInFileService" properties="/WEB-INF/users.properties"/>
+  </authentication-provider>   
+   
+  
+  
+</beans:beans>

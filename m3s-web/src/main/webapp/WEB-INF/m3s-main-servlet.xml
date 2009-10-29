@@ -14,13 +14,59 @@
   </bean>
   <!-- insert page -->
   <bean name="/insert.html" class="org.inbio.m3s.web.controller.InsertPageController"/>
-  <!-- insert page -->
   <bean name="/saveImage.html" class="org.inbio.m3s.web.controller.SaveImagePageController">
+    <!-- View -->
+    <property name="viewName" value="insertStep2"/>
+    <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>
   </bean>
   
+  <!-- edit page -->
+  <bean name="/edit.html" class="org.inbio.m3s.web.controller.EditPageController"/>
+  <bean name="/editMedia.html" class="org.inbio.m3s.web.controller.EditStep2PageController">
+    <!-- View -->
+    <property name="viewName" value="editStep2"/>
+    <!--  Form Action -->
+    <property name="formActionValue" value="saveMetadata.html"/>
+  	<!--  metadata -->
+  	<property name="metadataUsername" value="username"/>
+    <property name="metadataId" value="mediaId"/>
+    <property name="metadataTitle" value="title"/>  
+    <property name="metadataDescription" value="description"/>
+    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="metadataProjects" value="projects"/>
+    <property name="metadataKeywords" value="keywords"/>
+    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
+    <property name="metadataAssociatedToValue" value="associatedToValue"/>
+    <property name="metadataTaxonomy" value="taxonomy"/>
+    <property name="metadataKingdom" value="taxonomyKingdom"/>
+    <property name="metadataSiteDescription" value="siteDescription"/>
+    <property name="metadataMediaAuthor" value="mediaAuthor"/>    
+    <property name="metadataOwnerType" value="ownerType"/>
+    <property name="metadataOwnerValue" value="ownerValue"/>
+    <property name="metadataUsePolicy" value="usePolicy"/>
+    <property name="metadataMediaVisible" value="mediaVisible"/>       
+    
+    
+    <!-- Managers  -->  
+    <property name="messageManager" ref="messageManager"/>	
+    <!--  de ARA -->
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>    
+    <!--  de ATTA 
+    <property name="mediaManager" ref="ATTAMediaManager"/>
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    -->
+  </bean>
+  
+  
   <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.SaveMetadataController">
+    <!-- View -->
+    <property name="viewName" value="insertStep3"/>
     <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <property name="metadataUsername" value="username"/>
     <property name="fileNameCode" value="fileName"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
@@ -37,8 +83,6 @@
     <property name="metadataOwnerValue" value="ownerValue"/>
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>    
-    <!-- View -->
-    <property name="viewName" value="insertStep3"/>
     <!-- Managers -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
@@ -75,7 +119,7 @@
   <!-- image dispatcher -->
   <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>
-  </bean>
+  </bean> 
   
   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <!-- one of the properties available; the maximum file size in bytes -->
@@ -124,4 +168,23 @@
     <property name="basenamePrefix" value="theme-"/>
   </bean>  
   
+  <bean name="/login.html" class="org.inbio.m3s.web.controller.LoginPageController">
+    <!-- View -->
+    <property name="viewName" value="login"/>
+    <!--  Form Action -->
+    <!--  arreglar esto 
+    <property name="formActionValue" value="saveMetadata.html"/>
+    -->
+  	<!--  metadata 
+    <property name="metadataSserName" value="userName"/>
+    <property name="metadataPassword" value="password"/>
+    -->  
+       
+    <!-- Managers  
+    <property name="messageManager" ref="messageManager"/>	
+    -->
+  </bean>
+
+
+    
 </beans>

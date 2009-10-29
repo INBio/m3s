@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--
+        3 Types of filter
+        0) Plain string search
+        1) Dropdown combo
+        2) Wizard - leading to a read-only value
+       
+        The filters require a unique numeric id (for use in javascript arrays).
+    -->
+
+    <!-- This is the list of filters that will be rendered in the dropdown -->
+    <bean id="searchFilters" class="org.inbio.m3s.web.filter.FilterMapWrapper">
+        <property name="filters">
+            <list>
+                <ref bean="mediaIdFilter" />
+                <ref bean="taxonNameFilter" />
+                <ref bean="mediaAuthorNameFilter" />
+                <ref bean="keywordFilter" />
+                <ref bean="projectFilter" />
+                <ref bean="familyTaxonFilter" />                
+                <ref bean="genusTaxonFilter" />
+                <ref bean="speciesTaxonFilter" />
+            </list>
+        </property>
+    </bean>
+
+        <!-- This is inherited by all the major rank filter definition -->
+    <bean id="baseFilter" abstract="true" class="org.inbio.m3s.web.filter.FilterDTO">
+        <!--<property name="subcategory" value="TaxonRank"/>-->
+        <!-- 
+        <property name="predicates">
+            <list>
+                <ref bean="predicateIs"/>
+                <ref bean="predicateIsLike"/>               
+            </list>
+        </property>
+         -->
+        <property name="wildcardFriendly" value="true"/>
+        <!--<property name="category" value="occurrence.search.filter.category.taxonomy"/>-->
+        <!--<property name="categoryId" value="0"/>-->     
+    </bean> 
+    
+    <!-- filters -->
+    <bean id="mediaIdFilter" parent="baseFilter">
+        <property name="id" value="0" />
+        <property name="name" value="mediaId" />
+        <property name="displayName" value="search.filters.media.id" />
+        
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.SCIENTIFICNAME" />
+        <property name="helpView" value="/speciesRecord/scientificNameHelp.htm" />
+        <!--
+        <property name="autoCompleteUrl" value="taxonomy/taxonName/ajax/view/ajaxTaxonName" /> 
+         -->
+         <property name="autoCompleteUrl" value="speciesRecordTaxonomy/taxonName/ajax/view/ajaxTaxonName" />
+    </bean>
+    
+    <bean id="taxonNameFilter" parent="baseFilter">
+        <property name="id" value="1" />
+        <property name="name" value="taxonName" />
+        <property name="displayName" value="search.filters.taxon.name" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.AUTHOR" />
+        <property name="helpView" value="/speciesRecord/authorHelp.htm" />
+    </bean>
+
+    <bean id="mediaAuthorNameFilter" parent="baseFilter">
+        <property name="id" value="2" />
+        <property name="name" value="mediaAuthorName" />
+        <property name="displayName" value="search.filters.media.author" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.COLLABORATORS" />
+        <property name="helpView" value="/speciesRecord/collaboratorHelp.htm" />
+    </bean>
+
+    <bean id="keywordFilter" parent="baseFilter">
+        <property name="id" value="3" />
+        <property name="name" value="keyword" />
+        <property name="displayName" value="search.filters.keyword" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.ABSTRACT" />
+        <property name="helpView" value="/speciesRecord/abstractHelp.htm" />
+        <!-- 
+        <property name="predicates">
+            <list>
+                <ref bean="predicateIsLikeWithWildcard"/>           
+            </list>
+        </property>
+         -->        
+    </bean>      
+ 
+    <bean id="projectFilter" parent="baseFilter">
+        <property name="id" value="4" />
+        <property name="name" value="project" />
+        <property name="displayName" value="search.filters.project" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.LANGUAGE" />
+        <property name="helpView" value="/speciesRecord/languageHelp.htm" />
+    </bean>     
+                
+    <bean id="familyTaxonFilter" parent="baseFilter">
+        <property name="id" value="5" />
+        <property name="name" value="familyTaxon" />
+        <property name="displayName" value="search.filters.taxon.family" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
+        <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
+        <!-- 
+        <property name="predicates">
+            <list>
+                <ref bean="predicateIsLikeWithWildcard"/>               
+            </list>
+        </property>
+         --> 
+    </bean>
+
+    <bean id="genusTaxonFilter" parent="baseFilter">
+        <property name="id" value="6" />
+        <property name="name" value="genusTaxon" />
+        <property name="displayName" value="search.filters.taxon.genus" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATAPROVIDERID" />
+        <!-- 
+        <property name="predicates">
+            <list>
+                <ref bean="predicateIs" />
+            </list>
+        </property>
+         -->
+         <!-- 
+        <property name="valueType" value="java.lang.Long" />
+        <property name="picklistHelper" ref="dataProviderIdFilterHelper" />
+        <property name="filterHelper" ref="dataProviderIdFilterHelper" />
+        <property name="filterType" value="1" />
+        <property name="helpView" value="/speciesRecord/dataProviderHelp.htm" />
+         -->
+    </bean>
+
+    <bean id="speciesTaxonFilter" parent="baseFilter">
+        <property name="id" value="7" />
+        <property name="name" value="speciesTaxon" />
+        <property name="displayName" value="search.filters.taxon.species" />
+         <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATARESOURCEID" />
+        <!--
+        <property name="predicates">
+            <list>
+                <ref bean="predicateIs" />
+            </list>
+        </property>
+         -->
+         <!-- 
+        <property name="valueType" value="java.lang.Long" />
+        <property name="filterHelper" ref="dataResourceIdFilterHelper" />
+        <property name="filterType" value="2" />
+        <property name="wizardView" value="occurrence.wizard.dataresource" />
+         -->
+    </bean>
+
+    <!-- filter helper for scientific name 
+    <bean id="rawSpeciesRecordScientificNameFilterHelper" class="org.gbif.portal.web.content.taxonomy.ScientificNameFilterHelper">
+        <property name="taxonomyManager" ref="speciesRecordTaxonomyManager" />
+        <property name="dataResourceManager" ref="dataResourceManager" />
+        <property name="messageSource" ref="messageSource"/>        
+        <property name="queryHelper" ref="rawSpeciesRecordQueryHelper" />
+        <property name="rankToTripletSubjectMappings" ref="rankToTripletSubjectMappings" />
+        <property name="taxonConceptUtils" ref="speciesRecordTaxonConceptUtils"/>
+    </bean>
+    -->
+</beans>

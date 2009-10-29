@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+  <!--  Define how the dispatcher will select the controllers -->
+  <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!--
+    <property name="interceptors">
+      <list>
+        <ref bean="localeChangeInterceptor"/>
+        <ref bean="SpeciesRecordDataAgreementInterceptor"/>
+        <ref bean="sessionHistoryInterceptor"/>             
+      </list> 
+    </property>
+    -->
+    <property name="mappings">
+      <props>
+        <prop key="/">searchFilterController</prop>
+        <prop key="/search*.htm">searchFilterController</prop>   
+        <prop key="/getGallery">galleries</prop>
+        <!-- 
+                <prop key="/wizards">wizardFilterController</prop>
+                <prop key="/refreshFilters">filterComponentsController</prop>
+                <prop key="/addOrUpdateFilters">filterComponentsController</prop>
+                <prop key="/downloadSpreadsheet.htm">speciesRecordCustomController</prop>
+                <prop key="/search*.htm">speciesRecordFilterController</prop>           
+                <prop key="/searchProviders.htm">speciesRecordCustomController</prop>
+                <prop key="/searchResources.htm">speciesRecordCustomController</prop>
+                <prop key="/searchCountries.htm">speciesRecordCustomController</prop>
+                <prop key="/searchSpeciesInResults.htm">speciesInResultsRecordFilterController</prop>                   
+                <prop key="/startDownload.htm">speciesRecordDownloadController</prop>
+                <prop key="/startTaxonomyDownload.htm">speciesRecordTaxonomyDownloadController</prop>
+                <prop key="/downloadResults.htm">speciesRecordCustomController</prop>
+                <prop key="/**/*">speciesRecordController</prop>
+                <prop key="/*.htm">urlFilenameController</prop>
+                 -->     
+      </props>
+    </property>
+  </bean>
+  
+  <!-- The Filter Querying controller for Species Records -->
+  <bean id="searchFilterController" class="org.inbio.m3s.web.controller.SearchController ">
+    <property name="viewName" value="searchFilter"/>
+    <property name="modelElements">
+      <map>
+        <entry key="formAction" value="/search/search.htm"/>
+        <entry key="filtersMap" value-ref="searchFilters"></entry>
+      </map>
+    </property>
+    <property name="metadataMediaList" value="medias"/>
+    <property name="searchManager" ref="ARASearchManager"/>
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="mediaDAO" ref="mediaDAO"/>
+  </bean>  
+  
+  <!-- image dispatcher -->
+  <bean id="galleries" class="org.inbio.m3s.web.controller.GalleryController">
+    <property name="searchManager" ref="ARASearchManager"/>
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>  
+  </bean>   
+    
+</beans>
