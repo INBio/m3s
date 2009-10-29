@@ -59,6 +59,7 @@ public class SaveMetadataController implements Controller {
 		
 	private String fileNameCode;
 	private String filePath;
+	private String metadataUsername;
 	private String metadataTitle;
 	private String metadataDescription;
 	private String metadataMediaCategory;
@@ -96,6 +97,7 @@ public class SaveMetadataController implements Controller {
 		ModelAndView mav = new ModelAndView(getViewName());
 
 		String fileName = request.getParameter(fileNameCode);
+		String userName = request.getParameter(metadataUsername);
 		String title = request.getParameter(metadataTitle);
 		String description = request.getParameter(metadataDescription);
 		String mediaTypeId = request.getParameter(metadataMediaCategory);
@@ -116,6 +118,7 @@ public class SaveMetadataController implements Controller {
 		
 		logger.debug("filePath: "+filePath);
 		logger.debug("fileName: "+fileName);
+		logger.debug("userName: "+userName);
 		logger.debug("title: "+title);
 		logger.debug("description: "+description);
 		logger.debug("mediaTypeId: "+mediaTypeId);
@@ -134,13 +137,16 @@ public class SaveMetadataController implements Controller {
 				
 		GeneralMetadataDTO gmDTO = getGM(title,description,mediaTypeId,siteDescription,projects,keywords,
 				associationTypeCode, associatedToValue, taxonName, kingdom);
+		gmDTO.setUsername(userName);
 		
-		UsesAndCopyrightsDTO uacDTO = getUAC(authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible); 
+		UsesAndCopyrightsDTO uacDTO = getUAC(authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible);
+		uacDTO.setUsername(userName);
 		
 		logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+fileName + "'");
 		TechnicalMetadataDTO tmDTO = metadataManager.getTechMetadataFromFile(gmDTO.getMediaTypeKey(), filePath + fileName); //el segundo parametro es el path completo de la imagen
 		if(tmDTO==null)
 			tmDTO = metadataManager.getTechMetadataByMediaType(gmDTO.getMediaTypeKey());
+		tmDTO.setUsername(userName);
 		
 		Integer mediaId = mediaManager.insertNewMedia(gmDTO, uacDTO, tmDTO);
 		mav.addObject("mediaId", mediaId);
@@ -776,6 +782,22 @@ public class SaveMetadataController implements Controller {
 	 */
 	public void setMediaFileManagement(MediaFileManagement mediaFileManagement) {
 		this.mediaFileManagement = mediaFileManagement;
+	}
+
+
+	/**
+	 * @return the metadataUsername
+	 */
+	public String getMetadataUsername() {
+		return metadataUsername;
+	}
+
+
+	/**
+	 * @param metadataUsername the metadataUsername to set
+	 */
+	public void setMetadataUsername(String metadataUsername) {
+		this.metadataUsername = metadataUsername;
 	}
 
 }

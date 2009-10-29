@@ -25,12 +25,14 @@ public class SaveImagePageController extends AbstractController{
 	
 	private String imageCode = "fileName";
 	
+	private String viewName = "insertStep2"; //se sobre escribe con el valor en el xml
+	
 	public SaveImagePageController(){}
 
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		
-		ModelAndView mav = new ModelAndView("insertStep2");
+		ModelAndView mav = new ModelAndView(viewName);
 		
 		//nombre del archivo que voy a subir 
 		//(en realidad es como el código del archivo que voy a subir)
@@ -43,9 +45,6 @@ public class SaveImagePageController extends AbstractController{
 		
 		//Tipos de Asociaciones
 		List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
-		//for(KeyValueDTO atDTO : associatedToValues){
-	//		logger.info(atDTO.getKey()+" "+atDTO.getNameKey());
-		//}
 		mav.addObject("associatedToValues", associatedToValues);
 		
 		//Tipos de Dueños de Imágenes
@@ -71,6 +70,34 @@ public class SaveImagePageController extends AbstractController{
 	 */
 	public MessageManager getMessageManager() {
 		return messageManager;
+	}
+
+	/**
+	 * @return the imageCode
+	 */
+	public String getImageCode() {
+		return imageCode;
+	}
+
+	/**
+	 * @param imageCode the imageCode to set
+	 */
+	public void setImageCode(String imageCode) {
+		this.imageCode = imageCode;
+	}
+
+	/**
+	 * @return the viewName
+	 */
+	public String getViewName() {
+		return viewName;
+	}
+
+	/**
+	 * @param viewName the viewName to set
+	 */
+	public void setViewName(String viewName) {
+		this.viewName = viewName;
 	}
 
 

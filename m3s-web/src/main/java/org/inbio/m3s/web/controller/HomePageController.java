@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.lite.MediaLite;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +23,8 @@ public class HomePageController extends AbstractController{
 	
 	private MediaDAO mediaDAO;	
 	
+	protected static Log logger = LogFactory.getLog(HomePageController.class);
+	
 	public HomePageController(){}
 
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, 
@@ -28,7 +32,7 @@ public class HomePageController extends AbstractController{
 		
 		
 		List<MediaLite> mediaLiteList = mediaDAO.getLastPublicMedia(8);
-		System.out.println("Cantidad de resulatados> "+mediaLiteList.size());
+		logger.debug("Cantidad de resulatados> "+mediaLiteList.size());
 		
 		return new ModelAndView("home","medias",mediaLiteList);
 	}
