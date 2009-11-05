@@ -1,11 +1,11 @@
-
-xdiv { border:solid 1px #ccc; margin: 10px;}
+xdiv { border:solid 1px #ccc; margin: 010px;}
 * { font-family: Arial, Helvetica, sans-serif;}
 body {  margin:0;}
 #wrapper {background:url(images/deg-back.jpg) repeat-x top center}
 #bor-der { margin: 0 10px; background:url(images/deg-der.jpg) no-repeat 988px 137px }
 #bor-izq {background:url(images/deg-izq.jpg) no-repeat 0 137px}
 #inner-wrap { margin:0 auto; width: 1028px; background:url(images/banner.jpg) no-repeat top center;}
+#banner-img { height: 133px;}
 #banner-txt { height: 120px; font-size: 20px; color:#FFFFFF; margin: 0 20px;}
 #user-info { text-align:right; background:#FFFFFF; margin:0 20px; font-size:10px; font-weight: bold; padding: 8px;}
 #content { background:#FFFFFF; margin:0 20px; }
@@ -35,3 +35,25 @@ br { clear:both;}
 .thumb-imaName { font-weight:bold; font-style:italic;}
 .thumb-text1, thumb-text2 {}
 .thumb-date { font-size:9px;}
+.media-kind, .thumb-imaName, .thumb-text1, thumb-text2, .thumb-date, { display: inline; overflow:auto; height:20px;position: fixed;asz}
+
+.imagesRightPanel { float:left; width: 130px; margin: 10px;}
+
+
+/*imprtar imagenes*/
+.ImportControlDTOFull { font-size:12px; margin: 20px 0;}
+
+.ImportControlDTOFull .name {width: 40%;}
+.ImportControlDTOFull .status {width: 20%;}
+.ImportControlDTOFull .date {width: 10%;}
+.ImportControlDTOFull .download {width: 30%;}
+
+.ImportControlDTOFull td {
+    height: 15px;
+    overflow: hidden;
+    padding: 2px 3px;
+    margin:0;
+    vertical-align: top;
+}
+.ImportControlDTOFull .odd { background-color: #e6eef1;}
+.ImportControlDTOFull .even {}

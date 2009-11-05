@@ -5,7 +5,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='m3s.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='galleries.css'/>"/>    
+    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='galleries.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='tables.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='autocomplete.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='autocomplete-skin.css'/>"/>        
     <title><tiles:getAsString name="title"/></title>
   </head>
   
