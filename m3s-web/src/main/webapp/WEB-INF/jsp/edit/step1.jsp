@@ -2,9 +2,6 @@
 
 <h2><spring:message code="edit.title"/></h2>
 
-<%--
-<tiles:insert page="upload.jsp"/>
---%>
 
   <div id="insert-metadata-form">
     <form method="post" accept-charset="UTF-8" action="editMedia.html">
@@ -16,7 +13,7 @@
       </label>
       <br/>
 
-      <input type="submit" value="Buscar" />
+      <input type="submit" value="<spring:message code="buton.continue"/>" />
     </form>
   </div>
       
