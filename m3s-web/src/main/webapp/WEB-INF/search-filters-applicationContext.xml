@@ -64,6 +64,7 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.AUTHOR" />
         <property name="helpView" value="/speciesRecord/authorHelp.htm" />
+        <property name="autoCompleteUrl" value="ajax/taxonName/view/ajaxTaxonName" />
     </bean>
 
     <bean id="mediaAuthorNameFilter" parent="baseFilter">

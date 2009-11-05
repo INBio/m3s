@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!-- taxon name search support  -->
+    <bean id="taxonNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
+        
+        <property name="autoCompleteManager" ref="ARATaxonomyManager"/>
+    
+        <!--ARA -->
+        <!-- <property name="taxonomyManager" ref="ARATaxonomyManager"/> -->
+         
+         <!-- ATTA  
+         <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+         -->
+        <!-- <property name="urlRoot" value="taxonName/ajax"/> -->   
+    </bean> 
+    
+</beans>

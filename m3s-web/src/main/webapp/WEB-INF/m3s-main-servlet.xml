@@ -13,7 +13,11 @@
     <property name="mediaDAO" ref="mediaDAO"/>
   </bean>
   <!-- insert page -->
-  <bean name="/insert.html" class="org.inbio.m3s.web.controller.InsertPageController"/>
+  <bean name="/insert.html" class="org.inbio.m3s.web.controller.reusable.SimpleFormController">
+    <property name="viewName" value="insertStep1"/>
+    <property name="formActionValue" value="uploadFile.html"/>
+  </bean>
+  
   <bean name="/saveImage.html" class="org.inbio.m3s.web.controller.SaveImagePageController">
     <!-- View -->
     <property name="viewName" value="insertStep2"/>
@@ -21,8 +25,29 @@
     <property name="messageManager" ref="messageManager"/>
   </bean>
   
+  <bean name="/excel.html" class="org.inbio.m3s.web.controller.ExcelImportController">
+    <!-- View -->
+    <property name="viewName" value="insertStep2Excel"/>
+    <!--data  -->
+    <property name="tempFilePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <property name="importFilePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+    <property name="metadataFileName" value="fileName"/>
+    <property name="metadataUsername" value="username"/>
+
+    <!-- Managers  -->  
+    <property name="importationManager" ref="importationManager"/>  
+    <!--  de ARA -->
+    <property name="importThread" ref="ARAImportThread"/>
+
+    <!--  de ATTA 
+    <property name="importThread" ref="ATTAImportThread"/>
+    -->
+  </bean>
+  
   <!-- edit page -->
-  <bean name="/edit.html" class="org.inbio.m3s.web.controller.EditPageController"/>
+  <bean name="/edit.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
+    <property name="viewName" value="editStep1"/>
+  </bean>
   <bean name="/editMedia.html" class="org.inbio.m3s.web.controller.EditStep2PageController">
     <!-- View -->
     <property name="viewName" value="editStep2"/>
@@ -53,12 +78,13 @@
     <!--  de ARA -->
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>    
+    <property name="agentManager" ref="ARAAgentManager"/>
+    
     <!--  de ATTA 
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    -->
+    -->    
   </bean>
   
   
@@ -86,6 +112,7 @@
     <!-- Managers -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
+    
     <!--  de ATTA 
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
@@ -93,12 +120,13 @@
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
     -->
-    <!--  de ARA -->
+    <!--  de ARA--> 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
+    
     
     <!-- Util Class -->
     <property name="mediaFileManagement" ref="mediaFileManagement"/>
@@ -115,6 +143,31 @@
     <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
     <property name="fileName" value="laPrueba2.jpg"/>
   </bean>
+    
+
+  <!-- uploads jpg or excel files controller -->
+  <bean name="/uploadFile.html" class="org.inbio.m3s.web.controller.UploadFileController">
+    <property name="commandClass" value="org.inbio.m3s.FileUploadBean"/>
+    <property name="formView" value="insertStep1"/>
+    
+    <property name="posibleSuccessViewMap">
+      <map>
+        <entry key="jpgImage" value="redirect:saveImage.html"/>
+        <entry key="excel" value="redirect:excel.html"/>
+      </map>
+    </property>
+    <property name="posibleFileExtensionMap">
+      <map>
+        <entry key="jpgImage" value="jpg"/>
+        <entry key="excel" value="xls"/>
+      </map>
+    </property>
+        
+    <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <property name="metadataFileName" value="fileName"/>
+    <property name="metadataUsername" value="username"/>
+    <property name="metadataFileType" value="fileType"/>
+  </bean>  
   
   <!-- image dispatcher -->
   <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">

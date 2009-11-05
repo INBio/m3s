@@ -24,13 +24,16 @@
 	  <!--  seguridad -->
 	  /WEB-INF/security-applicationContext.xml,
 	  /WEB-INF/search-filters-applicationContext.xml,
-      <!-- ARA-->
+	  /WEB-INF/ajax-applicationContext.xml,
+      <!-- ARA -->
       classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml,	  
       classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml,
-      <!-- ATTA
+      
+      <!-- ATTA 
 	  classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml, 
 	  classpath*:org/inbio/m3s/service/applicationContext-service-atta.xml,
-	   -->
+	  -->
+	   
       classpath*:org/inbio/m3s/dao/applicationContext-dao.xml,
       classpath*:org/inbio/m3s/dao/applicationContext-factories.xml,
       classpath*:org/inbio/m3s/dto/applicationContext-factories.xml,
@@ -66,6 +69,10 @@
   <filter-mapping>
     <filter-name>charsetFilter</filter-name>
     <url-pattern>/*</url-pattern>
+  </filter-mapping>  
+<filter-mapping>
+    <filter-name>charsetFilter</filter-name>
+    <url-pattern>/search/*</url-pattern>
   </filter-mapping>  
   
    
@@ -106,6 +113,11 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>ajaxDispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>  
   
   <servlet-mapping>
     <servlet-name>m3s-main</servlet-name>
@@ -115,6 +127,10 @@
     <servlet-name>searchDispatcher</servlet-name>
     <url-pattern>/search/*</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ajaxDispatcher</servlet-name>
+    <url-pattern>/ajax/*</url-pattern>
+  </servlet-mapping>  
   <!--   
   <servlet-mapping>
     <servlet-name>searchDispatcher</servlet-name>

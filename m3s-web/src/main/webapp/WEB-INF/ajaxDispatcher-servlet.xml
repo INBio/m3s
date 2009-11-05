@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!--  Application context definition for Taxonomy DispatcherServlet -->
+<beans>
+    
+    <!--  Defines how the dispatcher will select the contollers -->
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!-- 
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor"/>
+                <ref bean="taxonomyDataAgreementInterceptor"/>
+        <ref bean="sessionHistoryInterceptor"/>             
+            </list>
+        </property>
+         -->
+        <property name="mappings">
+            <props>
+                <prop key="/taxonName/**/**">taxonNameAutoCompleteController</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
