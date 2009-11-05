@@ -31,7 +31,7 @@ public class HomePageController extends AbstractController{
 			HttpServletResponse response) throws Exception {
 		
 		
-		List<MediaLite> mediaLiteList = mediaDAO.getLastPublicMedia(8);
+		List<MediaLite> mediaLiteList = mediaDAO.getLastPublicMedia(9);
 		logger.debug("Cantidad de resulatados> "+mediaLiteList.size());
 		
 		return new ModelAndView("home","medias",mediaLiteList);

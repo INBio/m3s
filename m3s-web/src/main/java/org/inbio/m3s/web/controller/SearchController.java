@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.web.controller;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.lite.MediaLite;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
@@ -33,7 +32,7 @@ public class SearchController extends SimpleController {
 	private MediaManager mediaManager;
 	private AgentManager agentManager;	
 	
-	//DAO :S
+	//DAO :S ;(
 	private MediaDAO mediaDAO;
 
 	@Override
@@ -46,39 +45,90 @@ public class SearchController extends SimpleController {
 		String filter = request.getParameter("filter");
 		String criteria = request.getParameter("criteria");
 		String value = request.getParameter("value");
+		if(value!=null)
+			value = URLDecoder.decode(value, "UTF-8");
+		logger.debug("filter: "+filter);
+		logger.debug("criteria: "+criteria);
+		logger.debug("value: "+value);
+		
 		if(filter!=null&criteria!=null&value!=null){
 			int first =  Integer.valueOf(request.getParameter("first")).intValue();
 			if(first < 1)
 				first = 1;
 			int last = Integer.valueOf(request.getParameter("last")).intValue();
 			
+			Integer searchFilterId = Integer.valueOf(filter);
+		  Integer searchCriteriaId = Integer.valueOf(criteria);
+		  SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
+		  List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
+		  sctList.add(scTriplet);
+		
+		  int totalResults = searchManager.getTotalResults(sctList); 
+		  List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
+		
+		  List<MediaLite> mediaLiteList = new ArrayList<MediaLite>();
+		  for(Integer mediaId : mediaIdsList){
+			  mediaLiteList.add(mediaDAO.getMediaLite(mediaId));
+		  }
 			
-			List<MediaLite> medias = query(filter,criteria,value,first,last);
-			mav.addObject(metadataMediaList, medias);
+			mav.addObject(metadataMediaList, mediaLiteList);
+			
+			//butons :s
+			String previousResultsText = " << Resultados anteriores ";
+			String posteriorResultsText = " Resultados posteriores >> ";
+			String noMoreResult = "No hay más resultados";
+			int showing = (last - first)+1;
+			if(totalResults < showing)
+				showing = totalResults;
+			int min;
+			int max;
+			String prevResults;
+			String nextResults;
+			
+			String baseURL = "/m3sINBio/getGallery?filter="+filter+"&criteria="+criteria+"&value="+value;
+			
+			//previous min and max
+			max = first -1;
+			min = first-showing;
+			if(first > 2){
+				prevResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+previousResultsText+"</a>";
+				mav.addObject("previousParams", "&first="+min+"&last="+max);
+			} else{
+				prevResults = noMoreResult;
+				mav.addObject("previousParams", null);
+			}
+			
+			
+			//next min and max
+			min = last+1;
+			max = last+showing;
+			if((totalResults - last) > 0){
+				nextResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+posteriorResultsText+"</a>";
+				mav.addObject("nextParams", "&first="+min+"&last="+max);
+			} else{
+				nextResults = noMoreResult;
+				mav.addObject("nextParams", null);
+			}
+			
+			
+			
+			
+			mav.addObject("controlButtons","<p> "+prevResults+"  || "+nextResults+" </p>");
+			//fin de buton
+			mav.addObject("totalResults", totalResults);
+			mav.addObject("showing", showing);
+			mav.addObject("criteria", criteria);
+			mav.addObject("filter", filter);
+			mav.addObject("value", value);
+			mav.addObject("first", first);
+			mav.addObject("last", last);
 		}
 		
 		return mav;
 	}
+		
+		
 	
-	private List<MediaLite> query(String filter, String criteria, String value, int first, int last){
-		
-		Integer searchFilterId = Integer.valueOf(filter);
-		Integer searchCriteriaId = Integer.valueOf(criteria);
-		SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
-		List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
-		sctList.add(scTriplet);
-		
-		int totalResults = searchManager.getTotalResults(sctList); 
-		List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
-		
-		List<MediaLite> mediaLiteList = new ArrayList<MediaLite>();
-		for(Integer mediaId : mediaIdsList){
-			mediaLiteList.add(mediaDAO.getMediaLite(mediaId));
-		}
-		
-		return mediaLiteList;
-	}
-
 	/**
 	 * @return the metadataMediaList
 	 */
