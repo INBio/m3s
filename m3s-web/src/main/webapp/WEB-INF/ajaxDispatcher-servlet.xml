@@ -17,6 +17,10 @@
         <property name="mappings">
             <props>
                 <prop key="/taxonName/**/**">taxonNameAutoCompleteController</prop>
+                <prop key="/personName/**/**">mediaAuthorNameAutoCompleteController</prop>
+                <prop key="/institutionName/**/**">institutionNameAutoCompleteController</prop>
+                <prop key="/projectName/**/**">projectNameAutoCompleteController</prop>
+                
             </props>
         </property>
     </bean>
