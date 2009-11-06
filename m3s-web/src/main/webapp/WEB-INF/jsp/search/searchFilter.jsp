@@ -41,7 +41,7 @@
   <label>
     <input id="valueId" name="value" value="<c:out value="${value}"/>"/>
     <div id="valueContainer"/>
-    <gbiftag:autoComplete containerId="valueContainer" inputId="valueId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
+    <gbiftag:autoComplete containerId="valueContainer" inputId="valueId" url="${pageContext.request.contextPath}/ajax/taxonName" multiValue="true"/>
   </label>  
 <%--
 <span id="newFilterValue" class="value">
@@ -66,7 +66,7 @@
 Aqui debe ir una explicación del filtro y criterio de búsqueda seleccionado
 </p>
 
-<c:if test="${not empty medias}">
+<c:if test="${not empty outputMediaList}">
   <h2>Resultados</h2>
   
   

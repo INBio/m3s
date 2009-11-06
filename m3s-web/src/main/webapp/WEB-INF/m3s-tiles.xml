@@ -45,6 +45,10 @@
   <definition name="editStep2" extends="mainTemplate">
     <put name="title" value="Edit Multimedia Metadata"/>	    
     <put name="content" value="/WEB-INF/jsp/edit/step2.jsp"/>
+  </definition>
+  <definition name="editStep3" extends="mainTemplate">
+    <put name="title" value="Edit Multimedia Metadata"/>        
+    <put name="content" value="/WEB-INF/jsp/edit/step3.jsp"/>
   </definition>  
   
   <!-- search media -->

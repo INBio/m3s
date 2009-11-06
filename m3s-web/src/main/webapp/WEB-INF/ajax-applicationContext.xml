@@ -27,8 +27,13 @@
 
     <!-- Project Name search support  -->
     <bean id="projectNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
-        <property name="autoCompleteManager" ref="ProjectNameAutoCompleteManager"/>   
-    </bean>            
+        <property name="autoCompleteManager" ref="projectNameAutoCompleteManager"/>   
+    </bean>
+    
+    <!-- Project Name search support  -->
+    <bean id="keywordAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
+        <property name="autoCompleteManager" ref="keywordAutoCompleteManager"/>   
+    </bean>                        
     
     
     

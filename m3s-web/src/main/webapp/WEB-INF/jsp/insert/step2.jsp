@@ -6,8 +6,7 @@
   
   <tiles:insert page="imagePreview.jsp"/>
   
-  <tiles:insert page="/WEB-INF/jsp/insert/metadata.jsp"/>
-  <%--<tiles:insert page="/WEB-INF/jsp/metadata.jsp"/>--%>
+  <tiles:insert page="/WEB-INF/jsp/metadata.jsp"/>
   
 </div>
 

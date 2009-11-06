@@ -20,7 +20,7 @@
                 <prop key="/personName/**/**">mediaAuthorNameAutoCompleteController</prop>
                 <prop key="/institutionName/**/**">institutionNameAutoCompleteController</prop>
                 <prop key="/projectName/**/**">projectNameAutoCompleteController</prop>
-                
+                <prop key="/keyword/**/**">keywordAutoCompleteController</prop>
             </props>
         </property>
     </bean>

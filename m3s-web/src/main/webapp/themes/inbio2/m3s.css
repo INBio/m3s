@@ -33,11 +33,12 @@ br { clear:both;}
 .media-kind { background-repeat:no-repeat; background-position: right top; height: 18px;}
 .thumb-image { height:120px; background-position:center center; background-repeat: no-repeat; border: 1px solid #efefef; margin: auto;}
 .thumb-imaName { font-weight:bold; font-style:italic;}
-.thumb-text1, thumb-text2 {}
+.thumb-text1, .thumb-text2 { font-size:10px; }
 .thumb-date { font-size:9px;}
 .media-kind, .thumb-imaName, .thumb-text1, thumb-text2, .thumb-date, { display: inline; overflow:auto; height:20px;position: fixed;asz}
 
-.imagesRightPanel { float:left; width: 130px; margin: 10px;}
+.imagesRightPanel { float:left; width: 130px; margin: 10px; height: 230px;}
+/*.imagesRightPanel:hover {border: solid gray 1px}*/
 
 
 /*imprtar imagenes*/
