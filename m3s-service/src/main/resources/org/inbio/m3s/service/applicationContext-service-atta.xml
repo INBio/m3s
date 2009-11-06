@@ -142,6 +142,23 @@
     <property name="importFromFile" ref="ATTAImportFromFile"/>
   </bean>
   
+  <!-- AutoComplete Managers -->
+  <bean id="ATTAInstitutionNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.InstitutionNameAutoCompleteManagerImpl">
+    <property name="institutionDAO" ref="INBioInstitutionDAO"/>
+  </bean>
+  <bean id="ATTAPersonNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.PersonNameAutoCompleteManagerImpl">
+    <property name="personDAO" ref="INBioPersonDAO"/>
+  </bean>
+  <bean id="ATTATaxonNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.TaxonNameAutoCompleteManagerImpl">
+    <property name="taxonDAO" ref="INBioTaxonDAO"/>
+  </bean>
+  
+  <!--  BriefMediaOutputDTOFactory/Service -->
+  <bean id="ATTABriefMediaOutputDTOFactory" class="org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory">
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+  </bean>
+  
 	<!-- DTO Factories -->
 	<bean id="institutionLiteDTOFactory" class="org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory"/>
 	<bean id="personLiteDTOFactory" class="org.inbio.m3s.dto.agent.PersonLiteDTOFactory"/>

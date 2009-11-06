@@ -73,5 +73,13 @@
   
 <!-- importThread (1 versiones, seran 3)-->  
 		
+<!-- AutoComplete Managers -->		
+  <bean id="projectNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.ProjectNameAutoCompleteManagerImpl">
+    <property name="projectDAO" ref="projectDAO"/>
+  </bean>
+  <bean id="keywordAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.KeywordAutoCompleteManagerImpl">
+    <property name="keywordDAO" ref="keywordDAO"/>
+  </bean>
+
 	
 </beans>

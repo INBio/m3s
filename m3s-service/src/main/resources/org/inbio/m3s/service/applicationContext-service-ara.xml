@@ -89,5 +89,22 @@
     <property name="importationManager" ref="importationManager"/>
     <property name="importFromFile" ref="ARAImportFromFile"/>
   </bean>	
+  
+  <!-- AutoComplete Managers -->
+  <bean id="ARAInstitutionNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.InstitutionNameAutoCompleteManagerImpl">
+    <property name="institutionDAO" ref="ARAInstitutionDAO"/>
+  </bean>
+  <bean id="ARAPersonNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.PersonNameAutoCompleteManagerImpl">
+    <property name="personDAO" ref="ARAPersonDAO"/>
+  </bean>
+  <bean id="ARATaxonNameAutoCompleteManager" class="org.inbio.m3s.service.autocomplete.impl.TaxonNameAutoCompleteManagerImpl">
+    <property name="taxonDAO" ref="ARATaxonDAO"/>
+  </bean>  
+  
+  <!--  BriefMediaOutputDTOFactory/Service -->
+  <bean id="ARABriefMediaOutputDTOFactory" class="org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory">
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+  </bean>  
 	
 </beans>
