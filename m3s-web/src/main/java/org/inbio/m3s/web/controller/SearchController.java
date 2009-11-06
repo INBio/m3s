@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.lite.MediaLite;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
@@ -31,6 +33,9 @@ public class SearchController extends SimpleController {
 	private SearchManager searchManager;
 	private MediaManager mediaManager;
 	private AgentManager agentManager;	
+
+	//DTOFactory/Service Mixture
+	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
 	
 	//DAO :S ;(
 	private MediaDAO mediaDAO;
@@ -66,12 +71,15 @@ public class SearchController extends SimpleController {
 		  int totalResults = searchManager.getTotalResults(sctList); 
 		  List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
 		
-		  List<MediaLite> mediaLiteList = new ArrayList<MediaLite>();
+		  //List<MediaLite> mediaLiteList = new ArrayList<MediaLite>();
+		  MediaLite ml;
+		  List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
 		  for(Integer mediaId : mediaIdsList){
-			  mediaLiteList.add(mediaDAO.getMediaLite(mediaId));
+		  	ml = mediaDAO.getMediaLite(mediaId);
+		  	bmoDTOList.add((BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml));
 		  }
 			
-			mav.addObject(metadataMediaList, mediaLiteList);
+			mav.addObject(metadataMediaList, bmoDTOList);
 			
 			//butons :s
 			String previousResultsText = " << Resultados anteriores ";
@@ -197,6 +205,25 @@ public class SearchController extends SimpleController {
 	 */
 	public void setMediaDAO(MediaDAO mediaDAO) {
 		this.mediaDAO = mediaDAO;
+	}
+
+
+
+	/**
+	 * @return the briefMediaOutputDTOFactory
+	 */
+	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
+		return briefMediaOutputDTOFactory;
+	}
+
+
+
+	/**
+	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
+	 */
+	public void setBriefMediaOutputDTOFactory(
+			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
+		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
 	}
 	
 }

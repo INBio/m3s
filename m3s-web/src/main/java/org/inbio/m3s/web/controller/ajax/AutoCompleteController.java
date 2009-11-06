@@ -9,7 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.inbio.m3s.service.AutoCompleteManager;
+import org.inbio.m3s.service.autocomplete.AutoCompleteManager;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -30,6 +30,8 @@ public class AutoCompleteController extends AbstractController {
 			HttpServletResponse response) throws Exception {
 
 		ServletOutputStream out = response.getOutputStream(); // binary output
+		response.setCharacterEncoding("UTF-8");
+		
 		
 		String queryValue = request.getParameter(query);
 		Map<Integer, String> options = autoCompleteManager.getAutoCompleteOptions(queryValue);

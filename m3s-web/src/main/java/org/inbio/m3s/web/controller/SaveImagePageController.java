@@ -27,12 +27,24 @@ public class SaveImagePageController extends AbstractController{
 	
 	private String viewName = "insertStep2"; //se sobre escribe con el valor en el xml
 	
+	private String formActionValue;
+	
+	/* Mueve el valor de fileName a mediaId para que despliegue todo bien*/
+	private String metadataFileName;
+	private String metadataMediaId;
+	
+	private String metadataMediaVisible;
+	
 	public SaveImagePageController(){}
 
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		
 		ModelAndView mav = new ModelAndView(viewName);
+		mav.addObject("formAction", formActionValue);
+		
+		String fileName = request.getParameter(metadataFileName);
+    mav.addObject(metadataMediaId,fileName);
 		
 		//nombre del archivo que voy a subir 
 		//(en realidad es como el código del archivo que voy a subir)
@@ -54,6 +66,9 @@ public class SaveImagePageController extends AbstractController{
 		//Políticas de Uso
 		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
 		mav.addObject("usePolicies", usePolicies);
+		
+		//MediaVisible will be visible by default
+		mav.addObject(metadataMediaVisible, "checked");
 		
 		return mav;
 	}
@@ -98,6 +113,62 @@ public class SaveImagePageController extends AbstractController{
 	 */
 	public void setViewName(String viewName) {
 		this.viewName = viewName;
+	}
+
+	/**
+	 * @return the formActionValue
+	 */
+	public String getFormActionValue() {
+		return formActionValue;
+	}
+
+	/**
+	 * @param formActionValue the formActionValue to set
+	 */
+	public void setFormActionValue(String formActionValue) {
+		this.formActionValue = formActionValue;
+	}
+
+	/**
+	 * @return the metadataFileName
+	 */
+	public String getMetadataFileName() {
+		return metadataFileName;
+	}
+
+	/**
+	 * @param metadataFileName the metadataFileName to set
+	 */
+	public void setMetadataFileName(String metadataFileName) {
+		this.metadataFileName = metadataFileName;
+	}
+
+	/**
+	 * @return the metadataMediaId
+	 */
+	public String getMetadataMediaId() {
+		return metadataMediaId;
+	}
+
+	/**
+	 * @param metadataMediaId the metadataMediaId to set
+	 */
+	public void setMetadataMediaId(String metadataMediaId) {
+		this.metadataMediaId = metadataMediaId;
+	}
+
+	/**
+	 * @return the metadataMediaVisible
+	 */
+	public String getMetadataMediaVisible() {
+		return metadataMediaVisible;
+	}
+
+	/**
+	 * @param metadataMediaVisible the metadataMediaVisible to set
+	 */
+	public void setMetadataMediaVisible(String metadataMediaVisible) {
+		this.metadataMediaVisible = metadataMediaVisible;
 	}
 
 
