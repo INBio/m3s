@@ -19,4 +19,6 @@ public interface PersonDAO extends BaseDAO {
 	
 	public List<Person> findAllGatheringResponsible() throws IllegalArgumentException;
 
+	public List<Person> findAllByPartialNamePaginated(String authorName, int maxResults);
+
 }

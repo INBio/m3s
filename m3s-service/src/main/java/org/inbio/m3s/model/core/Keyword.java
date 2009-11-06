@@ -21,8 +21,6 @@ public class Keyword extends DBLogEntity implements Serializable {
 
 	private KeywordCategory keywordCategory;
 
-	//private Set<MediaKeyword> mediaKeywords = new HashSet<MediaKeyword>(0);
-
 	public Keyword() {
 	}
 

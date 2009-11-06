@@ -18,6 +18,16 @@ public interface TaxonDAO extends BaseDAO {
 
 	public List<Taxon> findAllByName(String defaultName) throws IllegalArgumentException;
 	
+	/**
+	 * This method is useful for the autocompleteManager implementation, receives part of the
+	 * taxon name and looks for all the possible names. 
+	 * 
+	 * @param partialTaxonName
+	 * @param maxResults
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public List<Taxon> findAllByPartialNamePaginated(String partialTaxonName, int maxResults) throws IllegalArgumentException;
 
 	public Taxon findByDefaultNameAndKingdomId(String defaultName, Integer kingdomTaxonId) throws TaxonNotFoundException;
 

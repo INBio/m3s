@@ -12,9 +12,9 @@ package org.inbio.m3s.dao.core;
  */
 public interface StatisticsDAO {
 
-	public Integer allMediaCount() throws IllegalArgumentException;
+	public Long allMediaCount() throws IllegalArgumentException;
 	
-	public Integer DSCPhotosCount() throws IllegalArgumentException;
+	public Long DSCPhotosCount() throws IllegalArgumentException;
 	
-	public Integer videosCount() throws IllegalArgumentException;
+	public Long videosCount() throws IllegalArgumentException;
 }

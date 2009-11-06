@@ -62,5 +62,27 @@ public class KeywordDAOImpl extends BaseDAOImpl implements KeywordDAO {
 			}
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<KeywordDTO> findAllByPartialNamePaginated(final String partialKeywrod, final int maxResults, final Integer languageId) {
+		logger.debug("findAllByPartialNamePaginated with[" + partialKeywrod +"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<KeywordDTO>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select new org.inbio.m3s.dto.message.KeywordDTO(k.keywordId, tt.name)"
+						+ " from TextTranslation as tt, Keyword as k"
+						+ " where tt.language.languageId = :languageId" 
+						+ " and tt.name like :keyword"
+						+ " and k.text.textId = tt.text.textId");
+				query.setParameter("languageId", languageId);
+				query.setParameter("keyword", partialKeywrod);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);					
+				return query.list();
+			}
+		});
+	}
 	
 }

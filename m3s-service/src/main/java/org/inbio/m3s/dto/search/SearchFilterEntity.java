@@ -18,21 +18,6 @@ public enum SearchFilterEntity {
 	GENUS(6,"Genero"),
 	SPECIES(7,"Specie");
 	
-	//public static final Integer MEDIA_ID = new Integer(0);
-
-	//public static final Integer TAXONOMY = new Integer(1);
-
-	//public static final Integer AUTHOR = new Integer(2);
-	
-	//public static final Integer KEYWORD = new Integer(3);
-
-	//private static final String[] LITERAL_VALUES = { "",
-	//		"Taxonomía", "Autor", "Palabra Clave" };
-
-	//public static String getLiteralValue(Integer code) {
-	//	return LITERAL_VALUES[code.intValue()];
-	//}
-	
 	private int id;
 	
 	private String keyword;

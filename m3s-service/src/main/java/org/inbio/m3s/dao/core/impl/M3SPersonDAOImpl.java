@@ -98,4 +98,9 @@ public class M3SPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 		return super.findAll(M3SPerson.class);
 	}
 
+	public List<Person> findAllByPartialNamePaginated(String string, int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -29,4 +29,6 @@ public interface ProjectDAO extends BaseDAO {
 
 	public Project findByName(String projectName) throws IllegalArgumentException;
 
+	public List<Project> findAllByPartialNamePaginated(String partialName, int maxResults);
+
 }

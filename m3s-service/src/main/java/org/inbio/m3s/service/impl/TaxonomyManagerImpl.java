@@ -34,6 +34,7 @@ import org.inbio.m3s.model.core.TaxonMediaId;
 import org.inbio.m3s.model.taxonomy.Taxon;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.TaxonomyManager;
+import org.inbio.m3s.service.autocomplete.AutoCompleteManager;
 import org.inbio.m3s.util.BotanyUtils;
 
 /**
@@ -422,8 +423,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	public void setTaxonMediaDAO(TaxonMediaDAO taxonMediaDAO) {
 		this.taxonMediaDAO = taxonMediaDAO;
 	}
-
-
 
 
 }

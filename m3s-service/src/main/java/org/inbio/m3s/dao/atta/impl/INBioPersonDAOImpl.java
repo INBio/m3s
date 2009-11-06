@@ -48,6 +48,34 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 			}
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Person> findAllByPartialNamePaginated(final String authorName, final int maxResults) {
+		logger.debug("findAllByPartialNamePaginated for author name: '" + authorName + "'.");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Person>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select pp.person"
+						+ " from org.inbio.m3s.model.atta.PersonProfile as pp"
+						+ " where ( pp.profile.profileId =" + IMAGES_PROCESOR_PROFILE_ID
+						+         " or pp.profile.profileId =" + IMAGES_AUTHOR_PROFILE_ID + ")"
+						+ " and ( pp.person.firstName is not null "
+						+       " and pp.person.lastName is not null )"
+						+ " and ( pp.person.firstName like :authorName "
+						+       " or pp.person.lastName like :authorName )"
+						+ " order by pp.person.firstName asc, pp.person.lastName asc");
+				//query.setParameter(0, nomenclaturalGroupId);
+				query.setParameter("authorName", authorName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);					
+				return query.list();
+			}
+		});
+	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	public List<Person> findAllGatheringResponsible()

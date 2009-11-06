@@ -50,6 +50,29 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 		});
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.TaxonDAO#findAllByPartialNamePaginated(java.lang.String, int, int)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Taxon> findAllByPartialNamePaginated(final String partialTaxonName, final int maxResults) throws IllegalArgumentException {
+		logger.debug("findAllByPartialNamePaginated for default name: '" + partialTaxonName + "'.");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from INBioTaxon as t" 
+						+ " where t.defaultName like :defaultName");
+				query.setParameter("defaultName", partialTaxonName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
+	}
+
 	
 	/**
 	 * 
@@ -306,6 +329,9 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	public List<Object> findAll(Class entityClass) throws IllegalArgumentException {
 		return super.findAll(INBioTaxon.class);
 	}
+
+
+
 
 	
 	

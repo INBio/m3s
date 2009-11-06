@@ -3,6 +3,8 @@
  */
 package org.inbio.m3s.dao.core;
 
+import java.util.List;
+
 import org.inbio.m3s.dao.BaseDAO;
 import org.inbio.m3s.model.general.Institution;
 
@@ -11,7 +13,6 @@ import org.inbio.m3s.model.general.Institution;
  * 
  *
  */
-//public interface InstitutionDAO<E extends Institution,I extends Object> extends BaseDAO<E,I>{
 public interface InstitutionDAO extends BaseDAO{
 	/**
 	 * 
@@ -19,6 +20,8 @@ public interface InstitutionDAO extends BaseDAO{
 	 * @returns
 	 */
 	public Institution findByName(String institutionName);
+
+	public List<Institution> findAllByPartialNamePaginated(String partialName, int maxResults);
 	
 	
 	

@@ -3,7 +3,9 @@
  */
 package org.inbio.m3s.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,12 +20,13 @@ import org.inbio.m3s.exception.PersonNotFoundException;
 import org.inbio.m3s.model.general.Institution;
 import org.inbio.m3s.model.general.Person;
 import org.inbio.m3s.service.AgentManager;
+import org.inbio.m3s.service.autocomplete.AutoCompleteManager;
 
 /**
  * @author jgutierrez
  * 
  */
-public class AgentManagerImpl implements AgentManager {
+public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 
 	protected static Log logger = LogFactory.getLog(AgentManagerImpl.class);
 	
@@ -113,6 +116,22 @@ public class AgentManagerImpl implements AgentManager {
 		List<Object> pList = personDAO.findAll(Person.class);
 		return (List<PersonLiteDTO>) personLiteDTOFactory.createDTOList(pList);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.AutoCompleteManager#getAutoCompleteOptions(java.lang.String)
+	 */
+	public Map<Integer, String> getAutoCompleteOptions(String value) {
+		
+		List<Person> pList = personDAO.findAllByPartialNamePaginated("%"+value+"%", 20);
+		Map<Integer, String> results = new HashMap<Integer, String>();
+		
+		for(Person p: pList)
+			results.put(p.getPersonId(), p.getFirstName() + " " +p.getLastName());
+		
+		return results;
+	}
+
 	
 
 	/*
@@ -213,7 +232,6 @@ public class AgentManagerImpl implements AgentManager {
 	public PersonDAO getPersonDAO() {
 		return personDAO;
 	}
-
 
 
 }

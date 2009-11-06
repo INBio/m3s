@@ -109,4 +109,22 @@ public class ProjectDAOImpl extends BaseDAOImpl implements ProjectDAO{
 		});
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Project> findAllByPartialNamePaginated(final String partialName, final int maxResults) {
+		logger.debug("findAllByPartialNamePaginated with[" + partialName +"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Project>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select p from Project as p" 
+						+ " where p.name like :projectName");
+				query.setParameter("projectName", partialName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);					
+				return query.list();
+			}
+		});
+	}
+
 }

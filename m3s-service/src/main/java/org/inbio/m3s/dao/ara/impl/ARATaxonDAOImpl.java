@@ -40,6 +40,29 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 			}
 		});
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.TaxonDAO#findAllByPartialNamePaginated(java.lang.String, int, int)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Taxon> findAllByPartialNamePaginated(final String partialTaxonName, final int maxResults) throws IllegalArgumentException {
+		logger.debug("findAllByPartialNamePaginated for default name: '" + partialTaxonName + "'.");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from ARATaxon as t" 
+						+ " where t.defaultName like :defaultName");
+				query.setParameter("defaultName", partialTaxonName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
+	}
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.TaxonDAO#findByDefaultNameAndKingdomId(java.lang.String, java.lang.Integer)

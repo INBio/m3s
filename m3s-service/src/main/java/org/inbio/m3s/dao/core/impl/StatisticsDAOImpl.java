@@ -23,9 +23,9 @@ public class StatisticsDAOImpl extends HibernateDaoSupport implements Statistics
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.StatisticsDAO#DSCPhotosCount()
 	 */
-	public Integer DSCPhotosCount() throws IllegalArgumentException {
+	public Long DSCPhotosCount() throws IllegalArgumentException {
 		HibernateTemplate template = getHibernateTemplate();
-		return (Integer) template.execute(new HibernateCallback() {
+		return (Long) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select count(m) from Media m where m.mediaType.mediaTypeId = "
@@ -40,9 +40,9 @@ public class StatisticsDAOImpl extends HibernateDaoSupport implements Statistics
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.StatisticsDAO#allMediaCount()
 	 */
-	public Integer allMediaCount() throws IllegalArgumentException {
+	public Long allMediaCount() throws IllegalArgumentException {
 		HibernateTemplate template = getHibernateTemplate();
-		return (Integer) template.execute(new HibernateCallback() {
+		return (Long) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select count(m) from Media m");
@@ -55,9 +55,9 @@ public class StatisticsDAOImpl extends HibernateDaoSupport implements Statistics
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.StatisticsDAO#videosCount()
 	 */
-	public Integer videosCount() throws IllegalArgumentException {
+	public Long videosCount() throws IllegalArgumentException {
 		HibernateTemplate template = getHibernateTemplate();
-		return (Integer) template.execute(new HibernateCallback() {
+		return (Long) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select count(m) from Media m where m.mediaType.mediaTypeId = "

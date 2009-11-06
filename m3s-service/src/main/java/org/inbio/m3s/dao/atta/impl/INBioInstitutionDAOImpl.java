@@ -45,6 +45,29 @@ public class INBioInstitutionDAOImpl extends BaseDAOImpl implements InstitutionD
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.InstitutionDAO#findAllByPartialNamePaginated(java.lang.String, int)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Institution> findAllByPartialNamePaginated(final String partialName, final int maxResults) {
+		logger.debug("findAllByPartialNamePaginated for institution name: '" + partialName + "'.");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Institution>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select i"
+						+ " from INBioInstitution as i "
+						+ " where i.name like :institutionName");
+				query.setParameter("institutionName", partialName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);					
+				return query.list();
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.inbio.m3s.dao.impl.BaseDAOImpl#create(java.lang.Object)
 	 */
 	@Override

@@ -11,6 +11,7 @@ import org.inbio.m3s.dao.core.InstitutionDAO;
 import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.ara.ARAInstitution;
 import org.inbio.m3s.model.general.Institution;
+import org.inbio.m3s.model.general.Person;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -42,6 +43,28 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 		});
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.InstitutionDAO#findAllByPartialNamePaginated(java.lang.String, int)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Institution> findAllByPartialNamePaginated(final String partialName, final int maxResults) {
+		logger.debug("findAllByPartialNamePaginated for institution name: '" + partialName + "'.");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Institution>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select i"
+						+ " from ARAInstitution as i "
+						+ " where i.name like :institutionName");
+				query.setParameter("institutionName", partialName);
+				query.setFirstResult(0);
+				query.setMaxResults(maxResults);				
+				query.setCacheable(true);					
+				return query.list();
+			}
+		});
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -91,5 +114,6 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	public List<Object> findAll(Class entityClass) throws IllegalArgumentException {
 		return super.findAll(ARAInstitution.class);
 	}
+
 
 }

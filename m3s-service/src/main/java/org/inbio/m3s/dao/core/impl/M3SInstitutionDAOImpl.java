@@ -93,6 +93,13 @@ public class M3SInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	}
 
 
+	public List<Institution> findAllByPartialNamePaginated(String partialName,
+			int maxResults) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
 }
