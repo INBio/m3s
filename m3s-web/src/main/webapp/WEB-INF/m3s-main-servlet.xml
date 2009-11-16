@@ -62,6 +62,7 @@
   <bean name="/edit.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="editStep1"/>
   </bean>
+  <!-- edit page -->
   <bean name="/editMedia.html" class="org.inbio.m3s.web.controller.EditStep2PageController">
     <!-- View -->
     <property name="viewName" value="editStep2"/>
@@ -85,6 +86,11 @@
     <property name="metadataOwnerValue" value="ownerValue"/>
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>
+    
+    <!--  Owner Widget configuration -->
+    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
+    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+    
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>	
     <!--  de ARA -->
@@ -98,7 +104,7 @@
     -->    
   </bean>
   
-  
+  <!--  updates the edited metadata -->
   <bean name="/updateMetadata.html" class="org.inbio.m3s.web.controller.UpdateMetadataController">
     <!-- View -->
     <property name="viewName" value="editStep3"/>
@@ -137,7 +143,7 @@
     <property name="siteDAO" ref="ARASiteDAO"/>
   </bean>
   
-  
+  <!--  save metadata when media is new -->
   <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.SaveMetadataController">
     <!-- View -->
     <property name="viewName" value="insertStep3"/>
@@ -176,7 +182,6 @@
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
-    
     
     <!-- Util Class -->
     <property name="mediaFileManagement" ref="mediaFileManagement"/>

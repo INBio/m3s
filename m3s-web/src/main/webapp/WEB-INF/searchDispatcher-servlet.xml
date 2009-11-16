@@ -35,6 +35,9 @@
         <entry key="filtersMap" value-ref="searchFilters"></entry>
       </map>
     </property>
+    
+    <property name="filtersMap" ref="searchFilters"/>
+    <property name="metadataFilters" value="filters"/>
     <property name="metadataMediaList" value="outputMediaList"/>
     <property name="mediaDAO" ref="mediaDAO"/>
     <!-- ARA -->

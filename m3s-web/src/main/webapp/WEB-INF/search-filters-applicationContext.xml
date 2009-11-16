@@ -19,12 +19,13 @@
                 <ref bean="mediaAuthorNameFilter" />
                 <ref bean="keywordFilter" />
                 <ref bean="projectFilter" />
+                <ref bean="orderTaxonFilter" />   
                 <ref bean="familyTaxonFilter" />                
                 <ref bean="genusTaxonFilter" />
                 <ref bean="speciesTaxonFilter" />
             </list>
         </property>
-    </bean>
+    </bean>  
 
         <!-- This is inherited by all the major rank filter definition -->
     <bean id="baseFilter" abstract="true" class="org.inbio.m3s.web.filter.FilterDTO">
@@ -54,7 +55,6 @@
         <!--
         <property name="autoCompleteUrl" value="taxonomy/taxonName/ajax/view/ajaxTaxonName" /> 
          -->
-         <property name="autoCompleteUrl" value="speciesRecordTaxonomy/taxonName/ajax/view/ajaxTaxonName" />
     </bean>
     
     <bean id="taxonNameFilter" parent="baseFilter">
@@ -64,18 +64,18 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.AUTHOR" />
         <property name="helpView" value="/speciesRecord/authorHelp.htm" />
-        <property name="autoCompleteUrl" value="ajax/taxonName/view/ajaxTaxonName" />
+        <property name="autoCompleteUrl" value="ajax/taxonName" />
     </bean>
 
     <bean id="mediaAuthorNameFilter" parent="baseFilter">
         <property name="id" value="2" />
         <property name="name" value="mediaAuthorName" />
         <property name="displayName" value="search.filters.media.author" />
+        <property name="autoCompleteUrl" value="ajax/personName" />
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.COLLABORATORS" />
         <property name="helpView" value="/speciesRecord/collaboratorHelp.htm" />
-    </bean>
-
+    </bean>    
     <bean id="keywordFilter" parent="baseFilter">
         <property name="id" value="3" />
         <property name="name" value="keyword" />
@@ -83,13 +83,7 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.ABSTRACT" />
         <property name="helpView" value="/speciesRecord/abstractHelp.htm" />
-        <!-- 
-        <property name="predicates">
-            <list>
-                <ref bean="predicateIsLikeWithWildcard"/>           
-            </list>
-        </property>
-         -->        
+        <property name="autoCompleteUrl" value="ajax/keyword" />
     </bean>      
  
     <bean id="projectFilter" parent="baseFilter">
@@ -99,8 +93,19 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.LANGUAGE" />
         <property name="helpView" value="/speciesRecord/languageHelp.htm" />
+        <property name="autoCompleteUrl" value="ajax/projectName" />
     </bean>     
-                
+             
+    <bean id="orderTaxonFilter" parent="baseFilter">
+        <property name="id" value="8" />
+        <property name="name" value="orderTaxon" />
+        <property name="displayName" value="search.filters.taxon.order" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
+        <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
+
+    </bean>
+
     <bean id="familyTaxonFilter" parent="baseFilter">
         <property name="id" value="5" />
         <property name="name" value="familyTaxon" />
@@ -108,13 +113,6 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
         <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
-        <!-- 
-        <property name="predicates">
-            <list>
-                <ref bean="predicateIsLikeWithWildcard"/>               
-            </list>
-        </property>
-         --> 
     </bean>
 
     <bean id="genusTaxonFilter" parent="baseFilter">
@@ -123,20 +121,7 @@
         <property name="displayName" value="search.filters.taxon.genus" />
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATAPROVIDERID" />
-        <!-- 
-        <property name="predicates">
-            <list>
-                <ref bean="predicateIs" />
-            </list>
-        </property>
-         -->
-         <!-- 
-        <property name="valueType" value="java.lang.Long" />
-        <property name="picklistHelper" ref="dataProviderIdFilterHelper" />
-        <property name="filterHelper" ref="dataProviderIdFilterHelper" />
-        <property name="filterType" value="1" />
-        <property name="helpView" value="/speciesRecord/dataProviderHelp.htm" />
-         -->
+
     </bean>
 
     <bean id="speciesTaxonFilter" parent="baseFilter">
@@ -145,19 +130,6 @@
         <property name="displayName" value="search.filters.taxon.species" />
          <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATARESOURCEID" />
-        <!--
-        <property name="predicates">
-            <list>
-                <ref bean="predicateIs" />
-            </list>
-        </property>
-         -->
-         <!-- 
-        <property name="valueType" value="java.lang.Long" />
-        <property name="filterHelper" ref="dataResourceIdFilterHelper" />
-        <property name="filterType" value="2" />
-        <property name="wizardView" value="occurrence.wizard.dataresource" />
-         -->
     </bean>
 
     <!-- filter helper for scientific name 

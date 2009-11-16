@@ -25,6 +25,7 @@
 	  /WEB-INF/security-applicationContext.xml,
 	  /WEB-INF/search-filters-applicationContext.xml,
 	  /WEB-INF/ajax-applicationContext.xml,
+	  /WEB-INF/mediaOwner-filters-applicationContext.xml,
       <!-- ARA -->
       classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml,	  
       classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml,

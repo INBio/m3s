@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    
+
+<!-- 
+  This is the list of filters that will be rendered in the dropdown 
+  for the mediaOwner metadata widget
+-->
+  
+  <bean id="mediaOwnerFilters" class="org.inbio.m3s.web.filter.FilterMapWrapper">
+    <property name="filters">
+      <list>
+        <ref bean="institutionOwnerFilter" />
+        <ref bean="personOwnerFilter" />
+      </list>
+    </property>
+  </bean>  
+
+  <bean id="institutionOwnerFilter" parent="baseFilter">
+    <property name="id" value="0" />
+    <property name="name" value="institutionOwner" />
+    <property name="displayName" value="metadata.owner.insitution" />
+    <property name="autoCompleteUrl" value="ajax/institutionName" />
+    <!-- falta revisar estos -->
+    <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.COLLABORATORS" />
+    <property name="helpView" value="/speciesRecord/collaboratorHelp.htm" />
+  </bean>
+
+  <bean id="personOwnerFilter" parent="baseFilter">
+    <property name="id" value="1" />
+    <property name="name" value="personOwner" />
+    <property name="displayName" value="metadata.owner.person" />
+    <property name="autoCompleteUrl" value="ajax/personName" />
+    <!-- falta revisar estos -->
+    <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.COLLABORATORS" />
+    <property name="helpView" value="/speciesRecord/collaboratorHelp.htm" />
+  </bean>
+
+
+</beans>
