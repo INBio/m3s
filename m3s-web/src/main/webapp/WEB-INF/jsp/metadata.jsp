@@ -1,5 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%@ include file="/common/autocompleteScripts.jsp"%>
+<script src="${pageContext.request.contextPath}/javascript/mediaOwner.js" type="text/javascript" language="javascript"></script>
+<%@ taglib uri="/tld/fn.tld" prefix="fn" %>
+
 
 <form method="post" accept-charset="UTF-8" action="<c:out value="${formAction}"/>">
 
@@ -27,6 +30,8 @@
   <%--Categoria --%>
   <label>
     <b><spring:message code="metadata.label.media.category"/>:</b>
+  </label>
+  <label>    
     <select name="mediaCategories" id="mediaCategoriesId" tabindex="3">
       <c:forEach items="${mediaTypes}" var="mediaType">
         <option value="<c:out value="${mediaType.mediaTypeKey}"/>"<c:if test="${mediaType.mediaTypeKey == mediaCategories}"> selected="selected"</c:if>>
@@ -42,10 +47,12 @@
     <b><spring:message code="metadata.label.projects"/>:</b>
   </label>
   <label>
-    <input id="projectId" name="projects" size="40" value="<c:out value="${projects}"/>" tabindex="4"/>
-    <div id="projectContainer"></div>
-  </label>
-  <m3s:autoComplete containerId="projectContainer" inputId="projectId" url="${pageContext.request.contextPath}/ajax/projectName" multiValue="true"/>   
+    <span id="projectSpan">
+      <input id="projectId" name="projects" size="40" value="<c:out value="${projects}"/>" tabindex="4"/>
+      <div id="projectContainer"></div>
+      <m3s:autoComplete containerId="projectContainer" inputId="projectId" url="${pageContext.request.contextPath}/ajax/projectName" multiValue="true"/>
+    </span>
+  </label>   
   <br/>
   
   <%--Palabras Clave --%>
@@ -62,6 +69,8 @@
   <%--Asociado A --%>
   <label>
     <b><spring:message code="metadata.label.associated.to"/>:</b>
+  </label>
+  <label>    
     <select name="associatedToValueType" id="associatedToValueTypeId" tabindex="6">
       <c:forEach items="${associatedToValues}" var="associatedTo">
         <option value="<c:out value="${associatedTo.key}"/>"<c:if test="${associatedTo.key == associatedToValueType}"> selected="selected"</c:if>>
@@ -118,27 +127,50 @@
   <m3s:autoComplete containerId="personContainer" inputId="authorId" url="${pageContext.request.contextPath}/ajax/personName" />
   <br/>
   
-  <%--Propietario --%>
+  <%--Propietario  --%>
+ <%-- mediaOwnerFilter Auto Completes--%>
+  <script type="text/javascript">
+    var mediaOwnerAutoCompleteUrls = new Array(${ fn:length(requestScope['mediaOwnerFilters'])});
+    <c:forEach items="${requestScope['mediaOwnerFilters']}" var="mediaOwnerFilter" varStatus="filterStatus" begin="0">
+      <c:if test="${not empty mediaOwnerFilter.autoCompleteUrl}">
+        mediaOwnerAutoCompleteUrls[${mediaOwnerFilter.id}] = "${pageContext.request.contextPath}/${mediaOwnerFilter.autoCompleteUrl}";
+      </c:if> 
+    </c:forEach>
+  </script>
+  
+  <%--label of the widget --%>
   <label>
     <b><spring:message code="metadata.label.owner"/>:</b>
-    <select name="ownerType" id="ownerTypeId" tabindex="12">
-      <c:forEach items="${mediaOwners}" var="owner">
-        <option value="<c:out value="${owner.key}"/>"<c:if test="${owner.key == ownerType}"> selected="selected"</c:if>>
-          <spring:message code="${owner.nameKey}"/>
+  </label>
+  
+  <label>
+    <select name="ownerType" id="ownerTypeId" tabindex="12" onchange="javascript:changeMediaOwnerInput();" onKeyUp="javascript:changeMediaOwnerInput();">
+      <c:forEach items="${mediaOwnerFilters}" var="ownerFilter">
+        <option value="<c:out value="${ownerFilter.id}"/>"<c:if test="${ownerFilter.id == ownerType}"> selected="selected"</c:if>>
+          <spring:message code="${ownerFilter.displayName}"/>
         </option>
       </c:forEach>
     </select>
-  </label>
+  </label> 
+  
   <label>
-    <input id="ownerId" type="text" name="ownerValue" value="<c:out value="${ownerValue}"/>" tabindex="13"/>
-    <div id="ownerContainer"></div>
+    <span id="newOwnerValue">
+      <input id="ownerId" type="text" name="ownerValue" value="<c:out value="${ownerValue}"/>" tabindex="13"/>
+      <div id="ownerContainer"></div>
+    </span>
   </label>
-  <m3s:autoComplete containerId="ownerContainer" inputId="ownerId" url="${pageContext.request.contextPath}/ajax/institutionName" />  
+  
+  <script type="text/javascript"> 
+    changeMediaOwnerInput();
+  </script>
+  <%--<tiles:insert page="/WEB-INF/jsp/metadata/mediaOwner.jsp"/>--%>
   <br/>
   
   <%--Politica de Uso --%>
   <label>
     <b><spring:message code="metadata.label.use.policy"/>:</b>
+  </label>
+  <label>
     <select name="usePolicy" id="usePolicyId" tabindex="14">
       <c:forEach items="${usePolicies}" var="upItem">
         <option value="<c:out value="${upItem.usePolicyKey}"/>"<c:if test="${upItem.usePolicyKey == usePolicy}"> selected="selected"</c:if>>
