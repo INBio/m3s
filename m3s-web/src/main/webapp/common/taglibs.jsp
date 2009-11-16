@@ -4,5 +4,3 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="m3s" tagdir="/WEB-INF/tags/m3s" %>
-<%@ taglib prefix="display" uri="/tld/displaytag.tld"  %>
-<%@ taglib prefix="display-el" uri="/tld/displaytag-el.tld"  %>
