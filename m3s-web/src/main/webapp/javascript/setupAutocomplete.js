@@ -8,7 +8,7 @@
  * 
  */
 
-function setupAutoComplete(queryUrl, inputId, containerId, multiValue){
+function setupAutoComplete(queryUrl, inputId, containerId){
 YAHOO.example.BasicRemote = function() {
     // Use an XHRDataSource    
     var oDS = new YAHOO.util.XHRDataSource(queryUrl);
@@ -63,6 +63,23 @@ YAHOO.example.BasicRemote = function() {
     };
 }();
 }
+
+function helloWorld(theSelectElement, inputId, containerId){
+	
+	var filterId = theSelectElement.value;
+	var useAutoComplete = (autoCompleteUrls[filterId]!=null);
+	
+	//if this filter uses auto complete, setup required container divs
+	if(useAutoComplete){
+		alert("debería buscar acá: "+ autoCompleteUrls[filterId]);
+		setupAutoComplete(autoCompleteUrls[filterId],inputId, containerId);
+	} else {
+		alert("no auto complete");
+	}
+	
+}
+
+
 /*
 function setupAutoComplete(queryUrl, inputId, containerId){
   YAHOO.example.BasicRemote = function() {
