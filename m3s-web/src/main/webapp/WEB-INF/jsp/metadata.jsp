@@ -1,6 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%@ include file="/common/autocompleteScripts.jsp"%>
 <script src="${pageContext.request.contextPath}/javascript/mediaOwner.js" type="text/javascript" language="javascript"></script>
+<script src="${pageContext.request.contextPath}/javascript/associatedValues.js" type="text/javascript" language="javascript"></script>
 <%@ taglib uri="/tld/fn.tld" prefix="fn" %>
 
 
@@ -71,7 +72,7 @@
     <b><spring:message code="metadata.label.associated.to"/>:</b>
   </label>
   <label>    
-    <select name="associatedToValueType" id="associatedToValueTypeId" tabindex="6">
+    <select id="associatedToValueTypeId" name="associatedToValueType" onchange="javascript:changeAssociatedToValue('${pageContext.request.contextPath}');" tabindex="6">
       <c:forEach items="${associatedToValues}" var="associatedTo">
         <option value="<c:out value="${associatedTo.key}"/>"<c:if test="${associatedTo.key == associatedToValueType}"> selected="selected"</c:if>>
           <spring:message code="${associatedTo.nameKey}"/>
@@ -80,7 +81,7 @@
     </select>      
   </label>
   <label>
-    <input type="text" name="associatedToValue" value="<c:out value="${associatedToValue}"/>" tabindex="7"/>
+    <input id="associatedToValueId" type="text" name="associatedToValue" value="<c:out value="${associatedToValue}"/>" onchange="javascript:changeAssociatedToValue('${pageContext.request.contextPath}');"  tabindex="7"/>
   </label>
   <br/>
       
@@ -89,21 +90,36 @@
     <b><spring:message code="metadata.label.taxonomy"/>:</b>
   </label>
   <label>
-    <input id="taxonomyId" name="taxonomy" value="<c:out value="${taxonomy}"/>" tabindex="8"/>
+    <input id="taxonomyId" type="text" tabindex="8"/>
     <div id="taxonomyContainer"></div>
   </label>
+  <m3s:autoComplete containerId="taxonomyContainer" inputId="taxonomyId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
   <label>
-    <input type="text" name="taxonomyKingdom" value="<c:out value="${taxonomyKingdom}"/>" tabindex="9"/>
+    <input id="kingdomId" type="text" tabindex="9"/>
+    <div id="taxonomyKingdomContainer"></div>    
   </label>
-  <m3s:autoComplete containerId="taxonomyContainer" inputId="taxonomyId" url="${pageContext.request.contextPath}/ajax/taxonName" multiValue="true"/>  
+  <m3s:autoComplete containerId="taxonomyKingdomContainer" inputId="kingdomId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
+  <label>
+    <input type="button" name="agregar" value="agregar" onclick="javascript:checkAndAddTaxonomy('${pageContext.request.contextPath}');"/>
+  </label>
+  <!-- el value debería ser taxonomy-->
+  <input type="hidden" id="taxonomyListId" name="taxonomy" value="<c:out value="${taxonomy}"/>" />  
   <br/>
+  <%-- Acá irá apareciendo la taxonomía --%>
+  <label>
+    <span id="taxonomy"></span>
+  </label>
+  <br/>
+  <script type="text/javascript">
+  setTaxonomy();
+  </script>
       
   <%--Sitio --%>
   <label>
     <b><spring:message code="metadata.label.site"/>:</b>
   </label>
   <label>
-    <textarea name="siteDescription" rows="4" cols="50" tabindex="10"></textarea>
+    <textarea id="siteDescriptionId" name="siteDescription" rows="4" cols="50" tabindex="10"><c:out value="${siteDescription}"/></textarea>
   </label>  
   <br/>
             
@@ -190,6 +206,6 @@
   </label>
   <br/> 
       
-  <input type="submit" value="Guardar" tabindex="16"/>
+  <input type="submit" value="Guardar" onclick="javascript:preSubmit();" tabindex="16"/>
 
 </form>
