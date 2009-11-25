@@ -3,7 +3,7 @@
 <div id="footer">
   <div id="footer-out">
     <div id="footer-in">
-      <p>pie pagina</p>
+      <p><spring:message code="m3s.footer"/></p>
     </div>
   </div>
 </div>
