@@ -25,7 +25,7 @@
 
 <h2><spring:message code="search.title"/></h2>
  
-<%--${pageContext.request.contextPath} --%> 
+<%--${pageContext.request.contextPath} --%>
 <form method="get" accept-charset="UTF-8" action="<c:out value="${pageContext.request.contextPath}${formAction}"/>">
   
   <input type="hidden" name="criteria" value="0" /> <!-- criteria = 'is' -->
@@ -73,7 +73,9 @@
 <br>
 <p>
 <label>
-Aqui debe ir una explicación del filtro y criterio de búsqueda seleccionado
+<a href="http://larus.inbio.ac.cr:8090/multimedios/doku.php?id=buscar"><spring:message code="search.help"/></a><br>
+
+
 </label>
 <br>
 </p>
