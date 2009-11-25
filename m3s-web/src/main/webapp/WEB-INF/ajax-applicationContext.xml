@@ -3,26 +3,29 @@
 <beans>
     <!-- taxon name search support  -->
     <bean id="taxonNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
+        <!-- ARA 
         <property name="autoCompleteManager" ref="ARATaxonNameAutoCompleteManager"/>
-         <!-- ATTA  
-         <property name="taxonomyManager" ref="ATTATaxonNameAutoCompleteManager"/>
-         -->   
+        -->
+         <!-- ATTA  -->
+         <property name="autoCompleteManager" ref="ATTATaxonNameAutoCompleteManager"/>   
     </bean>
     
     <!-- Media Author Name search support  -->
     <bean id="mediaAuthorNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
+        <!-- ARA
         <property name="autoCompleteManager" ref="ARAPersonNameAutoCompleteManager"/>
-         <!-- ATTA  
-         <property name="taxonomyManager" ref="ATTAPersonNameAutoCompleteManager"/>
-         -->   
+         -->
+         <!-- ATTA -->     
+         <property name="autoCompleteManager" ref="ATTAPersonNameAutoCompleteManager"/>
     </bean>
     
     <!-- Institution Name search support  -->
     <bean id="institutionNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
+        <!-- ARA
         <property name="autoCompleteManager" ref="ARAInstitutionNameAutoCompleteManager"/>
-         <!-- ATTA  
-         <property name="taxonomyManager" ref="ATTAInstitutionNameAutoCompleteManager"/>
-         -->   
+        -->   
+         <!-- ATTA  -->
+         <property name="autoCompleteManager" ref="ATTAInstitutionNameAutoCompleteManager"/>
     </bean>
 
     <!-- Project Name search support  -->
@@ -35,8 +38,25 @@
         <property name="autoCompleteManager" ref="keywordAutoCompleteManager"/>   
     </bean>                        
     
-    
-    
-    
-    
+    <!-- SpecimenId, ObservationNumber, collectionCode and taxon&KingdomVerifier  associated Taxonomy  -->
+    <bean id="associatedToController" class="org.inbio.m3s.web.controller.ajax.AssociatedToController">
+        <!-- ARA
+        <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+        <property name="siteDAO" ref="ARASiteDAO"/>
+         -->
+        <!-- ATTA -->
+         <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+        <property name="siteDAO" ref="INBioSiteDAO"/>
+    </bean>  
+                 
+    <!-- SpecimenId associated Taxonomy  
+    <bean id="taxonomyBySpecimenNumberController" class="org.inbio.m3s.web.controller.ajax.AssociatedToController">
+        <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    </bean> 
+    -->              
+    <!-- Kind of Taxonomy verifier ...
+    <bean id="taxonomyByNameAndKingdomController" class="org.inbio.m3s.web.controller.ajax.AssociatedToController">
+        <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    </bean>               
+    -->
 </beans>

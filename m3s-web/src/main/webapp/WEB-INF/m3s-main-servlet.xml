@@ -19,7 +19,11 @@
     <!-- daos,managers,dto/service -->
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="statisticsManager" ref="statisticsManager"/>
+    <!-- ARA 
     <property name="briefMediaOutputDTOFactory" ref="ARABriefMediaOutputDTOFactory"/>
+    -->
+    <!-- ATTA -->
+    <property name="briefMediaOutputDTOFactory" ref="ATTABriefMediaOutputDTOFactory"/>
   </bean>
   <!-- insert page -->
   <bean name="/insert.html" class="org.inbio.m3s.web.controller.reusable.SimpleFormController">
@@ -31,6 +35,11 @@
     <!-- View -->
     <property name="viewName" value="insertStep2"/>
     <property name="formActionValue" value="saveMetadata.html"/>
+    
+    <!--  Owner Widget configuration -->
+    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
+    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+    
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>
     <!--  -->
@@ -50,12 +59,12 @@
 
     <!-- Managers  -->  
     <property name="importationManager" ref="importationManager"/>  
-    <!--  de ARA -->
+    <!--  de ARA
     <property name="importThread" ref="ARAImportThread"/>
-
-    <!--  de ATTA 
-    <property name="importThread" ref="ATTAImportThread"/>
     -->
+    <!--  de ATTA --> 
+    <property name="importThread" ref="ATTAImportThread"/>
+    
   </bean>
   
   <!-- edit page -->
@@ -79,7 +88,6 @@
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
     <property name="metadataAssociatedToValue" value="associatedToValue"/>
     <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataKingdom" value="taxonomyKingdom"/>
     <property name="metadataSiteDescription" value="siteDescription"/>
     <property name="metadataMediaAuthor" value="mediaAuthor"/>    
     <property name="metadataOwnerType" value="ownerType"/>
@@ -91,23 +99,28 @@
     <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
     <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
     
+    <!-- Converters  -->
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+    
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>	
-    <!--  de ARA -->
+    <!-- ARA
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>    
-    <!--  de ATTA 
+    <property name="agentManager" ref="ARAAgentManager"/>
+    -->        
+    <!-- ATTA --> 
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    -->    
+    
   </bean>
   
   <!--  updates the edited metadata -->
   <bean name="/updateMetadata.html" class="org.inbio.m3s.web.controller.UpdateMetadataController">
     <!-- View -->
     <property name="viewName" value="editStep3"/>
+    <property name="formActionValue" value="uploadFile.html"/>
     <property name="metadataUsername" value="username"/>
     <property name="fileNameCode" value="fileName"/>
     <property name="metadataTitle" value="title"/>  
@@ -118,29 +131,33 @@
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
     <property name="metadataAssociatedToValue" value="associatedToValue"/>
     <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataKingdom" value="taxonomyKingdom"/>
     <property name="metadataSiteDescription" value="siteDescription"/>
     <property name="metadataMediaAuthor" value="mediaAuthor"/>
     <property name="metadataOwnerType" value="ownerType"/>
     <property name="metadataOwnerValue" value="ownerValue"/>
     <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>    
+    <property name="metadataMediaVisible" value="mediaVisible"/>  
+    
+    <!-- Converters  -->
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+      
     <!-- Managers -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
-    <!--  de ATTA 
+    <!-- ATTA --> 
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
-    -->
-    <!--  de ARA--> 
+    
+    <!--  de ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
+    -->
   </bean>
   
   <!--  save metadata when media is new -->
@@ -158,31 +175,34 @@
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
     <property name="metadataAssociatedToValue" value="associatedToValue"/>
     <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataKingdom" value="taxonomyKingdom"/>
     <property name="metadataSiteDescription" value="siteDescription"/>
     <property name="metadataMediaAuthor" value="mediaAuthor"/>
     <property name="metadataOwnerType" value="ownerType"/>
     <property name="metadataOwnerValue" value="ownerValue"/>
     <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>    
+    <property name="metadataMediaVisible" value="mediaVisible"/>
+    
+    <!-- Converters  -->
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+        
     <!-- Managers -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
     
-    <!--  de ATTA 
+    <!-- ATTA -->
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
-    -->
-    <!--  de ARA--> 
+    
+    <!-- ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
-    
+    -->
     <!-- Util Class -->
     <property name="mediaFileManagement" ref="mediaFileManagement"/>
     

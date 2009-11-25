@@ -10,8 +10,8 @@
     <intercept-url pattern="/login.html*" filters="none"/>
     <intercept-url pattern="/home.html*" filters="none"/>
     <intercept-url pattern="/index.*" filters="none"/>
-    <intercept-url pattern="/search.*" filters="none" />
-    <intercept-url pattern="/insert.*" access="ROLE_USER" />
+    <intercept-url pattern="/search/*" access="ROLE_USER" />
+    <intercept-url pattern="/insert*" access="ROLE_USER" />
     <intercept-url pattern="/edit.*" access="ROLE_USER" />
     <intercept-url pattern="/import.*" access="ROLE_USER" />
     <anonymous username="guest" granted-authority="ROLE_GUEST"/>

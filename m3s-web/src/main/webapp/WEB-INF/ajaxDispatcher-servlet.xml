@@ -21,6 +21,13 @@
                 <prop key="/institutionName/**/**">institutionNameAutoCompleteController</prop>
                 <prop key="/projectName/**/**">projectNameAutoCompleteController</prop>
                 <prop key="/keyword/**/**">keywordAutoCompleteController</prop>
+                <prop key="/taxonomyBySpecimenNumber/**/**">associatedToController</prop>
+                <prop key="/taxonomyByObservationNumber/**/**">associatedToController</prop>
+                <prop key="/taxonomyByGatheringCode/**/**">associatedToController</prop>
+                <prop key="/taxonomyByNameAndKingdom/**/**">associatedToController</prop>
+                <prop key="/siteBySpecimenNumber/**/**">associatedToController</prop>
+                <prop key="/siteByObservationNumber/**/**">associatedToController</prop>
+                <prop key="/siteByGatheringCode/**/**">associatedToController</prop>
             </props>
         </property>
     </bean>
