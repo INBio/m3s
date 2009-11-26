@@ -50,7 +50,7 @@
   <label>
     <span id="projectSpan">
       <input id="projectId" name="projects" size="40" value="<c:out value="${projects}"/>" tabindex="4"/>
-      <div id="projectContainer"></div>
+      <div id="projectContainer" class="yui-skin-m3s"></div>
       <m3s:autoComplete containerId="projectContainer" inputId="projectId" url="${pageContext.request.contextPath}/ajax/projectName" multiValue="true"/>
     </span>
   </label>   
@@ -62,7 +62,7 @@
   </label>
   <label>
     <input id="keywordId" type="text" name="keywords" size="40" value="<c:out value="${keywords}"/>" tabindex="5"/>
-    <div id="keywordsContainer"></div>
+    <div id="keywordsContainer" class="yui-skin-m3s"></div>
   </label>
   <m3s:autoComplete containerId="keywordsContainer" inputId="keywordId" url="${pageContext.request.contextPath}/ajax/keyword" multiValue="true"/>
   <br/>
@@ -91,12 +91,12 @@
   </label>
   <label>
     <input id="taxonomyId" type="text" tabindex="8"/>
-    <div id="taxonomyContainer"></div>
+    <div id="taxonomyContainer" class="yui-skin-m3s"></div>
   </label>
   <m3s:autoComplete containerId="taxonomyContainer" inputId="taxonomyId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
   <label>
     <input id="kingdomId" type="text" tabindex="9"/>
-    <div id="taxonomyKingdomContainer"></div>    
+    <div id="taxonomyKingdomContainer" class="yui-skin-m3s"></div>    
   </label>
   <m3s:autoComplete containerId="taxonomyKingdomContainer" inputId="kingdomId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
   <label>
@@ -138,7 +138,7 @@
   </label>
   <label>
     <input id="authorId" name="mediaAuthor" value="<c:out value="${mediaAuthor}"/>" tabindex="11"/>
-    <div id="personContainer"></div>
+    <div id="personContainer" class="yui-skin-m3s"></div>
   </label>
   <m3s:autoComplete containerId="personContainer" inputId="authorId" url="${pageContext.request.contextPath}/ajax/personName" />
   <br/>
