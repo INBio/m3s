@@ -175,7 +175,9 @@ function changeObjectInput(theSelectElement, value) {
 			//alert("use auto complete");
 			var autoCompleteDiv = document.createElement('DIV');
 			autoCompleteDiv.id="statescontainer";
-			autoCompleteDiv.className="statescontainer";			
+			//autoCompleteDiv.className="statescontainer";
+			autoCompleteDiv.className="yui-skin-m3s";
+			
 			autoCompleteDiv.innerHTML ="";
 			autoCompleteDiv.style.left="0px";
 			valueSpan.appendChild(autoCompleteDiv);			
