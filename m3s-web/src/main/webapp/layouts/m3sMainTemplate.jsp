@@ -7,8 +7,7 @@
     <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='m3s.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='galleries.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='tables.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='autocomplete.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='autocomplete-skin.css'/>"/>        
+    <link rel="stylesheet" type="text/css" href="<c:out value="${pageContext.request.contextPath}"/>/<spring:theme code='autocomplete.css'/>"/>        
     <title><tiles:getAsString name="title"/></title>
   </head>
   
