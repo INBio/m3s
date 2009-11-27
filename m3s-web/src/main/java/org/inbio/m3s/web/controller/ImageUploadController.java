@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.inbio.m3s.FileUploadBean;
+import org.inbio.m3s.util.ImageMagickAPI;
 
 
 import org.springframework.validation.BindException;
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 /**
  * 
  * @author jgutierrez
- *
+ *@deprecated
  */
 public class ImageUploadController extends SimpleFormController {
 
@@ -44,6 +45,8 @@ public class ImageUploadController extends SimpleFormController {
          // hmm, that's strange, the user did not upload anything
     } else{
     	file.transferTo(new File(filePath+fileName));
+    	
+    	ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
     }
     //return new ModelAndView("home","medias",mediaLiteList);
     return new ModelAndView(this.getSuccessView(), "fileName", fileName);

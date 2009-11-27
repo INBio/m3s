@@ -43,6 +43,7 @@ import org.inbio.m3s.service.SiteManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.service.util.ImportFileParser;
 import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -65,7 +66,6 @@ public class UpdateMetadataController implements Controller {
 	private String metadataAssociatedToValueType;
 	private String metadataAssociatedToValue;
 	private String metadataTaxonomy; 
-	private String metadataKingdom;
 	private String metadataSiteDescription;
 	private String metadataMediaAuthor;
 	private String metadataOwnerType;
@@ -74,6 +74,7 @@ public class UpdateMetadataController implements Controller {
 	private String metadataMediaVisible;	
 	
 	private String viewName;	
+	private String formActionValue;
 	
 	private MediaManager mediaManager;
 	private MetadataManager metadataManager;
@@ -83,12 +84,15 @@ public class UpdateMetadataController implements Controller {
 	private SiteManager siteManager;
 	private SiteDAO siteDAO;
 	
+	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	
 	
 	public ModelAndView handleRequest(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 	
 		//Create the view
 		ModelAndView mav = new ModelAndView(getViewName());
+		mav.addObject("formAction", formActionValue);
 
 		String mediaId = request.getParameter(fileNameCode);
 		String userName = request.getParameter(metadataUsername);
@@ -99,8 +103,7 @@ public class UpdateMetadataController implements Controller {
 		String keywords = request.getParameter(metadataKeywords);
 		Integer associationTypeCode = Integer.valueOf(request.getParameter(metadataAssociatedToValueType));
 		String associatedToValue = request.getParameter(metadataAssociatedToValue);
-		String taxonName = request.getParameter(metadataTaxonomy);
-		String kingdom = request.getParameter(metadataKingdom);
+		String taxonomy = request.getParameter(metadataTaxonomy);
 		String siteDescription = request.getParameter(metadataSiteDescription);
 		String authorName = request.getParameter(metadataMediaAuthor);
 		authorName = URLDecoder.decode(authorName, "UTF-8");
@@ -119,8 +122,7 @@ public class UpdateMetadataController implements Controller {
 		logger.debug("keywords: "+keywords);
 		logger.debug("associationTypeCode: "+associationTypeCode);
 		logger.debug("associatedToValue: "+associatedToValue);
-		logger.debug("taxonName: "+taxonName);
-		logger.debug("kingdom: "+kingdom);
+		logger.debug("taxonomy: "+taxonomy);
 		logger.debug("siteDescription: "+siteDescription);
 		logger.debug("author: "+authorName);
 		logger.debug("ownerType: "+ownerTypeId);
@@ -129,7 +131,7 @@ public class UpdateMetadataController implements Controller {
 		logger.debug("mediaVisible: "+mediaVisible);
 				
 		GeneralMetadataDTO gmDTO = getGM(mediaId, title,description,mediaTypeId,siteDescription,projects,keywords,
-				associationTypeCode, associatedToValue, taxonName, kingdom);
+				associationTypeCode, associatedToValue, taxonomy);
 		gmDTO.setUsername(userName);
 		
 		UsesAndCopyrightsDTO uacDTO = getUAC(mediaId, authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible);
@@ -259,11 +261,10 @@ public class UpdateMetadataController implements Controller {
 	 */
 	private GeneralMetadataDTO getGM(String mediaId, String title, String description, String mediaTypeId,
 			String siteDescription, String projects, String keywords, Integer associationTypeCode, 
-			String associatedToValue, String taxonName, String kingdom) throws IllegalArgumentException {
+			String associatedToValue, String taxonomy) throws IllegalArgumentException {
 		
 		GeneralMetadataDTO gmDTO = new GeneralMetadataDTO(mediaId,title,description,mediaTypeId,null,siteDescription);
 		List<TaxonLiteDTO> taxonsList = new ArrayList<TaxonLiteDTO>();
-		TaxonLiteDTO tlDTO = null;
 		
 		try {
 			//el primer nulo es el mediaId, como es nuevo siempre ira en null
@@ -310,10 +311,12 @@ public class UpdateMetadataController implements Controller {
 					
 				logger.debug("Associated To Collect Number... done");
 			}
-			// taxonomy
-			//taxonName = info.read(rowNumber, ImportFileParser.TAXONOMY_DATA);
-			logger.debug("taxonName: '" + taxonName + "'");
-			logger.debug("kingdom: '" + kingdom + "'");
+
+			//taxonomy
+			logger.debug("taxonomy: '" + taxonomy + "'");
+			taxonsList = taxonGuiOrDTOConverter.toDTOList(taxonomy);
+			gmDTO.setTaxonsList(taxonsList);
+			/*
 			if (taxonName == null || taxonName.compareTo("") == 0) {
 				// in case the media is associated with the specimen Number of
 				// the gathering code the taxonomy should be associated from
@@ -336,20 +339,10 @@ public class UpdateMetadataController implements Controller {
 					if(taxonsList==null || taxonsList.size()==0)
 						throw new IllegalArgumentException("El código de colecta no tiene especímenes(taxones) asociados");
 				}
-			} else {
-				// TODO revisar si es necesario inicializar este arrayList pues creo que
-				// no hace falta.
-				tlDTO = taxonomyManager.getTaxonLite(taxonName, kingdom);
-				if(tlDTO == null)
-					logger.error("no Taxon Lite was found");
-				taxonsList.add(tlDTO);
-
 			}
-
-			gmDTO.setTaxonsList(taxonsList);
+			*/
 			logger.debug("Taxonomy elements: '" + gmDTO.getTaxonsList().size() + "'");
 
-			//gmDTO.setTaxonsList(null);
 			
 		// TODO: has to fix the siteId stuff
 			// site Description
@@ -670,20 +663,6 @@ public class UpdateMetadataController implements Controller {
 	}
 
 	/**
-	 * @return the metadataKingdom
-	 */
-	public String getMetadataKingdom() {
-		return metadataKingdom;
-	}
-
-	/**
-	 * @param metadataKingdom the metadataKingdom to set
-	 */
-	public void setMetadataKingdom(String metadataKingdom) {
-		this.metadataKingdom = metadataKingdom;
-	}
-
-	/**
 	 * @return the siteManager
 	 */
 	public SiteManager getSiteManager() {
@@ -757,6 +736,39 @@ public class UpdateMetadataController implements Controller {
 	 */
 	public void setMetadataUsername(String metadataUsername) {
 		this.metadataUsername = metadataUsername;
+	}
+
+
+	/**
+	 * @return the taxonGuiOrDTOConverter
+	 */
+	public TaxonGuiOrDTOConverter getTaxonGuiOrDTOConverter() {
+		return taxonGuiOrDTOConverter;
+	}
+
+
+	/**
+	 * @param taxonGuiOrDTOConverter the taxonGuiOrDTOConverter to set
+	 */
+	public void setTaxonGuiOrDTOConverter(
+			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
+		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
+	}
+
+
+	/**
+	 * @return the formActionValue
+	 */
+	public String getFormActionValue() {
+		return formActionValue;
+	}
+
+
+	/**
+	 * @param formActionValue the formActionValue to set
+	 */
+	public void setFormActionValue(String formActionValue) {
+		this.formActionValue = formActionValue;
 	}
 
 }

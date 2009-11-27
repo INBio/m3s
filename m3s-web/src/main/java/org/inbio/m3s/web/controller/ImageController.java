@@ -47,6 +47,7 @@ public class ImageController extends AbstractController {
     		BufferedInputStream input = null;
 
     		//imagen 'hosteada' en attila...
+    		/*
     		if (imageId <= 100000) {
     			String strURL = "http://attila.inbio.ac.cr:7777/pls/portal30/IMAGEDB.GET_BFILE_IMAGE?p_imageId="+imageId+"&p_imageResolutionId="+size+"";
     			URL url  = new URL(strURL);
@@ -60,7 +61,7 @@ public class ImageController extends AbstractController {
           
           //imagen 'hosteada' en m3s
     		} else {
-
+*/
     			MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
 
 
@@ -79,7 +80,7 @@ public class ImageController extends AbstractController {
     					imageFile));
     			contentLength = input.available();
 
-    		}
+//    		} //parte del 'if' para ver si la img esta en attila
 
     		// has to be gotten from the fileMiMEType metadata value
     		httpServletResponse.setContentType("image/jpeg");

@@ -29,8 +29,10 @@ public class AutoCompleteController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		ServletOutputStream out = response.getOutputStream(); // binary output
 		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		ServletOutputStream out = response.getOutputStream(); // binary output
+		
 		
 		
 		String queryValue = request.getParameter(query);

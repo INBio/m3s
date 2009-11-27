@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.inbio.m3s.FileUploadBean;
+import org.inbio.m3s.util.ImageMagickAPI;
 
 
 import org.springframework.validation.BindException;
@@ -67,6 +68,11 @@ public class UploadFileController extends SimpleFormController {
          // hmm, that's strange, the user did not upload anything
     } else{
     	file.transferTo(new File(filePath+fileName));
+    	
+    	
+    	if(fileType.compareTo("jpgImage")==0){
+    		ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
+    	}
     }
     
     
@@ -173,5 +179,6 @@ public class UploadFileController extends SimpleFormController {
 	public void setMetadataFileType(String metadataFileType) {
 		this.metadataFileType = metadataFileType;
 	}
+
 }
 

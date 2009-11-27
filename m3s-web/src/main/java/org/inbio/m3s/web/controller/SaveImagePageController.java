@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.service.MessageManager;
+import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -34,6 +35,10 @@ public class SaveImagePageController extends AbstractController{
 	private String metadataMediaId;
 	
 	private String metadataMediaVisible;
+	
+	/* MediaOwner Widget */
+  private FilterMapWrapper mediaOwnerFilters;
+  private String mediaOwnerFiltersRequestKey;	
 	
 	public SaveImagePageController(){}
 
@@ -61,11 +66,14 @@ public class SaveImagePageController extends AbstractController{
 		
 		//Tipos de Dueños de Imágenes
 		List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
-		mav.addObject("mediaOwners", ownerValues);	
+		mav.addObject("mediaOwners", ownerValues);
+		//Owner Widget -- usando en el mediaOwner.jsp
+		mav.addObject(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
 		
 		//Políticas de Uso
 		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
 		mav.addObject("usePolicies", usePolicies);
+		
 		
 		//MediaVisible will be visible by default
 		mav.addObject(metadataMediaVisible, "checked");
@@ -169,6 +177,34 @@ public class SaveImagePageController extends AbstractController{
 	 */
 	public void setMetadataMediaVisible(String metadataMediaVisible) {
 		this.metadataMediaVisible = metadataMediaVisible;
+	}
+
+	/**
+	 * @return the mediaOwnerFilters
+	 */
+	public FilterMapWrapper getMediaOwnerFilters() {
+		return mediaOwnerFilters;
+	}
+
+	/**
+	 * @param mediaOwnerFilters the mediaOwnerFilters to set
+	 */
+	public void setMediaOwnerFilters(FilterMapWrapper mediaOwnerFilters) {
+		this.mediaOwnerFilters = mediaOwnerFilters;
+	}
+
+	/**
+	 * @return the mediaOwnerFiltersRequestKey
+	 */
+	public String getMediaOwnerFiltersRequestKey() {
+		return mediaOwnerFiltersRequestKey;
+	}
+
+	/**
+	 * @param mediaOwnerFiltersRequestKey the mediaOwnerFiltersRequestKey to set
+	 */
+	public void setMediaOwnerFiltersRequestKey(String mediaOwnerFiltersRequestKey) {
+		this.mediaOwnerFiltersRequestKey = mediaOwnerFiltersRequestKey;
 	}
 
 

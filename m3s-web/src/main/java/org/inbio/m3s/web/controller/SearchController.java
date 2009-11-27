@@ -19,6 +19,7 @@ import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.SearchManager;
 import org.inbio.m3s.web.controller.reusable.SimpleController;
+import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -39,12 +40,18 @@ public class SearchController extends SimpleController {
 	
 	//DAO :S ;(
 	private MediaDAO mediaDAO;
+	
+	private String metadataFilters;
+	private FilterMapWrapper filtersMap;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
+		
 		ModelAndView mav = super.handleRequestInternal(request, response);
+		
+		mav.addObject(metadataFilters, filtersMap.getFilters());
 		
 		//parametros obligatorios de una búsqueda:
 		String filter = request.getParameter("filter");
@@ -52,15 +59,20 @@ public class SearchController extends SimpleController {
 		String value = request.getParameter("value");
 		if(value!=null)
 			value = URLDecoder.decode(value, "UTF-8");
+			
+		int first;
+		int last;
+		
 		logger.debug("filter: "+filter);
 		logger.debug("criteria: "+criteria);
 		logger.debug("value: "+value);
 		
+		
 		if(filter!=null&criteria!=null&value!=null){
-			int first =  Integer.valueOf(request.getParameter("first")).intValue();
+			first =  Integer.valueOf(request.getParameter("first")).intValue();
 			if(first < 1)
 				first = 1;
-			int last = Integer.valueOf(request.getParameter("last")).intValue();
+			last = Integer.valueOf(request.getParameter("last")).intValue();
 			
 			Integer searchFilterId = Integer.valueOf(filter);
 		  Integer searchCriteriaId = Integer.valueOf(criteria);
@@ -118,19 +130,22 @@ public class SearchController extends SimpleController {
 				mav.addObject("nextParams", null);
 			}
 			
-			
-			
-			
 			mav.addObject("controlButtons","<p> "+prevResults+"  || "+nextResults+" </p>");
 			//fin de buton
 			mav.addObject("totalResults", totalResults);
-			mav.addObject("showing", showing);
-			mav.addObject("criteria", criteria);
+			mav.addObject("showing", showing);	
 			mav.addObject("filter", filter);
 			mav.addObject("value", value);
-			mav.addObject("first", first);
-			mav.addObject("last", last);
+			
+		} else {
+			criteria ="0";
+			first =0;
+			last = 10;
 		}
+		
+		mav.addObject("criteria", criteria);
+		mav.addObject("first", first);
+		mav.addObject("last", last);
 		
 		return mav;
 	}
@@ -224,6 +239,42 @@ public class SearchController extends SimpleController {
 	public void setBriefMediaOutputDTOFactory(
 			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
 		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
+	}
+
+
+
+	/**
+	 * @return the metadataFilters
+	 */
+	public String getMetadataFilters() {
+		return metadataFilters;
+	}
+
+
+
+	/**
+	 * @param metadataFilters the metadataFilters to set
+	 */
+	public void setMetadataFilters(String metadataFilters) {
+		this.metadataFilters = metadataFilters;
+	}
+
+
+
+	/**
+	 * @return the filtersMap
+	 */
+	public FilterMapWrapper getFiltersMap() {
+		return filtersMap;
+	}
+
+
+
+	/**
+	 * @param filtersMap the filtersMap to set
+	 */
+	public void setFiltersMap(FilterMapWrapper filtersMap) {
+		this.filtersMap = filtersMap;
 	}
 	
 }

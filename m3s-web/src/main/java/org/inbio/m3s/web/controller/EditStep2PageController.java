@@ -26,6 +26,8 @@ import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
+import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -50,7 +52,6 @@ public class EditStep2PageController extends AbstractController{
 	private String metadataAssociatedToValue;
 	
 	private String metadataTaxonomy; 
-	private String metadataKingdom;
 	private String metadataSiteDescription;
 	private String metadataMediaAuthor;
 	private String metadataOwnerType;
@@ -63,6 +64,11 @@ public class EditStep2PageController extends AbstractController{
 	private TaxonomyManager taxonomyManager;
 	private AgentManager agentManager;
 	
+	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	
+	/* MediaOwner Widget */
+  private FilterMapWrapper mediaOwnerFilters;
+  private String mediaOwnerFiltersRequestKey;	
 	
 	public EditStep2PageController(){}
 
@@ -128,12 +134,16 @@ public class EditStep2PageController extends AbstractController{
 		mav.addObject(metadataAssociatedToValueType, String.valueOf(associatedToType));
 		mav.addObject(metadataAssociatedToValue, associatedToValue);
 		
-		//taxonomy
+	//taxonomy
+		mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(gmDTO.getTaxonsList()));
+		
+		/*
 		if(gmDTO.getTaxonsList().size() > 0 ){
 			mav.addObject(metadataTaxonomy, gmDTO.getTaxonsList().get(0).getDefaultName());
 			TaxonLiteDTO kingdomDTO = taxonomyManager.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getKingdomKey());
 			mav.addObject(metadataKingdom, kingdomDTO.getDefaultName());
 		}
+		*/
 		
 		//site description
 		mav.addObject(metadataSiteDescription, gmDTO.getSiteDescription());
@@ -143,7 +153,7 @@ public class EditStep2PageController extends AbstractController{
 		mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
 		
 						
-		//Tipos de Dueños de Imágenes
+		//Tipos de Dueños de Imágenes -- esto debe ser eliminado
 		List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
 		mav.addObject("mediaOwners", ownerValues);	
 		
@@ -161,6 +171,9 @@ public class EditStep2PageController extends AbstractController{
 			mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
 			mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
 		}
+		
+		//Owner Widget -- usando en el mediaOwner.jsp
+		mav.addObject(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
 		
 		//Políticas de Uso
 		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
@@ -402,20 +415,6 @@ public class EditStep2PageController extends AbstractController{
 	}
 
 	/**
-	 * @return the metadataKingdom
-	 */
-	public String getMetadataKingdom() {
-		return metadataKingdom;
-	}
-
-	/**
-	 * @param metadataKingdom the metadataKingdom to set
-	 */
-	public void setMetadataKingdom(String metadataKingdom) {
-		this.metadataKingdom = metadataKingdom;
-	}
-
-	/**
 	 * @return the metadataSiteDescription
 	 */
 	public String getMetadataSiteDescription() {
@@ -498,5 +497,49 @@ public class EditStep2PageController extends AbstractController{
 	public void setMetadataUsername(String metadataUsername) {
 		this.metadataUsername = metadataUsername;
 	}
+
+	/**
+	 * @return the mediaOwnerFilters
+	 */
+	public FilterMapWrapper getMediaOwnerFilters() {
+		return mediaOwnerFilters;
+	}
+
+	/**
+	 * @param mediaOwnerFilters the mediaOwnerFilters to set
+	 */
+	public void setMediaOwnerFilters(FilterMapWrapper mediaOwnerFilters) {
+		this.mediaOwnerFilters = mediaOwnerFilters;
+	}
+
+	/**
+	 * @return the mediaOwnerFiltersRequestKey
+	 */
+	public String getMediaOwnerFiltersRequestKey() {
+		return mediaOwnerFiltersRequestKey;
+	}
+
+	/**
+	 * @param mediaOwnerFiltersRequestKey the mediaOwnerFiltersRequestKey to set
+	 */
+	public void setMediaOwnerFiltersRequestKey(String mediaOwnerFiltersRequestKey) {
+		this.mediaOwnerFiltersRequestKey = mediaOwnerFiltersRequestKey;
+	}
+
+	/**
+	 * @return the taxonGuiOrDTOConverter
+	 */
+	public TaxonGuiOrDTOConverter getTaxonGuiOrDTOConverter() {
+		return taxonGuiOrDTOConverter;
+	}
+
+	/**
+	 * @param taxonGuiOrDTOConverter the taxonGuiOrDTOConverter to set
+	 */
+	public void setTaxonGuiOrDTOConverter(
+			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
+		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
+	}
+
 
 }
