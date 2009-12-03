@@ -5,6 +5,15 @@
 <%@ taglib uri="/tld/fn.tld" prefix="fn" %>
 
 
+<c:if test="${not empty error}">
+  <label>
+    <font color="red">Error[sin exception] <c:out value="${error}"/></font>
+  </label>
+  <label>
+    <font color="red">Error[properties] -> <spring:message code="${errorMessageKey}"/></font>
+  </label>
+</c:if>
+
 <form method="post" accept-charset="UTF-8" action="<c:out value="${formAction}"/>">
 
   <input type="hidden" name="fileName" value="<c:out value="${mediaId}"/>" />
