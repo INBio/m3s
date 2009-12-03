@@ -103,7 +103,7 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
         <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
-
+        <property name="autoCompleteUrl" value="ajax/taxonName" />
     </bean>
 
     <bean id="familyTaxonFilter" parent="baseFilter">
@@ -113,6 +113,7 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
         <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
+        <property name="autoCompleteUrl" value="ajax/taxonName" />
     </bean>
 
     <bean id="genusTaxonFilter" parent="baseFilter">
@@ -121,7 +122,7 @@
         <property name="displayName" value="search.filters.taxon.genus" />
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATAPROVIDERID" />
-
+        <property name="autoCompleteUrl" value="ajax/taxonName" />
     </bean>
 
     <bean id="speciesTaxonFilter" parent="baseFilter">
@@ -130,6 +131,7 @@
         <property name="displayName" value="search.filters.taxon.species" />
          <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATARESOURCEID" />
+        <property name="autoCompleteUrl" value="ajax/taxonName" />
     </bean>
 
     <!-- filter helper for scientific name 

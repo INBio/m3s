@@ -32,7 +32,6 @@
     <property name="modelElements">
       <map>
         <entry key="formAction" value="/search/search.htm"/>
-        <entry key="filtersMap" value-ref="searchFilters"></entry>
       </map>
     </property>
     
@@ -40,31 +39,32 @@
     <property name="metadataFilters" value="filters"/>
     <property name="metadataMediaList" value="outputMediaList"/>
     <property name="mediaDAO" ref="mediaDAO"/>
-    <!-- ARA 
+    <!-- ARA -->
     <property name="searchManager" ref="ARASearchManager"/>
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="briefMediaOutputDTOFactory" ref="ARABriefMediaOutputDTOFactory"/>
-     -->
-     <!-- ATTA -->
+     
+     <!-- ATTA
     <property name="searchManager" ref="ATTASearchManager"/>
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="briefMediaOutputDTOFactory" ref="ATTABriefMediaOutputDTOFactory"/>
+    -->
   </bean>  
   
   <!-- image dispatcher -->
   <bean id="galleries" class="org.inbio.m3s.web.controller.GalleryController">
-    <!-- ARA 
+    <!-- ARA --> 
     <property name="searchManager" ref="ARASearchManager"/>
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
-    -->
-    <!-- ATTA -->
+    
+    <!-- ATTA
     <property name="searchManager" ref="ATTASearchManager"/>
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    
+    -->
   </bean>   
     
 </beans>
