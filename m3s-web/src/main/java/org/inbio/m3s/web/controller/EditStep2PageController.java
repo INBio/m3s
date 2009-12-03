@@ -4,10 +4,12 @@
 package org.inbio.m3s.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
@@ -27,6 +29,7 @@ import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.StringUtil;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
+import org.inbio.m3s.web.exception.ValidationException;
 import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -38,6 +41,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 public class EditStep2PageController extends AbstractController{
 	
 	private String viewName;
+	private String errorViewName = "editStep1";
 	
 	private String formActionValue;
 	
@@ -72,119 +76,138 @@ public class EditStep2PageController extends AbstractController{
 	
 	public EditStep2PageController(){}
 
+	
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		
 		ModelAndView mav = new ModelAndView(viewName);
 		mav.addObject("formAction", formActionValue);
+		
+		ValidationException ve = new ValidationException();
+		ve.setViewName(errorViewName);
 
 		String mediaKey = request.getParameter(metadataId);
-		
-		GeneralMetadataDTO gmDTO = mediaManager.getGeneralMetadataByMedia(mediaKey);
-		UsesAndCopyrightsDTO uacDTO = mediaManager.getUACM(mediaKey);
-		
-		mav.addObject(metadataId, mediaKey);
-		mav.addObject(metadataTitle, gmDTO.getTitle());
-		mav.addObject(metadataDescription, gmDTO.getDescription());
-		
-		//Tipos de multimedios
-		List<MediaTypeDTO>  mediaTypes = messageManager.getAllMediaTypes();
-		mav.addObject("mediaTypes", mediaTypes);
-		mav.addObject(metadataMediaCategory, gmDTO.getMediaTypeKey());
-		
-	//projects and keywords
-		List<ProjectDTO> pDTOList = gmDTO.getProjectsList();
-		String projectsList ="";
-		for(ProjectDTO pDTO : pDTOList)
-			projectsList = projectsList + pDTO.getName() + StringUtil.TEXT_DELIMITER;
-		mav.addObject(metadataProjects, projectsList);
-		
-		List<KeywordDTO> kDTOList = gmDTO.getKeywordsList();
-		String keywordsList ="";
-		for(KeywordDTO kDTO : kDTOList)
-			keywordsList = keywordsList + kDTO.getName() + StringUtil.TEXT_DELIMITER;
-		mav.addObject(metadataKeywords, keywordsList);
-		
-		//Tipos de Asociaciones
-		List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
-		mav.addObject("associatedToValues", associatedToValues);
-		
-		Integer associatedToType;
-		String associatedToValue;
-		
-		logger.debug("Discovering the association type:");
-		if (gmDTO.getAssociatedSpecimensList() != null && gmDTO.getAssociatedSpecimensList().size() != 0) {
-			associatedToType = AssociatedToEntity.SPECIMEN_NUMBER.getId();
-			associatedToValue = gmDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
-		} else if (gmDTO.getAssociatedObservationsList() != null && gmDTO.getAssociatedObservationsList().size() != 0) {
-			associatedToType = AssociatedToEntity.OBSERVATION_NUMBER.getId();
-			associatedToValue = gmDTO.getAssociatedObservationsList().get(0).getObservationKey();			
-		} else if (gmDTO.getAssociatedGatheringsList() != null && gmDTO.getAssociatedGatheringsList().size() != 0) {
-			GatheringLiteDTO glDTO = gmDTO.getAssociatedGatheringsList().get(0);		
-			String gatheringPersonName = glDTO.getResponsiblePersonName();
-			associatedToType = AssociatedToEntity.GATHERING_CODE.getId();
-			associatedToValue = gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
-		} else {
-			associatedToType = AssociatedToEntity.NO_ASSOCIATION.getId();
-			associatedToValue = "";
-		}		
-		
-		logger.debug(" Associated Type: "+ associatedToType);
-		logger.debug(" Associated Value: "+ associatedToValue);
-		mav.addObject(metadataAssociatedToValueType, String.valueOf(associatedToType));
-		mav.addObject(metadataAssociatedToValue, associatedToValue);
-		
-	//taxonomy
-		mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(gmDTO.getTaxonsList()));
-		
-		/*
-		if(gmDTO.getTaxonsList().size() > 0 ){
-			mav.addObject(metadataTaxonomy, gmDTO.getTaxonsList().get(0).getDefaultName());
-			TaxonLiteDTO kingdomDTO = taxonomyManager.getTaxonLiteById(gmDTO.getTaxonsList().get(0).getKingdomKey());
-			mav.addObject(metadataKingdom, kingdomDTO.getDefaultName());
-		}
-		*/
-		
-		//site description
-		mav.addObject(metadataSiteDescription, gmDTO.getSiteDescription());
-		
-		//Author
-		PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(uacDTO.getAuthorKey());
-		mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
-		
-						
-		//Tipos de Dueños de Imágenes -- esto debe ser eliminado
-		List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
-		mav.addObject("mediaOwners", ownerValues);	
-		
-		logger.debug("personOwnerKey '"+uacDTO.getPersonOwnerKey()+"'");
-		logger.debug("institutionOwnerKey '"+uacDTO.getInstitutionOwnerKey()+"'");
-		//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
-		if(uacDTO.getPersonOwnerKey() != null){
-			logger.debug("person Owner");
-			PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(uacDTO.getPersonOwnerKey());
-			mav.addObject(metadataOwnerValue, ownerPersonDTO.getName());
-			mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.PERSON.getId()));
-		} else{
-			logger.debug("institution Owner");
-			InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(uacDTO.getInstitutionOwnerKey());
-			mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
-			mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
+		if(StringUtils.isBlank(mediaKey)){
+			//enviar msj de que esta jodido
+			ve.setErrorMessageKey("error.edit.01");
+			throw ve;
+		} else if(!StringUtils.isNumeric(mediaKey)){
+			//esta jodido porque tiene valores NO numericos
+			ve.setErrorMessageKey("error.edit.02");
+			throw ve;
 		}
 		
-		//Owner Widget -- usando en el mediaOwner.jsp
-		mav.addObject(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
-		
-		//Políticas de Uso
-		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
-		mav.addObject("usePolicies", usePolicies);
-		mav.addObject(metadataUsePolicy, uacDTO.getUsePolicyKey());
-		logger.debug(metadataUsePolicy+"'"+uacDTO.getUsePolicyKey()+"'");
-		
-		if (uacDTO.getIsPublic().charValue() == 'Y')
-			mav.addObject(metadataMediaVisible, "checked");
-		else
-			mav.addObject(metadataMediaVisible, null);
+		GeneralMetadataDTO gmDTO = null;
+		UsesAndCopyrightsDTO uacDTO = null;
+		try{
+			gmDTO = mediaManager.getGeneralMetadataByMedia(mediaKey);
+			uacDTO = mediaManager.getUACM(mediaKey);
+		} catch(Exception e){
+			//esta jodido porque no se encontro nada para ese multimedio
+			ve.setErrorMessageKey("error.edit.03");
+			throw ve;
+		}
+
+		try{
+			mav.addObject(metadataId, mediaKey);
+			mav.addObject(metadataTitle, gmDTO.getTitle());
+			mav.addObject(metadataDescription, gmDTO.getDescription());
+
+			//Tipos de multimedios
+			List<MediaTypeDTO>  mediaTypes = messageManager.getAllMediaTypes();
+			mav.addObject("mediaTypes", mediaTypes);
+			mav.addObject(metadataMediaCategory, gmDTO.getMediaTypeKey());
+
+			//projects and keywords
+			List<ProjectDTO> pDTOList = gmDTO.getProjectsList();
+			String projectsList ="";
+			for(ProjectDTO pDTO : pDTOList)
+				projectsList = projectsList + pDTO.getName() + StringUtil.TEXT_DELIMITER;
+			mav.addObject(metadataProjects, projectsList);
+
+			List<KeywordDTO> kDTOList = gmDTO.getKeywordsList();
+			String keywordsList ="";
+			for(KeywordDTO kDTO : kDTOList)
+				keywordsList = keywordsList + kDTO.getName() + StringUtil.TEXT_DELIMITER;
+			mav.addObject(metadataKeywords, keywordsList);
+
+			//Tipos de Asociaciones
+			List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
+			mav.addObject("associatedToValues", associatedToValues);
+
+			Integer associatedToType;
+			String associatedToValue;
+
+			logger.debug("Discovering the association type:");
+			if (gmDTO.getAssociatedSpecimensList() != null && gmDTO.getAssociatedSpecimensList().size() != 0) {
+				associatedToType = AssociatedToEntity.SPECIMEN_NUMBER.getId();
+				associatedToValue = gmDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
+			} else if (gmDTO.getAssociatedObservationsList() != null && gmDTO.getAssociatedObservationsList().size() != 0) {
+				associatedToType = AssociatedToEntity.OBSERVATION_NUMBER.getId();
+				associatedToValue = gmDTO.getAssociatedObservationsList().get(0).getObservationKey();			
+			} else if (gmDTO.getAssociatedGatheringsList() != null && gmDTO.getAssociatedGatheringsList().size() != 0) {
+				GatheringLiteDTO glDTO = gmDTO.getAssociatedGatheringsList().get(0);		
+				String gatheringPersonName = glDTO.getResponsiblePersonName();
+				associatedToType = AssociatedToEntity.GATHERING_CODE.getId();
+				associatedToValue = gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
+			} else {
+				associatedToType = AssociatedToEntity.NO_ASSOCIATION.getId();
+				associatedToValue = "";
+			}		
+
+			logger.debug(" Associated Type: "+ associatedToType);
+			logger.debug(" Associated Value: "+ associatedToValue);
+			mav.addObject(metadataAssociatedToValueType, String.valueOf(associatedToType));
+			mav.addObject(metadataAssociatedToValue, associatedToValue);
+
+			//taxonomy
+			mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(gmDTO.getTaxonsList()));
+
+			//site description
+			mav.addObject(metadataSiteDescription, gmDTO.getSiteDescription());
+
+			//Author
+			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(uacDTO.getAuthorKey());
+			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
+
+
+			//Tipos de Dueños de Imágenes -- esto debe ser eliminado
+			List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
+			mav.addObject("mediaOwners", ownerValues);	
+
+			logger.debug("personOwnerKey '"+uacDTO.getPersonOwnerKey()+"'");
+			logger.debug("institutionOwnerKey '"+uacDTO.getInstitutionOwnerKey()+"'");
+			//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
+			if(uacDTO.getPersonOwnerKey() != null){
+				logger.debug("person Owner");
+				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(uacDTO.getPersonOwnerKey());
+				mav.addObject(metadataOwnerValue, ownerPersonDTO.getName());
+				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.PERSON.getId()));
+			} else{
+				logger.debug("institution Owner");
+				InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(uacDTO.getInstitutionOwnerKey());
+				mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
+				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
+			}
+
+			//Owner Widget -- usando en el mediaOwner.jsp
+			mav.addObject(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
+
+			//Políticas de Uso
+			List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
+			mav.addObject("usePolicies", usePolicies);
+			mav.addObject(metadataUsePolicy, uacDTO.getUsePolicyKey());
+			logger.debug(metadataUsePolicy+"'"+uacDTO.getUsePolicyKey()+"'");
+
+			if (uacDTO.getIsPublic().charValue() == 'Y')
+				mav.addObject(metadataMediaVisible, "checked");
+			else
+				mav.addObject(metadataMediaVisible, null);
+		} catch (Exception e){
+			//esta jodido cargando los metadatos :s
+			ve.setErrorMessageKey("error.edit.04");
+			throw ve;
+		}
 		
 		return mav;
 	}

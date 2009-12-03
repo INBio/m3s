@@ -5,7 +5,9 @@ package org.inbio.m3s.web.controller;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.SearchManager;
 import org.inbio.m3s.web.controller.reusable.SimpleController;
+import org.inbio.m3s.web.exception.ValidationException;
 import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,6 +46,9 @@ public class SearchController extends SimpleController {
 	
 	private String metadataFilters;
 	private FilterMapWrapper filtersMap;
+	
+	private String metadataFilter ="filter";
+	private String metadataCriteria = "criteria";
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -51,106 +57,149 @@ public class SearchController extends SimpleController {
 		
 		ModelAndView mav = super.handleRequestInternal(request, response);
 		
+		//filtros de búsqueda
 		mav.addObject(metadataFilters, filtersMap.getFilters());
 		
-		//parametros obligatorios de una búsqueda:
-		String filter = request.getParameter("filter");
+		String filter = request.getParameter(metadataFilter);
 		String criteria = request.getParameter("criteria");
 		String value = request.getParameter("value");
-		if(value!=null)
-			value = URLDecoder.decode(value, "UTF-8");
-			
-		int first;
-		int last;
 		
-		logger.debug("filter: "+filter);
-		logger.debug("criteria: "+criteria);
-		logger.debug("value: "+value);
+		//validacion de filtros más tuanis es urgente acá!
 		
-		
-		if(filter!=null&criteria!=null&value!=null){
-			first =  Integer.valueOf(request.getParameter("first")).intValue();
-			if(first < 1)
-				first = 1;
-			last = Integer.valueOf(request.getParameter("last")).intValue();
+		try {
+			//parametros obligatorios de una búsqueda:
+			if(value!=null)
+				value = URLDecoder.decode(value, "UTF-8");
+
+			int first;
+			int last;
+
+			logger.debug("filter: "+filter);
+			logger.debug("criteria: "+criteria);
+			logger.debug("value: "+value);
+
+
+			if(filter!=null&criteria!=null&value!=null){
+				first =  Integer.valueOf(request.getParameter("first")).intValue();
+				if(first < 1)
+					first = 1;
+				last = Integer.valueOf(request.getParameter("last")).intValue();
+
+				Integer searchFilterId = Integer.valueOf(filter);
+				Integer searchCriteriaId = Integer.valueOf(criteria);
+
+				//comienza la busqueda
+				SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
+				List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
+				sctList.add(scTriplet);
+
+				int totalResults = searchManager.getTotalResults(sctList); 
+				List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
+
+				MediaLite ml;
+				List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
+				for(Integer mediaId : mediaIdsList){
+					ml = mediaDAO.getMediaLite(mediaId);
+					bmoDTOList.add((BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml));
+				}
+
+				//pone la lista con resultados en el model
+				mav.addObject(metadataMediaList, bmoDTOList);
+
+				//interface elements
+				mav.addAllObjects(setInterfaceElements(first,last,totalResults));
+
+				//filter + value
+				mav.addObject(metadataFilter, filter);
+				mav.addObject("value", value);
+
+			} else {
+				criteria ="0";
+				first =0;
+				last = 10;
+			}
+
+			mav.addObject("criteria", criteria);
+			mav.addObject("first", first);
+			mav.addObject("last", last);
+			mav.addObject("error", null);
+
+		} catch (Exception e){
 			
-			Integer searchFilterId = Integer.valueOf(filter);
-		  Integer searchCriteriaId = Integer.valueOf(criteria);
-		  SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
-		  List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
-		  sctList.add(scTriplet);
-		
-		  int totalResults = searchManager.getTotalResults(sctList); 
-		  List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
-		
-		  //List<MediaLite> mediaLiteList = new ArrayList<MediaLite>();
-		  MediaLite ml;
-		  List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
-		  for(Integer mediaId : mediaIdsList){
-		  	ml = mediaDAO.getMediaLite(mediaId);
-		  	bmoDTOList.add((BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml));
-		  }
+			logger.debug("Exception: "+e.getMessage());
 			
-			mav.addObject(metadataMediaList, bmoDTOList);
+			ValidationException ve;
+			Map<String, Object> modelElements = getModelElements();
 			
-			//butons :s
-			String previousResultsText = " << Resultados anteriores ";
-			String posteriorResultsText = " Resultados posteriores >> ";
-			String noMoreResult = "No hay más resultados";
-			int showing = (last - first)+1;
-			if(totalResults < showing)
-				showing = totalResults;
-			int min;
-			int max;
-			String prevResults;
-			String nextResults;
-			
-			String baseURL = "/m3sINBio/getGallery?filter="+filter+"&criteria="+criteria+"&value="+value;
-			
-			//previous min and max
-			max = first -1;
-			min = first-showing;
-			if(first > 2){
-				prevResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+previousResultsText+"</a>";
-				mav.addObject("previousParams", "&first="+min+"&last="+max);
-			} else{
-				prevResults = noMoreResult;
-				mav.addObject("previousParams", null);
+			if(e instanceof IllegalArgumentException){
+				ve = new ValidationException(e.getMessage(), e.getCause());
+				modelElements.put("error", "ERROR: "+e.getMessage());
+			} else {
+				ve = new ValidationException();
 			}
 			
+			ve.setViewName(getViewName());
+			ve.setErrorMessageKey("error.metadata.01");
 			
-			//next min and max
-			min = last+1;
-			max = last+showing;
-			if((totalResults - last) > 0){
-				nextResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+posteriorResultsText+"</a>";
-				mav.addObject("nextParams", "&first="+min+"&last="+max);
-			} else{
-				nextResults = noMoreResult;
-				mav.addObject("nextParams", null);
-			}
+			/* el form action está incluido en los model elements heredados	*/
+			modelElements.put(metadataFilters, filtersMap.getFilters());
+			modelElements.put(metadataFilter, filter);
+			modelElements.put("criteria", criteria);
+			modelElements.put("value", value);
+			modelElements.put("first", 0);
+			modelElements.put("last", 10);
 			
-			mav.addObject("controlButtons","<p> "+prevResults+"  || "+nextResults+" </p>");
-			//fin de buton
-			mav.addObject("totalResults", totalResults);
-			mav.addObject("showing", showing);	
-			mav.addObject("filter", filter);
-			mav.addObject("value", value);
-			
-		} else {
-			criteria ="0";
-			first =0;
-			last = 10;
-		}
-		
-		mav.addObject("criteria", criteria);
-		mav.addObject("first", first);
-		mav.addObject("last", last);
+			ve.setModelElements(modelElements);
+			logger.debug("throw ValidationException");
+			throw ve;
+		} 
 		
 		return mav;
 	}
 		
+	/**
+	 * 
+	 * @param first
+	 * @param last
+	 * @param totalResults
+	 * @return
+	 */
+	public Map<String, Object> setInterfaceElements(int first, int last, int totalResults){
 		
+		Map<String, Object> interfaceElements = new HashMap<String, Object>();
+		
+		//carnita
+		//butons :s
+		int showing = (last - first)+1;
+		if(totalResults < showing)
+			showing = totalResults;
+		int min;
+		int max;
+		
+		//previous min and max
+		max = first -1;
+		min = first-showing;
+		if(first > 2){
+			interfaceElements.put("previousParams", "&first="+min+"&last="+max);
+		} else{
+			interfaceElements.put("previousParams", null);
+		}
+		
+		//next min and max
+		min = last+1;
+		max = last+showing;
+		if((totalResults - last) > 0){
+			interfaceElements.put("nextParams", "&first="+min+"&last="+max);
+		} else{
+			interfaceElements.put("nextParams", null);
+		}
+		
+		//fin de buton
+		interfaceElements.put("totalResults", totalResults);
+		interfaceElements.put("showing", showing);
+		
+		return interfaceElements;
+	}
 	
 	/**
 	 * @return the metadataMediaList

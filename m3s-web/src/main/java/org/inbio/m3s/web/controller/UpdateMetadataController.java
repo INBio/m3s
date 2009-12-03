@@ -6,7 +6,9 @@ package org.inbio.m3s.web.controller;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +45,9 @@ import org.inbio.m3s.service.SiteManager;
 import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.service.util.ImportFileParser;
 import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
+import org.inbio.m3s.web.exception.ValidationException;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -85,6 +89,8 @@ public class UpdateMetadataController implements Controller {
 	private SiteDAO siteDAO;
 	
 	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	
+	private MetadataHandler metadataHandler;
 	
 	
 	public ModelAndView handleRequest(HttpServletRequest request, 
@@ -129,7 +135,8 @@ public class UpdateMetadataController implements Controller {
 		logger.debug("ownerValue: "+ownerName);
 		logger.debug("usePolicy: "+usePolicyKey);
 		logger.debug("mediaVisible: "+mediaVisible);
-				
+		
+		try{
 		GeneralMetadataDTO gmDTO = getGM(mediaId, title,description,mediaTypeId,siteDescription,projects,keywords,
 				associationTypeCode, associatedToValue, taxonomy);
 		gmDTO.setUsername(userName);
@@ -140,15 +147,50 @@ public class UpdateMetadataController implements Controller {
 		
 		logger.debug("updating metadata...");
 
-		getMediaManager().updateGM(gmDTO);
+		mediaManager.updateGM(gmDTO);
 		logger.debug("saving Metadata... general metadata saved");
 
-		getMediaManager().updateUACM(uacDTO);
+		mediaManager.updateUACM(uacDTO);
 		logger.debug("saving Metadata... uses and copyrigths metadata saved");
 		
 		mav.addObject("mediaId", mediaId);
 		logger.debug("Updated Media Id = "+mediaId);
-
+		} catch(IllegalArgumentException iae){
+			ValidationException ve = new ValidationException(iae.getMessage(), iae.getCause());
+			
+			ve.setViewName("editStep2");
+			ve.setErrorMessageKey("error.metadata.01");
+			
+			Map<String, Object> modelElements = new HashMap<String, Object>();
+			modelElements.put("error", "ERROR: "+iae.getMessage());
+			
+			/*		 */
+			modelElements.put("formAction", "updateMetadata.html");
+			
+			modelElements.put(fileNameCode, mediaId);
+			modelElements.put("mediaId", mediaId);
+			//modelElements.put(metadataUsername, userName);
+			modelElements.put(metadataTitle, title);
+			modelElements.put(metadataDescription, description);
+			modelElements.put(metadataMediaCategory, mediaTypeId);
+			modelElements.put(metadataProjects, projects);
+			modelElements.put(metadataKeywords, keywords);
+			modelElements.put(metadataAssociatedToValueType, associationTypeCode.toString());
+			modelElements.put(metadataAssociatedToValue, associatedToValue);
+			modelElements.put(metadataTaxonomy, taxonomy);
+			modelElements.put(metadataSiteDescription, siteDescription);
+			modelElements.put(metadataMediaAuthor, authorName);
+			modelElements.put(metadataOwnerType, ownerTypeId.toString());
+			modelElements.put(metadataOwnerValue, ownerName);
+			modelElements.put(metadataUsePolicy, usePolicyKey);
+			modelElements.put(metadataMediaVisible, mediaVisible);
+			
+			modelElements = metadataHandler.getMetadata(modelElements);
+			
+			ve.setModelElements(modelElements);
+			logger.debug("throw ValidationException");
+			throw ve;
+		}
 		
 		return mav;
 	}
@@ -769,6 +811,22 @@ public class UpdateMetadataController implements Controller {
 	 */
 	public void setFormActionValue(String formActionValue) {
 		this.formActionValue = formActionValue;
+	}
+
+
+	/**
+	 * @return the metadataHandler
+	 */
+	public MetadataHandler getMetadataHandler() {
+		return metadataHandler;
+	}
+
+
+	/**
+	 * @param metadataHandler the metadataHandler to set
+	 */
+	public void setMetadataHandler(MetadataHandler metadataHandler) {
+		this.metadataHandler = metadataHandler;
 	}
 
 }

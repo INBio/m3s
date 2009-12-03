@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.inbio.m3s.FileUploadBean;
 import org.inbio.m3s.util.ImageMagickAPI;
+import org.inbio.m3s.web.exception.ValidationException;
 
 
 import org.springframework.validation.BindException;
@@ -35,64 +37,91 @@ public class UploadFileController extends SimpleFormController {
 	private String metadataFileType;
 	private String metadataFileName;
 	private String metadataUsername;
-	
+
+	private String errorViewName ="insertStep1";
+
 	/** The key correspondes to fileType Options */
 	protected Map<String, String> posibleSuccessViewMap;	
 	/** The  */
 	protected Map<String, String> posibleFileExtensionMap;
-	
+
 	protected ModelAndView onSubmit(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Object command,
-      BindException errors) throws ServletException, IOException, Exception {
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Object command,
+			BindException errors) throws ServletException, IOException, Exception {
+
+		//in case of error just fire this exception
+		ValidationException ve = new ValidationException();
+		ve.setViewName(errorViewName);
+		Map<String,Object> modelElements = new HashMap<String, Object>();
+		modelElements.put("formAction","uploadFile.html");
+		ve.setModelElements(modelElements);
 		
-		String fileType = request.getParameter(metadataFileType);
-		logger.debug("fileType = " +fileType);
-	
-		String userName = request.getParameter(metadataUsername);
-		logger.debug("userName: "+userName);
-		// Creates a new HttpSession so the other servlets could identify
-		// the file that has been upload
-		HttpSession session = request.getSession(true);
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss-");
-		java.util.Date date = new java.util.Date();
-		String fileId = dateFormat.format(date) + userName +session.getId();
-		String fileName = fileId+"."+posibleFileExtensionMap.get(fileType);
-		
-	  // cast the bean
-    FileUploadBean bean = (FileUploadBean) command;
-    //let's see if there's content there
-    MultipartFile file = bean.getFile();
-    if (file == null) {
-         // hmm, that's strange, the user did not upload anything
-    } else{
-    	file.transferTo(new File(filePath+fileName));
-    	
-    	
-    	if(fileType.compareTo("jpgImage")==0){
-    		ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
-    	}
-    }
-    
-    
-    ModelAndView mav = new ModelAndView(posibleSuccessViewMap.get(fileType));
-    
-    mav.addObject(metadataFileName, fileName);
-    mav.addObject(metadataUsername, userName);
-    return mav;
-    
-    //return new ModelAndView(this.getSuccessView(), "fileName", fileName);
-     // well, let's do nothing with the bean for now and return
-    //return super.onSubmit(request, response, command, errors);
+		try { 
+
+			String fileType = request.getParameter(metadataFileType);
+			logger.debug("fileType = " +fileType);
+
+			String userName = request.getParameter(metadataUsername);
+			logger.debug("userName: "+userName);
+
+
+			// Creates a new HttpSession so the other servlets could identify
+			// the file that has been upload
+			HttpSession session = request.getSession(true);
+			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss-");
+			java.util.Date date = new java.util.Date();
+			String fileId = dateFormat.format(date) + userName +session.getId();
+			String fileName = fileId+"."+posibleFileExtensionMap.get(fileType);
+
+			// cast the bean
+			FileUploadBean bean = (FileUploadBean) command;
+			//let's see if there's content there
+			MultipartFile file = bean.getFile();
+
+			if (file == null || file.isEmpty()) {
+				//no hay archivo que subir :S
+				ve.setErrorMessageKey("error.insert.01");
+				throw ve;
+
+			} else{
+				file.transferTo(new File(filePath+fileName));
+				try{
+					if(fileType.compareTo("jpgImage")==0){
+						ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
+					}
+				}catch (Exception e){
+					//no se puede mover el archivo de imagen
+					ve.setErrorMessageKey("error.insert.02");
+					throw ve;
+				}
+			}
+
+			ModelAndView mav = new ModelAndView(posibleSuccessViewMap.get(fileType));
+
+			mav.addObject(metadataFileName, fileName);
+			mav.addObject(metadataUsername, userName);
+			
+			return mav;
+			
+		}catch (Exception e){
+
+			if(ve.getErrorMessageKey()!= null)
+				throw ve;
+			
+			ve.setErrorMessageKey("error.insert.01");
+			throw ve;
+		}
+
 	}
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
-    throws ServletException {
-    // to actually be able to convert Multipart instance to byte[]
-    // we have to register a custom editor
-    binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
-    // now Spring knows how to handle multipart object and convert them
+	throws ServletException {
+		// to actually be able to convert Multipart instance to byte[]
+		// we have to register a custom editor
+		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
+		// now Spring knows how to handle multipart object and convert them
 	}
 
 	/**

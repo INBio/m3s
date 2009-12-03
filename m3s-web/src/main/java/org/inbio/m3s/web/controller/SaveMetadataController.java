@@ -6,7 +6,9 @@ package org.inbio.m3s.web.controller;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +47,9 @@ import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.service.util.ImportFileParser;
 import org.inbio.m3s.util.MediaFileManagement;
 import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
+import org.inbio.m3s.web.exception.ValidationException;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -89,6 +93,7 @@ public class SaveMetadataController implements Controller {
 	//util clases
 	MediaFileManagement mediaFileManagement;
 	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	private MetadataHandler metadataHandler;
 	
 	
 	public ModelAndView handleRequest(HttpServletRequest request, 
@@ -134,6 +139,7 @@ public class SaveMetadataController implements Controller {
 		logger.debug("usePolicy: "+usePolicyKey);
 		logger.debug("mediaVisible: "+mediaVisible);
 				
+		try {
 		GeneralMetadataDTO gmDTO = getGM(title,description,mediaTypeId,siteDescription,projects,keywords,
 				associationTypeCode, associatedToValue, taxonomy);
 		gmDTO.setUsername(userName);
@@ -155,6 +161,42 @@ public class SaveMetadataController implements Controller {
 		//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
 		//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
 		mediaFileManagement.organizeAndCleanFiles(filePath + fileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()));
+		} catch (IllegalArgumentException iae){
+			ValidationException ve = new ValidationException(iae.getMessage(), iae.getCause());
+			
+			ve.setViewName("insertStep2");
+			ve.setErrorMessageKey("error.metadata.01");
+			
+			Map<String, Object> modelElements = new HashMap<String, Object>();
+			modelElements.put("error", "ERROR: "+iae.getMessage());
+			
+			/*		 */
+			modelElements.put("formAction", "saveMetadata.html");
+			
+			modelElements.put("mediaId", fileName);
+			
+			modelElements.put(fileNameCode, fileName);
+			modelElements.put(metadataTitle, title);
+			modelElements.put(metadataDescription, description);
+			modelElements.put(metadataMediaCategory, mediaTypeId);
+			modelElements.put(metadataProjects, projects);
+			modelElements.put(metadataKeywords, keywords);
+			modelElements.put(metadataAssociatedToValueType, associationTypeCode.toString());
+			modelElements.put(metadataAssociatedToValue, associatedToValue);
+			modelElements.put(metadataTaxonomy, taxonomy);
+			modelElements.put(metadataSiteDescription, siteDescription);
+			modelElements.put(metadataMediaAuthor, authorName);
+			modelElements.put(metadataOwnerType, ownerTypeId.toString());
+			modelElements.put(metadataOwnerValue, ownerName);
+			modelElements.put(metadataUsePolicy, usePolicyKey);
+			modelElements.put(metadataMediaVisible, mediaVisible);
+			
+			modelElements = metadataHandler.getMetadata(modelElements);
+			
+			ve.setModelElements(modelElements);
+			logger.debug("throw ValidationException");
+			throw ve;
+		}
 		
 		return mav;
 	}
@@ -208,13 +250,8 @@ public class SaveMetadataController implements Controller {
 			// use policy
 			uacDTO.setUsePolicyKey(usePolicyKey);
 			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
-			/*
+
 			// mediaUses
-			String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
-			uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
-			info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
-			*/
 			uacDTO.setMediaUsesList(new ArrayList<MediaUseDTO>());
 	
 			// backup and visible value
@@ -793,6 +830,22 @@ public class SaveMetadataController implements Controller {
 	public void setTaxonGuiOrDTOConverter(
 			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
 		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
+	}
+
+
+	/**
+	 * @return the metadataHandler
+	 */
+	public MetadataHandler getMetadataHandler() {
+		return metadataHandler;
+	}
+
+
+	/**
+	 * @param metadataHandler the metadataHandler to set
+	 */
+	public void setMetadataHandler(MetadataHandler metadataHandler) {
+		this.metadataHandler = metadataHandler;
 	}
 
 }
