@@ -126,6 +126,10 @@ public class SearchManagerImpl implements SearchManager {
 			}  else if (tripletPivote.getFilter().intValue() == SearchFilterEntity.SPECIES.getId()) {
 				where = where.concat(higherTaxonomyWhere(tripletPivote, TaxonomicalRangeEntity.SPECIES));
 				items++;
+			} else if (tripletPivote.getFilter().intValue() == SearchFilterEntity.ORDER.getId()) {
+				where = where.concat(higherTaxonomyWhere(tripletPivote, TaxonomicalRangeEntity.ORDER));
+				items++;
+			
 			}
 			
 		}

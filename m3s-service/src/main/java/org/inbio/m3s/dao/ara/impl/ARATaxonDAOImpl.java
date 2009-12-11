@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.dao.ara.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -83,6 +84,29 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 				query.setParameter("kingdomTaxonId", kingdomTaxonId);
 				query.setCacheable(true);
 				return query.uniqueResult();
+			}
+		});
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.TaxonDAO#findByOrder(java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Taxon> findByOrder(final Integer orderTaxonId) {
+		logger.debug("findByOrder with orderTaxonId["+orderTaxonId+"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from ARATaxon as t"
+						+ " where t.orderId = :orderTaxonId"
+						+	" or t.taxonId = :taxonId");
+				query.setParameter("orderTaxonId", orderTaxonId);
+				query.setParameter("taxonId", orderTaxonId);
+				query.setCacheable(true);
+				return query.list();
 			}
 		});
 	}
@@ -188,7 +212,7 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	public Taxon findBySpecimenId(Integer specimenId)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		return new Taxon(new Integer(7), new Integer(1), "falta hacer", new Date(), "falta hacer", new Integer(1), "falta hacer");
 	}
 
 	/*

@@ -49,6 +49,13 @@ public interface TaxonDAO extends BaseDAO {
 	 * @param taxonId
 	 * @return
 	 */
+	public List<Taxon> findByOrder(Integer orderTaxonId);
+	
+	/**
+	 * 
+	 * @param taxonId
+	 * @return
+	 */
 	public List<Taxon> findByFamily(Integer familyTaxonId);
 
 	/**

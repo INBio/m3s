@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * 
  */
 public class MediaFileManagement {
-	
+
 	private static Logger logger = Logger.getLogger(MediaFileManagement.class);
 
 	/* Inyected values*/
@@ -27,17 +27,17 @@ public class MediaFileManagement {
 	private String originalFolder = "ORIGINAL";
 	private String m3sMediaBaseDir = "/mnt/m3sImages/INBio/MEDIA"; 
 
-	
+
 	// Media Size
 	public int ORIGINAL = 0;
 	public int THUMB = 1;
 	public int BIG = 2;
-//FIXME: esto no deberia estar aca
+	//FIXME: esto no deberia estar aca
 	public Integer DSC_MEDIA_TYPE_ID = new Integer(1);
-//FIXME: esto no deberia estar aca	
+	//FIXME: esto no deberia estar aca	
 	public Integer MOV_VIDEO_MEDIA_TYPE_ID = new Integer(4);
 
-	
+
 	/**
 	 * Takes the temporal media and moves it to the ORIGINAL MEDIA folder.,
 	 * removes the tempFileName and Creates the THUMB and BIG media. Everything on
@@ -65,9 +65,9 @@ public class MediaFileManagement {
 
 		// address of the high quality image
 		String orignalMediaFilePath = getM3sMediaBaseDir() + getFileSeparator() + getOriginalFolder()
-				+ getFileSeparator() + todaysDate + getFileSeparator()
-				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, ORIGINAL);
+		+ getFileSeparator() + todaysDate + getFileSeparator()
+		+ mediaId.toString()
+		+ getFileExtension(mediaTypeId, ORIGINAL);
 
 		String thumbMediaFilePath;
 		String bigMediaFilePath;
@@ -85,14 +85,14 @@ public class MediaFileManagement {
 
 			// the path of this media depends on the visibility -> ya no!
 			thumbMediaFilePath = getM3sMediaBaseDir()
-					+ getFileSeparator() + getThumbFolder();
+			+ getFileSeparator() + getThumbFolder();
 			bigMediaFilePath = getM3sMediaBaseDir()
-					+ getFileSeparator() + getBigFolder();
+			+ getFileSeparator() + getBigFolder();
 
 			thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
-					+ todaysDate;
+			+ todaysDate;
 			bigMediaFilePath = bigMediaFilePath + getFileSeparator()
-					+ todaysDate;
+			+ todaysDate;
 			// creates the folder with the date to keep media organized(in case its
 			// not created before)
 			dir = new File(thumbMediaFilePath);
@@ -107,19 +107,19 @@ public class MediaFileManagement {
 		logger.debug("Fin prueba de mover archivo con apache commons-io");
 
 		thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
-				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, THUMB);
-		
+		+ mediaId.toString()
+		+ getFileExtension(mediaTypeId, THUMB);
+
 		bigMediaFilePath = bigMediaFilePath + getFileSeparator()
-				+ mediaId.toString()
-				+ getFileExtension(mediaTypeId, BIG);
-		
+		+ mediaId.toString()
+		+ getFileExtension(mediaTypeId, BIG);
+
 		// create the thumb and big media files
 		createLowResFiles(mediaTypeId, orignalMediaFilePath, thumbMediaFilePath,
 				bigMediaFilePath);
 
 	}
-	
+
 	/**
 	 * 
 	 * @param fileName
@@ -128,11 +128,11 @@ public class MediaFileManagement {
 	public boolean isFileReadable(String fileName){
 		logger.debug("isFileReadable");
 		logger.debug("params: [fileName=" + fileName + "].");
-		
+
 		try{
 			File f =new File(fileName);
 			return f.canRead();
-		
+
 		} catch(NullPointerException npe){
 			logger.error("file '" + fileName + "' doesnt exist!.");
 			return false;
@@ -140,7 +140,7 @@ public class MediaFileManagement {
 			logger.error("file '" + fileName + "' is not accesible [pero si existe].");
 			return false;
 		}
-		
+
 	}
 
 	/**
@@ -158,21 +158,29 @@ public class MediaFileManagement {
 	private void createLowResFiles(Integer mediaTypeId, String originalMediaFilePath, 
 			String thumbMediaFilePath, String bigMediaFilePath) throws IllegalArgumentException {
 
-		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
-			ImageMagickAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
-			ImageMagickAPI.writeStandardSize(originalMediaFilePath, bigMediaFilePath);
+		try{
+			if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
+				ImageMagickAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
+				ImageMagickAPI.writeStandardSize(originalMediaFilePath, bigMediaFilePath);
 
-		} else if (mediaTypeId.equals(MOV_VIDEO_MEDIA_TYPE_ID)) {
-			VideoAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
-			VideoAPI.createFLV(originalMediaFilePath, bigMediaFilePath);
+			} else if (mediaTypeId.equals(MOV_VIDEO_MEDIA_TYPE_ID)) {
+				VideoAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
+				VideoAPI.createFLV(originalMediaFilePath, bigMediaFilePath);
+			} else {
+				logger.error("No se puede reconocer el mediaTypeId recibido como parametro");
+				throw new IllegalArgumentException("No se puede reconocer el mediaTypeId recibido como parametro");
+			}
 
-		} else {
+		} catch(Exception e){
 			logger.error("No se puede reconocer el mediaTypeId recibido como parametro");
 			throw new IllegalArgumentException("No se puede reconocer el mediaTypeId recibido como parametro");
 		}
 
+
+
+
 	}
-	
+
 	/**
 	 * Este metodo esta todo alambrado, pero en teoria es para que dado un
 	 * mediaTypeId, retorne la extensión del archivo que debe guardarse en la
@@ -185,7 +193,7 @@ public class MediaFileManagement {
 	 * @throws IllegalArgumentException
 	 */
 	private String getFileExtension(Integer mediaTypeId, int mediaSize)
-			throws IllegalArgumentException {
+	throws IllegalArgumentException {
 
 		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
 			return ".jpg";
@@ -201,9 +209,9 @@ public class MediaFileManagement {
 				return ".flv";
 		} else {
 			logger
-					.error("No se puede reconocer el mediaTypeId recibido como parametro");
+			.error("No se puede reconocer el mediaTypeId recibido como parametro");
 			throw new IllegalArgumentException(
-					"No se puede reconocer el mediaTypeId recibido como parametro");
+			"No se puede reconocer el mediaTypeId recibido como parametro");
 		}
 	}
 

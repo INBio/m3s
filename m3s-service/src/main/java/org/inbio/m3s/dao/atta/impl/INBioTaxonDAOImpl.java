@@ -227,6 +227,24 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 
 
 	@SuppressWarnings("unchecked")
+	public List<Taxon> findByOrder(final Integer orderTaxonId) {
+		logger.debug("findByOrder with orderTaxonId["+orderTaxonId+"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from INBioTaxon as t"
+						+ " where t.orderId = " + orderTaxonId
+						+	" or t.taxonId = " + orderTaxonId );
+				//query.setParameter(0, nomenclaturalGroupId);
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<Taxon> findByFamily(final Integer familyTaxonId) {
 		logger.debug("findByFamily with familyTaxonId["+familyTaxonId+"]");
 		HibernateTemplate template = getHibernateTemplate();
@@ -328,11 +346,6 @@ public class INBioTaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	@Override
 	public List<Object> findAll(Class entityClass) throws IllegalArgumentException {
 		return super.findAll(INBioTaxon.class);
-	}
-
-
-
-
-	
+	}	
 	
 }

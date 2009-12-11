@@ -3,13 +3,13 @@
  */
 package org.inbio.m3s.dto.taxonomy;
 
-import java.io.Serializable;
+import org.inbio.m3s.dto.BaseDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public class TaxonLiteDTO implements Serializable {
+public class TaxonLiteDTO extends BaseDTO {
 
 	/**
 	 * 
@@ -22,6 +22,10 @@ public class TaxonLiteDTO implements Serializable {
 	
 	private String kingdomKey;
 
+	/* The kingdom name will be useful for some operations of the GUI that need
+	 * not only the kingdomKey... this value won't be filled by default,
+	 * in those cases is responsibility of the programmer to set the value */
+	private String kingdomName;
 	
 	/**
 	 * 
@@ -42,6 +46,19 @@ public class TaxonLiteDTO implements Serializable {
 	}
 	
 	/**
+	 * @param taxonKey
+	 * @param defaultName
+	 * @param kingdomKey
+	 * @param kingdomName
+	 */
+	public TaxonLiteDTO(String taxonKey, String defaultName, String kingdomKey, String kingdomName) {
+		this.taxonKey = taxonKey;
+		this.defaultName = defaultName;
+		this.kingdomKey = kingdomKey;
+		this.kingdomName = kingdomName;
+	}	
+	
+	/**
 	 * 
 	 */
 	@Override
@@ -50,6 +67,7 @@ public class TaxonLiteDTO implements Serializable {
 				"\n\tTaxonId: " + this.getTaxonKey() +
 				"\n\tDefault Name: " + this.getDefaultName() +
 				"\n\tKingdom key: " + this.getKingdomKey() +
+				"\n\tKingdom Name: " + this.getKingdomName() +
 				"";
 	}
 
@@ -93,6 +111,20 @@ public class TaxonLiteDTO implements Serializable {
 	 */
 	public void setKingdomKey(String kingdomKey) {
 		this.kingdomKey = kingdomKey;
+	}
+
+	/**
+	 * @return the kingdomName
+	 */
+	public String getKingdomName() {
+		return kingdomName;
+	}
+
+	/**
+	 * @param kingdomName the kingdomName to set
+	 */
+	public void setKingdomName(String kingdomName) {
+		this.kingdomName = kingdomName;
 	}
 	
 }

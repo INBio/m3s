@@ -6,6 +6,8 @@ package org.inbio.m3s.dto;
 import java.io.Serializable;
 
 /**
+ * All DTO's should extend this base!
+ * 
  * @author jgutierrez
  *
  */

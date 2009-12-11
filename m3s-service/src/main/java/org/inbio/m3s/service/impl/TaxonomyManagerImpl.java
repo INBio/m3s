@@ -34,7 +34,6 @@ import org.inbio.m3s.model.core.TaxonMediaId;
 import org.inbio.m3s.model.taxonomy.Taxon;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.TaxonomyManager;
-import org.inbio.m3s.service.autocomplete.AutoCompleteManager;
 import org.inbio.m3s.util.BotanyUtils;
 
 /**
@@ -72,7 +71,9 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 		
 		Taxon taxon = taxonDAO.findByNameAndRange(taxonDefaultName, taxonomicalRange.getId());
 		
-		if(taxonomicalRange.equals(TaxonomicalRangeEntity.FAMILY))
+		if(taxonomicalRange.equals(TaxonomicalRangeEntity.ORDER))
+			return tlDTOFactory.createDTOList(taxonDAO.findByOrder(taxon.getTaxonId()));
+		else if(taxonomicalRange.equals(TaxonomicalRangeEntity.FAMILY))
 			return tlDTOFactory.createDTOList(taxonDAO.findByFamily(taxon.getTaxonId()));
 		else if(taxonomicalRange.equals(TaxonomicalRangeEntity.GENUS))
 			return tlDTOFactory.createDTOList(taxonDAO.findByGenus(taxon.getTaxonId()));
@@ -422,6 +423,25 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 */
 	public void setTaxonMediaDAO(TaxonMediaDAO taxonMediaDAO) {
 		this.taxonMediaDAO = taxonMediaDAO;
+	}
+
+	
+	public TaxonLiteDTO setKingdomName(TaxonLiteDTO tlDTO)
+			throws IllegalArgumentException {
+		TaxonLiteDTO kingdomtlDTO = getTaxonLiteById(tlDTO.getKingdomKey());
+		tlDTO.setKingdomName(kingdomtlDTO.getDefaultName());
+		return tlDTO;
+	}
+
+	public List<TaxonLiteDTO> setKingdomName(List<TaxonLiteDTO> tlDTOList)
+			throws IllegalArgumentException {
+		
+		List<TaxonLiteDTO> updatedList = new ArrayList<TaxonLiteDTO>();
+
+		for(TaxonLiteDTO tlDTO : tlDTOList)
+			updatedList.add(setKingdomName(tlDTO));
+
+		return updatedList;
 	}
 
 

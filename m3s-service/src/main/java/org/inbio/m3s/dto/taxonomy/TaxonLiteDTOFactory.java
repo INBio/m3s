@@ -27,6 +27,9 @@ public class TaxonLiteDTOFactory extends BaseDTOFactory {
 
 	/**
 	 * Copy properties from model object to dto.
+	 * 
+	 * kingdoName will be set as null.
+	 *
 	 * @param t
 	 * @param dto
 	 */
@@ -39,6 +42,8 @@ public class TaxonLiteDTOFactory extends BaseDTOFactory {
 			dto.setKingdomKey(t.getTaxonId().toString());
 		else
 			dto.setKingdomKey(t.getKingdomId().toString());
+		
+		dto.setKingdomName(null);
 	}
 
 }

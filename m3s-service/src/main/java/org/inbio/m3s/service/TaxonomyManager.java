@@ -124,4 +124,8 @@ public interface TaxonomyManager {
 	 */
 	public List<TaxonLiteDTO> getTaxonLiteFromGatheringCode(String gatheringCode) throws IllegalArgumentException;
 	
+	
+	public TaxonLiteDTO setKingdomName(TaxonLiteDTO tlDTO) throws IllegalArgumentException;
+	
+	public List<TaxonLiteDTO> setKingdomName(List<TaxonLiteDTO> tlDTOList) throws IllegalArgumentException;
 }
