@@ -69,6 +69,24 @@ public class ImportationManagerImpl implements ImportationManager {
 
 	}
 	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.ImportationManager#getImportControlDTOFull(java.lang.String, java.lang.String)
+	 */
+	public ImportControlDTOFull getImportControlDTOFull(String username,
+			String systemFileName) throws IllegalArgumentException {
+		logger.debug("getImportControlDTOFull() with username " + username);
+		
+		ImportControlId icId = new ImportControlId(systemFileName,username); 
+		ImportControl ic = (ImportControl) importControlDAO.findById(ImportControl.class, icId);
+		if(ic == null)
+			throw new IllegalArgumentException("no import control information");
+		
+		return (ImportControlDTOFull) getImportControlFullDTOFactory().createDTO(ic);
+
+	}	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.ImportationManager#createImportControl(org.inbio.m3s.dto.importcontrol.ImportControlDTOLite)

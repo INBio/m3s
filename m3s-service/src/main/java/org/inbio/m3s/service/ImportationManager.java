@@ -25,9 +25,12 @@ public interface ImportationManager {
 	public List<ImportControlDTOFull> getImportControlDTOFullList(String username, int quantity) throws IllegalArgumentException;
 	
 	public ImportControlDTOLite getImportControlDTOLite(String username, String systemFileName) throws IllegalArgumentException;
+
+	public ImportControlDTOFull getImportControlDTOFull(String username, String systemFileName) throws IllegalArgumentException;
 	
 	public void createImportControl(ImportControlDTOLite icLite) throws IllegalArgumentException;
 	
 	public void updateImportControl(ImportControlDTOLite icLite) throws IllegalArgumentException;
+
 		
 }
