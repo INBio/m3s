@@ -16,11 +16,15 @@
          -->
         <property name="mappings">
             <props>
+            
+                <!-- AutoComplete  -->
                 <prop key="/taxonName/**/**">taxonNameAutoCompleteController</prop>
                 <prop key="/personName/**/**">mediaAuthorNameAutoCompleteController</prop>
                 <prop key="/institutionName/**/**">institutionNameAutoCompleteController</prop>
                 <prop key="/projectName/**/**">projectNameAutoCompleteController</prop>
                 <prop key="/keyword/**/**">keywordAutoCompleteController</prop>
+                
+                <!-- Associated To  -->
                 <prop key="/taxonomyBySpecimenNumber/**/**">associatedToController</prop>
                 <prop key="/taxonomyByObservationNumber/**/**">associatedToController</prop>
                 <prop key="/taxonomyByGatheringCode/**/**">associatedToController</prop>
@@ -28,6 +32,9 @@
                 <prop key="/siteBySpecimenNumber/**/**">associatedToController</prop>
                 <prop key="/siteByObservationNumber/**/**">associatedToController</prop>
                 <prop key="/siteByGatheringCode/**/**">associatedToController</prop>
+                
+                <!-- DataTable  -->
+                <prop key="/importationData/**/**">dataTableController</prop>
             </props>
         </property>
     </bean>
