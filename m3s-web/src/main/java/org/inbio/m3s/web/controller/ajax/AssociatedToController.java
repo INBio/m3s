@@ -2,9 +2,7 @@ package org.inbio.m3s.web.controller.ajax;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,15 +10,15 @@ import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.service.TaxonomyManager;
+import org.inbio.m3s.web.controller.reusable.XMLWriterMultiActionController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class AssociatedToController  extends MultiActionController {
+public class AssociatedToController  extends XMLWriterMultiActionController {
 
 	TaxonomyManager taxonomyManager;
 	SiteDAO siteDAO;
@@ -229,6 +227,15 @@ public class AssociatedToController  extends MultiActionController {
 	
 	}	
 	
+	/**
+	 * This code was moved to the XMLWriterMultiActionController
+	 * 
+	 * @param request
+	 * @param response
+	 * @param xml
+	 * @return
+	 * @throws Exception
+	 
 	private ModelAndView writeXMLOnResponse(HttpServletRequest request,
 			HttpServletResponse response, String xml) throws Exception {
 
@@ -243,6 +250,7 @@ public class AssociatedToController  extends MultiActionController {
 		
 		return null;
 	}
+	*/
 	
 	private String createTaxonomyXML(List<TaxonLiteDTO> taxonLiteDTOList) throws Exception {
 
