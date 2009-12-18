@@ -50,8 +50,13 @@
         -->
         <!-- ATTA -->
         <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-        <property name="siteDAO" ref="INBioSiteDAO"/>
-       
+        <property name="siteDAO" ref="INBioSiteDAO"/>     
     </bean>  
+
+    <!-- Data Table  -->
+    <bean id="dataTableController" class="org.inbio.m3s.web.controller.ajax.DataTableController">
+      <property name="importationManager" ref="importationManager"/>
+    </bean>  
+
                  
 </beans>
