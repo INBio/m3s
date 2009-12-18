@@ -44,15 +44,16 @@ public class ExcelImportController extends AbstractController{
 		ModelAndView mav = new ModelAndView(viewName);
 		
 		String userName = request.getParameter(metadataUsername);
-		logger.debug("userName: "+userName);
 		String fileName = request.getParameter(metadataFileName);
+		logger.debug("userName: "+userName);
 		logger.debug("fileName: "+fileName);
 		
 		List<ImportControlDTOFull> l = getResultTableData(userName);
-		System.out.println("results:"+l.size());
+		logger.debug("results:"+l.size());
 		mav.addObject("icDTOList", l);
 		
-		executeImport(userName,fileName);
+		if(fileName != null)
+			executeImport(userName,fileName);
 		
 		return mav;
 	}
