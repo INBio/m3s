@@ -206,6 +206,7 @@ tbody .yui-dt-editable {
     color:#FFF;
 }
 .yui-skin-sam .yui-dt-list tr.yui-dt-even td.yui-dt-selected,
+
 .yui-skin-sam .yui-dt-list tr.yui-dt-odd td.yui-dt-selected {
     background-color:#446CD7; /* bright blue selected cell */
     color:#FFF;
@@ -238,3 +239,6 @@ tbody .yui-dt-editable {
     border:1px solid #fff;
     background-color:#fff;
 }
+
+.yui-skin-sam .yui-dt-body { cursor:pointer; } /* when rows are selectable */
+#xpath { margin-top:2em; }
