@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!--  Application context definition for Taxonomy DispatcherServlet -->
+<beans>
+
+  <!--  Defines how the dispatcher will select the contollers -->
+  <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!-- 
+    <property name="interceptors">
+      <list>
+        <ref bean="localeChangeInterceptor"/>
+        <ref bean="taxonomyDataAgreementInterceptor"/>
+        <ref bean="sessionHistoryInterceptor"/>             
+      </list>
+    </property>
+    -->
+  
+    <property name="mappings">
+      <props>
+        <!-- ImportationFiles  -->
+        <prop key="/getImportationFile">importationFileDispatcher</prop>
+      </props>
+    </property>
+  </bean>
+    
+  <!-- importationFilesDispatcher dispatcher -->
+  <bean id="importationFileDispatcher" class="org.inbio.m3s.web.dispatcher.ImportationFileDispatcher">
+  
+    <property name="importationManager" ref="importationManager"/>
+  	<!-- constant -->
+    <property name="MEDIA_REAL_BASE_ADDRESS" value="/mnt/m3sImages/INBio/MEDIA/IMPORTATION_FILES/"/>
+	<!-- input values -->
+    <property name="usernameMetadata" value="username"/>
+    <property name="systemFileNameMetadata" value="systemFileName"/>
+    
+  </bean>     
+
+    
+</beans>
+
+
