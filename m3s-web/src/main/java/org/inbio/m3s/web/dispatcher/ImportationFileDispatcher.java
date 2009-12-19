@@ -52,8 +52,7 @@ public class ImportationFileDispatcher extends AbstractController {
 
     	//has to be gotten from the fileMiMEType metadata value
     	httpServletResponse.setContentType("application/excel");
-
-    		
+	
   		//	 Write file contents to response.
     	while (contentLength-- > 0) {
     		out.write(input.read());
