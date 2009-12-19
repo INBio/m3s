@@ -23,12 +23,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
         myDataSource.responseType = YAHOO.util.DataSource.TYPE_XML;
         myDataSource.useXPath = true;
         myDataSource.responseSchema = {
-            metaFields: {rootatt:"/myroot/@rootatt", topnode:"//top", nestedatt:"//second/@nested"},
+            metaFields: {rootatt:"/myroot/@rootatt"},
             resultNode: "item",
             fields: [{key:"File Name", locator:"userfilename"}, {key:"Status", locator:"status"}, {key:"Date", locator:"creationdate"} ]
         };
 
-        var myDataTable = new YAHOO.widget.DataTable("xpath", myColumnDefs, myDataSource);
+        var myDataTable = new YAHOO.widget.DataTable("xpath", myColumnDefs, myDataSource, {
+            selectionMode:"single" 
+        });
+
+        myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow); 
+        myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow); 
+        myDataTable.subscribe("rowClickEvent", downloadFile); 
+
 
         return {
             oDS: myDataSource,
@@ -36,6 +43,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
         };
     }();
 });
+
+function downloadFile(){
+	window.alert("downloadFile");
+}
 </script>
 
   
