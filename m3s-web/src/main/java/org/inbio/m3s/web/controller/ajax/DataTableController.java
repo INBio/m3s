@@ -49,6 +49,7 @@ public class DataTableController extends XMLWriterMultiActionController {
 		String rootElement = "myroot";
 		
 		//estos si quedan pura vida.
+		//String totalRecords = "totalrecords";
 		String allitems = "allitems";
 		String itemElement ="item";
 		String userFileNameElement = "userfilename";
@@ -59,8 +60,7 @@ public class DataTableController extends XMLWriterMultiActionController {
 		String output ="<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 			+ "<"+rootElement+" rootatt=\"5\">";
 		
-		output+= "<top>topvalue</top>";
-		output+= "<second nested =\"nestedsecond\"/>";
+		//output+= "<"+totalRecords+">1</"+totalRecords+">";
 		
 		output+= "<"+allitems+">";
 		for(ImportControlDTOFull icDTOFull : icDTOList){
