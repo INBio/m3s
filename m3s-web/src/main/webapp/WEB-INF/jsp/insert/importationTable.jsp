@@ -1,6 +1,5 @@
 <%@ include file="/common/taglibs.jsp" %>
 
-
 <h3><spring:message code="insert.excel.history"/></h3>
 
 <display:table 
@@ -19,7 +18,7 @@
                   paramId="id" paramProperty="systemFileName"/>
   <display:column property="status" titleKey="insert.excel.table.status"/>
   <display:column property="creationDate" titleKey="insert.excel.table.date"/>
-  <%--<display:column titleKey="insert.excel.table.download" property="userFileName"  />--%>
+
 
   <display:setProperty name="paging.banner.no_items_found"> </display:setProperty>    
   <display:setProperty name="pagination.pagenumber.param">pageno</display:setProperty>
