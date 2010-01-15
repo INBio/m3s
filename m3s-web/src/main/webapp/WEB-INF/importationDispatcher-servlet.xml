@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+  <!--  Define how the dispatcher will select the controllers -->
+  <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!--
+    <property name="interceptors">
+      <list>
+        <ref bean="localeChangeInterceptor"/>
+        <ref bean="SpeciesRecordDataAgreementInterceptor"/>
+        <ref bean="sessionHistoryInterceptor"/>             
+      </list> 
+    </property>
+    -->
+    <property name="mappings">
+      <props>
+        <!-- <prop key="/">searchFilterController</prop> -->
+        <!--<prop key="/search*.htm">searchFilterController</prop> -->   
+        <prop key="/getImportationFile">importationFile</prop>    
+      </props>
+    </property>
+  </bean>
+  
+  
+  
+  <!-- importation files dispatcher -->
+  <bean id="importationFile" class="org.inbio.m3s.web.controller.ImportationFileDispatcherController">    
+  </bean>   
+    
+</beans>
