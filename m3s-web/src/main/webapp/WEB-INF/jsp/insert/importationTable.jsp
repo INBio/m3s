@@ -1,53 +1,30 @@
 <%@ include file="/common/taglibs.jsp" %>
-<%@ include file="/common/tableScripts.jsp" %>
 
-<p>Tabla.[${username}]</p>
- 
+
+<h3><spring:message code="insert.excel.history"/></h3>
+
+<display:table 
+  name="icDTOList" 
+  export="false" 
+  class="results"   
+  pagesize="5" 
+  sort="external"
+  defaultsort="1"
+  size="resultSize"
   
-<body class="yui-skin-sam">
-  <div id="xpath"></div>
-</body>
-
-<script type="text/javascript">
-
-
-YAHOO.util.Event.addListener(window, "load", function() {
-    YAHOO.example.XPath = function() {
-        var myColumnDefs = [
-            {key:"File Name"},
-            {key:"Status"},
-            {key:"Date"}
-        ];
-
-        var myDataSource = new YAHOO.util.DataSource("http://localhost:8080/m3s-web/ajax/importationData?param=jgutierrez");
-        myDataSource.responseType = YAHOO.util.DataSource.TYPE_XML;
-        myDataSource.useXPath = true;
-        myDataSource.responseSchema = {
-            metaFields: {rootatt:"/myroot/@rootatt"},
-            resultNode: "item",
-            fields: [{key:"File Name", locator:"userfilename"}, {key:"Status", locator:"status"}, {key:"Date", locator:"creationdate"} ]
-        };
-
-        var myDataTable = new YAHOO.widget.DataTable("xpath", myColumnDefs, myDataSource, {
-            selectionMode:"single" 
-        });
-
-        myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow); 
-        myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow); 
-        myDataTable.subscribe("rowClickEvent", downloadFile); 
-
-
-        return {
-            oDS: myDataSource,
-            oDT: myDataTable
-        };
-    }();
-});
-
-function downloadFile(){
-	window.alert("downloadFile");
-}
-</script>
-
+  requestURI="${pageContext.request.contextPath}/excel.html?">
   
+  <display:column property="userFileName" titleKey="insert.excel.table.filename" 
+                  href="${pageContext.request.contextPath}/getImportationFile" 
+                  paramId="id" paramProperty="systemFileName"/>
+  <display:column property="status" titleKey="insert.excel.table.status"/>
+  <display:column property="creationDate" titleKey="insert.excel.table.date"/>
+  <%--<display:column titleKey="insert.excel.table.download" property="userFileName"  />--%>
+
+  <display:setProperty name="paging.banner.no_items_found"> </display:setProperty>    
+  <display:setProperty name="pagination.pagenumber.param">pageno</display:setProperty>
+  <display:setProperty name="paging.banner.placement">both</display:setProperty>  
+
+</display:table>
+
   
