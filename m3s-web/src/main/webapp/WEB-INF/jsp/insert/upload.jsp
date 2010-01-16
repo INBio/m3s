@@ -20,5 +20,15 @@
       <input type="file" name="file" value="<spring:message code="buton.search"/>"/>      
       
       <input type="submit" value="<spring:message code="buton.continue"/>" />
+      <br>
+      
+      <p>
+        <label>
+          <a href="<c:out value="${pageContext.request.contextPath}"/>/excel.html?username=<sec:authentication property="principal.username"/>"><spring:message code="insert.excel.view.history"/></a>
+          <br>
+        </label>
+        <br>
+      </p>
+      
     </form>
   </div>
