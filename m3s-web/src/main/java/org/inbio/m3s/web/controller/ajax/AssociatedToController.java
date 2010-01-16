@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author jgutierrez
  *
  */
-public class AssociatedToController  extends XMLWriterMultiActionController {
+public class AssociatedToController extends XMLWriterMultiActionController {
 
 	TaxonomyManager taxonomyManager;
 	SiteDAO siteDAO;

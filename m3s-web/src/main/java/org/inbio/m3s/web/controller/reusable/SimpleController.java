@@ -32,14 +32,8 @@ public class SimpleController extends AbstractController{
 
 		ModelAndView mav = new ModelAndView(viewName);
 		
-		if(modelElements!=null){
+		if(modelElements!=null)
 			mav.addAllObjects(modelElements);
-			//for (String key : modelElements.keySet()) {
-			//	Object theObject = modelElements.get(key);
-			//	mav.addObject(key, theObject);
-			//}
-		}
-		
 		
 		return mav;
 	}
