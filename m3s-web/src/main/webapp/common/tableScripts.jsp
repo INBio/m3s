@@ -1,3 +1,5 @@
+<!-- Deprecated (15/01/2010 - james) -->
+
 <script src="${pageContext.request.contextPath}/javascript/yui/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript" language="javascript"></script>
 <script src="${pageContext.request.contextPath}/javascript/yui/connection/connection-min.js" type="text/javascript" language="javascript"></script>
 <script src="${pageContext.request.contextPath}/javascript/yui/element/element-min.js" type="text/javascript" language="javascript"></script>
