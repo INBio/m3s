@@ -56,6 +56,12 @@
     <put name="title" value="Search Multimedia"/>        
     <put name="content" value="/WEB-INF/jsp/search/searchFilter.jsp"/>
   </definition>
+
+  <!-- media page -->
+  <definition name="mediaPage" extends="mainTemplate">
+    <put name="title" value="Multimedia"/>        
+    <put name="content" value="/WEB-INF/jsp/media/mediaPage.jsp"/>
+  </definition>
   
   <!-- login -->
   <definition name="login" extends="mainTemplate">

@@ -121,6 +121,17 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>3</load-on-startup>
   </servlet>  
+  <servlet>
+  <servlet-name>importationDispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>mediaDispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>5</load-on-startup>
+  </servlet>  
+  
   <servlet-mapping>
     <servlet-name>m3s-main</servlet-name>
     <url-pattern>*.html</url-pattern>
@@ -133,6 +144,10 @@
     <servlet-name>ajaxDispatcher</servlet-name>
     <url-pattern>/ajax/*</url-pattern>
   </servlet-mapping>  
+  <servlet-mapping>
+    <servlet-name>mediaDispatcher</servlet-name>
+    <url-pattern>/media/*</url-pattern>
+  </servlet-mapping>  
   <!--   
   <servlet-mapping>
     <servlet-name>searchDispatcher</servlet-name>
@@ -140,16 +155,21 @@
   </servlet-mapping>  
    -->
   
-  <!-- The images dispatcher serlvet -->
+  <!-- The images dispatcher servlet -->
   <servlet-mapping>
     <servlet-name>m3s-main</servlet-name>
     <url-pattern>/getImage</url-pattern>
   </servlet-mapping>
-  <!-- The galleries dispatcher serlvet -->
+  <!-- The galleries dispatcher servlet -->
   <servlet-mapping>
     <servlet-name>searchDispatcher</servlet-name>
     <url-pattern>/getGallery</url-pattern>
-  </servlet-mapping>  
+  </servlet-mapping>
+  <!-- The importation files dispatcher servlet -->
+  <servlet-mapping>
+    <servlet-name>importationDispatcher</servlet-name>
+    <url-pattern>/getImportationFile</url-pattern>
+  </servlet-mapping>
   <!-- The images uploader servlet -->
   <servlet-mapping>
     <servlet-name>m3s-main</servlet-name>
