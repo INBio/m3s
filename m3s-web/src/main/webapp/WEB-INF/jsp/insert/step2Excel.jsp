@@ -11,5 +11,5 @@
 <tiles:insert page="/WEB-INF/jsp/insert/importationTable.jsp"/>
 
 <br>
-  <p>Para descargar algún archivo de clic en la columna correspondiente
+  <p>Dando clic en el nombre del archivo podrá descargarlo</p>
 </br>
