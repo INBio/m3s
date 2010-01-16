@@ -1,7 +1,7 @@
 /*
  * Esta clase no se utiliza!
  * 
- *  @deprecated (15/01/2009 - james)
+ *  @deprecated (15/01/2010 - james)
  *
  */
 
