@@ -9,7 +9,7 @@ Este JSP recibe como parametro una lista de objetos de tipo media(corroborar est
     <c:forEach items="${outputMediaList}" var="media">
       <div class="imagesRightPanel">
         <%--<div class="media-kind" style="background-image: url(images/image.png);"/> --%>
-        <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?size=big&id=<c:out value="${media.mediaKey}"/>">
+        <a href="<c:out value="${pageContext.request.contextPath}"/>/media?id=<c:out value="${media.mediaKey}"/>">
           <div class="thumb-image" style="background-image: url(<c:out value="${pageContext.request.contextPath}"/>/getImage?size=thumb&id=<c:out value="${media.mediaKey}"/>);">
           </div>
           <div class="thumb-imaName"><c:out value="${media.title}"/></div>
