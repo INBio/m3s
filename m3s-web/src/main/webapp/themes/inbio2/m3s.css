@@ -58,3 +58,31 @@ br { clear:both;}
 }
 .ImportControlDTOFull .odd { background-color: #e6eef1;}
 .ImportControlDTOFull .even {}
+
+/******************************************
+/* Media Profile
+*******************************************/
+
+.profile-media{
+  float:left;
+  /*background-color: #E8EEF7;*/
+  margin: 10px;
+  border: 1px solid #516AA0;
+  width: 100%;
+}
+
+.profile-bigMedia{
+    height:396px; 
+    width:396px;
+    background-position: center center; 
+    background-repeat:no-repeat; 
+    margin:2px;	
+}
+
+.profile-thumbMedia{
+	height:196px;
+	width:196px;  
+    background-position: center center; 
+    background-repeat:no-repeat; 
+    margin:2px;
+}

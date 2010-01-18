@@ -80,23 +80,3 @@
 	-moz-opacity: 0.8;
 	opacity: 0.8;	
 }
-
-
-/******************************************
-/* Media Profile
-*******************************************/
-
-.big-image {
-    height:396px; 
-    background-position: center center; 
-    background-repeat:no-repeat; 
-    margin:2px;
-}
-
-.big-imagePanel {
-    float:left;
-    background-color: #E8EEF7;
-    margin: 10px;
-    border: 1px solid #516AA0;
-    width:400px;
-}
