@@ -35,6 +35,45 @@
         <entry key="formAction" value="/search/search.htm"/>
       </map>
     </property>    
-  </bean>   
+    
+    <!--  metadata -->
+    <!-- <property name="metadataUsername" value="username"/> -->
+    <property name="metadataId" value="id"/>
+    <property name="metadataTitle" value="title"/>  
+    <property name="metadataDescription" value="description"/>
+    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="metadataProjects" value="projects"/>
+    <property name="metadataKeywords" value="keywords"/>
+    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
+    <property name="metadataAssociatedToValue" value="associatedToValue"/>
+    <property name="metadataTaxonomy" value="taxonomy"/>
+    <property name="metadataSiteDescription" value="siteDescription"/>
+    <property name="metadataMediaAuthor" value="mediaAuthor"/>    
+    <property name="metadataOwnerType" value="ownerType"/>
+    <property name="metadataOwnerValue" value="ownerValue"/>
+    <property name="metadataUsePolicy" value="usePolicy"/>
+    <property name="metadataMediaVisible" value="mediaVisible"/>
+    
+    <!--  Owner Widget configuration 
+    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
+    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+    -->
+    <!-- Converters  -->
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+    
+    <!-- Managers  -->  
+    <property name="messageManager" ref="messageManager"/>  
+    <!-- ARA
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    -->
+    <!-- ATTA --> 
+    <property name="mediaManager" ref="ATTAMediaManager"/>
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    
+  </bean>    
+    
     
 </beans>
