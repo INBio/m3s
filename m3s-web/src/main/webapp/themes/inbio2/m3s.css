@@ -72,7 +72,7 @@ br { clear:both;}
 }
 
 .profile-bigMedia{
-    height:396px; 
+    /*height:396px;*/ 
     width:396px;
     background-position: center center; 
     background-repeat:no-repeat; 
