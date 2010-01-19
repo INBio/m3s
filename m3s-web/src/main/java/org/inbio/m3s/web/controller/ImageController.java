@@ -56,15 +56,16 @@ public class ImageController extends AbstractController {
 	@Override
   protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 
-    		Integer imageId = Integer.valueOf(httpServletRequest.getParameter("id"));
-    		int size = validatedLiteralSize(httpServletRequest.getParameter("size"));
     		String temporalId = httpServletRequest.getParameter(metadataTemporalId);
-    		
+
     		String imageAddress;
     		
     		if(temporalId != null){
     			imageAddress = 	applicationPath+ temporalFilesPath + temporalId;
     		} else {
+
+    			Integer imageId = Integer.valueOf(httpServletRequest.getParameter("id"));
+        		int size = validatedLiteralSize(httpServletRequest.getParameter("size"));
 
     			MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
     			// Is Visible?
