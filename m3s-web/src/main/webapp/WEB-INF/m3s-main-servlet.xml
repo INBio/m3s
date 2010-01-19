@@ -19,12 +19,12 @@
     <!-- daos,managers,dto/service -->
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="statisticsManager" ref="statisticsManager"/>
-    <!-- ARA -->
+    <!-- ARA 
     <property name="briefMediaOutputDTOFactory" ref="ARABriefMediaOutputDTOFactory"/>
-    
-    <!-- ATTA
+    -->
+    <!-- ATTA -->
     <property name="briefMediaOutputDTOFactory" ref="ATTABriefMediaOutputDTOFactory"/>
-    -->  
+    
   </bean>
   
   
@@ -57,19 +57,19 @@
     <!-- View -->
     <property name="viewName" value="insertStep2Excel"/>
     <!--data  -->
-    <property name="tempFilePath" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
-    <property name="importFilePath" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+    <property name="tempFilePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+    <property name="importFilePath" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>
     <property name="metadataFileName" value="fileName"/>
     <property name="metadataUsername" value="username"/>
 
     <!-- Managers  -->  
     <property name="importationManager" ref="importationManager"/>  
-    <!--  de ARA -->
+    <!--  de ARA 
     <property name="importThread" ref="ARAImportThread"/>
-    
-    <!--  de ATTA 
-    <property name="importThread" ref="ATTAImportThread"/>
     -->
+    <!--  de ATTA -->
+    <property name="importThread" ref="ATTAImportThread"/>
+    
   </bean>
   
   <!-- edit page -->
@@ -109,16 +109,16 @@
     
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>	
-    <!-- ARA -->
+    <!-- ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
-    
-    <!-- ATTA 
+    -->
+    <!-- ATTA --> 
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    -->
+    
   </bean>
   
   <!--  updates the edited metadata -->
@@ -151,27 +151,26 @@
     <!-- Managers -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
-    <!-- ATTA   
+    <!-- ATTA -->   
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
-    -->
-    <!--  de ARA -->
+    
+    <!--  de ARA
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
-    
+    -->
   </bean>
   
   <!--  save metadata when media is new -->
   <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.SaveMetadataController">
     <!-- View -->
     <property name="viewName" value="insertStep3"/>
-    <!--<property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>-->
     <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
     <property name="metadataUsername" value="username"/>
     <property name="fileNameCode" value="fileName"/>
@@ -198,20 +197,20 @@
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
     
-    <!-- ATTA  
+    <!-- ATTA  -->
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
-    -->
-    <!-- ARA --> 
+    
+    <!-- ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
-    
+    -->
     <!-- Util Class -->
     <property name="mediaFileManagement" ref="mediaFileManagement"/>
     
@@ -236,8 +235,6 @@
       </map>
     </property>
         
-    <!--<property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>-->
-    <!--<property name="filePath" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>-->
     <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
     <property name="metadataFileName" value="fileName"/>
     <property name="metadataUsername" value="username"/>
@@ -255,10 +252,8 @@
     <property name="bigImagePath" value="BIG"/>
     <property name="thumbImageCode" value="1"/>
     <property name="bigImageCode" value="2"/>
-    
-    
-    
   </bean> 
+  
   
   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <!-- one of the properties available; the maximum file size in bytes -->
@@ -339,7 +334,7 @@
     
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>  
-    <!-- ARA
+    <!-- ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
@@ -348,7 +343,7 @@
     <property name="mediaManager" ref="ATTAMediaManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
-    -->
+    --> 
   </bean>
   
 </beans>
