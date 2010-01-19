@@ -33,12 +33,6 @@ public class ImageController extends AbstractController {
 	private String bigImagePath;
 	private int thumbImageCode;
 	private int bigImageCode;
-	//public int THUMP_IMAGE = 1;
-	//public int BIG_IMAGE = 2;	
-	//public String THUMB_IMAGES = "THUMB";
-	//public String BIG_IMAGES = "BIG";	
-	//public String WEB_APP_FILES = "/usr/share/tomcat5.5/webapps/m3sINBioFiles/";
-	//public String MEDIA_REAL_BASE_ADDRESS= "/mnt/m3sImages/INBio/MEDIA/";
 	
 	
 	private MediaDAO mediaDAO;
