@@ -14,11 +14,13 @@
     <intercept-url pattern="/insert*" access="ROLE_USER" />
     <intercept-url pattern="/edit.*" access="ROLE_USER" />
     <intercept-url pattern="/import.*" access="ROLE_USER" />
+    <intercept-url pattern="/media*" access="ROLE_USER" />
+    <intercept-url pattern="/ajax*" access="ROLE_USER" />
     <anonymous username="guest" granted-authority="ROLE_GUEST"/>
     <form-login login-page="/login.html" default-target-url="/home.html" authentication-failure-url="/login.html?error=true" />
     <logout/> 
     <concurrent-session-control max-sessions="1" />
-    <!-- <remember-me key="m3sUserKey"/> -->
+    <!--  <remember-me key="m3sUserKey"/>-->
     <!--  <http-basic/>-->
   </http>
   
@@ -26,7 +28,6 @@
   <authentication-provider>
     <user-service>
       <user name="jgutierrez" password="inbiom3s" authorities="ROLE_USER, ROLE_ADMIN" />
-      <user name="ccoloma" password="1234" authorities="ROLE_USER" />
     </user-service>
   </authentication-provider>
    -->
