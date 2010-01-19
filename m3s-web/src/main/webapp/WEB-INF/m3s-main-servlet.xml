@@ -216,15 +216,15 @@
   </bean>
   
   
-  <!-- image upload controller -->
+  <!-- image upload controller 
   <bean name="/uploadImage" class="org.inbio.m3s.web.controller.ImageUploadController">
     <property name="commandClass" value="org.inbio.m3s.FileUploadBean"/>
     <property name="formView" value="insertStep1"/>
     <property name="successView" value="redirect:saveImage.html"/>
-    
     <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
     <property name="fileName" value="laPrueba2.jpg"/>
   </bean>
+  -->
     
 
   <!-- uploads jpg or excel files controller -->
@@ -245,8 +245,9 @@
       </map>
     </property>
         
-    <property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>
+    <!--<property name="filePath" value="/usr/share/tomcat5.5/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>-->
     <!--<property name="filePath" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/"/>-->
+    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
     <property name="metadataFileName" value="fileName"/>
     <property name="metadataUsername" value="username"/>
     <property name="metadataFileType" value="fileType"/>
@@ -255,6 +256,17 @@
   <!-- image dispatcher -->
   <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="applicationPath" value="/mnt/m3sImages/INBio/"/>
+    <property name="temporalFilesPath" value="TEMP_MEDIA_DIR/"/>
+    <property name="mediaFilesPath" value="MEDIA/"/>
+    
+    <property name="thumbImagePath" value="THUMB"/>
+    <property name="bigImagePath" value="BIG"/>
+    <property name="thumbImageCode" value="1"/>
+    <property name="bigImageCode" value="2"/>
+    
+    
+    
   </bean> 
   
   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
