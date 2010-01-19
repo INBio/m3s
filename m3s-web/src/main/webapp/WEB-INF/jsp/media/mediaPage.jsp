@@ -4,7 +4,7 @@
 <h2><spring:message code="media.profile.title"/></h2>
 
 
-<table width="100%"  border="0" cellpadding="10" cellspacing="0">
+<table width="100%" border="0" cellpadding="10" cellspacing="0">
   <tr>
     <td>
       <div class="profile-bigMedia">
