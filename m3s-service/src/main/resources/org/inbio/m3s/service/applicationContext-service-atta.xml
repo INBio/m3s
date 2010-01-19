@@ -111,8 +111,7 @@
 <!-- importFromFile (2 versiones, ¿¿seran mas??)-->  
   <bean id="ATTAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="realBatchMediaDir" value="/root/m3sTempImages/INBio/"/>
-  	<property name="realWebDir" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/"/>
-  	<property name="realImportFilesDir" value="/var/www/lucina.inbio.ac.cr/webapps/m3sINBioFiles/IMPORT_FILES/"/>
+  	<property name="realImportFilesDir" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
   	<property name="mediaManager" ref="ATTAMediaManager"/>
   	<property name="taxonomyManager" ref="ATTATaxonomyManager"/>
@@ -124,8 +123,7 @@
   </bean>  
   <bean id="M3SImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
   	<property name="realBatchMediaDir" value="/home/jgutierrez/SoftwareTools/m3sINBio/TEMP_IMPORT_IMAGES/"/>
-  	<property name="realWebDir" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/"/>
-  	<property name="realImportFilesDir" value="/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/IMPORT_FILES/"/>  	
+  	<property name="realImportFilesDir" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>  	
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
   	<property name="mediaManager" ref="M3SMediaManager"/>
   	<property name="taxonomyManager" ref="M3STaxonomyManager"/>
