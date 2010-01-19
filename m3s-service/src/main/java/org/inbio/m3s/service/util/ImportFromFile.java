@@ -75,7 +75,6 @@ public class ImportFromFile {
 	
 	//constants
 	private String realBatchMediaDir;
-	private String realWebDir;
 	private String realImportFilesDir;
 	
 	private static Logger logger = Logger.getLogger(ImportFromFile.class);
@@ -834,20 +833,6 @@ public class ImportFromFile {
 	 */
 	public void setRealBatchMediaDir(String realBatchMediaDir) {
 		this.realBatchMediaDir = realBatchMediaDir;
-	}
-
-	/**
-	 * @return the realWebDir
-	 */
-	public String getRealWebDir() {
-		return realWebDir;
-	}
-
-	/**
-	 * @param realWebDir the realWebDir to set
-	 */
-	public void setRealWebDir(String realWebDir) {
-		this.realWebDir = realWebDir;
 	}
 
 	/**
