@@ -3,8 +3,6 @@ package org.inbio.m3s.web.controller;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -15,77 +13,85 @@ import org.inbio.m3s.dto.lite.MediaLite;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+
 /**
  * 
  * @author jgutierrez
  *
  */
 public class ImageController extends AbstractController {
-
-	public int THUMP_IMAGE = 1;
-	public int BIG_IMAGE = 2;
 	
-	public String THUMB_IMAGES = "THUMB";
-	public String BIG_IMAGES = "BIG";	
+	//values of the servlet
+	private String metadataTemporalId = "temporal";
 	
-	public String WEB_APP_FILES = "/usr/share/tomcat5.5/webapps/m3sINBioFiles/";
+	//constantes
+	private String applicationPath; 	// /mnt/m3sImages/INBio/
+	private String temporalFilesPath; // TEMP_MEDIA_DIR/
+	private String mediaFilesPath;		// MEDIA/
+	//private String filePath;
+	private String thumbImagePath;
+	private String bigImagePath;
+	private int thumbImageCode;
+	private int bigImageCode;
+	//public int THUMP_IMAGE = 1;
+	//public int BIG_IMAGE = 2;	
+	//public String THUMB_IMAGES = "THUMB";
+	//public String BIG_IMAGES = "BIG";	
+	//public String WEB_APP_FILES = "/usr/share/tomcat5.5/webapps/m3sINBioFiles/";
+	//public String MEDIA_REAL_BASE_ADDRESS= "/mnt/m3sImages/INBio/MEDIA/";
 	
-	public String MEDIA_REAL_BASE_ADDRESS= "/mnt/m3sImages/INBio/MEDIA/";
 	
 	private MediaDAO mediaDAO;
 	
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+	/*
+	 * Este servlet ataja las peticiones de imagenes. (incluye imagenes temporales). Los parametros
+	 * que el servlet soporta son:
+	 * id= identificador la de imagenes
+	 * size= el tamaaño que puede ser thumb o big
+	 * temporal=el identificador de la imagen como temporal
+	 * 
+	 * (non-Javadoc)
+	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+  protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 
-        
-        ServletOutputStream out = httpServletResponse.getOutputStream(); // binary output
     		Integer imageId = Integer.valueOf(httpServletRequest.getParameter("id"));
     		int size = validatedLiteralSize(httpServletRequest.getParameter("size"));
+    		String temporalId = httpServletRequest.getParameter(metadataTemporalId);
     		
+    		String imageAddress;
     		
+    		if(temporalId != null){
+    			imageAddress = 	applicationPath+ temporalFilesPath + temporalId;
+    		} else {
+
+    			MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
+    			// Is Visible?
+    			if (mediaLite.getIsPublic() == 'Y')
+    				imageAddress = getPath(imageId, size, mediaLite.getCreationDate().toString());
+    			else{
+    				logger.error("image with id="+imageId+" isn't visible");
+    				imageAddress = 	applicationPath+ temporalFilesPath + "unavailable.png";
+    			}
+    		}
+
+    		//starting the delivering of the image
+    		
+        ServletOutputStream out = httpServletResponse.getOutputStream(); // binary output
     		int contentLength = 0;
     		BufferedInputStream input = null;
+    		
+    		// Open image file.
+    		// Prepare file object.
+    		File imageFile = new File(imageAddress);
+    		input = new BufferedInputStream(new FileInputStream(imageFile));
+    		contentLength = input.available();
 
-    		//imagen 'hosteada' en attila...
-    		/*
-    		if (imageId <= 100000) {
-    			String strURL = "http://attila.inbio.ac.cr:7777/pls/portal30/IMAGEDB.GET_BFILE_IMAGE?p_imageId="+imageId+"&p_imageResolutionId="+size+"";
-    			URL url  = new URL(strURL);
-    	    URLConnection conn = url.openConnection();      
-          conn.setUseCaches(false); 
-          contentLength = conn.getContentLength();
-          input = new BufferedInputStream(conn.getInputStream());
-    			 
-    			// oracle image
-    			//http://attila.inbio.ac.cr:7777/pls/portal30//IMAGEDB.GET_BFILE_IMAGE?p_imageId=33433&p_imageResolutionId=1
-          
-          //imagen 'hosteada' en m3s
-    		} else {
-*/
-    			MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
-
-
-    			String imageAddress;
-    			// value == 'Y'
-    			// if (MultimediaDAO.isMediaVisible(imageId))
-    			if (mediaLite.getIsPublic() == 'Y')
-    				imageAddress = getPath(imageId, size);
-    			else
-    				imageAddress = WEB_APP_FILES + "images/unavailable.png";
-
-    			// Open image file.
-    			// Prepare file object.
-    			File imageFile = new File(imageAddress);
-    			input = new BufferedInputStream(new FileInputStream(
-    					imageFile));
-    			contentLength = input.available();
-
-//    		} //parte del 'if' para ver si la img esta en attila
 
     		// has to be gotten from the fileMiMEType metadata value
     		httpServletResponse.setContentType("image/jpeg");
 
-    		
     		//	 Write file contents to response.
     		while (contentLength-- > 0) {
     			out.write(input.read());
@@ -111,10 +117,10 @@ public class ImageController extends AbstractController {
     		} catch(NumberFormatException nfe){
     		
     			if (literalSize.compareToIgnoreCase("thumb") == 0) {
-    				return THUMP_IMAGE;
+    				return thumbImageCode;
     			
     			} else if (literalSize.compareToIgnoreCase("big") == 0) {
-    				return BIG_IMAGE;
+    				return bigImageCode;
     			}  			
    
     		}
@@ -132,43 +138,23 @@ public class ImageController extends AbstractController {
   	 *          class constant
   	 * @return the real path of the image on the file system
   	 */
-  	private String getPath(Integer imageId, int size) throws IllegalArgumentException {
+  	private String getPath(Integer imageId, int size, String imageCreationDate) throws IllegalArgumentException {
 
-  		String path;
-  		MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
-
-  		// look if the image is public
-  		//if (MultimediaDAO.isMediaVisible(imageId)) {
-  		path = MEDIA_REAL_BASE_ADDRESS;
-  		if(mediaLite.getIsPublic() == 'Y'){
-  			// path = ClientProperties.IMAGES_PUBLIC_WEB_BASE_ADDRESS;
-  			logger.debug("image visible");
-  		} else {
-  			//path = Properties.MEDIA_REAL_BASE_ADDRESS;
-  			logger.error("image NO visible");
-  		}
+  		String path = applicationPath + mediaFilesPath;
 
   		// apends the size to the path
-  		if (size == THUMP_IMAGE) {
-  			path = path.concat(File.separator + THUMB_IMAGES);
-  		} else if (size == BIG_IMAGE) {
-  			path = path.concat(File.separator + BIG_IMAGES);
+  		if (size == thumbImageCode) {
+  			path = path.concat(File.separator + thumbImagePath);
+  		} else if (size == bigImageCode) {
+  			path = path.concat(File.separator + bigImagePath);
   		} else {
-  			// HibernateUtil.closeM3SDBFactory();
   			throw new IllegalArgumentException(
   					"That size of image it's not valid or implemented");
   		}
 
-  		// gets the DB insertion date (log field CREATION_DATE)
-  		try {
-  			
-  			//return ((Date) queryResult.get(0)).toString();
-  			//path = path.concat(File.separator+ MultimediaDAO.getMediaCreationDate(imageId));
-  			path = path.concat(File.separator+ mediaLite.getCreationDate().toString());
-  		} catch (IllegalArgumentException iae) {
-  			// HibernateUtil.closeM3SDBFactory();
-  			throw new IllegalArgumentException("Media not found");
-  		}
+  		//creation date folder
+  		path = path.concat(File.separator+ imageCreationDate);
+
   		// adds the id of the media
   		path = path.concat(File.separator + imageId.toString());
 
@@ -177,7 +163,6 @@ public class ImageController extends AbstractController {
   		// fileExtension = MultimediaDAO.getFileExtension(imageId);
   		path = path.concat("." + "jpg");
 
-  		// HibernateUtil.closeM3SDBFactory();
   		return path;
 
   	}
@@ -188,4 +173,102 @@ public class ImageController extends AbstractController {
   	public void setMediaDAO(MediaDAO mediaDAO) {
   		this.mediaDAO = mediaDAO;
   	}
+
+		/**
+		 * @return the thumbImagePath
+		 */
+		public String getThumbImagePath() {
+			return thumbImagePath;
+		}
+
+		/**
+		 * @param thumbImagePath the thumbImagePath to set
+		 */
+		public void setThumbImagePath(String thumbImagePath) {
+			this.thumbImagePath = thumbImagePath;
+		}
+
+		/**
+		 * @return the bigImagePath
+		 */
+		public String getBigImagePath() {
+			return bigImagePath;
+		}
+
+		/**
+		 * @param bigImagePath the bigImagePath to set
+		 */
+		public void setBigImagePath(String bigImagePath) {
+			this.bigImagePath = bigImagePath;
+		}
+
+		/**
+		 * @return the thumbImageCode
+		 */
+		public int getThumbImageCode() {
+			return thumbImageCode;
+		}
+
+		/**
+		 * @param thumbImageCode the thumbImageCode to set
+		 */
+		public void setThumbImageCode(int thumbImageCode) {
+			this.thumbImageCode = thumbImageCode;
+		}
+
+		/**
+		 * @return the bigImageCode
+		 */
+		public int getBigImageCode() {
+			return bigImageCode;
+		}
+
+		/**
+		 * @param bigImageCode the bigImageCode to set
+		 */
+		public void setBigImageCode(int bigImageCode) {
+			this.bigImageCode = bigImageCode;
+		}
+
+		/**
+		 * @return the applicationPath
+		 */
+		public String getApplicationPath() {
+			return applicationPath;
+		}
+
+		/**
+		 * @param applicationPath the applicationPath to set
+		 */
+		public void setApplicationPath(String applicationPath) {
+			this.applicationPath = applicationPath;
+		}
+
+		/**
+		 * @return the temporalFilesPath
+		 */
+		public String getTemporalFilesPath() {
+			return temporalFilesPath;
+		}
+
+		/**
+		 * @param temporalFilesPath the temporalFilesPath to set
+		 */
+		public void setTemporalFilesPath(String temporalFilesPath) {
+			this.temporalFilesPath = temporalFilesPath;
+		}
+
+		/**
+		 * @return the mediaFilesPath
+		 */
+		public String getMediaFilesPath() {
+			return mediaFilesPath;
+		}
+
+		/**
+		 * @param mediaFilesPath the mediaFilesPath to set
+		 */
+		public void setMediaFilesPath(String mediaFilesPath) {
+			this.mediaFilesPath = mediaFilesPath;
+		}
 }
