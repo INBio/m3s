@@ -71,8 +71,6 @@ public class ExcelImportController extends AbstractController{
 			icDTO.setSystemFileName("http://localhost:8180/m3sINBioFiles/IMPORT_FILES/"+icDTO.getSystemFileName());
 		}
 		
-		//Properties.WEB_IMPORT_FILES_DIR+icFull.getSystemFileName()
-		
 		return icList;
 	}
 
