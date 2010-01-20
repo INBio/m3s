@@ -13,7 +13,7 @@
   <p>
 
   <c:if test="${not empty previousParams}">
-    <a href="${pageContext.request.contextPath}${formAction}?criteria=${criteria}&filter=${filter}&value=${value}${previousParams}">
+    <a href="${pageContext.request.contextPath}${formAction}?css=${css}}&criteria=${criteria}&filter=${filter}&value=${value}${previousParams}">
     <spring:message code="search.previous.results"/> </a>
   </c:if>
   <c:if test="${empty previousParams}">
@@ -21,7 +21,7 @@
   </c:if>    
      ||  
   <c:if test="${not empty nextParams}">
-    <a href ="${pageContext.request.contextPath}${formAction}?criteria=${criteria}&filter=${filter}&value=${value}${nextParams}">
+    <a href ="${pageContext.request.contextPath}${formAction}?${css}&criteria=${criteria}&filter=${filter}&value=${value}${nextParams}">
     <spring:message code="search.next.results"/> </a>
   </c:if>  
   <c:if test="${empty nextParams}">

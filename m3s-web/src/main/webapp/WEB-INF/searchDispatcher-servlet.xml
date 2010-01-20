@@ -58,7 +58,7 @@
     <property name="viewName" value="darwinPilaGalleries"/>
     <property name="modelElements">
       <map>
-        <!-- <entry key="formAction" value="/search/search.htm"/> -->
+        <entry key="formAction" value="/getGallery"/>
       </map>
     </property>
     
