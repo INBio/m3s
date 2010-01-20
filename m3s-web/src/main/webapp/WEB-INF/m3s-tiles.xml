@@ -68,5 +68,22 @@
     <put name="title" value="Please Login"/>	    
     <put name="content" value="/WEB-INF/jsp/login.jsp"/>
   </definition>  
+  
+  <!-- Gallery -->
+  <definition name="galleryTemplate" page="/layouts/galleryTemplate.jsp">
+    <put name="title" value="M3S Auto Generated Gallery"/> <!-- will be overwritten -->
+    <put name="content" value="/WEB-INF/jsp/search/galleries.jsp"/>
+    <put name="contactMessage" value="Contact"></put> <!-- will be overwritten -->
+    <put name="contactEmail" value="jgutierrez@inbio.ac.cr"></put> <!-- will be overwritten -->
+    <put name="footerMessage" value="Footer will be here..."></put> <!-- will be overwritten -->
+  </definition>  
+  <!-- darwin-pila gallery page -->
+  <definition name="darwinPilaGalleries" extends="galleryTemplate">
+    <put name="title" value="M3S Auto Generated Gallery for Darwin Pila"/>
+    <put name="content" value="/WEB-INF/jsp/search/darwinPilaGalleries.jsp"/>
+    <put name="contactMessage" value="Contactenos"></put>
+    <put name="contactEmail" value="alm@nhm.ac.uk"></put>
+    <put name="footerMessage" value="2009 Derechos reservados al proyecto ‘Herramientas por el manejo del Parque Internacional La Amistad de la Iniciativa Darwin del Reino Unido"></put> <!-- will be overwritten -->
+  </definition>  
 
 </tiles-definitions>
