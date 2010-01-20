@@ -3,29 +3,39 @@
  */
 package org.inbio.m3s.web.controller;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
+import org.inbio.m3s.dto.lite.MediaLite;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
+import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
+import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.SearchManager;
+import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.controller.reusable.SimpleController;
+import org.inbio.m3s.web.exception.ValidationException;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  * @author jgutierrez
  *
  */
-public class GalleryController extends AbstractController {
+public class GalleryController extends SimpleController {
 
 	public static int THUMP_IMAGE = 1;
 
@@ -37,6 +47,19 @@ public class GalleryController extends AbstractController {
 	private SearchManager searchManager;
 	private MediaManager mediaManager;
 	private AgentManager agentManager;	
+	
+	//DTOFactory/Service Mixture
+	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
+	
+	//DAO :S ;(
+	private MediaDAO mediaDAO;
+	
+	//parameters
+	private String metadataMediaList;
+	private String metadataFilter ="filter";
+	private String metadataCriteria = "criteria";
+	private String metadataValue = "value";
+	private String metadataCss = "css";
 	
 	
 	/**
@@ -52,126 +75,175 @@ public class GalleryController extends AbstractController {
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		ServletOutputStream out = response.getOutputStream(); // binary output
-		response.setContentType("text/html");
-		//parameters
-		Integer searchFilterId = Integer.valueOf(request.getParameter("filter"));
-		Integer searchCriteriaId = Integer.valueOf(request.getParameter("criteria"));
-		String value = request.getParameter("value");
-		String css = request.getParameter("css");
-		int first =  Integer.valueOf(request.getParameter("first")).intValue();
-		if(first < 1)
-			first = 1;
-		int last = Integer.valueOf(request.getParameter("last")).intValue();
+		ModelAndView mav = super.handleRequestInternal(request, response);
 		
-		int totalResults;
+		
+		String filter = request.getParameter(metadataFilter);
+		String criteria = request.getParameter(metadataCriteria);
+		String value = request.getParameter(metadataValue);
+		String css = request.getParameter(metadataCss);
+		
+		
+		try {
+			//parametros obligatorios de una búsqueda:
+			if(value!=null)
+				value = URLDecoder.decode(value, "UTF-8");
 
-		
-		
-		SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
-		List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
-		sctList.add(scTriplet);
-		
-		totalResults = searchManager.getTotalResults(sctList); 
-		List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
-		
-		GeneralMetadataDTO gmDTO;
-		UsesAndCopyrightsDTO uacDTO = null;
+			int first;
+			int last;
+
+			logger.debug("filter: "+filter);
+			logger.debug("criteria: "+criteria);
+			logger.debug("value: "+value);
+
+
+			if(filter!=null&criteria!=null&value!=null){
+				first =  Integer.valueOf(request.getParameter("first")).intValue();
+				if(first < 1)
+					first = 1;
+				last = Integer.valueOf(request.getParameter("last")).intValue();
+
+				Integer searchFilterId = Integer.valueOf(filter);
+				Integer searchCriteriaId = Integer.valueOf(criteria);
+
+				//comienza la busqueda
+				SearchCriteriaTripletDTO scTriplet = new SearchCriteriaTripletDTO(searchFilterId,searchCriteriaId,value);
+				List<SearchCriteriaTripletDTO> sctList = new ArrayList<SearchCriteriaTripletDTO>();
+				sctList.add(scTriplet);
+
+				int totalResults = searchManager.getTotalResults(sctList); 
+				List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
+
+				GeneralMetadataDTO gmDTO;
+				MediaLite ml;
+				List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
+				BriefMediaOutputDTO bmoDTO;
+				String info2 = "";
 				
-			// writting the HTML file
-			out.println("<html><head><title>M3S Auto Generated Gallery</title>");
-			if(css != null)
-				out.println("<link href=\""+css+"\" rel=\"stylesheet\" type=\"text/css\">");
-			out.println("</head><body>");
+				for(Integer mediaId : mediaIdsList){
+					ml = mediaDAO.getMediaLite(mediaId);
+					gmDTO = mediaManager.getGeneralMetadataByMedia(String.valueOf(mediaId));
+					
+					bmoDTO = (BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml);
+				
+					//modify info2, set the association type
+					//biodiversity information (associated to?)
+					logger.debug("Discovering the association type:");
+					if (gmDTO.getAssociatedSpecimensList() != null && gmDTO.getAssociatedSpecimensList().size() != 0) {
+						info2 = "Número de Especimen: "+gmDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
+					} else if (gmDTO.getAssociatedObservationsList() != null && gmDTO.getAssociatedObservationsList().size() != 0) {
+						info2 = "Número de Observación: "+gmDTO.getAssociatedObservationsList().get(0).getObservationKey();
+					} else if (gmDTO.getAssociatedGatheringsList() != null && gmDTO.getAssociatedGatheringsList().size() != 0) {
+						GatheringLiteDTO glDTO = gmDTO.getAssociatedGatheringsList().get(0);		
+						String gatheringPersonName = glDTO.getResponsiblePersonName();
+						info2 = "Código de Colecta: "+gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
+					} else {
+						info2 = "Sin información asociada";
+					}					
+					bmoDTO.setInfo2(info2);
+					
+					bmoDTOList.add(bmoDTO);
+				}
 
-			//cuestiones para el css
-			out.println("<div id=\"wrapper\">");
-			out.println("<div id=\"nido\">");
-			out.println("<div id=\"banner\"> </div>");
-			out.println("<div id=\"contenido\">");
+				//pone la lista con resultados en el model
+				mav.addObject(metadataMediaList, bmoDTOList);
 
-			//out.println("<h1>Galería de Prueba</h1>");
-			//out.println("<p>");
-			//out.println("<table class=\"thumb\" cellpadding=\"0\" cellspacing=\"0\"><tbody><tr>");
-			
-			//los controles son de moverse a un lado u otro...
-			//muestra tambien el total de resultados
-			out.println(addControlButtons(searchFilterId.intValue(), searchCriteriaId.intValue(), value, css, first, last, totalResults));
-			
-			out.println("<div class=\"thumb\">");
+				//interface elements
+				mav.addAllObjects(setInterfaceElements(first,last,totalResults));
 
-			
-			for (Integer mediaId : mediaIdsList) {
-				gmDTO = mediaManager.getGeneralMetadataByMedia(String.valueOf(mediaId));
-				uacDTO = mediaManager.getUACM(String.valueOf(mediaId));
-				//uacGWTDTO = uacmConverter.to
-				///uactv = MetadataConverter.toTextualValue(mediaManager.getUACM(mediaId));
-				out.println(addItem(gmDTO, uacDTO));
+				//filter + value
+				mav.addObject(metadataFilter, filter);
+				mav.addObject(metadataValue, value);
+
+			} else {
+				criteria ="0";
+				first =0;
+				last = 10;
 			}
 			
-			//out.println("</tr></tbody></table>");
+			modelElements.put(metadataCss, css);
+			mav.addObject(metadataCriteria, criteria);
+			mav.addObject("first", first); 
+			mav.addObject("last", last);
+			mav.addObject("error", null);
 
-			out.println("<div class=\"clear\"></div></div></div>");
-			out.println("<div id=\"footer\">");
-			out.println("<div id=\"logos\">");
-			out.println("<div id=\"contacto\"><a href=\"mailto:alm@nhm.ac.uk\">Contactenos</a></div>");
-			out.println("</div>");
-			out.println("<div id=\"footerIn\">2009 Derechos reservados al proyecto ‘Herramientas por el manejo del Parque Internacional La Amistad de la Iniciativa Darwin del Reino Unido</div>");			
-			out.println("</div></div></div>");
-
+		} catch (Exception e){
 			
-			out.println("</body></html>");
+			logger.debug("Exception: "+e.getMessage());
 			
-			out.flush();
-			out.close();
+			ValidationException ve;
+			Map<String, Object> modelElements = getModelElements();
 			
-			return null;
+			if(e instanceof IllegalArgumentException){
+				ve = new ValidationException(e.getMessage(), e.getCause());
+				modelElements.put("error", "ERROR: "+e.getMessage());
+			} else {
+				ve = new ValidationException();
+			}
+			
+			ve.setViewName(getViewName());
+			ve.setErrorMessageKey("error.metadata.01");
+			
+			/* el form action está incluido en los model elements heredados	*/
+			modelElements.put(metadataFilter, filter);
+			modelElements.put(metadataCriteria, criteria);
+			modelElements.put(metadataValue, value);
+			modelElements.put(metadataCss, css);
+			modelElements.put("first", 0);
+			modelElements.put("last", 10);
+			
+			ve.setModelElements(modelElements);
+			logger.debug("throw ValidationException");
+			throw ve;
+		} 
+		
+		return mav;
 	}
-	
+
 	/**
 	 * 
-	 * @param filter
-	 * @param criteria
-	 * @param value
-	 * @param css
 	 * @param first
 	 * @param last
 	 * @param totalResults
 	 * @return
 	 */
-	private String addControlButtons(int filter, int criteria, String value, String css, int first, int last, int totalResults){
-		String previousResultsText = " << Resultados anteriores ";
-		String posteriorResultsText = " Resultados posteriores >> ";
-		String noMoreResult = "No hay más resultados";
+	private Map<String, Object> setInterfaceElements(int first, int last, int totalResults){
+		
+		Map<String, Object> interfaceElements = new HashMap<String, Object>();
+		
+		//carnita
+		//butons :s
 		int showing = (last - first)+1;
 		if(totalResults < showing)
 			showing = totalResults;
 		int min;
 		int max;
-		String prevResults;
-		String nextResults;
-		
-		String baseURL = "/m3sINBio/getGallery?filter="+filter+"&criteria="+criteria+"&value="+value+"&css="+css;
 		
 		//previous min and max
 		max = first -1;
 		min = first-showing;
-		if(first > 2)
-			prevResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+previousResultsText+"</a>";
-		else
-			prevResults = noMoreResult;
+		if(first > 2){
+			interfaceElements.put("previousParams", "&first="+min+"&last="+max);
+		} else{
+			interfaceElements.put("previousParams", null);
+		}
 		
 		//next min and max
 		min = last+1;
 		max = last+showing;
-		if((totalResults - last) > 0)
-			nextResults = "<a href = \""+baseURL+"&first="+min+"&last="+max+"\">"+posteriorResultsText+"</a>";
-		else
-			nextResults = noMoreResult;
-
-		return "<p>Total de resultados: "+totalResults+" (Mostrando: "+showing+")</p>"
-				+ "<p> "+prevResults+"  || "+nextResults+" </p>";
-	}
+		if((totalResults - last) > 0){
+			interfaceElements.put("nextParams", "&first="+min+"&last="+max);
+		} else{
+			interfaceElements.put("nextParams", null);
+		}
+		
+		//fin de buton
+		interfaceElements.put("totalResults", totalResults);
+		interfaceElements.put("showing", showing);
+		
+		return interfaceElements;
+	}	
+	
 	
 	/**
 	 * 
@@ -224,9 +296,8 @@ public class GalleryController extends AbstractController {
 		+ "<div class=\"gwt-Label imaName\">"+info1+"</div>"
 		+ "<div class=\"imaInfo\">"+info1+"</div>"
 		+ "<div class=\"imaInfo\">"+info2+"</div>"
-		+ "</a> </div>";
-		/*
-			 "<td style=\"vertical-align: top;\" align=\"left\"/>"
+		+ "</a> </div>"
+		+	 "<td style=\"vertical-align: top;\" align=\"left\"/>"
 		 +  "<table style=\"width: 170px; height: 220px;\" class=\"imagesRightPanel\" cellpadding=\"0\" cellspacing=\"0\">"
 		 +   "<tbody>"
 		 +    "<tr>"
@@ -261,7 +332,7 @@ public class GalleryController extends AbstractController {
 		 +  "</table>"
 		 + "</td>"
 		;
-		*/
+		
 	}
 
 	/**
@@ -304,6 +375,105 @@ public class GalleryController extends AbstractController {
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
+	}
+
+	/**
+	 * @return the briefMediaOutputDTOFactory
+	 */
+	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
+		return briefMediaOutputDTOFactory;
+	}
+
+	/**
+	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
+	 */
+	public void setBriefMediaOutputDTOFactory(
+			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
+		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
+	}
+
+	/**
+	 * @return the mediaDAO
+	 */
+	public MediaDAO getMediaDAO() {
+		return mediaDAO;
+	}
+
+	/**
+	 * @param mediaDAO the mediaDAO to set
+	 */
+	public void setMediaDAO(MediaDAO mediaDAO) {
+		this.mediaDAO = mediaDAO;
+	}
+
+	/**
+	 * @return the metadataMediaList
+	 */
+	public String getMetadataMediaList() {
+		return metadataMediaList;
+	}
+
+	/**
+	 * @param metadataMediaList the metadataMediaList to set
+	 */
+	public void setMetadataMediaList(String metadataMediaList) {
+		this.metadataMediaList = metadataMediaList;
+	}
+
+	/**
+	 * @return the metadataFilter
+	 */
+	public String getMetadataFilter() {
+		return metadataFilter;
+	}
+
+	/**
+	 * @param metadataFilter the metadataFilter to set
+	 */
+	public void setMetadataFilter(String metadataFilter) {
+		this.metadataFilter = metadataFilter;
+	}
+
+	/**
+	 * @return the metadataCriteria
+	 */
+	public String getMetadataCriteria() {
+		return metadataCriteria;
+	}
+
+	/**
+	 * @param metadataCriteria the metadataCriteria to set
+	 */
+	public void setMetadataCriteria(String metadataCriteria) {
+		this.metadataCriteria = metadataCriteria;
+	}
+
+	/**
+	 * @return the metadataValue
+	 */
+	public String getMetadataValue() {
+		return metadataValue;
+	}
+
+	/**
+	 * @param metadataValue the metadataValue to set
+	 */
+	public void setMetadataValue(String metadataValue) {
+		this.metadataValue = metadataValue;
+	}
+
+	/**
+	 * @return the metadataCss
+	 */
+	public String getMetadataCss() {
+		return metadataCss;
+	}
+
+	/**
+	 * @param metadataCss the metadataCss to set
+	 */
+	public void setMetadataCss(String metadataCss) {
+		this.metadataCss = metadataCss;
 	}		
 
 }
