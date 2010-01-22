@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.inbio.m3s.FileUploadBean;
+import org.inbio.m3s.MultipleFilesUploadBean;
+import org.inbio.m3s.SingleFileUploadBean;
 import org.inbio.m3s.util.ImageMagickAPI;
 import org.inbio.m3s.web.exception.ValidationException;
 
@@ -37,6 +38,7 @@ public class UploadFileController extends SimpleFormController {
 	private String metadataFileType;
 	private String metadataFileName;
 	private String metadataUsername;
+	private String metadataTotalFiles;
 
 	private String errorViewName ="insertStep1";
 
@@ -58,13 +60,16 @@ public class UploadFileController extends SimpleFormController {
 		modelElements.put("formAction","uploadFile.html");
 		ve.setModelElements(modelElements);
 		
+		
 		try { 
 
 			String fileType = request.getParameter(metadataFileType);
 			logger.debug("fileType = " +fileType);
+			ModelAndView mav = new ModelAndView(posibleSuccessViewMap.get(fileType));
 
 			String userName = request.getParameter(metadataUsername);
 			logger.debug("userName: "+userName);
+			mav.addObject(metadataUsername, userName);
 
 
 			// Creates a new HttpSession so the other servlets could identify
@@ -73,39 +78,73 @@ public class UploadFileController extends SimpleFormController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss-");
 			java.util.Date date = new java.util.Date();
 			String fileId = dateFormat.format(date) + userName +session.getId();
-			String fileName = fileId+"."+posibleFileExtensionMap.get(fileType);
-
-			// cast the bean
-			FileUploadBean bean = (FileUploadBean) command;
-			//let's see if there's content there
-			MultipartFile file = bean.getFile();
-
-			if (file == null || file.isEmpty()) {
+			
+			//Archivos de imagenes, pueden ser hasta 6.
+			if(fileType.compareTo("jpgImage")==0){
+				
+				// cast the bean
+				MultipleFilesUploadBean bean = (MultipleFilesUploadBean) command;
+				
+				int filesCount = bean.getFilesCount();
+				mav.addObject(metadataTotalFiles, filesCount);
+				
+				if(filesCount == 0){
 				//no hay archivo que subir :S
-				ve.setErrorMessageKey("error.insert.01");
-				throw ve;
-
-			} else{
-				file.transferTo(new File(filePath+fileName));
-				try{
-					if(fileType.compareTo("jpgImage")==0){
-						ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
-					}
-				}catch (Exception e){
-					//no se puede mover el archivo de imagen
-					ve.setErrorMessageKey("error.insert.02");
+					ve.setErrorMessageKey("error.insert.01");
 					throw ve;
 				}
-			}
+				
+				String fileName = fileId+filesCount+"."+posibleFileExtensionMap.get(fileType);;
+				mav.addObject(metadataFileName, fileName);
+				
+				for(MultipartFile file: bean.getFiles()){
+					fileName = fileId+filesCount+"."+posibleFileExtensionMap.get(fileType);
+					file.transferTo(new File(filePath+fileName));
+				
+					try{
+							ImageMagickAPI.createThumb(filePath+fileName, filePath+"thumb-"+fileName);
+					}catch (Exception e){
+						//no se puede mover el archivo de imagen
+						ve.setErrorMessageKey("error.insert.02");
+						throw ve;
+					}
+					
+					filesCount--;					
+				}
+				
+				//mav.addObject(metadataFileName, fileName);
+				//TODO: fix the filename problem
+				
+				
+			
+			//Archivo Excel, solo puede ser 1.
+			} else if (fileType.compareTo("excel")==0){
+				String fileName = fileId+"."+posibleFileExtensionMap.get(fileType);
 
-			ModelAndView mav = new ModelAndView(posibleSuccessViewMap.get(fileType));
+				// cast the bean
+				SingleFileUploadBean bean = (SingleFileUploadBean) command;
+				//let's see if there's content there
+				MultipartFile file = bean.getFile();
+				
+				if (file == null || file.isEmpty()) {
+					//no hay archivo que subir :S
+					ve.setErrorMessageKey("error.insert.01");
+					throw ve;
+				} else{
+					file.transferTo(new File(filePath+fileName));
+				}
+				
 
-			mav.addObject(metadataFileName, fileName);
-			mav.addObject(metadataUsername, userName);
+				mav.addObject(metadataFileName, fileName);
+				mav.addObject(metadataTotalFiles, 1);
+				
+			
+		}
+
 			
 			return mav;
-			
-		}catch (Exception e){
+		
+		} catch (Exception e){
 
 			if(ve.getErrorMessageKey()!= null)
 				throw ve;
@@ -115,6 +154,7 @@ public class UploadFileController extends SimpleFormController {
 		}
 
 	}
+	
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
 	throws ServletException {
@@ -207,6 +247,20 @@ public class UploadFileController extends SimpleFormController {
 	 */
 	public void setMetadataFileType(String metadataFileType) {
 		this.metadataFileType = metadataFileType;
+	}
+
+	/**
+	 * @return the metadataTotalFiles
+	 */
+	public String getMetadataTotalFiles() {
+		return metadataTotalFiles;
+	}
+
+	/**
+	 * @param metadataTotalFiles the metadataTotalFiles to set
+	 */
+	public void setMetadataTotalFiles(String metadataTotalFiles) {
+		this.metadataTotalFiles = metadataTotalFiles;
 	}
 
 }

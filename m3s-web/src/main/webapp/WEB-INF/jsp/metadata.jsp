@@ -16,7 +16,7 @@
 
 <form method="post" accept-charset="UTF-8" action="<c:out value="${formAction}"/>">
 
-  <input type="hidden" name="fileName" value="<c:out value="${mediaId}"/>" />
+  <input type="hidden" name="fileName" value="<c:out value="${fileName}"/>" />
   <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
   
   <%--Titulo --%>

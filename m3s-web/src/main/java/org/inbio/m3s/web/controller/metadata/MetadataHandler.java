@@ -58,8 +58,6 @@ public class MetadataHandler {
 		//Políticas de Uso
 		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
 		modelElements.put(metadataUsePolicies, usePolicies);
-		//mav.addObject(metadataUsePolicy, uacDTO.getUsePolicyKey());
-		//logger.debug(metadataUsePolicy+"'"+uacDTO.getUsePolicyKey()+"'");
 		
 		return modelElements;
 	}

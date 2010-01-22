@@ -4,6 +4,7 @@
 package org.inbio.m3s.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
+ * @deprecated (2010/01/21)
  * @author jgutierrez
  *
  */
@@ -31,8 +33,9 @@ public class SaveImagePageController extends AbstractController{
 	private String formActionValue;
 	
 	/* Mueve el valor de fileName a mediaId para que despliegue todo bien*/
-	private String metadataFileName;
-	private String metadataMediaId;
+	//private String metadataFileName;
+	//private String metadataMediaId;
+	//private String metadataFileNames;
 	
 	private String metadataMediaVisible;
 	
@@ -48,8 +51,11 @@ public class SaveImagePageController extends AbstractController{
 		ModelAndView mav = new ModelAndView(viewName);
 		mav.addObject("formAction", formActionValue);
 		
-		String fileName = request.getParameter(metadataFileName);
-    mav.addObject(metadataMediaId,fileName);
+		//String fileName = request.getParameter(metadataFileName);
+    //mav.addObject(metadataMediaId,fileName);
+    
+    //Map<String, String> fileNames = request.getParameter(metadataFileNames);
+    //mav.addObject(metadataFileNames, fileNames);
 		
 		//nombre del archivo que voy a subir 
 		//(en realidad es como el código del archivo que voy a subir)
@@ -81,6 +87,42 @@ public class SaveImagePageController extends AbstractController{
 		return mav;
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,Object> blablabla(Map<String,Object> context) throws Exception {
+		
+		//ModelAndView mav = new ModelAndView(viewName);
+		context.put("formAction", formActionValue);
+				
+		//Tipos de multimedios
+		List<MediaTypeDTO>  mediaTypes = messageManager.getAllMediaTypes();
+		context.put("mediaTypes", mediaTypes);
+		
+		//Tipos de Asociaciones
+		List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
+		context.put("associatedToValues", associatedToValues);
+		
+		//Tipos de Dueños de Imágenes
+		List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
+		context.put("mediaOwners", ownerValues);
+		//Owner Widget -- usando en el mediaOwner.jsp
+		context.put(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
+		
+		//Políticas de Uso
+		List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
+		context.put("usePolicies", usePolicies);
+		
+		
+		//MediaVisible will be visible by default
+		context.put(metadataMediaVisible, "checked");
+		
+		return context;
+	}
+	
 	/**
 	 * @param messageManager the messageManager to set
 	 */
@@ -135,34 +177,6 @@ public class SaveImagePageController extends AbstractController{
 	 */
 	public void setFormActionValue(String formActionValue) {
 		this.formActionValue = formActionValue;
-	}
-
-	/**
-	 * @return the metadataFileName
-	 */
-	public String getMetadataFileName() {
-		return metadataFileName;
-	}
-
-	/**
-	 * @param metadataFileName the metadataFileName to set
-	 */
-	public void setMetadataFileName(String metadataFileName) {
-		this.metadataFileName = metadataFileName;
-	}
-
-	/**
-	 * @return the metadataMediaId
-	 */
-	public String getMetadataMediaId() {
-		return metadataMediaId;
-	}
-
-	/**
-	 * @param metadataMediaId the metadataMediaId to set
-	 */
-	public void setMetadataMediaId(String metadataMediaId) {
-		this.metadataMediaId = metadataMediaId;
 	}
 
 	/**

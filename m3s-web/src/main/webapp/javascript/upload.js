@@ -13,16 +13,21 @@
 function cleanHelpDivs(){	
   document.getElementById('jpgImageHelpDiv').style.display='none';
   document.getElementById('importationHelpDiv').style.display='none';
+  document.getElementById('jpgImageFormDiv').style.display='none';
+  document.getElementById('importationFormDiv').style.display='none';
+  
 }
 
-function viewJpgImageHelp(){
+function viewJpgImageDivs(){
 	cleanHelpDivs();
 	document.getElementById('jpgImageHelpDiv').style.display='block';
+	document.getElementById('jpgImageFormDiv').style.display='block';
 }
 
-function viewImportationHelp(){
+function viewImportationDivs(){
 	cleanHelpDivs();
 	document.getElementById('importationHelpDiv').style.display='block';
+	document.getElementById('importationFormDiv').style.display='block';
 }
 
 

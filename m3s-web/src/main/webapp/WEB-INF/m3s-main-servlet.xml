@@ -43,13 +43,20 @@
     <!--  Owner Widget configuration -->
     <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
     <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+
+    <!-- Metadata media visible -->
+    <property name="metadataMediaVisible" value="mediaVisible"/>
     
     <!-- Managers  -->  
     <property name="messageManager" ref="messageManager"/>
-    <!--  -->
-    <property name="metadataFileName" value="fileName"/>
-    <property name="metadataMediaId" value="mediaId"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>
+    
+    <!-- Input/Output Values 
+    <property name="metadataFileNames" value="fileNames"/>
+    <property name="metadataUsername" value="username"/>
+    <property name="metadataTotalFiles" value="totalFiles"/>
+    -->
+    
+
   </bean>
   
   <!--  excell -->
@@ -173,7 +180,11 @@
     <property name="viewName" value="insertStep3"/>
     <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
     <property name="metadataUsername" value="username"/>
+    
+    <!-- fileNames for the images -->
     <property name="fileNameCode" value="fileName"/>
+    
+    
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
     <property name="metadataMediaCategory" value="mediaCategories"/>
@@ -219,7 +230,7 @@
 
   <!-- uploads jpg or excel files controller -->
   <bean name="/uploadFile.html" class="org.inbio.m3s.web.controller.UploadFileController">
-    <property name="commandClass" value="org.inbio.m3s.FileUploadBean"/>
+    <property name="commandClass" value="org.inbio.m3s.SingleFileUploadBean"/>
     <property name="formView" value="insertStep1"/>
     
     <property name="posibleSuccessViewMap">
@@ -239,6 +250,40 @@
     <property name="metadataFileName" value="fileName"/>
     <property name="metadataUsername" value="username"/>
     <property name="metadataFileType" value="fileType"/>
+    <property name="metadataTotalFiles" value="totalFiles"/>
+    
+  </bean>  
+
+  <!-- uploads Image files controller -->
+  <bean name="/uploadImages.html" class="org.inbio.m3s.web.controller.upload.MultipleImagesUploadController">
+    <property name="commandClass" value="org.inbio.m3s.MultipleFilesUploadBean"/>
+    <property name="formView" value="insertStep1"/>
+    
+    <property name="successView" value="insertStep2"/> <!-- Propia de la clase... -->
+    <property name="fileExtension" value="jpg"/>
+        
+    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+    <property name="metadataFileNames" value="fileNames"/>
+    <property name="metadataFileName" value="fileName"/>
+    <property name="metadataUsername" value="username"/>
+    <property name="metadataTotalFiles" value="totalFiles"/>
+    
+    <!-- View -->
+    <property name="viewName" value="insertStep2"/> <!-- no -->
+    <property name="formActionValue" value="saveMetadata.html"/>
+    
+    <!--  Owner Widget configuration -->
+    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
+    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+
+    <!-- Metadata media visible -->
+    <property name="metadataMediaVisible" value="mediaVisible"/>
+    
+    <!-- Managers  -->  
+    <property name="messageManager" ref="messageManager"/>
+    <property name="metadataHandler" ref="metadataHandler"/>
+    
+    
   </bean>  
   
   <!-- image dispatcher -->

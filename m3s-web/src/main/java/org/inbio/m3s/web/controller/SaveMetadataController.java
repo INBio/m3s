@@ -13,11 +13,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
 import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
@@ -63,6 +65,7 @@ public class SaveMetadataController implements Controller {
 	protected static Log logger = LogFactory.getLog(SaveMetadataController.class);	
 		
 	private String fileNameCode;
+	
 	private String filePath;
 	private String metadataUsername;
 	private String metadataTitle;
@@ -103,6 +106,7 @@ public class SaveMetadataController implements Controller {
 		ModelAndView mav = new ModelAndView(getViewName());
 
 		String fileName = request.getParameter(fileNameCode);
+		
 		String userName = request.getParameter(metadataUsername);
 		String title = request.getParameter(metadataTitle);
 		String description = request.getParameter(metadataDescription);
@@ -140,27 +144,41 @@ public class SaveMetadataController implements Controller {
 		logger.debug("mediaVisible: "+mediaVisible);
 				
 		try {
-		GeneralMetadataDTO gmDTO = getGM(title,description,mediaTypeId,siteDescription,projects,keywords,
+		  GeneralMetadataDTO gmDTO = getGM(title,description,mediaTypeId,siteDescription,projects,keywords,
 				associationTypeCode, associatedToValue, taxonomy);
-		gmDTO.setUsername(userName);
+		  gmDTO.setUsername(userName);
 		
-		UsesAndCopyrightsDTO uacDTO = getUAC(authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible);
-		uacDTO.setUsername(userName);
+		  UsesAndCopyrightsDTO uacDTO = getUAC(authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible);
+		  uacDTO.setUsername(userName);
 		
-		logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+fileName + "'");
-		TechnicalMetadataDTO tmDTO = metadataManager.getTechMetadataFromFile(gmDTO.getMediaTypeKey(), filePath + fileName); //el segundo parametro es el path completo de la imagen
-		if(tmDTO==null)
-			tmDTO = metadataManager.getTechMetadataByMediaType(gmDTO.getMediaTypeKey());
-		tmDTO.setUsername(userName);
 		
-		Integer mediaId = mediaManager.insertNewMedia(gmDTO, uacDTO, tmDTO);
-		mav.addObject("mediaId", mediaId);
-		logger.debug("New Media Id = "+mediaId);
+		  String[] fileNames = StringUtils.split(fileName, ';');
+		  String mediaKeys = "";
+		  TechnicalMetadataDTO tmDTO;
+		  Integer mediaId;
+		
+		  for(String individualFileName : fileNames){
 
-		// FIXME: only for jpg's... not really a bug! ;).
-		//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
-		//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
-		mediaFileManagement.organizeAndCleanFiles(filePath + fileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()));
+				logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+individualFileName + "'");
+				tmDTO = metadataManager.getTechMetadataFromFile(gmDTO.getMediaTypeKey(), filePath + individualFileName); //el segundo parametro es el path completo de la imagen
+				if(tmDTO==null)
+					tmDTO = metadataManager.getTechMetadataByMediaType(gmDTO.getMediaTypeKey());
+				tmDTO.setUsername(userName);
+				
+				mediaId = mediaManager.insertNewMedia(gmDTO, uacDTO, tmDTO);
+				mediaKeys = mediaKeys + String.valueOf(mediaId) + "  ";
+				
+				// FIXME: only for jpg's... not really a bug! ;).
+				//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
+				//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
+				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()));
+		  }
+		
+		
+		mav.addObject("mediaId", mediaKeys);
+		logger.debug("New Media Ids = "+mediaKeys);
+
+		
 		} catch (IllegalArgumentException iae){
 			ValidationException ve = new ValidationException(iae.getMessage(), iae.getCause());
 			
