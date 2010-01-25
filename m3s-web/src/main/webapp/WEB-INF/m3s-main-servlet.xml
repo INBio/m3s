@@ -94,6 +94,11 @@
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>
 
+    <!-- in case of error -->
+    <property name="errorViewName" value="insertStep2"/>
+    <property name="errorFormActionKey" value="formAction"/>
+    <property name="errorFormActionValue" value="saveMetadata.html"/>
+
     <!--  Managers, Handlers and Utils (etc) -->
     <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>    
@@ -144,18 +149,25 @@
   </bean>   
 
   
-  <!-- edit page -->
+  <!-- edit page (1) -->
   <bean name="/edit.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="editStep1"/>
+    <property name="modelElements">
+      <map>
+        <entry key="editFormAction" value="editMedia.html"/>
+      </map>
+    </property>    
   </bean>
-  <!-- edit page -->
+  
+  <!-- edit page (2) -->
   <bean name="/editMedia.html" class="org.inbio.m3s.web.controller.EditStep2PageController">
-    <!-- View -->
+    <!--  Model and View (JSP) -->
     <property name="viewName" value="editStep2"/>
-    <!--  Form Action -->
+    <property name="formActionKey" value="formAction"/>
     <property name="formActionValue" value="updateMetadata.html"/>
-  	<!--  metadata -->
-  	<property name="metadataUsername" value="username"/>
+  	
+  	<!-- metadata values -->
+  	<!-- <property name="metadataUsername" value="username"/> -->
     <property name="metadataId" value="mediaId"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
@@ -172,34 +184,35 @@
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>
     
-    <!--  Owner Widget configuration -->
-    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
-    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+    <!-- in case of error--> 
+    <property name="errorViewName" value="editStep1"/> 
+    <property name="errorFormActionKey" value="editFormAction"/>
+    <property name="errorFormActionValue" value="editMedia.html"/>
     
-    <!-- Converters  -->
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+    <!-- Managers, Handlers and Converters  -->
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>	
+    <property name="metadataHandler" ref="metadataHandler"/>
     
-    <!-- Managers  -->  
-    <property name="messageManager" ref="messageManager"/>	
     <!-- ARA 
     <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     -->
     <!-- ATTA --> 
     <property name="mediaManager" ref="ATTAMediaManager"/>
-    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
     
   </bean>
   
-  <!--  updates the edited metadata -->
-  <bean name="/updateMetadata.html" class="org.inbio.m3s.web.controller.UpdateMetadataController">
+  <!-- Edit(3)  updates the edited metadata -->
+  <bean name="/updateMetadata.html" class="org.inbio.m3s.web.controller.metadata.UpdateMetadataController">
     <!-- View -->
     <property name="viewName" value="editStep3"/>
-    <property name="formActionValue" value="uploadFile.html"/>
+    <property name="formActionKey" value="editFormAction"/>
+    <property name="formActionValue" value="editMedia.html"/>
+    
+    <!-- metadata form values -->
     <property name="metadataUsername" value="username"/>
-    <property name="fileNameCode" value="fileName"/>
+    <property name="fileNameCode" value="mediaId"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
     <property name="metadataMediaCategory" value="mediaCategories"/>
@@ -215,25 +228,24 @@
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>  
     
-    <!-- Converters  -->
+    <!-- in case of error--> 
+    <property name="errorViewName" value="editStep2"/> 
+    <property name="errorFormActionKey" value="formAction"/>
+    <property name="errorFormActionValue" value="updateMetadata.html"/>    
+    
+    <!-- Managers, Handlers and Converters  -->
     <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
     <property name="metadataHandler" ref="metadataHandler"/>
-    
-      
-    <!-- Managers -->
-    <property name="metadataManager" ref="metadataManager"/>
     <property name="messageManager" ref="messageManager"/>
     <!-- ATTA -->   
     <property name="mediaManager" ref="ATTAMediaManager"/>    
     <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
     <property name="siteManager" ref="ATTASiteManager"/>
     <property name="siteDAO" ref="INBioSiteDAO"/>
     
     <!--  de ARA
     <property name="mediaManager" ref="ARAMediaManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
     <property name="siteManager" ref="ARASiteManager"/>
     <property name="siteDAO" ref="ARASiteDAO"/>
     -->

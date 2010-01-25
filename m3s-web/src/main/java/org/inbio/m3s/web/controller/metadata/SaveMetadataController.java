@@ -68,7 +68,7 @@ public class SaveMetadataController implements Controller {
 	// Model & JSP (view)
 	private String viewName;
   
-	//metadata From
+	//metadata Form
 	private String metadataUsernameKey;
 	private String fileNameKey; 
 	private String metadataTitle;
@@ -85,6 +85,11 @@ public class SaveMetadataController implements Controller {
 	private String metadataOwnerValue;
 	private String metadataUsePolicy;
 	private String metadataMediaVisible;	
+	
+	//Error management
+	private String errorViewName; //="insertStep2"
+	private String errorFormActionKey;//=formAction
+	private String errorFormActionValue;//=saveMetadata.html
 	
 	//Managers, Handlers and Utils (etc)
 	private MediaManager mediaManager;
@@ -181,14 +186,14 @@ public class SaveMetadataController implements Controller {
 		} catch (IllegalArgumentException iae){
 			ValidationException ve = new ValidationException(iae.getMessage(), iae.getCause());
 			
-			ve.setViewName("insertStep2");
+			ve.setViewName(errorViewName);
 			ve.setErrorMessageKey("error.metadata.01");
 			
 			Map<String, Object> modelElements = new HashMap<String, Object>();
 			modelElements.put("error", "ERROR: "+iae.getMessage());
 			
 			/*		 */
-			modelElements.put("formAction", "saveMetadata.html");
+			modelElements.put(errorFormActionKey, errorFormActionValue);
 			
 			modelElements.put("mediaId", fileName);
 			
@@ -851,6 +856,54 @@ public class SaveMetadataController implements Controller {
 	 */
 	public void setMetadataHandler(MetadataHandler metadataHandler) {
 		this.metadataHandler = metadataHandler;
+	}
+
+
+	/**
+	 * @return the errorViewName
+	 */
+	public String getErrorViewName() {
+		return errorViewName;
+	}
+
+
+	/**
+	 * @param errorViewName the errorViewName to set
+	 */
+	public void setErrorViewName(String errorViewName) {
+		this.errorViewName = errorViewName;
+	}
+
+
+	/**
+	 * @return the errorFormActionKey
+	 */
+	public String getErrorFormActionKey() {
+		return errorFormActionKey;
+	}
+
+
+	/**
+	 * @param errorFormActionKey the errorFormActionKey to set
+	 */
+	public void setErrorFormActionKey(String errorFormActionKey) {
+		this.errorFormActionKey = errorFormActionKey;
+	}
+
+
+	/**
+	 * @return the errorFormActionValue
+	 */
+	public String getErrorFormActionValue() {
+		return errorFormActionValue;
+	}
+
+
+	/**
+	 * @param errorFormActionValue the errorFormActionValue to set
+	 */
+	public void setErrorFormActionValue(String errorFormActionValue) {
+		this.errorFormActionValue = errorFormActionValue;
 	}
 
 }

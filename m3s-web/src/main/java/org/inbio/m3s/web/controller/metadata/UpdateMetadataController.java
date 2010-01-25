@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.inbio.m3s.web.controller;
+package org.inbio.m3s.web.controller.metadata;
 
 
 import java.net.URLDecoder;
@@ -40,12 +40,9 @@ import org.inbio.m3s.exception.YesNoValueNotFoundException;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
-import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SiteManager;
-import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.service.util.ImportFileParser;
 import org.inbio.m3s.util.StringUtil;
-import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
 import org.inbio.m3s.web.exception.ValidationException;
 
@@ -59,7 +56,13 @@ import org.springframework.web.servlet.mvc.Controller;
 public class UpdateMetadataController implements Controller {
 
 	protected static Log logger = LogFactory.getLog(UpdateMetadataController.class);	
-		
+
+	//view and model
+	private String viewName;//=editStep3	
+	private String formActionKey;//=editFormAction
+	private String formActionValue;//=editMedia.html
+	
+	//metadata Form
 	private String fileNameCode;
 	private String metadataUsername;
 	private String metadataTitle;
@@ -76,29 +79,29 @@ public class UpdateMetadataController implements Controller {
 	private String metadataOwnerValue;
 	private String metadataUsePolicy;
 	private String metadataMediaVisible;	
+
+	//Error management
+	private String errorViewName; //=editStep2
+	private String errorFormActionKey;//=formAction
+	private String errorFormActionValue;//=updateMetadata.html
 	
-	private String viewName;	
-	private String formActionValue;
-	
-	private MediaManager mediaManager;
-	private MetadataManager metadataManager;
+	//Managers, Handlers and Utils (etc)
+	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	private MetadataHandler metadataHandler;
 	private MessageManager messageManager;
+	private MediaManager mediaManager;
 	private AgentManager agentManager;
-	private TaxonomyManager taxonomyManager;
 	private SiteManager siteManager;
 	private SiteDAO siteDAO;
 	
-	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
-	
-	private MetadataHandler metadataHandler;
 	
 	
 	public ModelAndView handleRequest(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 	
 		//Create the view
-		ModelAndView mav = new ModelAndView(getViewName());
-		mav.addObject("formAction", formActionValue);
+		ModelAndView mav = new ModelAndView(viewName);
+		mav.addObject(formActionKey, formActionValue);
 
 		String mediaId = request.getParameter(fileNameCode);
 		String userName = request.getParameter(metadataUsername);
@@ -119,7 +122,7 @@ public class UpdateMetadataController implements Controller {
 		String usePolicyKey = request.getParameter(metadataUsePolicy);
 		String mediaVisible = request.getParameter(metadataMediaVisible);
 		
-		logger.debug("mediaId: "+mediaId);
+		logger.debug("["+fileNameCode+"] mediaId: "+mediaId);
 		logger.debug("userName: "+userName);
 		logger.debug("title: "+title);
 		logger.debug("description: "+description);
@@ -158,14 +161,14 @@ public class UpdateMetadataController implements Controller {
 		} catch(IllegalArgumentException iae){
 			ValidationException ve = new ValidationException(iae.getMessage(), iae.getCause());
 			
-			ve.setViewName("editStep2");
+			ve.setViewName(errorViewName);
 			ve.setErrorMessageKey("error.metadata.01");
 			
 			Map<String, Object> modelElements = new HashMap<String, Object>();
 			modelElements.put("error", "ERROR: "+iae.getMessage());
 			
 			/*		 */
-			modelElements.put("formAction", "updateMetadata.html");
+			modelElements.put(errorFormActionKey, errorFormActionValue);
 			
 			modelElements.put(fileNameCode, mediaId);
 			modelElements.put("mediaId", mediaId);
@@ -218,7 +221,7 @@ public class UpdateMetadataController implements Controller {
 
 		uacDTO.setMediaKey(mediaId);
 
-		logger.debug("\nGetting uses and copyrigths metadata TV");
+		logger.debug("Getting uses and copyrigths metadata TV");
 		
 		try{
 	
@@ -244,13 +247,8 @@ public class UpdateMetadataController implements Controller {
 			// use policy
 			uacDTO.setUsePolicyKey(usePolicyKey);
 			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
-			/*
-			// mediaUses
-			String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
-			uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
-			info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
-			*/
+			
+			/*	mediaUses */
 			uacDTO.setMediaUsesList(new ArrayList<MediaUseDTO>());
 	
 			// backup and visible value
@@ -265,31 +263,26 @@ public class UpdateMetadataController implements Controller {
 			logger.debug("Is backup: '" + uacDTO.getIsBackup() + "'");
 			logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
 	
-			logger.debug("\nGetting uses and copyrigths metadata its done");
+			logger.debug("Getting uses and copyrigths metadata its done");
 			return uacDTO;
 		
 		}  catch (PersonNotFoundException pnfe) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(pnfe.getMessage());
 		
 		} catch (InstitutionNotFoundException infe) {
-		  //info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Institucion: '" + infe.getNotFoundInstitution()+ "' en la Base de Datos.");
 		  logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Institucion: '" + infe.getNotFoundInstitution() + "' en la Base de Datos.");
 		  throw new IllegalArgumentException(infe.getMessage());
 		  
 		} catch (OwnerTypeNotFoundException otnfe){
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Dueño: '" + otnfe.getNotFoundOwnerType()  + "'.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de dueño: '" + otnfe.getNotFoundOwnerType() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(otnfe.getMessage());
 		
 		} catch (MediaUseNotFoundException munfe){
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Uso para el Medio: '" + munfe.getNotFoundMediaUse()  + "'.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Uso para el Medio: '" + munfe.getNotFoundMediaUse() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(munfe.getMessage());
 
 		} catch (YesNoValueNotFoundException ynvnfe){
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede reconoger el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo..");
 			throw new IllegalArgumentException(ynvnfe.getMessage());
 		}				
@@ -358,31 +351,6 @@ public class UpdateMetadataController implements Controller {
 			logger.debug("taxonomy: '" + taxonomy + "'");
 			taxonsList = taxonGuiOrDTOConverter.toDTOList(taxonomy);
 			gmDTO.setTaxonsList(taxonsList);
-			/*
-			if (taxonName == null || taxonName.compareTo("") == 0) {
-				// in case the media is associated with the specimen Number of
-				// the gathering code the taxonomy should be associated from
-				// atta. otherwise do nothing
-				if (associationTypeCode.equals(AssociatedToEntity.SPECIMEN_NUMBER.getId())) {
-					// TODO revisar si es necesario inicializar este arrayList pues creo
-					// que
-					// no hace falta.
-					tlDTO = taxonomyManager.getTaxonLiteFromSpecimenId(associatedToValue);
-					taxonsList.add(tlDTO);
-					if(taxonsList==null || taxonsList.size()==0)
-						throw new IllegalArgumentException("El número de especímen no tiene taxones asociados");
-
-
-				} else if (associationTypeCode.equals(AssociatedToEntity.GATHERING_CODE.getId())) {
-					taxonsList = new ArrayList<TaxonLiteDTO>();
-					for (TaxonLiteDTO tlDTO2 : taxonomyManager.getTaxonLiteFromGatheringCode(associatedToValue)) {
-						taxonsList.add(tlDTO2);
-					}
-					if(taxonsList==null || taxonsList.size()==0)
-						throw new IllegalArgumentException("El código de colecta no tiene especímenes(taxones) asociados");
-				}
-			}
-			*/
 			logger.debug("Taxonomy elements: '" + gmDTO.getTaxonsList().size() + "'");
 
 			
@@ -406,43 +374,31 @@ public class UpdateMetadataController implements Controller {
 			return gmDTO;
 			
 		} catch (MediaTypeNotFoundException mtnfe) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Medio: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(mtnfe.getMessage());
 		
 		} catch (ProjectNotFoundException pnfe) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Proyecto: '" + pnfe.getNotFoundProject() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Proyecto: '" + pnfe.getNotFoundProject() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(pnfe.getMessage());
 		
 		} catch (KeywordNotFoundException knfe) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Palabra Clave: '" + knfe.getNotFoundKeyword() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Palabra Clave: '" + knfe.getNotFoundKeyword() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(knfe.getMessage());
 			
 		} catch (TaxonNotFoundException tnfe) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(tnfe.getMessage());
 		
 		} catch (AssociationTypeNotFoundException atnfe){
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Asociación: '" + atnfe.getNotFoundAssociationType()  + "'.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + atnfe.getNotFoundAssociationType() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(atnfe.getMessage());
 
 		}	catch (Exception e) {
-			//info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " '" + e.getMessage() + "'");
 			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
 			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
 
-	/**
-	 * @param viewName the viewName to set
-	 */
-	public void setViewName(String viewName) {
-		this.viewName = viewName;
-	}
 
 	/**
 	 * @return the viewName
@@ -451,301 +407,44 @@ public class UpdateMetadataController implements Controller {
 		return viewName;
 	}
 
-	/**
-	 * @return the metadataTitle
-	 */
-	public String getMetadataTitle() {
-		return metadataTitle;
-	}
 
 	/**
-	 * @param metadataTitle the metadataTitle to set
+	 * @param viewName the viewName to set
 	 */
-	public void setMetadataTitle(String metadataTitle) {
-		this.metadataTitle = metadataTitle;
-	}
-
-	/**
-	 * @return the metadataDescription
-	 */
-	public String getMetadataDescription() {
-		return metadataDescription;
-	}
-
-	/**
-	 * @param metadataDescription the metadataDescription to set
-	 */
-	public void setMetadataDescription(String metadataDescription) {
-		this.metadataDescription = metadataDescription;
-	}
-
-	/**
-	 * @return the metadataMediaCategory
-	 */
-	public String getMetadataMediaCategory() {
-		return metadataMediaCategory;
-	}
-
-	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
-	 */
-	public void setMetadataMediaCategory(String metadataMediaCategory) {
-		this.metadataMediaCategory = metadataMediaCategory;
-	}
-
-	/**
-	 * @return the metadataProjects
-	 */
-	public String getMetadataProjects() {
-		return metadataProjects;
-	}
-
-	/**
-	 * @param metadataProjects the metadataProjects to set
-	 */
-	public void setMetadataProjects(String metadataProjects) {
-		this.metadataProjects = metadataProjects;
-	}
-
-	/**
-	 * @return the metadataKeywords
-	 */
-	public String getMetadataKeywords() {
-		return metadataKeywords;
-	}
-
-	/**
-	 * @param metadataKeywords the metadataKeywords to set
-	 */
-	public void setMetadataKeywords(String metadataKeywords) {
-		this.metadataKeywords = metadataKeywords;
-	}
-
-	/**
-	 * @return the metadataAssociatedToValueType
-	 */
-	public String getMetadataAssociatedToValueType() {
-		return metadataAssociatedToValueType;
-	}
-
-	/**
-	 * @param metadataAssociatedToValueType the metadataAssociatedToValueType to set
-	 */
-	public void setMetadataAssociatedToValueType(
-			String metadataAssociatedToValueType) {
-		this.metadataAssociatedToValueType = metadataAssociatedToValueType;
-	}
-
-	/**
-	 * @return the metadataAssociatedToValue
-	 */
-	public String getMetadataAssociatedToValue() {
-		return metadataAssociatedToValue;
-	}
-
-	/**
-	 * @param metadataAssociatedToValue the metadataAssociatedToValue to set
-	 */
-	public void setMetadataAssociatedToValue(String metadataAssociatedToValue) {
-		this.metadataAssociatedToValue = metadataAssociatedToValue;
-	}
-
-	/**
-	 * @return the metadataTaxonomy
-	 */
-	public String getMetadataTaxonomy() {
-		return metadataTaxonomy;
-	}
-
-	/**
-	 * @param metadataTaxonomy the metadataTaxonomy to set
-	 */
-	public void setMetadataTaxonomy(String metadataTaxonomy) {
-		this.metadataTaxonomy = metadataTaxonomy;
-	}
-
-	/**
-	 * @return the metadataSiteDescription
-	 */
-	public String getMetadataSiteDescription() {
-		return metadataSiteDescription;
-	}
-
-	/**
-	 * @param metadataSiteDescription the metadataSiteDescription to set
-	 */
-	public void setMetadataSiteDescription(String metadataSiteDescription) {
-		this.metadataSiteDescription = metadataSiteDescription;
-	}
-
-	/**
-	 * @return the metadataOwnerType
-	 */
-	public String getMetadataOwnerType() {
-		return metadataOwnerType;
-	}
-
-	/**
-	 * @param metadataOwnerType the metadataOwnerType to set
-	 */
-	public void setMetadataOwnerType(String metadataOwnerType) {
-		this.metadataOwnerType = metadataOwnerType;
-	}
-
-	/**
-	 * @return the metadataOwnerValue
-	 */
-	public String getMetadataOwnerValue() {
-		return metadataOwnerValue;
-	}
-
-	/**
-	 * @param metadataOwnerValue the metadataOwnerValue to set
-	 */
-	public void setMetadataOwnerValue(String metadataOwnerValue) {
-		this.metadataOwnerValue = metadataOwnerValue;
-	}
-
-	/**
-	 * @return the metadataUsePolicy
-	 */
-	public String getMetadataUsePolicy() {
-		return metadataUsePolicy;
-	}
-
-	/**
-	 * @param metadataUsePolicy the metadataUsePolicy to set
-	 */
-	public void setMetadataUsePolicy(String metadataUsePolicy) {
-		this.metadataUsePolicy = metadataUsePolicy;
-	}
-
-	/**
-	 * @return the metadataMediaVisible
-	 */
-	public String getMetadataMediaVisible() {
-		return metadataMediaVisible;
-	}
-
-	/**
-	 * @param metadataMediaVisible the metadataMediaVisible to set
-	 */
-	public void setMetadataMediaVisible(String metadataMediaVisible) {
-		this.metadataMediaVisible = metadataMediaVisible;
-	}
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
-	}
-
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-	/**
-	 * @param metadataManager the metadataManager to set
-	 */
-	public void setMetadataManager(MetadataManager metadataManager) {
-		this.metadataManager = metadataManager;
-	}
-
-	/**
-	 * @return the metadataManager
-	 */
-	public MetadataManager getMetadataManager() {
-		return metadataManager;
-	}
-
-	/**
-	 * @param messageManager the messageManager to set
-	 */
-	public void setMessageManager(MessageManager messageManager) {
-		this.messageManager = messageManager;
-	}
-
-	/**
-	 * @return the messageManager
-	 */
-	public MessageManager getMessageManager() {
-		return messageManager;
-	}
-
-	/**
-	 * @param agentManager the agentManager to set
-	 */
-	public void setAgentManager(AgentManager agentManager) {
-		this.agentManager = agentManager;
-	}
-
-	/**
-	 * @return the agentManager
-	 */
-	public AgentManager getAgentManager() {
-		return agentManager;
-	}
-
-	/**
-	 * @return the taxonomyManager
-	 */
-	public TaxonomyManager getTaxonomyManager() {
-		return taxonomyManager;
-	}
-
-	/**
-	 * @param taxonomyManager the taxonomyManager to set
-	 */
-	public void setTaxonomyManager(TaxonomyManager taxonomyManager) {
-		this.taxonomyManager = taxonomyManager;
-	}
-
-	/**
-	 * @return the siteManager
-	 */
-	public SiteManager getSiteManager() {
-		return siteManager;
-	}
-
-	/**
-	 * @param siteManager the siteManager to set
-	 */
-	public void setSiteManager(SiteManager siteManager) {
-		this.siteManager = siteManager;
-	}
-
-	/**
-	 * @return the siteDAO
-	 */
-	public SiteDAO getSiteDAO() {
-		return siteDAO;
-	}
-
-	/**
-	 * @param siteDAO the siteDAO to set
-	 */
-	public void setSiteDAO(SiteDAO siteDAO) {
-		this.siteDAO = siteDAO;
+	public void setViewName(String viewName) {
+		this.viewName = viewName;
 	}
 
 
 	/**
-	 * @return the metadataMediaAuthor
+	 * @return the formActionKey
 	 */
-	public String getMetadataMediaAuthor() {
-		return metadataMediaAuthor;
+	public String getFormActionKey() {
+		return formActionKey;
 	}
 
 
 	/**
-	 * @param metadataMediaAuthor the metadataMediaAuthor to set
+	 * @param formActionKey the formActionKey to set
 	 */
-	public void setMetadataMediaAuthor(String metadataMediaAuthor) {
-		this.metadataMediaAuthor = metadataMediaAuthor;
+	public void setFormActionKey(String formActionKey) {
+		this.formActionKey = formActionKey;
+	}
+
+
+	/**
+	 * @return the formActionValue
+	 */
+	public String getFormActionValue() {
+		return formActionValue;
+	}
+
+
+	/**
+	 * @param formActionValue the formActionValue to set
+	 */
+	public void setFormActionValue(String formActionValue) {
+		this.formActionValue = formActionValue;
 	}
 
 
@@ -782,6 +481,279 @@ public class UpdateMetadataController implements Controller {
 
 
 	/**
+	 * @return the metadataTitle
+	 */
+	public String getMetadataTitle() {
+		return metadataTitle;
+	}
+
+
+	/**
+	 * @param metadataTitle the metadataTitle to set
+	 */
+	public void setMetadataTitle(String metadataTitle) {
+		this.metadataTitle = metadataTitle;
+	}
+
+
+	/**
+	 * @return the metadataDescription
+	 */
+	public String getMetadataDescription() {
+		return metadataDescription;
+	}
+
+
+	/**
+	 * @param metadataDescription the metadataDescription to set
+	 */
+	public void setMetadataDescription(String metadataDescription) {
+		this.metadataDescription = metadataDescription;
+	}
+
+
+	/**
+	 * @return the metadataMediaCategory
+	 */
+	public String getMetadataMediaCategory() {
+		return metadataMediaCategory;
+	}
+
+
+	/**
+	 * @param metadataMediaCategory the metadataMediaCategory to set
+	 */
+	public void setMetadataMediaCategory(String metadataMediaCategory) {
+		this.metadataMediaCategory = metadataMediaCategory;
+	}
+
+
+	/**
+	 * @return the metadataProjects
+	 */
+	public String getMetadataProjects() {
+		return metadataProjects;
+	}
+
+
+	/**
+	 * @param metadataProjects the metadataProjects to set
+	 */
+	public void setMetadataProjects(String metadataProjects) {
+		this.metadataProjects = metadataProjects;
+	}
+
+
+	/**
+	 * @return the metadataKeywords
+	 */
+	public String getMetadataKeywords() {
+		return metadataKeywords;
+	}
+
+
+	/**
+	 * @param metadataKeywords the metadataKeywords to set
+	 */
+	public void setMetadataKeywords(String metadataKeywords) {
+		this.metadataKeywords = metadataKeywords;
+	}
+
+
+	/**
+	 * @return the metadataAssociatedToValueType
+	 */
+	public String getMetadataAssociatedToValueType() {
+		return metadataAssociatedToValueType;
+	}
+
+
+	/**
+	 * @param metadataAssociatedToValueType the metadataAssociatedToValueType to set
+	 */
+	public void setMetadataAssociatedToValueType(
+			String metadataAssociatedToValueType) {
+		this.metadataAssociatedToValueType = metadataAssociatedToValueType;
+	}
+
+
+	/**
+	 * @return the metadataAssociatedToValue
+	 */
+	public String getMetadataAssociatedToValue() {
+		return metadataAssociatedToValue;
+	}
+
+
+	/**
+	 * @param metadataAssociatedToValue the metadataAssociatedToValue to set
+	 */
+	public void setMetadataAssociatedToValue(String metadataAssociatedToValue) {
+		this.metadataAssociatedToValue = metadataAssociatedToValue;
+	}
+
+
+	/**
+	 * @return the metadataTaxonomy
+	 */
+	public String getMetadataTaxonomy() {
+		return metadataTaxonomy;
+	}
+
+
+	/**
+	 * @param metadataTaxonomy the metadataTaxonomy to set
+	 */
+	public void setMetadataTaxonomy(String metadataTaxonomy) {
+		this.metadataTaxonomy = metadataTaxonomy;
+	}
+
+
+	/**
+	 * @return the metadataSiteDescription
+	 */
+	public String getMetadataSiteDescription() {
+		return metadataSiteDescription;
+	}
+
+
+	/**
+	 * @param metadataSiteDescription the metadataSiteDescription to set
+	 */
+	public void setMetadataSiteDescription(String metadataSiteDescription) {
+		this.metadataSiteDescription = metadataSiteDescription;
+	}
+
+
+	/**
+	 * @return the metadataMediaAuthor
+	 */
+	public String getMetadataMediaAuthor() {
+		return metadataMediaAuthor;
+	}
+
+
+	/**
+	 * @param metadataMediaAuthor the metadataMediaAuthor to set
+	 */
+	public void setMetadataMediaAuthor(String metadataMediaAuthor) {
+		this.metadataMediaAuthor = metadataMediaAuthor;
+	}
+
+
+	/**
+	 * @return the metadataOwnerType
+	 */
+	public String getMetadataOwnerType() {
+		return metadataOwnerType;
+	}
+
+
+	/**
+	 * @param metadataOwnerType the metadataOwnerType to set
+	 */
+	public void setMetadataOwnerType(String metadataOwnerType) {
+		this.metadataOwnerType = metadataOwnerType;
+	}
+
+
+	/**
+	 * @return the metadataOwnerValue
+	 */
+	public String getMetadataOwnerValue() {
+		return metadataOwnerValue;
+	}
+
+
+	/**
+	 * @param metadataOwnerValue the metadataOwnerValue to set
+	 */
+	public void setMetadataOwnerValue(String metadataOwnerValue) {
+		this.metadataOwnerValue = metadataOwnerValue;
+	}
+
+
+	/**
+	 * @return the metadataUsePolicy
+	 */
+	public String getMetadataUsePolicy() {
+		return metadataUsePolicy;
+	}
+
+
+	/**
+	 * @param metadataUsePolicy the metadataUsePolicy to set
+	 */
+	public void setMetadataUsePolicy(String metadataUsePolicy) {
+		this.metadataUsePolicy = metadataUsePolicy;
+	}
+
+
+	/**
+	 * @return the metadataMediaVisible
+	 */
+	public String getMetadataMediaVisible() {
+		return metadataMediaVisible;
+	}
+
+
+	/**
+	 * @param metadataMediaVisible the metadataMediaVisible to set
+	 */
+	public void setMetadataMediaVisible(String metadataMediaVisible) {
+		this.metadataMediaVisible = metadataMediaVisible;
+	}
+
+
+	/**
+	 * @return the errorViewName
+	 */
+	public String getErrorViewName() {
+		return errorViewName;
+	}
+
+
+	/**
+	 * @param errorViewName the errorViewName to set
+	 */
+	public void setErrorViewName(String errorViewName) {
+		this.errorViewName = errorViewName;
+	}
+
+
+	/**
+	 * @return the errorFormActionKey
+	 */
+	public String getErrorFormActionKey() {
+		return errorFormActionKey;
+	}
+
+
+	/**
+	 * @param errorFormActionKey the errorFormActionKey to set
+	 */
+	public void setErrorFormActionKey(String errorFormActionKey) {
+		this.errorFormActionKey = errorFormActionKey;
+	}
+
+
+	/**
+	 * @return the errorFormActionValue
+	 */
+	public String getErrorFormActionValue() {
+		return errorFormActionValue;
+	}
+
+
+	/**
+	 * @param errorFormActionValue the errorFormActionValue to set
+	 */
+	public void setErrorFormActionValue(String errorFormActionValue) {
+		this.errorFormActionValue = errorFormActionValue;
+	}
+
+
+	/**
 	 * @return the taxonGuiOrDTOConverter
 	 */
 	public TaxonGuiOrDTOConverter getTaxonGuiOrDTOConverter() {
@@ -799,22 +771,6 @@ public class UpdateMetadataController implements Controller {
 
 
 	/**
-	 * @return the formActionValue
-	 */
-	public String getFormActionValue() {
-		return formActionValue;
-	}
-
-
-	/**
-	 * @param formActionValue the formActionValue to set
-	 */
-	public void setFormActionValue(String formActionValue) {
-		this.formActionValue = formActionValue;
-	}
-
-
-	/**
 	 * @return the metadataHandler
 	 */
 	public MetadataHandler getMetadataHandler() {
@@ -828,5 +784,86 @@ public class UpdateMetadataController implements Controller {
 	public void setMetadataHandler(MetadataHandler metadataHandler) {
 		this.metadataHandler = metadataHandler;
 	}
+
+
+	/**
+	 * @return the messageManager
+	 */
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
+
+	/**
+	 * @param messageManager the messageManager to set
+	 */
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
+	}
+
+
+	/**
+	 * @return the mediaManager
+	 */
+	public MediaManager getMediaManager() {
+		return mediaManager;
+	}
+
+
+	/**
+	 * @param mediaManager the mediaManager to set
+	 */
+	public void setMediaManager(MediaManager mediaManager) {
+		this.mediaManager = mediaManager;
+	}
+
+
+	/**
+	 * @return the agentManager
+	 */
+	public AgentManager getAgentManager() {
+		return agentManager;
+	}
+
+
+	/**
+	 * @param agentManager the agentManager to set
+	 */
+	public void setAgentManager(AgentManager agentManager) {
+		this.agentManager = agentManager;
+	}
+
+
+	/**
+	 * @return the siteManager
+	 */
+	public SiteManager getSiteManager() {
+		return siteManager;
+	}
+
+
+	/**
+	 * @param siteManager the siteManager to set
+	 */
+	public void setSiteManager(SiteManager siteManager) {
+		this.siteManager = siteManager;
+	}
+
+
+	/**
+	 * @return the siteDAO
+	 */
+	public SiteDAO getSiteDAO() {
+		return siteDAO;
+	}
+
+
+	/**
+	 * @param siteDAO the siteDAO to set
+	 */
+	public void setSiteDAO(SiteDAO siteDAO) {
+		this.siteDAO = siteDAO;
+	}
+
 
 }

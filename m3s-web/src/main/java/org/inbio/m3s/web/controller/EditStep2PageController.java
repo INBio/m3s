@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,24 +14,18 @@ import org.apache.commons.lang.StringUtils;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
-import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
-import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
-import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MediaManager;
-import org.inbio.m3s.service.MessageManager;
-import org.inbio.m3s.service.TaxonomyManager;
 import org.inbio.m3s.util.StringUtil;
+import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
 import org.inbio.m3s.web.exception.ValidationException;
-import org.inbio.m3s.web.filter.FilterMapWrapper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -40,12 +35,13 @@ import org.springframework.web.servlet.mvc.AbstractController;
  */
 public class EditStep2PageController extends AbstractController{
 	
-	private String viewName;
-	private String errorViewName = "editStep1";
+	//model and view
+	private String viewName;//=editStep2
+	private String formActionKey;//="formAction"
+	private String formActionValue;//=updateMetadata.html
 	
-	private String formActionValue;
-	
-	private String metadataUsername;
+	//metadata values
+	//private String metadataUsername;
 	private String metadataId;
 	private String metadataTitle;
 	private String metadataDescription;
@@ -54,7 +50,6 @@ public class EditStep2PageController extends AbstractController{
 	private String metadataKeywords;
 	private String metadataAssociatedToValueType;
 	private String metadataAssociatedToValue;
-	
 	private String metadataTaxonomy; 
 	private String metadataSiteDescription;
 	private String metadataMediaAuthor;
@@ -62,30 +57,35 @@ public class EditStep2PageController extends AbstractController{
 	private String metadataOwnerValue;
 	private String metadataUsePolicy;
 	private String metadataMediaVisible;	
-	
-	private MessageManager messageManager;
-	private MediaManager mediaManager;
-	private TaxonomyManager taxonomyManager;
-	private AgentManager agentManager;
-	
-	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
-	
-	/* MediaOwner Widget */
-  private FilterMapWrapper mediaOwnerFilters;
-  private String mediaOwnerFiltersRequestKey;	
-	
-	public EditStep2PageController(){}
 
+	//in case of error	
+	private String errorViewName; //="insertStep1";
+	private String errorFormActionKey; //="editFormAction"
+	private String errorFormActionValue; //="editMedia.html"
+	
+	//managers, handlers, converters, utils & etc
+	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
+	private MetadataHandler metadataHandler;
+	private MediaManager mediaManager;
+	private AgentManager agentManager;
+
+	
 	
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
 		
+		//in case of success
 		ModelAndView mav = new ModelAndView(viewName);
-		mav.addObject("formAction", formActionValue);
+		mav.addObject(formActionKey, formActionValue);
 		
+		//error management
 		ValidationException ve = new ValidationException();
 		ve.setViewName(errorViewName);
+		Map<String,Object> modelElements = new HashMap<String, Object>();
+		modelElements.put(errorFormActionKey,errorFormActionValue);
+		ve.setModelElements(modelElements);
 
+		//media ID validation
 		String mediaKey = request.getParameter(metadataId);
 		if(StringUtils.isBlank(mediaKey)){
 			//enviar msj de que esta jodido
@@ -97,6 +97,7 @@ public class EditStep2PageController extends AbstractController{
 			throw ve;
 		}
 		
+		//getting the metadata
 		GeneralMetadataDTO gmDTO = null;
 		UsesAndCopyrightsDTO uacDTO = null;
 		try{
@@ -110,21 +111,22 @@ public class EditStep2PageController extends AbstractController{
 
 		try{
 			mav.addObject(metadataId, mediaKey);
+			logger.debug(metadataId+" "+mediaKey);
 			mav.addObject(metadataTitle, gmDTO.getTitle());
+			logger.debug(metadataTitle+" "+gmDTO.getTitle());
 			mav.addObject(metadataDescription, gmDTO.getDescription());
 
-			//Tipos de multimedios
-			List<MediaTypeDTO>  mediaTypes = messageManager.getAllMediaTypes();
-			mav.addObject("mediaTypes", mediaTypes);
+			//Tipo de multimedio seleccionado
 			mav.addObject(metadataMediaCategory, gmDTO.getMediaTypeKey());
 
-			//projects and keywords
+			//projects
 			List<ProjectDTO> pDTOList = gmDTO.getProjectsList();
 			String projectsList ="";
 			for(ProjectDTO pDTO : pDTOList)
 				projectsList = projectsList + pDTO.getName() + StringUtil.TEXT_DELIMITER;
 			mav.addObject(metadataProjects, projectsList);
 
+			//keywords
 			List<KeywordDTO> kDTOList = gmDTO.getKeywordsList();
 			String keywordsList ="";
 			for(KeywordDTO kDTO : kDTOList)
@@ -132,9 +134,6 @@ public class EditStep2PageController extends AbstractController{
 			mav.addObject(metadataKeywords, keywordsList);
 
 			//Tipos de Asociaciones
-			List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
-			mav.addObject("associatedToValues", associatedToValues);
-
 			Integer associatedToType;
 			String associatedToValue;
 
@@ -171,10 +170,6 @@ public class EditStep2PageController extends AbstractController{
 			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
 
 
-			//Tipos de Dueños de Imágenes -- esto debe ser eliminado
-			List<KeyValueDTO> ownerValues = messageManager.getAllMediaOwnerValues();
-			mav.addObject("mediaOwners", ownerValues);	
-
 			logger.debug("personOwnerKey '"+uacDTO.getPersonOwnerKey()+"'");
 			logger.debug("institutionOwnerKey '"+uacDTO.getInstitutionOwnerKey()+"'");
 			//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
@@ -190,12 +185,8 @@ public class EditStep2PageController extends AbstractController{
 				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
 			}
 
-			//Owner Widget -- usando en el mediaOwner.jsp
-			mav.addObject(mediaOwnerFiltersRequestKey, mediaOwnerFilters.getFilters());
 
 			//Políticas de Uso
-			List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
-			mav.addObject("usePolicies", usePolicies);
 			mav.addObject(metadataUsePolicy, uacDTO.getUsePolicyKey());
 			logger.debug(metadataUsePolicy+"'"+uacDTO.getUsePolicyKey()+"'");
 
@@ -203,56 +194,23 @@ public class EditStep2PageController extends AbstractController{
 				mav.addObject(metadataMediaVisible, "checked");
 			else
 				mav.addObject(metadataMediaVisible, null);
+			
+			//metadata JSP values
+			Map<String,Object> metadataModelValues = new HashMap<String, Object>();
+			metadataModelValues = metadataHandler.getMetadata(metadataModelValues);
+			mav.addAllObjects(metadataModelValues);
+			
 		} catch (Exception e){
 			//esta jodido cargando los metadatos :s
 			ve.setErrorMessageKey("error.edit.04");
 			throw ve;
 		}
 		
+		
 		return mav;
 	}
 
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
 
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
-	}
-
-	/**
-	 * @return the metadataId
-	 */
-	public String getMetadataId() {
-		return metadataId;
-	}
-
-	/**
-	 * @param metadataId the metadataId to set
-	 */
-	public void setMetadataId(String metadataId) {
-		this.metadataId = metadataId;
-	}
-
-	/**
-	 * @return the metadataTitle
-	 */
-	public String getMetadataTitle() {
-		return metadataTitle;
-	}
-
-	/**
-	 * @param metadataTitle the metadataTitle to set
-	 */
-	public void setMetadataTitle(String metadataTitle) {
-		this.metadataTitle = metadataTitle;
-	}
 
 	/**
 	 * @return the viewName
@@ -261,6 +219,8 @@ public class EditStep2PageController extends AbstractController{
 		return viewName;
 	}
 
+
+
 	/**
 	 * @param viewName the viewName to set
 	 */
@@ -268,47 +228,25 @@ public class EditStep2PageController extends AbstractController{
 		this.viewName = viewName;
 	}
 
-	/**
-	 * @return the metadataDescription
-	 */
-	public String getMetadataDescription() {
-		return metadataDescription;
-	}
+
 
 	/**
-	 * @param metadataDescription the metadataDescription to set
+	 * @return the formActionKey
 	 */
-	public void setMetadataDescription(String metadataDescription) {
-		this.metadataDescription = metadataDescription;
+	public String getFormActionKey() {
+		return formActionKey;
 	}
 
-	/**
-	 * @return the metadataMediaCategory
-	 */
-	public String getMetadataMediaCategory() {
-		return metadataMediaCategory;
-	}
+
 
 	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
+	 * @param formActionKey the formActionKey to set
 	 */
-	public void setMetadataMediaCategory(String metadataMediaCategory) {
-		this.metadataMediaCategory = metadataMediaCategory;
+	public void setFormActionKey(String formActionKey) {
+		this.formActionKey = formActionKey;
 	}
 
-	/**
-	 * @return the messageManager
-	 */
-	public MessageManager getMessageManager() {
-		return messageManager;
-	}
 
-	/**
-	 * @param messageManager the messageManager to set
-	 */
-	public void setMessageManager(MessageManager messageManager) {
-		this.messageManager = messageManager;
-	}
 
 	/**
 	 * @return the formActionValue
@@ -317,6 +255,8 @@ public class EditStep2PageController extends AbstractController{
 		return formActionValue;
 	}
 
+
+
 	/**
 	 * @param formActionValue the formActionValue to set
 	 */
@@ -324,47 +264,79 @@ public class EditStep2PageController extends AbstractController{
 		this.formActionValue = formActionValue;
 	}
 
-	/**
-	 * @return the metadataOwnerType
-	 */
-	public String getMetadataOwnerType() {
-		return metadataOwnerType;
-	}
+
 
 	/**
-	 * @param metadataOwnerType the metadataOwnerType to set
+	 * @return the metadataId
 	 */
-	public void setMetadataOwnerType(String metadataOwnerType) {
-		this.metadataOwnerType = metadataOwnerType;
+	public String getMetadataId() {
+		return metadataId;
 	}
 
-	/**
-	 * @return the metadataOwnerValue
-	 */
-	public String getMetadataOwnerValue() {
-		return metadataOwnerValue;
-	}
+
 
 	/**
-	 * @param metadataOwnerValue the metadataOwnerValue to set
+	 * @param metadataId the metadataId to set
 	 */
-	public void setMetadataOwnerValue(String metadataOwnerValue) {
-		this.metadataOwnerValue = metadataOwnerValue;
+	public void setMetadataId(String metadataId) {
+		this.metadataId = metadataId;
 	}
 
-	/**
-	 * @return the metadataUsePolicy
-	 */
-	public String getMetadataUsePolicy() {
-		return metadataUsePolicy;
-	}
+
 
 	/**
-	 * @param metadataUsePolicy the metadataUsePolicy to set
+	 * @return the metadataTitle
 	 */
-	public void setMetadataUsePolicy(String metadataUsePolicy) {
-		this.metadataUsePolicy = metadataUsePolicy;
+	public String getMetadataTitle() {
+		return metadataTitle;
 	}
+
+
+
+	/**
+	 * @param metadataTitle the metadataTitle to set
+	 */
+	public void setMetadataTitle(String metadataTitle) {
+		this.metadataTitle = metadataTitle;
+	}
+
+
+
+	/**
+	 * @return the metadataDescription
+	 */
+	public String getMetadataDescription() {
+		return metadataDescription;
+	}
+
+
+
+	/**
+	 * @param metadataDescription the metadataDescription to set
+	 */
+	public void setMetadataDescription(String metadataDescription) {
+		this.metadataDescription = metadataDescription;
+	}
+
+
+
+	/**
+	 * @return the metadataMediaCategory
+	 */
+	public String getMetadataMediaCategory() {
+		return metadataMediaCategory;
+	}
+
+
+
+	/**
+	 * @param metadataMediaCategory the metadataMediaCategory to set
+	 */
+	public void setMetadataMediaCategory(String metadataMediaCategory) {
+		this.metadataMediaCategory = metadataMediaCategory;
+	}
+
+
 
 	/**
 	 * @return the metadataProjects
@@ -373,12 +345,16 @@ public class EditStep2PageController extends AbstractController{
 		return metadataProjects;
 	}
 
+
+
 	/**
 	 * @param metadataProjects the metadataProjects to set
 	 */
 	public void setMetadataProjects(String metadataProjects) {
 		this.metadataProjects = metadataProjects;
 	}
+
+
 
 	/**
 	 * @return the metadataKeywords
@@ -387,6 +363,8 @@ public class EditStep2PageController extends AbstractController{
 		return metadataKeywords;
 	}
 
+
+
 	/**
 	 * @param metadataKeywords the metadataKeywords to set
 	 */
@@ -394,12 +372,16 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataKeywords = metadataKeywords;
 	}
 
+
+
 	/**
 	 * @return the metadataAssociatedToValueType
 	 */
 	public String getMetadataAssociatedToValueType() {
 		return metadataAssociatedToValueType;
 	}
+
+
 
 	/**
 	 * @param metadataAssociatedToValueType the metadataAssociatedToValueType to set
@@ -409,12 +391,16 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataAssociatedToValueType = metadataAssociatedToValueType;
 	}
 
+
+
 	/**
 	 * @return the metadataAssociatedToValue
 	 */
 	public String getMetadataAssociatedToValue() {
 		return metadataAssociatedToValue;
 	}
+
+
 
 	/**
 	 * @param metadataAssociatedToValue the metadataAssociatedToValue to set
@@ -423,12 +409,16 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataAssociatedToValue = metadataAssociatedToValue;
 	}
 
+
+
 	/**
 	 * @return the metadataTaxonomy
 	 */
 	public String getMetadataTaxonomy() {
 		return metadataTaxonomy;
 	}
+
+
 
 	/**
 	 * @param metadataTaxonomy the metadataTaxonomy to set
@@ -437,12 +427,16 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataTaxonomy = metadataTaxonomy;
 	}
 
+
+
 	/**
 	 * @return the metadataSiteDescription
 	 */
 	public String getMetadataSiteDescription() {
 		return metadataSiteDescription;
 	}
+
+
 
 	/**
 	 * @param metadataSiteDescription the metadataSiteDescription to set
@@ -451,12 +445,16 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataSiteDescription = metadataSiteDescription;
 	}
 
+
+
 	/**
 	 * @return the metadataMediaAuthor
 	 */
 	public String getMetadataMediaAuthor() {
 		return metadataMediaAuthor;
 	}
+
+
 
 	/**
 	 * @param metadataMediaAuthor the metadataMediaAuthor to set
@@ -465,12 +463,70 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataMediaAuthor = metadataMediaAuthor;
 	}
 
+
+
+	/**
+	 * @return the metadataOwnerType
+	 */
+	public String getMetadataOwnerType() {
+		return metadataOwnerType;
+	}
+
+
+
+	/**
+	 * @param metadataOwnerType the metadataOwnerType to set
+	 */
+	public void setMetadataOwnerType(String metadataOwnerType) {
+		this.metadataOwnerType = metadataOwnerType;
+	}
+
+
+
+	/**
+	 * @return the metadataOwnerValue
+	 */
+	public String getMetadataOwnerValue() {
+		return metadataOwnerValue;
+	}
+
+
+
+	/**
+	 * @param metadataOwnerValue the metadataOwnerValue to set
+	 */
+	public void setMetadataOwnerValue(String metadataOwnerValue) {
+		this.metadataOwnerValue = metadataOwnerValue;
+	}
+
+
+
+	/**
+	 * @return the metadataUsePolicy
+	 */
+	public String getMetadataUsePolicy() {
+		return metadataUsePolicy;
+	}
+
+
+
+	/**
+	 * @param metadataUsePolicy the metadataUsePolicy to set
+	 */
+	public void setMetadataUsePolicy(String metadataUsePolicy) {
+		this.metadataUsePolicy = metadataUsePolicy;
+	}
+
+
+
 	/**
 	 * @return the metadataMediaVisible
 	 */
 	public String getMetadataMediaVisible() {
 		return metadataMediaVisible;
 	}
+
+
 
 	/**
 	 * @param metadataMediaVisible the metadataMediaVisible to set
@@ -479,75 +535,61 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataMediaVisible = metadataMediaVisible;
 	}
 
-	/**
-	 * @return the taxonomyManager
-	 */
-	public TaxonomyManager getTaxonomyManager() {
-		return taxonomyManager;
-	}
+
 
 	/**
-	 * @param taxonomyManager the taxonomyManager to set
+	 * @return the errorViewName
 	 */
-	public void setTaxonomyManager(TaxonomyManager taxonomyManager) {
-		this.taxonomyManager = taxonomyManager;
+	public String getErrorViewName() {
+		return errorViewName;
 	}
 
-	/**
-	 * @return the agentManager
-	 */
-	public AgentManager getAgentManager() {
-		return agentManager;
-	}
+
 
 	/**
-	 * @param agentManager the agentManager to set
+	 * @param errorViewName the errorViewName to set
 	 */
-	public void setAgentManager(AgentManager agentManager) {
-		this.agentManager = agentManager;
+	public void setErrorViewName(String errorViewName) {
+		this.errorViewName = errorViewName;
 	}
 
-	/**
-	 * @return the metadataUsername
-	 */
-	public String getMetadataUsername() {
-		return metadataUsername;
-	}
+
 
 	/**
-	 * @param metadataUsername the metadataUsername to set
+	 * @return the errorFormActionKey
 	 */
-	public void setMetadataUsername(String metadataUsername) {
-		this.metadataUsername = metadataUsername;
+	public String getErrorFormActionKey() {
+		return errorFormActionKey;
 	}
 
-	/**
-	 * @return the mediaOwnerFilters
-	 */
-	public FilterMapWrapper getMediaOwnerFilters() {
-		return mediaOwnerFilters;
-	}
+
 
 	/**
-	 * @param mediaOwnerFilters the mediaOwnerFilters to set
+	 * @param errorFormActionKey the errorFormActionKey to set
 	 */
-	public void setMediaOwnerFilters(FilterMapWrapper mediaOwnerFilters) {
-		this.mediaOwnerFilters = mediaOwnerFilters;
+	public void setErrorFormActionKey(String errorFormActionKey) {
+		this.errorFormActionKey = errorFormActionKey;
 	}
 
-	/**
-	 * @return the mediaOwnerFiltersRequestKey
-	 */
-	public String getMediaOwnerFiltersRequestKey() {
-		return mediaOwnerFiltersRequestKey;
-	}
+
 
 	/**
-	 * @param mediaOwnerFiltersRequestKey the mediaOwnerFiltersRequestKey to set
+	 * @return the errorFormActionValue
 	 */
-	public void setMediaOwnerFiltersRequestKey(String mediaOwnerFiltersRequestKey) {
-		this.mediaOwnerFiltersRequestKey = mediaOwnerFiltersRequestKey;
+	public String getErrorFormActionValue() {
+		return errorFormActionValue;
 	}
+
+
+
+	/**
+	 * @param errorFormActionValue the errorFormActionValue to set
+	 */
+	public void setErrorFormActionValue(String errorFormActionValue) {
+		this.errorFormActionValue = errorFormActionValue;
+	}
+
+
 
 	/**
 	 * @return the taxonGuiOrDTOConverter
@@ -555,6 +597,8 @@ public class EditStep2PageController extends AbstractController{
 	public TaxonGuiOrDTOConverter getTaxonGuiOrDTOConverter() {
 		return taxonGuiOrDTOConverter;
 	}
+
+
 
 	/**
 	 * @param taxonGuiOrDTOConverter the taxonGuiOrDTOConverter to set
@@ -564,5 +608,58 @@ public class EditStep2PageController extends AbstractController{
 		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
 	}
 
+
+
+	/**
+	 * @return the metadataHandler
+	 */
+	public MetadataHandler getMetadataHandler() {
+		return metadataHandler;
+	}
+
+
+
+	/**
+	 * @param metadataHandler the metadataHandler to set
+	 */
+	public void setMetadataHandler(MetadataHandler metadataHandler) {
+		this.metadataHandler = metadataHandler;
+	}
+
+
+
+	/**
+	 * @return the mediaManager
+	 */
+	public MediaManager getMediaManager() {
+		return mediaManager;
+	}
+
+
+
+	/**
+	 * @param mediaManager the mediaManager to set
+	 */
+	public void setMediaManager(MediaManager mediaManager) {
+		this.mediaManager = mediaManager;
+	}
+
+
+
+	/**
+	 * @return the agentManager
+	 */
+	public AgentManager getAgentManager() {
+		return agentManager;
+	}
+
+
+
+	/**
+	 * @param agentManager the agentManager to set
+	 */
+	public void setAgentManager(AgentManager agentManager) {
+		this.agentManager = agentManager;
+	}
 
 }

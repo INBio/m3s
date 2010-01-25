@@ -24,6 +24,7 @@
 
   <input type="hidden" name="fileName" value="<c:out value="${fileName}"/>" />
   <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
+  <input type="hidden" name="mediaId" value="<c:out value="${mediaId}"/>" />
   
   <%--Titulo --%>
   <label>

@@ -43,7 +43,7 @@
 	</category>
 	<category name="org.hibernate">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
-		<priority value="debug"/>
+		<priority value="error"/>
 	</category>	
 	<category name="org">
 		<priority value="error"/>
