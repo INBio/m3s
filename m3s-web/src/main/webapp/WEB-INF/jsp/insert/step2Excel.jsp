@@ -1,3 +1,6 @@
+<%--
+    Paso final de la importacion en lote.
+ --%>
 <%@ include file="/common/taglibs.jsp" %>
 
 <h2><spring:message code="insert.excel.title"/></h2>
