@@ -11,7 +11,7 @@
   defaultsort="1"
   size="resultSize"
   
-  requestURI="${pageContext.request.contextPath}/excel.html?">
+  requestURI="${pageContext.request.contextPath}/uploadImportationFile.html?">
   
   <display:column property="userFileName" titleKey="insert.excel.table.filename" 
                   href="${pageContext.request.contextPath}/getImportationFile" 

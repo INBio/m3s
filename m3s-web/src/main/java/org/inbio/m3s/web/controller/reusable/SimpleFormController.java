@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Based ConfigurableContentController written by dmartin for the Gbif Portal
  * @see org.gbif.portal.web.controller.ConfigurableContentController
  *
+ * @deprecated
  */
 public class SimpleFormController extends SimpleController{
 

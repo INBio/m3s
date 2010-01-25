@@ -1,5 +1,10 @@
+<%--
+  @deprecated
+  Usado por:
+  
+ --%>
 <%@ include file="/common/taglibs.jsp"%>
-<script src="${pageContext.request.contextPath}/javascript/upload.js" type="text/javascript" language="javascript"></script>
+<%--<script src="${pageContext.request.contextPath}/javascript/upload.js" type="text/javascript" language="javascript"></script>--%>
 
 <div id="insert-upload-form">
       
@@ -13,7 +18,6 @@
       <input type="radio" name="fileType" value="video" disabled="disabled">
         <spring:message code="insert.video.mov"/>
       <br>
-
       
       <%--imagenes --%>
       <div id="jpgImageFormDiv" style="display: none">
@@ -84,5 +88,31 @@
           </p>
         </div>
       </div>  
-      
 </div>      
+
+<script type="text/javascript">
+<%--
+/*
+ * Limpia los divs de ayuda que  
+ */
+ --%>
+function cleanHelpDivs(){   
+  document.getElementById('jpgImageHelpDiv').style.display='none';
+  document.getElementById('importationHelpDiv').style.display='none';
+  document.getElementById('jpgImageFormDiv').style.display='none';
+  document.getElementById('importationFormDiv').style.display='none';
+  
+}
+
+function viewJpgImageDivs(){
+  cleanHelpDivs();
+  document.getElementById('jpgImageHelpDiv').style.display='block';
+  document.getElementById('jpgImageFormDiv').style.display='block';
+}
+
+function viewImportationDivs(){
+  cleanHelpDivs();
+  document.getElementById('importationHelpDiv').style.display='block';
+  document.getElementById('importationFormDiv').style.display='block';
+}
+</script>

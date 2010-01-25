@@ -1,6 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <%--
+@deprecated [2010.01.22]
+
+Usado por:
+ *
+
 Este JSP recibe como parametro una lista de objetos de tipo media(corroborar este dato) y hace una galería
  de cada uno de los elementos de la lista, maravilloso
  --%>

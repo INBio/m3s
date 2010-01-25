@@ -29,46 +29,111 @@
   
   
   <!-- insert page -->
-  <bean name="/insert.html" class="org.inbio.m3s.web.controller.reusable.SimpleFormController">
+  <bean name="/insert.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="insertStep1"/>
-    <property name="formActionValue" value="uploadFile.html"/>
+    
+    <property name="modelElements">
+      <map>
+        <entry key="jpgImagesFormAction" value="uploadImages.html"/>
+        <entry key="excelFormAction" value="uploadImportationFile.html"/>
+      </map>
+    </property>
   </bean>
   
-  <!--  save image -->
-  <bean name="/saveImage.html" class="org.inbio.m3s.web.controller.SaveImagePageController">
-    <!-- View -->
-    <property name="viewName" value="insertStep2"/>
-    <property name="formActionValue" value="saveMetadata.html"/>
-    
-    <!--  Owner Widget configuration -->
-    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
-    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
+  <!-- uploads Image files controller -->
+  <bean name="/uploadImages.html" class="org.inbio.m3s.web.controller.upload.MultipleImagesUploadController">
+    <!--  Extendidas del SimpleFormController -->
+    <property name="commandClass" value="org.inbio.m3s.MultipleFilesUploadBean"/>
+    <property name="successView" value="insertStep2"/> <!-- Propia de la clase... -->
 
-    <!-- Metadata media visible -->
-    <property name="metadataMediaVisible" value="mediaVisible"/>
+    <!-- constantes -->
+    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+    <property name="fileExtension" value="jpg"/>
+    
+    <!-- Model & JSP -->
+    <property name="metadataUsernameKey" value="username"/>            
+    <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->
+    <property name="temporalMediaListKey" value="temporalMediaList"/><!-- Objectos de tipo BriefMediaDTO para el despliegue de thumbnails -->    
+    <property name="formActionKey" value="formAction"/>
+    <property name="formActionValue" value="saveMetadata.html"/>      
+    <property name="metadataMediaVisibleKey" value="mediaVisible"/>
+    <property name="metadataMediaVisibleValue" value="checked"/>        
+    
+    <!-- in case of error -->
+    <property name="errorViewName" value="insertStep1"/>
+    <property name="errorFormActionKey" value="jpgImagesFormAction"/>
+    <property name="errorFormActionValue" value="uploadImages.html"/>
     
     <!-- Managers  -->  
-    <property name="messageManager" ref="messageManager"/>
-    
-    <!-- Input/Output Values 
-    <property name="metadataFileNames" value="fileNames"/>
-    <property name="metadataUsername" value="username"/>
-    <property name="metadataTotalFiles" value="totalFiles"/>
-    -->
-    
-
+    <property name="metadataHandler" ref="metadataHandler"/>
+          
   </bean>
   
-  <!--  excell -->
-  <bean name="/excel.html" class="org.inbio.m3s.web.controller.ExcelImportController">
-    <!-- View -->
-    <property name="viewName" value="insertStep2Excel"/>
-    <!--data  -->
-    <property name="tempFilePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-    <property name="importFilePath" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>
-    <property name="metadataFileName" value="fileName"/>
-    <property name="metadataUsername" value="username"/>
+  <!--  save metadata when media is new -->
+  <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.metadata.SaveMetadataController">
+    <!-- constantes -->
+    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+  
+    <!--    Model & JSP (View) -->
+    <property name="viewName" value="insertStep3"/>
+    <property name="metadataUsernameKey" value="username"/>    
+    <property name="fileNameKey" value="fileName"/>
+    
+    <property name="metadataTitle" value="title"/>  
+    <property name="metadataDescription" value="description"/>
+    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="metadataProjects" value="projects"/>
+    <property name="metadataKeywords" value="keywords"/>
+    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
+    <property name="metadataAssociatedToValue" value="associatedToValue"/>
+    <property name="metadataTaxonomy" value="taxonomy"/>
+    <property name="metadataSiteDescription" value="siteDescription"/>
+    <property name="metadataMediaAuthor" value="mediaAuthor"/>
+    <property name="metadataOwnerType" value="ownerType"/>
+    <property name="metadataOwnerValue" value="ownerValue"/>
+    <property name="metadataUsePolicy" value="usePolicy"/>
+    <property name="metadataMediaVisible" value="mediaVisible"/>
 
+    <!--  Managers, Handlers and Utils (etc) -->
+    <property name="metadataManager" ref="metadataManager"/>
+    <property name="messageManager" ref="messageManager"/>    
+    <property name="mediaFileManagement" ref="mediaFileManagement"/>
+    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
+    <property name="metadataHandler" ref="metadataHandler"/>
+    <!-- ATTA  -->
+    <property name="mediaManager" ref="ATTAMediaManager"/>    
+    <property name="agentManager" ref="ATTAAgentManager"/>
+    <property name="siteManager" ref="ATTASiteManager"/>
+    <property name="siteDAO" ref="INBioSiteDAO"/>
+    <!-- ARA 
+    <property name="mediaManager" ref="ARAMediaManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="siteManager" ref="ARASiteManager"/>
+    <property name="siteDAO" ref="ARASiteDAO"/>
+    -->
+    
+  </bean>
+  
+  <!-- uploads jpg or excel files controller -->
+  <!--  excell -->  
+  <bean name="/uploadImportationFile.html" class="org.inbio.m3s.web.controller.upload.UploadImportationFileController">
+    <!--  Extendidas del SimpleFormController -->
+    <property name="commandClass" value="org.inbio.m3s.SingleFileUploadBean"/>
+    <property name="successView" value="insertStep2Excel"/> <!-- Propia de la clase... -->
+    
+    <!-- constantes -->
+    <property name="importFilePath" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>    
+    <property name="fileExtension" value="xls"/>
+    
+    <!-- Model & JSP -->
+    <property name="metadataUsernameKey" value="username"/>
+    <property name="importationHistoryKey" value="icDTOList"/>    
+
+    <!-- in case of error -->
+    <property name="errorViewName" value="insertStep1"/>
+    <property name="errorFormActionKey" value="excelFormAction"/>
+    <property name="errorFormActionValue" value="uploadImportationFile.html"/>
+    
     <!-- Managers  -->  
     <property name="importationManager" ref="importationManager"/>  
     <!--  de ARA 
@@ -76,8 +141,8 @@
     -->
     <!--  de ATTA -->
     <property name="importThread" ref="ATTAImportThread"/>
-    
-  </bean>
+  </bean>   
+
   
   <!-- edit page -->
   <bean name="/edit.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
@@ -174,118 +239,7 @@
     -->
   </bean>
   
-  <!--  save metadata when media is new -->
-  <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.SaveMetadataController">
-    <!-- View -->
-    <property name="viewName" value="insertStep3"/>
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-    <property name="metadataUsername" value="username"/>
-    
-    <!-- fileNames for the images -->
-    <property name="fileNameCode" value="fileName"/>
-    
-    
-    <property name="metadataTitle" value="title"/>  
-    <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
-    <property name="metadataProjects" value="projects"/>
-    <property name="metadataKeywords" value="keywords"/>
-    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
-    <property name="metadataAssociatedToValue" value="associatedToValue"/>
-    <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataSiteDescription" value="siteDescription"/>
-    <property name="metadataMediaAuthor" value="mediaAuthor"/>
-    <property name="metadataOwnerType" value="ownerType"/>
-    <property name="metadataOwnerValue" value="ownerValue"/>
-    <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>
-    
-    <!-- Converters  -->
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
-    <property name="metadataHandler" ref="metadataHandler"/>
-        
-    <!-- Managers -->
-    <property name="metadataManager" ref="metadataManager"/>
-    <property name="messageManager" ref="messageManager"/>
-    
-    <!-- ATTA  -->
-    <property name="mediaManager" ref="ATTAMediaManager"/>    
-    <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-    <property name="siteManager" ref="ATTASiteManager"/>
-    <property name="siteDAO" ref="INBioSiteDAO"/>
-    
-    <!-- ARA 
-    <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-    <property name="siteManager" ref="ARASiteManager"/>
-    <property name="siteDAO" ref="ARASiteDAO"/>
-    -->
-    <!-- Util Class -->
-    <property name="mediaFileManagement" ref="mediaFileManagement"/>
-    
-  </bean>
-    
-
-  <!-- uploads jpg or excel files controller -->
-  <bean name="/uploadFile.html" class="org.inbio.m3s.web.controller.UploadFileController">
-    <property name="commandClass" value="org.inbio.m3s.SingleFileUploadBean"/>
-    <property name="formView" value="insertStep1"/>
-    
-    <property name="posibleSuccessViewMap">
-      <map>
-        <entry key="jpgImage" value="redirect:saveImage.html"/>
-        <entry key="excel" value="redirect:excel.html"/>
-      </map>
-    </property>
-    <property name="posibleFileExtensionMap">
-      <map>
-        <entry key="jpgImage" value="jpg"/>
-        <entry key="excel" value="xls"/>
-      </map>
-    </property>
-        
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-    <property name="metadataFileName" value="fileName"/>
-    <property name="metadataUsername" value="username"/>
-    <property name="metadataFileType" value="fileType"/>
-    <property name="metadataTotalFiles" value="totalFiles"/>
-    
-  </bean>  
-
-  <!-- uploads Image files controller -->
-  <bean name="/uploadImages.html" class="org.inbio.m3s.web.controller.upload.MultipleImagesUploadController">
-    <property name="commandClass" value="org.inbio.m3s.MultipleFilesUploadBean"/>
-    <property name="formView" value="insertStep1"/>
-    
-    <property name="successView" value="insertStep2"/> <!-- Propia de la clase... -->
-    <property name="fileExtension" value="jpg"/>
-        
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-    <property name="metadataFileNames" value="fileNames"/>
-    <property name="metadataFileName" value="fileName"/>
-    <property name="metadataUsername" value="username"/>
-    <property name="metadataTotalFiles" value="totalFiles"/>
-    
-    <!-- View -->
-    <property name="viewName" value="insertStep2"/> <!-- no -->
-    <property name="formActionValue" value="saveMetadata.html"/>
-    
-    <!--  Owner Widget configuration -->
-    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
-    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
-
-    <!-- Metadata media visible -->
-    <property name="metadataMediaVisible" value="mediaVisible"/>
-    
-    <!-- Managers  -->  
-    <property name="messageManager" ref="messageManager"/>
-    <property name="metadataHandler" ref="metadataHandler"/>
-    
-    
-  </bean>  
-  
+   
   <!-- image dispatcher -->
   <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>

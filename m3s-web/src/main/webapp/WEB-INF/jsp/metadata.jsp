@@ -1,3 +1,9 @@
+<%--
+  Se usa en:
+  
+ * ../insert/step2.jsp
+  
+ --%>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ include file="/common/autocompleteScripts.jsp"%>
 <script src="${pageContext.request.contextPath}/javascript/mediaOwner.js" type="text/javascript" language="javascript"></script>
