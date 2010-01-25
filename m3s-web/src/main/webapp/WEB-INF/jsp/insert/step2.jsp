@@ -4,7 +4,6 @@
 
   <h3><spring:message code="preview.title"/></h3>
   <%--
-  <tiles:insert page="imagePreview.jsp"/>
    Este JSP recibe como parametro una lista de objetos de tipo media(corroborar este dato) y hace una galería
    de cada uno de los elementos de la lista, maravilloso
   --%>
