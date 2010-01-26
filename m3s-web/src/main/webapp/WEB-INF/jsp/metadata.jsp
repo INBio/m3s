@@ -2,6 +2,7 @@
   Se usa en:
   
  * ../insert/step2.jsp
+ * ../edit/step2.jsp
   
  --%>
 <%@ include file="/common/taglibs.jsp"%>
@@ -27,8 +28,10 @@
 
 <form method="post" accept-charset="UTF-8" action="<c:out value="${formAction}"/>">
 
-  <input type="hidden" name="fileName" value="<c:out value="${fileName}"/>" />
   <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
+  <%-- ...fileName es usado para la inserción de multimedios... --%>
+  <input type="hidden" id="fileNameId" name="fileName" value="<c:out value="${fileName}"/>" />
+  <%-- ...mediaId es usado para la edición... --%>
   <input type="hidden" name="mediaId" value="<c:out value="${mediaId}"/>" />
   
   <%--Titulo --%>

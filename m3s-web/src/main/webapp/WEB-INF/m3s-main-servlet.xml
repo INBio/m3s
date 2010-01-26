@@ -82,8 +82,7 @@
     
     <!-- Model & JSP -->
     <property name="metadataUsernameKey" value="username"/>            
-    <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->
-    <property name="temporalMediaListKey" value="temporalMediaList"/><!-- Objectos de tipo BriefMediaDTO para el despliegue de thumbnails -->    
+    <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->    
     <property name="formActionKey" value="formAction"/>
     <property name="formActionValue" value="saveMetadata.html"/>      
     <property name="metadataMediaVisibleKey" value="mediaVisible"/>

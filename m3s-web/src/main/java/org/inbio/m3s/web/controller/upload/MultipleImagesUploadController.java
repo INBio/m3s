@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.inbio.m3s.MultipleFilesUploadBean;
-import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
 import org.inbio.m3s.util.ImageMagickAPI;
 import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.exception.ValidationException;
@@ -42,9 +39,7 @@ public class MultipleImagesUploadController extends SimpleFormController {
 	
 	//model & JSP
 	private String metadataUsernameKey; //="username"
-	//private String totalFilesKey;
-	private String fileNameKey;
-	private String temporalMediaListKey; //objecto BriefMedia
+	private String fileNameKey;//=fileName
 	
 	private String formActionKey; //="formAction"
 	private String formActionValue; //para el siguiente form...
@@ -70,14 +65,10 @@ public class MultipleImagesUploadController extends SimpleFormController {
 		modelElements.put(errorFormActionKey,errorFormActionValue);
 		ve.setModelElements(modelElements);
 	
-		//	
-		List<BriefMediaOutputDTO> fileNames = new ArrayList<BriefMediaOutputDTO>();
 		String fileName ="";
 		
 		try { 
 
-			//String fileType = request.getParameter(metadataFileType);
-			//logger.debug("fileType = " +fileType);
 			ModelAndView mav = new ModelAndView(getSuccessView());
 
 			String userName = request.getParameter(metadataUsernameKey);
@@ -108,13 +99,9 @@ public class MultipleImagesUploadController extends SimpleFormController {
 					throw ve;
 				}
 				
-				
-				String userFileName;
 				String systemFileName;
-				BriefMediaOutputDTO bmoDTO;
 				
 				for(MultipartFile file: multipleImagesBean.getFiles()){
-					userFileName = "imagen #"+filesCount+"."+fileExtension;;
 					systemFileName = fileId+filesCount+"."+fileExtension;
 					file.transferTo(new File(filePath+systemFileName));
 				
@@ -125,14 +112,11 @@ public class MultipleImagesUploadController extends SimpleFormController {
 						ve.setErrorMessageKey("error.insert.02");
 						throw ve;
 					}
-					bmoDTO = new BriefMediaOutputDTO(systemFileName,userFileName,null,null,null);
-					fileNames.add(bmoDTO);
 					fileName += systemFileName+";";
 					filesCount--;					
 				}
 				
 				//add the fileNames hashmap
-				mav.addObject(temporalMediaListKey, fileNames);
 				mav.addObject(fileNameKey,fileName);
 				logger.debug(fileNameKey+" "+fileName);
 				
@@ -242,26 +226,6 @@ public class MultipleImagesUploadController extends SimpleFormController {
 	public void setFileNameKey(String fileNameKey) {
 		this.fileNameKey = fileNameKey;
 	}
-
-
-
-	/**
-	 * @return the temporalMediaListKey
-	 */
-	public String getTemporalMediaListKey() {
-		return temporalMediaListKey;
-	}
-
-
-
-	/**
-	 * @param temporalMediaListKey the temporalMediaListKey to set
-	 */
-	public void setTemporalMediaListKey(String temporalMediaListKey) {
-		this.temporalMediaListKey = temporalMediaListKey;
-	}
-
-
 
 	/**
 	 * @return the formActionKey
