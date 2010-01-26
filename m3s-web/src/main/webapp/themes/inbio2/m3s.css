@@ -59,6 +59,11 @@ br { clear:both;}
 .ImportControlDTOFull .odd { background-color: #e6eef1;}
 .ImportControlDTOFull .even {}
 
+
+/******************************************
+/* Edit
+*******************************************/
+.edit-preview-thumbs { float: right; width: 130px; padding:5px; position: absolute; margin: 20px 0 0 740px; background: #f2f6fb; font-size:12px;}
 /******************************************
 /* Media Profile
 *******************************************/

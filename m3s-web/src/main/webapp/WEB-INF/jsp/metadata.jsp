@@ -12,13 +12,18 @@
 
 
 <c:if test="${not empty error}">
+  
   <label>
     <font color="red">Error[sin exception] <c:out value="${error}"/></font>
   </label>
+  <br/>
+  
   <label>
     <font color="red">Error[properties] -> <spring:message code="${errorMessageKey}"/></font>
   </label>
+  <br/>
 </c:if>
+
 
 <form method="post" accept-charset="UTF-8" action="<c:out value="${formAction}"/>">
 
