@@ -9,13 +9,6 @@
           <td height="28" colspan="2" class="MainPanel-Title">
             <h2><spring:message code="home.title"/></h2>
           </td>
-          <%--
-          <td>
-            <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-              <p><spring:message code="m3s.login.welcome"/> <sec:authentication property="principal.username"/></p>
-            </sec:authorize>              
-          </td>
-          --%>
         </tr>
 
 	    <tr>

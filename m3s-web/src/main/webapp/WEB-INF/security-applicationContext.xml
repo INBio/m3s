@@ -7,9 +7,9 @@
                            
  
   <http>
-    <intercept-url pattern="/login.html*" filters="none"/>
-    <intercept-url pattern="/home.html*" filters="none"/>
-    <intercept-url pattern="/index.*" filters="none"/>
+    <!--<intercept-url pattern="/login.html*" />-->
+    <!--<intercept-url pattern="/home.html*"  />-->
+    <!--<intercept-url pattern="/index.*" access="ROLE_GUEST,ROLE_USER"/> -->
     <intercept-url pattern="/search/*" access="ROLE_USER" />
     <intercept-url pattern="/insert*" access="ROLE_USER" />
     <intercept-url pattern="/edit.*" access="ROLE_USER" />
@@ -20,21 +20,12 @@
     <form-login login-page="/login.html" default-target-url="/home.html" authentication-failure-url="/login.html?error=true" />
     <logout/> 
     <concurrent-session-control max-sessions="1" />
-    <!--  <remember-me key="m3sUserKey"/>-->
+    <!--  <remember-me key="m3s-security"/>-->
     <!--  <http-basic/>-->
   </http>
   
-  <!-- 
-  <authentication-provider>
-    <user-service>
-      <user name="jgutierrez" password="inbiom3s" authorities="ROLE_USER, ROLE_ADMIN" />
-    </user-service>
-  </authentication-provider>
-   -->
   <authentication-provider>
     <user-service id="userDetailsInFileService" properties="/WEB-INF/users.properties"/>
   </authentication-provider>   
-   
-  
   
 </beans:beans>
