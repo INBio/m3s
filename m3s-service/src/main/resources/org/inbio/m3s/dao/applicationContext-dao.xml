@@ -10,7 +10,7 @@
 	<!-- BaseDAO Bean-->
   <bean id="superBaseDAO" abstract="true">
 	<property name="sessionFactory" ref="coffeaSessionFactory"/>
-	<!--<property name="sessionFactory" ref="fornaxSessionFactory"/>-->
+	<!-- <property name="sessionFactory" ref="fornaxSessionFactory"/>-->
 	<!--<property name="sessionFactory" ref="museoNacionalFornaxSessionFactory"/> -->
   </bean>
   <bean id="baseDAORO" class="org.inbio.m3s.dao.impl.BaseDAOImpl" parent="superBaseDAO"/>
