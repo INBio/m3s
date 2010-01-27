@@ -21,7 +21,7 @@ Usado por:
   <br>
       
   <%--imagenes --%>
-  <div id="jpgImageFormDiv" style="display: none">
+  <div id="jpgImageFormDiv" style="display: block">
     <form method="post" enctype="multipart/form-data" action="<c:out value="${jpgImagesFormAction}"/>">
       <%-- Nombre del Usuario --%>
       <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
@@ -62,7 +62,7 @@ Usado por:
   <%-- Help --%>    
   <div id="uploadHelpDiv">
       
-    <div id="jpgImageHelpDiv" style="display: none">      
+    <div id="jpgImageHelpDiv" style="display: block">      
       <p>
         <label>
           <spring:message code="insert.jpg.help1"/>

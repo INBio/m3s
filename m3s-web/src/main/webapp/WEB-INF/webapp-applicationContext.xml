@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- web app config to be shared across dispatchers-->
+<beans>
+
+  <!-- Reads the properties file to override the parameters for DB etc
+       Note: the lazy init -->
+  <bean id="propertyOverrideConfigurer" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer"  lazy-init="false">
+    <property name="location" value="WEB-INF/classes/config.properties"/>
+    <property name="ignoreResourceNotFound" value="true"/>
+    <property name="ignoreInvalidKeys" value="true"/>
+  </bean>	
+	
+</beans>	
