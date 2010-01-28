@@ -183,7 +183,7 @@
 
   </dependencies>
   <build>
-    <finalName>m3sINBio-dev</finalName>
+    <finalName>m3sINBio</finalName>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
