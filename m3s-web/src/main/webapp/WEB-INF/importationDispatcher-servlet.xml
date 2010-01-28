@@ -24,12 +24,6 @@
         <prop key="/getImportationFile">importationFile</prop>    
       </props>
     </property>
-  </bean>
-  
-  
-  
-  <!-- importation files dispatcher -->
-  <bean id="importationFile" class="org.inbio.m3s.web.controller.ImportationFileDispatcherController">    
-  </bean>   
+  </bean>  
     
 </beans>

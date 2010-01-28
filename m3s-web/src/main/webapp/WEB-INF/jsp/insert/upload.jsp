@@ -79,7 +79,7 @@ Usado por:
           <br>
           <spring:message code="insert.excel.help2"/>
           <br>            
-          <a href="<c:out value="${pageContext.request.contextPath}"/>/uploadImportationFile.html?username=<sec:authentication property="principal.username"/>"><spring:message code="insert.excel.view.history"/></a>
+          <a href="<c:out value="${pageContext.request.contextPath}"/>/importationFileTable.html?username=<sec:authentication property="principal.username"/>"><spring:message code="insert.excel.view.history"/></a>
           <br>
         </label>
         <br>

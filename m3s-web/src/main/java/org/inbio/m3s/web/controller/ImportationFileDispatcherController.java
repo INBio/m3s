@@ -19,15 +19,10 @@ import org.springframework.web.servlet.mvc.AbstractController;
  *
  */
 public class ImportationFileDispatcherController extends AbstractController {
-
-
-	// private static final String UNKNOWN_MIME_TYPE =
-	// "application/x-unknown-mime-type";
 	
-	private String contentTypeMetadata = "application/vnd.ms-excel";
-	private String fileIdMetadata = "id";
-	private String basePath = "/mnt/m3sImages/INBio/";
-	private String importationPath = "IMPORT_FILES/";
+	private String contentTypeMetadata;// ="application/vnd.ms-excel"
+	private String fileIdMetadata;// ="id"
+	private String importationPath;// = "/mnt/m3sImages/INBio/IMPORT_FILES/";
 	
 	
 	
@@ -48,7 +43,7 @@ public class ImportationFileDispatcherController extends AbstractController {
 		String fileId =request.getParameter(fileIdMetadata);
 		
 		//find the file and open it
-		File file = new File(basePath+importationPath+fileId);
+		File file = new File(importationPath+fileId);
 	
 		//output...
 		BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
@@ -105,6 +100,24 @@ public class ImportationFileDispatcherController extends AbstractController {
 	 */
 	public void setFileIdMetadata(String fileIdMetadata) {
 		this.fileIdMetadata = fileIdMetadata;
+	}
+
+
+
+	/**
+	 * @return the importationPath
+	 */
+	public String getImportationPath() {
+		return importationPath;
+	}
+
+
+
+	/**
+	 * @param importationPath the importationPath to set
+	 */
+	public void setImportationPath(String importationPath) {
+		this.importationPath = importationPath;
 	}
 
 	

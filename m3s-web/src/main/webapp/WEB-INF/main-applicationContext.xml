@@ -37,7 +37,7 @@
     <property name="successView" value="insertStep2"/> <!-- Propia de la clase... -->
 
     <!-- constantes -->
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+    <property name="filePath" value="${temporalFilesPath}"/>
     <property name="fileExtension" value="jpg"/>
     
     <!-- Model & JSP -->
@@ -61,7 +61,7 @@
   <!--  save metadata when media is new -->
   <bean id="saveMetadataController" name="" class="org.inbio.m3s.web.controller.metadata.SaveMetadataController">
     <!-- constantes -->
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
+    <property name="filePath" value="${temporalFilesPath}"/>
   
     <!--    Model & JSP (View) -->
     <property name="viewName" value="insertStep3"/>
@@ -111,7 +111,7 @@
     <property name="successView" value="insertStep2Excel"/> <!-- Propia de la clase... -->
     
     <!-- constantes -->
-    <property name="importFilePath" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>    
+    <property name="importFilePath" value="${importationFilesPath}"/>    
     <property name="fileExtension" value="xls"/>
     
     <!-- Model & JSP -->
@@ -127,7 +127,22 @@
     <property name="importationManager" ref="importationManager"/>  
     <!-- check constants.properties-->    
     <property name="importThread" ref="${importThread}"/>
-  </bean>   
+  </bean>     
+
+  <!-- uploads jpg or excel files controller -->
+  <!--  excel -->  
+  <bean id="importationFileTableController" class="org.inbio.m3s.web.controller.ImportationFileTableController">
+    <!--  Extendidas del SimpleFormController -->
+    <property name="viewName" value="insertStep2Excel"/>    
+    
+    <!-- Model & JSP -->
+    <property name="metadataUsernameKey" value="username"/>
+    <property name="importationHistoryKey" value="icDTOList"/>    
+    
+    <!-- Managers  -->  
+    <property name="importationManager" ref="importationManager"/>  
+
+  </bean>
 
   <!-- edit page (1) -->
   <bean id="editController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
@@ -318,6 +333,26 @@
     <property name="mediaManager" ref="${mediaManager}"/>
     <property name="agentManager" ref="${agentManager}"/>
     <property name="briefMediaOutputDTOFactory" ref="${briefMediaOutputDTOFactory}"/>
+  </bean> 
+  
+  <!-- importation files dispatcher -->
+  <bean id="importationFile" class="org.inbio.m3s.web.controller.ImportationFileDispatcherController">
+    <property name="contentTypeMetadata" value="application/vnd.ms-excel"/>
+    <property name="fileIdMetadata" value="id"/>
+    <property name="importationPath" value="${importationFilesPath}"/>
+  </bean> 
+
+  <!-- image dispatcher -->
+  <bean id="imageController" class="org.inbio.m3s.web.controller.ImageController">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="applicationPath" value="/mnt/m3sImages/INBio/"/>
+    <property name="temporalFilesPath" value="TEMP_MEDIA_DIR/"/>
+    <property name="mediaFilesPath" value="MEDIA/"/>
+    
+    <property name="thumbImagePath" value="THUMB"/>
+    <property name="bigImagePath" value="BIG"/>
+    <property name="thumbImageCode" value="1"/>
+    <property name="bigImageCode" value="2"/>
   </bean> 
 
 </beans>

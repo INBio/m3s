@@ -5,13 +5,6 @@
     <!-- TaxonGuiOrDTOConverter  -->
     <bean id="taxonGuiOrDTOConverter" class="org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter">
       <property name="taxonomyManager" ref="${taxonomyManager}"/>
-        
-        <!-- ARA 
-        <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-         -->
-         <!-- ATTA  
-         <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-         -->
     </bean>               
     
     
