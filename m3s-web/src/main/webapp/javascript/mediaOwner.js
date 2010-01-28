@@ -35,7 +35,7 @@ function changeMediaOwnerInput() {
 	//newInput.className = "ownerInputClass";
 	newInput.value = mediaOwnerActualValue;
 	valueSpan.appendChild(newInput);
-	newInput.tabindex=13;
+	newInput.tabindex="13";
 
 	//autocomplete?
 	var useAutoComplete = (mediaOwnerAutoCompleteUrls[mediaOwnerTypeId]!=null);

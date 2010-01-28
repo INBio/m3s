@@ -25,7 +25,7 @@
   </http>
   
   <authentication-provider>
-    <user-service id="userDetailsInFileService" properties="/WEB-INF/users.properties"/>
+    <user-service id="userDetailsInFileService" properties="WEB-INF/classes/users.properties"/>
   </authentication-provider>   
   
 </beans:beans>

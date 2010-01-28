@@ -3,33 +3,20 @@
 <beans>
     <!-- taxon name search support  -->
     <bean id="taxonNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
-        <!-- ARA 
-        <property name="autoCompleteManager" ref="ARATaxonNameAutoCompleteManager"/>
-        -->
-         <!-- ATTA -->
-         <property name="autoCompleteManager" ref="ATTATaxonNameAutoCompleteManager"/>
-         
+      <!-- check constants.properties-->
+      <property name="autoCompleteManager" ref="${taxonNameAutoCompleteManager}"/>         
     </bean>
     
     <!-- Media Author Name search support  -->
     <bean id="mediaAuthorNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
-        <!-- ARA
-        <property name="autoCompleteManager" ref="ARAPersonNameAutoCompleteManager"/>
-         -->
-         <!-- ATTA -->     
-         <property name="autoCompleteManager" ref="ATTAPersonNameAutoCompleteManager"/>
-         
+        <!-- check constants.properties-->
+         <property name="autoCompleteManager" ref="${personNameAutoCompleteManager}"/>
     </bean>
     
     <!-- Institution Name search support  -->
     <bean id="institutionNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
-        <!-- ARA
-        <property name="autoCompleteManager" ref="ARAInstitutionNameAutoCompleteManager"/>
-        -->
-        
-        <!-- ATTA -->  
-        <property name="autoCompleteManager" ref="ATTAInstitutionNameAutoCompleteManager"/>
-        
+      <!-- check constants.properties-->
+      <property name="autoCompleteManager" ref="${institutionNameAutoCompleteManager}"/>
     </bean>
 
     <!-- Project Name search support  -->
@@ -44,19 +31,14 @@
     
     <!-- SpecimenId, ObservationNumber, collectionCode and taxon&KingdomVerifier  associated Taxonomy  -->
     <bean id="associatedToController" class="org.inbio.m3s.web.controller.ajax.AssociatedToController">
-        <!-- ARA
-        <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-        <property name="siteDAO" ref="ARASiteDAO"/>
-        -->
-        <!-- ATTA -->
-        <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-        <property name="siteDAO" ref="INBioSiteDAO"/>     
+      <!-- check constants.properties-->
+      <property name="taxonomyManager" ref="${taxonomyManager}"/>
+      <property name="siteDAO" ref="${siteDAO}"/>     
     </bean>  
 
     <!-- Data Table  -->
     <bean id="dataTableController" class="org.inbio.m3s.web.controller.ajax.DataTableController">
       <property name="importationManager" ref="importationManager"/>
     </bean>  
-
                  
 </beans>

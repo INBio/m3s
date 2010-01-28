@@ -22,17 +22,17 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>	
 	  <!--  seguridad -->
+	  /WEB-INF/webapp-applicationContext.xml,
 	  /WEB-INF/security-applicationContext.xml,
 	  /WEB-INF/search-filters-applicationContext.xml,
 	  /WEB-INF/ajax-applicationContext.xml,
+      /WEB-INF/converters-applicationContext.xml,
 	  /WEB-INF/mediaOwner-filters-applicationContext.xml,
-	  /WEB-INF/converters-applicationContext.xml,
-          /WEB-INF/webapp-applicationContext.xml,
+	  /WEB-INF/main-applicationContext.xml,
       <!-- ARA 
       classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml,	  
       classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml,
       -->
-      
       <!-- ATTA -->
 	  classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml, 
 	  classpath*:org/inbio/m3s/service/applicationContext-service-atta.xml,

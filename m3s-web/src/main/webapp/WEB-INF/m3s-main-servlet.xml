@@ -3,286 +3,47 @@
 <!--  Configuration of the controller beans -->
 <beans>
 
-  <!-- view reolver: Tiles -->
-  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-  	<property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesJstlView"/>
-  </bean>  
-  <!-- tiles configurer -->
-  <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles.TilesConfigurer">
-    <property name="definitions">
+  <!--  Defines how the dispatcher will select the contollers -->
+  <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!-- 
+    <property name="interceptors">
       <list>
-        <value>/WEB-INF/m3s-tiles.xml</value>
+        <ref bean="localeChangeInterceptor"/>
+        <ref bean="taxonomyDataAgreementInterceptor"/>
+        <ref bean="sessionHistoryInterceptor"/>             
       </list>
     </property>
-  </bean>
-  <!-- externalized messages -->
-  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basenames">
-      <list>
-        <value>messages</value>
-        <!-- aca se pueden agregar otros 'values' correspondientes a archivos de internationalizacion-->
-      </list>
+    -->
+    <property name="mappings">
+      <props>
+        <!-- Home Page  -->
+        <prop key="/home.html">homePageController</prop>
+        
+        <!-- Insert -->
+        <prop key="/insert.html">insertController</prop>
+        <!-- Images -->
+        <prop key="/uploadImages.html">multipleImagesUploadController</prop>
+        <prop key="/saveMetadata.html">saveMetadataController</prop>
+        <!-- Importation file -->
+        <prop key="/uploadImportationFile.html">uploadImportationFileController</prop>
+        
+        <!-- Edit -->
+        <prop key="/edit.html">editController</prop>
+        <prop key="/editMedia.html">editStep2PageController</prop>
+        <prop key="/updateMetadata.html">updateMetadataController</prop>
+        
+        <!-- Image dispatcher controller -->
+        <prop key="/getImage">imageController</prop>
+
+        <!-- Login -->
+        <prop key="/login.html">loginPageController</prop>
+      </props>
     </property>
-  </bean>
-  <!--Resolves the theme-->
-  <bean id="themeResolver" class="org.springframework.web.servlet.theme.CookieThemeResolver">
-    <property name="defaultThemeName" value="inbio2"/>
-    <property name="cookieName" value="m3sTheme"/>
-    <property name="cookieMaxAge" value ="2147483647"/>
-  </bean>
-  <bean id="themeSource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
-    <property name="basenamePrefix" value="theme-"/>
-  </bean>
-  <!--  Este bean se encargará de manejar TODAS las excepciones -->
-  <bean id="handler1" class="org.inbio.m3s.web.exception.handler.GenericExceptionHandler"/>  
-
-
-
-  <!-- home page -->
-  <bean name="/home.html" class="org.inbio.m3s.web.controller.HomePageController">
-    <property name="metadataOutputMediaList" value="outputMediaList"/>
-    <!-- Statistical Info -->
-    <property name="metadataMultimediaCount" value="multimediaCount"/>
-    <property name="metadataImagesCount" value="imagesCount"/>
-    <property name="metadataVideosCount" value="videosCount"/>
-
-    <!-- daos,managers,dto/service -->
-    <property name="mediaDAO" ref="mediaDAO"/>
-    <property name="statisticsManager" ref="statisticsManager"/>
-    <!-- ARA 
-    <property name="briefMediaOutputDTOFactory" ref="ARABriefMediaOutputDTOFactory"/>
-    -->
-    <!-- ATTA -->
-    <property name="briefMediaOutputDTOFactory" ref="ATTABriefMediaOutputDTOFactory"/>
-    
-  </bean>
-  
-  
-  <!-- insert page -->
-  <bean name="/insert.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
-    <property name="viewName" value="insertStep1"/>
-    
-    <property name="modelElements">
-      <map>
-        <entry key="jpgImagesFormAction" value="uploadImages.html"/>
-        <entry key="excelFormAction" value="uploadImportationFile.html"/>
-      </map>
-    </property>
-  </bean>
-  
-  <!-- uploads Image files controller -->
-  <bean name="/uploadImages.html" class="org.inbio.m3s.web.controller.upload.MultipleImagesUploadController">
-    <!--  Extendidas del SimpleFormController -->
-    <property name="commandClass" value="org.inbio.m3s.MultipleFilesUploadBean"/>
-    <property name="successView" value="insertStep2"/> <!-- Propia de la clase... -->
-
-    <!-- constantes -->
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-    <property name="fileExtension" value="jpg"/>
-    
-    <!-- Model & JSP -->
-    <property name="metadataUsernameKey" value="username"/>            
-    <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->    
-    <property name="formActionKey" value="formAction"/>
-    <property name="formActionValue" value="saveMetadata.html"/>      
-    <property name="metadataMediaVisibleKey" value="mediaVisible"/>
-    <property name="metadataMediaVisibleValue" value="checked"/>        
-    
-    <!-- in case of error -->
-    <property name="errorViewName" value="insertStep1"/>
-    <property name="errorFormActionKey" value="jpgImagesFormAction"/>
-    <property name="errorFormActionValue" value="uploadImages.html"/>
-    
-    <!-- Managers  -->  
-    <property name="metadataHandler" ref="metadataHandler"/>
-          
-  </bean>
-  
-  <!--  save metadata when media is new -->
-  <bean name="/saveMetadata.html" class="org.inbio.m3s.web.controller.metadata.SaveMetadataController">
-    <!-- constantes -->
-    <property name="filePath" value="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/"/>
-  
-    <!--    Model & JSP (View) -->
-    <property name="viewName" value="insertStep3"/>
-    <property name="metadataUsernameKey" value="username"/>    
-    <property name="fileNameKey" value="fileName"/>
-    
-    <property name="metadataTitle" value="title"/>  
-    <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
-    <property name="metadataProjects" value="projects"/>
-    <property name="metadataKeywords" value="keywords"/>
-    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
-    <property name="metadataAssociatedToValue" value="associatedToValue"/>
-    <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataSiteDescription" value="siteDescription"/>
-    <property name="metadataMediaAuthor" value="mediaAuthor"/>
-    <property name="metadataOwnerType" value="ownerType"/>
-    <property name="metadataOwnerValue" value="ownerValue"/>
-    <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>
-
-    <!-- in case of error -->
-    <property name="errorViewName" value="insertStep2"/>
-    <property name="errorFormActionKey" value="formAction"/>
-    <property name="errorFormActionValue" value="saveMetadata.html"/>
-
-    <!--  Managers, Handlers and Utils (etc) -->
-    <property name="metadataManager" ref="metadataManager"/>
-    <property name="messageManager" ref="messageManager"/>    
-    <property name="mediaFileManagement" ref="mediaFileManagement"/>
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
-    <property name="metadataHandler" ref="metadataHandler"/>
-    <!-- ATTA  -->
-    <property name="mediaManager" ref="ATTAMediaManager"/>    
-    <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="siteManager" ref="ATTASiteManager"/>
-    <property name="siteDAO" ref="INBioSiteDAO"/>
-    <!-- ARA 
-    <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="siteManager" ref="ARASiteManager"/>
-    <property name="siteDAO" ref="ARASiteDAO"/>
-    -->
-    
-  </bean>
-  
-  <!-- uploads jpg or excel files controller -->
-  <!--  excel -->  
-  <bean name="/uploadImportationFile.html" class="org.inbio.m3s.web.controller.upload.UploadImportationFileController">
-    <!--  Extendidas del SimpleFormController -->
-    <property name="commandClass" value="org.inbio.m3s.SingleFileUploadBean"/>
-    <property name="successView" value="insertStep2Excel"/> <!-- Propia de la clase... -->
-    
-    <!-- constantes -->
-    <property name="importFilePath" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>    
-    <property name="fileExtension" value="xls"/>
-    
-    <!-- Model & JSP -->
-    <property name="metadataUsernameKey" value="username"/>
-    <property name="importationHistoryKey" value="icDTOList"/>    
-
-    <!-- in case of error -->
-    <property name="errorViewName" value="insertStep1"/>
-    <property name="errorFormActionKey" value="excelFormAction"/>
-    <property name="errorFormActionValue" value="uploadImportationFile.html"/>
-    
-    <!-- Managers  -->  
-    <property name="importationManager" ref="importationManager"/>  
-    <!--  de ARA 
-    <property name="importThread" ref="ARAImportThread"/>
-    -->
-    <!--  de ATTA -->
-    <property name="importThread" ref="ATTAImportThread"/>
-  </bean>   
-
-  
-  <!-- edit page (1) -->
-  <bean name="/edit.html" class="org.inbio.m3s.web.controller.reusable.SimpleController">
-    <property name="viewName" value="editStep1"/>
-    <property name="modelElements">
-      <map>
-        <entry key="editFormAction" value="editMedia.html"/>
-      </map>
-    </property>    
-  </bean>
-  
-  <!-- edit page (2) -->
-  <bean name="/editMedia.html" class="org.inbio.m3s.web.controller.EditStep2PageController">
-    <!--  Model and View (JSP) -->
-    <property name="viewName" value="editStep2"/>
-    <property name="formActionKey" value="formAction"/>
-    <property name="formActionValue" value="updateMetadata.html"/>
-  	
-  	<!-- metadata values -->
-  	<!-- <property name="metadataUsername" value="username"/> -->
-    <property name="metadataId" value="mediaId"/>
-    <property name="metadataTitle" value="title"/>  
-    <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
-    <property name="metadataProjects" value="projects"/>
-    <property name="metadataKeywords" value="keywords"/>
-    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
-    <property name="metadataAssociatedToValue" value="associatedToValue"/>
-    <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataSiteDescription" value="siteDescription"/>
-    <property name="metadataMediaAuthor" value="mediaAuthor"/>    
-    <property name="metadataOwnerType" value="ownerType"/>
-    <property name="metadataOwnerValue" value="ownerValue"/>
-    <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>
-    
-    <!-- in case of error--> 
-    <property name="errorViewName" value="editStep1"/> 
-    <property name="errorFormActionKey" value="editFormAction"/>
-    <property name="errorFormActionValue" value="editMedia.html"/>
-    
-    <!-- Managers, Handlers and Converters  -->
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>	
-    <property name="metadataHandler" ref="metadataHandler"/>
-    
-    <!-- ARA 
-    <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>
-    -->
-    <!-- ATTA --> 
-    <property name="mediaManager" ref="ATTAMediaManager"/>
-    <property name="agentManager" ref="ATTAAgentManager"/>
-    
-  </bean>
-  
-  <!-- Edit(3)  updates the edited metadata -->
-  <bean name="/updateMetadata.html" class="org.inbio.m3s.web.controller.metadata.UpdateMetadataController">
-    <!-- View -->
-    <property name="viewName" value="editStep3"/>
-    <property name="formActionKey" value="editFormAction"/>
-    <property name="formActionValue" value="editMedia.html"/>
-    
-    <!-- metadata form values -->
-    <property name="metadataUsername" value="username"/>
-    <property name="fileNameCode" value="mediaId"/>
-    <property name="metadataTitle" value="title"/>  
-    <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
-    <property name="metadataProjects" value="projects"/>
-    <property name="metadataKeywords" value="keywords"/>
-    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
-    <property name="metadataAssociatedToValue" value="associatedToValue"/>
-    <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataSiteDescription" value="siteDescription"/>
-    <property name="metadataMediaAuthor" value="mediaAuthor"/>
-    <property name="metadataOwnerType" value="ownerType"/>
-    <property name="metadataOwnerValue" value="ownerValue"/>
-    <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>  
-    
-    <!-- in case of error--> 
-    <property name="errorViewName" value="editStep2"/> 
-    <property name="errorFormActionKey" value="formAction"/>
-    <property name="errorFormActionValue" value="updateMetadata.html"/>    
-    
-    <!-- Managers, Handlers and Converters  -->
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
-    <property name="metadataHandler" ref="metadataHandler"/>
-    <property name="messageManager" ref="messageManager"/>
-    <!-- ATTA -->   
-    <property name="mediaManager" ref="ATTAMediaManager"/>    
-    <property name="agentManager" ref="ATTAAgentManager"/>
-    <property name="siteManager" ref="ATTASiteManager"/>
-    <property name="siteDAO" ref="INBioSiteDAO"/>
-    
-    <!--  de ARA
-    <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="siteManager" ref="ARASiteManager"/>
-    <property name="siteDAO" ref="ARASiteDAO"/>
-    -->
   </bean>
   
    
   <!-- image dispatcher -->
-  <bean name="/getImage" class="org.inbio.m3s.web.controller.ImageController">
+  <bean id="imageController" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="applicationPath" value="/mnt/m3sImages/INBio/"/>
     <property name="temporalFilesPath" value="TEMP_MEDIA_DIR/"/>
@@ -313,7 +74,7 @@
  -->  
     
   
-  <bean name="/login.html" class="org.inbio.m3s.web.controller.LoginPageController">
+  <bean id="loginPageController" class="org.inbio.m3s.web.controller.LoginPageController">
     <!-- View -->
     <property name="viewName" value="login"/>
     <!--  Form Action -->
@@ -330,28 +91,6 @@
     -->
   </bean>
   
-  <!--  Este bean apoya en la búsqueda de metadatos -->
-  <bean id="metadataHandler" class="org.inbio.m3s.web.controller.metadata.MetadataHandler">
-    <!-- metadata values -->
-    <property name="metadataMediaTypes" value="mediaTypes"/>
-    <property name="metadataAssociatedToValues" value="associatedToValues"/>
-    <property name="metadataUsePolicies" value="usePolicies"/>
-    <!--  Owner Widget configuration -->
-    <property name="mediaOwnerFilters" ref="mediaOwnerFilters"/>
-    <property name="mediaOwnerFiltersRequestKey" value="mediaOwnerFilters"/>
-    
-    <!-- Managers  -->  
-    <property name="messageManager" ref="messageManager"/>  
-    <!-- ARA 
-    <property name="mediaManager" ref="ARAMediaManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-    <property name="agentManager" ref="ARAAgentManager"/>
-    -->
-    <!-- ATTA 
-    <property name="mediaManager" ref="ATTAMediaManager"/>
-    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-    <property name="agentManager" ref="ATTAAgentManager"/>
-    --> 
-  </bean>
+  
   
 </beans>

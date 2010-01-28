@@ -22,7 +22,6 @@ import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
-import org.inbio.m3s.dto.metadata.util.OwnerEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.service.AgentManager;
