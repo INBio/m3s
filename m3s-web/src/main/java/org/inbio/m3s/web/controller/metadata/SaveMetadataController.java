@@ -64,6 +64,7 @@ public class SaveMetadataController implements Controller {
 		
 	//Constants
 	private String filePath; //=${temporalFilesPath}
+	private String mediaFilesPath;//${mediaFilesPath}
 	
 	// Model & JSP (view)
 	private String viewName;
@@ -175,7 +176,7 @@ public class SaveMetadataController implements Controller {
 				// FIXME: only for jpg's... not really a bug! ;).
 				//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
 				//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
-				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()));
+				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()), mediaFilesPath);
 		  }
 		
 		
@@ -904,6 +905,22 @@ public class SaveMetadataController implements Controller {
 	 */
 	public void setErrorFormActionValue(String errorFormActionValue) {
 		this.errorFormActionValue = errorFormActionValue;
+	}
+
+
+	/**
+	 * @return the mediaFilesPath
+	 */
+	public String getMediaFilesPath() {
+		return mediaFilesPath;
+	}
+
+
+	/**
+	 * @param mediaFilesPath the mediaFilesPath to set
+	 */
+	public void setMediaFilesPath(String mediaFilesPath) {
+		this.mediaFilesPath = mediaFilesPath;
 	}
 
 }

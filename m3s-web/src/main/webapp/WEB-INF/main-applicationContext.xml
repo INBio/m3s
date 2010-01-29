@@ -62,6 +62,7 @@
   <bean id="saveMetadataController" name="" class="org.inbio.m3s.web.controller.metadata.SaveMetadataController">
     <!-- constantes -->
     <property name="filePath" value="${temporalFilesPath}"/>
+    <property name="mediaFilesPath" value="${mediaFilesPath}"/>
   
     <!--    Model & JSP (View) -->
     <property name="viewName" value="insertStep3"/>
@@ -111,7 +112,9 @@
     <property name="successView" value="insertStep2Excel"/> <!-- Propia de la clase... -->
     
     <!-- constantes -->
-    <property name="importFilePath" value="${importationFilesPath}"/>    
+    <property name="importFilePath" value="${importationFilesPath}"/>
+    <property name="importationBatchMediaPath" value="${importationBatchMediaPath}"/>
+    <property name="mediaFilesPath" value="${mediaFilesPath}"/>
     <property name="fileExtension" value="xls"/>
     
     <!-- Model & JSP -->

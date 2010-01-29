@@ -38,6 +38,8 @@ public class UploadImportationFileController extends SimpleFormController {
 
 	//Constants
 	private String importFilePath;
+	private String importationBatchMediaPath;
+	private String mediaFilesPath;//${mediaFilesDir}
 	private String fileExtension; //="xls";
 	
 	//model & JSP's
@@ -100,7 +102,7 @@ public class UploadImportationFileController extends SimpleFormController {
 			
 			if(systemFileName != null)
 				//executeImport(userName,fileName);
-				importThread.run(ImportationFileEntity.MS_EXCEL_FILE, userName, systemFileName, "originalName");
+				importThread.run(ImportationFileEntity.MS_EXCEL_FILE, userName, systemFileName, "originalName",importFilePath,importationBatchMediaPath,mediaFilesPath);
 			
 			return mav;
 		
@@ -266,6 +268,38 @@ public class UploadImportationFileController extends SimpleFormController {
 	 */
 	public void setImportThread(ImportThread importThread) {
 		this.importThread = importThread;
+	}
+
+
+	/**
+	 * @return the importationBatchMediaPath
+	 */
+	public String getImportationBatchMediaPath() {
+		return importationBatchMediaPath;
+	}
+
+
+	/**
+	 * @param importationBatchMediaPath the importationBatchMediaPath to set
+	 */
+	public void setImportationBatchMediaPath(String importationBatchMediaPath) {
+		this.importationBatchMediaPath = importationBatchMediaPath;
+	}
+
+
+	/**
+	 * @return the mediaFilesPath
+	 */
+	public String getMediaFilesPath() {
+		return mediaFilesPath;
+	}
+
+
+	/**
+	 * @param mediaFilesPath the mediaFilesPath to set
+	 */
+	public void setMediaFilesPath(String mediaFilesPath) {
+		this.mediaFilesPath = mediaFilesPath;
 	}
 
 
