@@ -22,7 +22,7 @@ public class ImportationFileDispatcherController extends AbstractController {
 	
 	private String contentTypeMetadata;// ="application/vnd.ms-excel"
 	private String fileIdMetadata;// ="id"
-	private String importationPath;// = "/mnt/m3sImages/INBio/IMPORT_FILES/";
+	private String importationPath;// = ${importationFilesPath};
 	
 	
 	

@@ -34,7 +34,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 public class MultipleImagesUploadController extends SimpleFormController {
 
 	//Constants
-	private String filePath; //="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/";
+	private String filePath; // ${temporalFilesPath}
 	protected String fileExtension; //="jpg";
 	
 	//model & JSP

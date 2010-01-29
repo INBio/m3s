@@ -63,7 +63,7 @@ public class SaveMetadataController implements Controller {
 	protected static Log logger = LogFactory.getLog(SaveMetadataController.class);	
 		
 	//Constants
-	private String filePath; //="/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/";
+	private String filePath; //=${temporalFilesPath}
 	
 	// Model & JSP (view)
 	private String viewName;

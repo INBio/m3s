@@ -25,12 +25,11 @@ public class ImageController extends AbstractController {
 	private String metadataTemporalId = "temporal";
 	
 	//constantes
-	private String applicationPath; 	// /mnt/m3sImages/INBio/
-	private String temporalFilesPath; // TEMP_MEDIA_DIR/
-	private String mediaFilesPath;		// MEDIA/
-	//private String filePath;
-	private String thumbImagePath;
-	private String bigImagePath;
+	private String temporalFilesPath; // ${temporalFilesPath}
+	private String mediaFilesPath;		// ${mediaFilesPath}
+	
+	private String thumbMediaFolder;//${thumbMediaFolder}
+	private String bigMediaFolder;  //${bigMediaFolder}
 	private int thumbImageCode;
 	private int bigImageCode;
 	
@@ -55,7 +54,7 @@ public class ImageController extends AbstractController {
     		String imageAddress;
     		
     		if(temporalId != null){
-    			imageAddress = 	applicationPath+ temporalFilesPath + temporalId;
+    			imageAddress = 	temporalFilesPath + temporalId;
     		} else {
 
     			Integer imageId = Integer.valueOf(httpServletRequest.getParameter("id"));
@@ -67,7 +66,7 @@ public class ImageController extends AbstractController {
     				imageAddress = getPath(imageId, size, mediaLite.getCreationDate().toString());
     			else{
     				logger.error("image with id="+imageId+" isn't visible");
-    				imageAddress = 	applicationPath+ temporalFilesPath + "unavailable.png";
+    				imageAddress = 	temporalFilesPath + "unavailable.png";
     			}
     		}
 
@@ -135,13 +134,13 @@ public class ImageController extends AbstractController {
   	 */
   	private String getPath(Integer imageId, int size, String imageCreationDate) throws IllegalArgumentException {
 
-  		String path = applicationPath + mediaFilesPath;
+  		String path = mediaFilesPath;
 
   		// apends the size to the path
   		if (size == thumbImageCode) {
-  			path = path.concat(File.separator + thumbImagePath);
+  			path = path.concat(File.separator + thumbMediaFolder);
   		} else if (size == bigImageCode) {
-  			path = path.concat(File.separator + bigImagePath);
+  			path = path.concat(File.separator + bigMediaFolder);
   		} else {
   			throw new IllegalArgumentException(
   					"That size of image it's not valid or implemented");
@@ -161,40 +160,75 @@ public class ImageController extends AbstractController {
   		return path;
 
   	}
-  	
-  	/**
-  	 * @param mediaDAO the mediaDAO to set
-  	 */
-  	public void setMediaDAO(MediaDAO mediaDAO) {
-  		this.mediaDAO = mediaDAO;
-  	}
 
 		/**
-		 * @return the thumbImagePath
+		 * @return the metadataTemporalId
 		 */
-		public String getThumbImagePath() {
-			return thumbImagePath;
+		public String getMetadataTemporalId() {
+			return metadataTemporalId;
 		}
 
 		/**
-		 * @param thumbImagePath the thumbImagePath to set
+		 * @param metadataTemporalId the metadataTemporalId to set
 		 */
-		public void setThumbImagePath(String thumbImagePath) {
-			this.thumbImagePath = thumbImagePath;
+		public void setMetadataTemporalId(String metadataTemporalId) {
+			this.metadataTemporalId = metadataTemporalId;
 		}
 
 		/**
-		 * @return the bigImagePath
+		 * @return the temporalFilesPath
 		 */
-		public String getBigImagePath() {
-			return bigImagePath;
+		public String getTemporalFilesPath() {
+			return temporalFilesPath;
 		}
 
 		/**
-		 * @param bigImagePath the bigImagePath to set
+		 * @param temporalFilesPath the temporalFilesPath to set
 		 */
-		public void setBigImagePath(String bigImagePath) {
-			this.bigImagePath = bigImagePath;
+		public void setTemporalFilesPath(String temporalFilesPath) {
+			this.temporalFilesPath = temporalFilesPath;
+		}
+
+		/**
+		 * @return the mediaFilesPath
+		 */
+		public String getMediaFilesPath() {
+			return mediaFilesPath;
+		}
+
+		/**
+		 * @param mediaFilesPath the mediaFilesPath to set
+		 */
+		public void setMediaFilesPath(String mediaFilesPath) {
+			this.mediaFilesPath = mediaFilesPath;
+		}
+
+		/**
+		 * @return the thumbMediaFolder
+		 */
+		public String getThumbMediaFolder() {
+			return thumbMediaFolder;
+		}
+
+		/**
+		 * @param thumbMediaFolder the thumbMediaFolder to set
+		 */
+		public void setThumbMediaFolder(String thumbMediaFolder) {
+			this.thumbMediaFolder = thumbMediaFolder;
+		}
+
+		/**
+		 * @return the bigMediaFolder
+		 */
+		public String getBigMediaFolder() {
+			return bigMediaFolder;
+		}
+
+		/**
+		 * @param bigMediaFolder the bigMediaFolder to set
+		 */
+		public void setBigMediaFolder(String bigMediaFolder) {
+			this.bigMediaFolder = bigMediaFolder;
 		}
 
 		/**
@@ -226,44 +260,17 @@ public class ImageController extends AbstractController {
 		}
 
 		/**
-		 * @return the applicationPath
+		 * @return the mediaDAO
 		 */
-		public String getApplicationPath() {
-			return applicationPath;
+		public MediaDAO getMediaDAO() {
+			return mediaDAO;
 		}
 
 		/**
-		 * @param applicationPath the applicationPath to set
+		 * @param mediaDAO the mediaDAO to set
 		 */
-		public void setApplicationPath(String applicationPath) {
-			this.applicationPath = applicationPath;
+		public void setMediaDAO(MediaDAO mediaDAO) {
+			this.mediaDAO = mediaDAO;
 		}
 
-		/**
-		 * @return the temporalFilesPath
-		 */
-		public String getTemporalFilesPath() {
-			return temporalFilesPath;
-		}
-
-		/**
-		 * @param temporalFilesPath the temporalFilesPath to set
-		 */
-		public void setTemporalFilesPath(String temporalFilesPath) {
-			this.temporalFilesPath = temporalFilesPath;
-		}
-
-		/**
-		 * @return the mediaFilesPath
-		 */
-		public String getMediaFilesPath() {
-			return mediaFilesPath;
-		}
-
-		/**
-		 * @param mediaFilesPath the mediaFilesPath to set
-		 */
-		public void setMediaFilesPath(String mediaFilesPath) {
-			this.mediaFilesPath = mediaFilesPath;
-		}
 }

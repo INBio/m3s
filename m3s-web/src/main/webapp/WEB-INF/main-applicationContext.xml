@@ -345,12 +345,13 @@
   <!-- image dispatcher -->
   <bean id="imageController" class="org.inbio.m3s.web.controller.ImageController">
     <property name="mediaDAO" ref="mediaDAO"/>
-    <property name="applicationPath" value="/mnt/m3sImages/INBio/"/>
-    <property name="temporalFilesPath" value="TEMP_MEDIA_DIR/"/>
-    <property name="mediaFilesPath" value="MEDIA/"/>
     
-    <property name="thumbImagePath" value="THUMB"/>
-    <property name="bigImagePath" value="BIG"/>
+    <!-- check constants.properties-->
+    <property name="temporalFilesPath" value="${temporalFilesPath}"/>
+    <property name="mediaFilesPath" value="${mediaFilesPath}"/>
+    <property name="thumbMediaFolder" value="${thumbMediaFolder}"/>
+    <property name="bigMediaFolder" value="${bigMediaFolder}"/>
+    
     <property name="thumbImageCode" value="1"/>
     <property name="bigImageCode" value="2"/>
   </bean> 
