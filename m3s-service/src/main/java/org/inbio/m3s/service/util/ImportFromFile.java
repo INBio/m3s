@@ -86,12 +86,13 @@ public class ImportFromFile {
 	 *          'Properties.REAL_IMPORT_FILES_DIR' constant + importFileName
 	 * @param fileType
 	 *          what kind of file is, by now the only suported is xls
-	 * @param importationBatchMediaPath real path where the media is going to be ready for the importation          
+	 * @param importationBatchMediaPath real path where the media is going to be ready for the importation
+	 * @param mediaFilesPath the path where the media will be stored          
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void ImportMedia(String importFileName, ImportationFileEntity fileType, String importationBatchMediaPath)
+	public void ImportMedia(String importFileName, ImportationFileEntity fileType, String importationBatchMediaPath, String mediaFilesPath)
 			throws FileNotFoundException, IOException, IllegalArgumentException {
 		logger.debug("\nImportacion de archivos en lote con archivo: " + importFileName);
 
@@ -136,7 +137,7 @@ public class ImportFromFile {
 					// FIXME: only for jpg's... not really a bug! ;).
 					// organizeAndCleanFiles(mediaFileName, mediaId.toString() + ".jpg",mediaId);
 					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",mediaId);
-					mediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()));
+					mediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()),mediaFilesPath);
 
 					resultStatus = resultStatus.concat("Medio guardado con exito, ID #"	+ mediaId.toString() + ".");
 				}

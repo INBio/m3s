@@ -32,8 +32,9 @@ public class ImportThread extends Thread {
 	 * Thread invocation to start working
 	 * 
 	 * @param importationBatchMediaPath real path where the media is going to be ready for the importation
+	 * @param mediaFilesPath the path where the media will be stored
 	 */
-	public void run(ImportationFileEntity fileType, String username, String systemFileName, String userFileName, String realImportFilesDir, String importationBatchMediaPath) {
+	public void run(ImportationFileEntity fileType, String username, String systemFileName, String userFileName, String realImportFilesDir, String importationBatchMediaPath,String mediaFilesPath) {
 
 		// set the status to ...
 		ImportControlDTOLite icLite = new ImportControlDTOLite(systemFileName,ImportationManager.IMPORT_SCHEDULED_FOR+"hoy", username,userFileName);
@@ -49,7 +50,7 @@ public class ImportThread extends Thread {
 		
 		try {
 
-			importFromFile.ImportMedia(realImportFilesDir + systemFileName, fileType, importationBatchMediaPath);
+			importFromFile.ImportMedia(realImportFilesDir + systemFileName, fileType, importationBatchMediaPath,mediaFilesPath);
 
 			// sets the status to terminado...
 			// set the status to procesando...

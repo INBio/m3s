@@ -24,7 +24,6 @@ public class MediaFileManagement {
 	private String thumbFolder = "THUMB";
 	private String bigFolder = "BIG";
 	private String originalFolder = "ORIGINAL";
-	private String m3sMediaBaseDir = "/mnt/m3sImages/INBio/MEDIA"; 
 
 
 	// Media Size
@@ -49,9 +48,10 @@ public class MediaFileManagement {
 	 *          the name of the file with its extension
 	 * @param mediaId
 	 *          Data Base media Identifier
+	 * @param mediaFilesPath The filePath where the media will be stored
 	 * @throws IllegalArgumentExcption
 	 */
-	public void organizeAndCleanFiles(String tempFileName, Integer mediaId, Integer mediaTypeId) throws IllegalArgumentException {
+	public void organizeAndCleanFiles(String tempFileName, Integer mediaId, Integer mediaTypeId, String mediaFilesPath) throws IllegalArgumentException {
 		logger.debug("organizeAndCleanFiles");
 		logger.debug("params: [tempFileName=" + tempFileName + "], " + "[mediaId="
 				+ mediaId + "] " + "[mediaTypeId=" + mediaTypeId + "].");
@@ -61,7 +61,7 @@ public class MediaFileManagement {
 		String todaysDate = (dateFormat.format(new Date())).toString();
 
 		// address of the high quality image
-		String orignalMediaFilePath = m3sMediaBaseDir + File.separator + originalFolder
+		String orignalMediaFilePath = mediaFilesPath + originalFolder
 		+ File.separator + todaysDate + File.separator
 		+ mediaId.toString()
 		+ getFileExtension(mediaTypeId, ORIGINAL);
@@ -81,10 +81,8 @@ public class MediaFileManagement {
 			FileUtils.moveFile(file, newFile);
 
 			// the path of this media depends on the visibility -> ya no!
-			thumbMediaFilePath = m3sMediaBaseDir
-			+ File.separator + thumbFolder;
-			bigMediaFilePath = m3sMediaBaseDir
-			+ File.separator + bigFolder;
+			thumbMediaFilePath = mediaFilesPath + thumbFolder;
+			bigMediaFilePath = mediaFilesPath + bigFolder;
 
 			thumbMediaFilePath = thumbMediaFilePath + File.separator
 			+ todaysDate;
@@ -251,20 +249,6 @@ public class MediaFileManagement {
 	 */
 	public void setOriginalFolder(String originalFolder) {
 		this.originalFolder = originalFolder;
-	}
-
-	/**
-	 * @return the m3sMediaBaseDir
-	 */
-	public String getM3sMediaBaseDir() {
-		return m3sMediaBaseDir;
-	}
-
-	/**
-	 * @param m3sMediaBaseDir the m3sMediaBaseDir to set
-	 */
-	public void setM3sMediaBaseDir(String m3sMediaBaseDir) {
-		this.m3sMediaBaseDir = m3sMediaBaseDir;
 	}
 
 

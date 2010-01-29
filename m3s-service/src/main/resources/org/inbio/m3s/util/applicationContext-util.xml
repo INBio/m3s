@@ -9,7 +9,6 @@
   	<property name="thumbFolder" value="THUMB"/>
   	<property name="bigFolder" value="BIG"/>
   	<property name="originalFolder" value="ORIGINAL"/>
-  	<property name="m3sMediaBaseDir" value="/mnt/m3sImages/INBio/MEDIA"/>
   </bean>	
 	
 </beans>
