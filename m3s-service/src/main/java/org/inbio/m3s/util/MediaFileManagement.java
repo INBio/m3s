@@ -21,7 +21,6 @@ public class MediaFileManagement {
 	private static Logger logger = Logger.getLogger(MediaFileManagement.class);
 
 	/* Inyected values*/
-	private String fileSeparator = "/";
 	private String thumbFolder = "THUMB";
 	private String bigFolder = "BIG";
 	private String originalFolder = "ORIGINAL";
@@ -57,15 +56,13 @@ public class MediaFileManagement {
 		logger.debug("params: [tempFileName=" + tempFileName + "], " + "[mediaId="
 				+ mediaId + "] " + "[mediaTypeId=" + mediaTypeId + "].");
 
-		// String DBFileName = mediaId.toString() + getFileExtension(mediaTypeId);
-
 		// todays images and date params to keep media organized
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String todaysDate = (dateFormat.format(new Date())).toString();
 
 		// address of the high quality image
-		String orignalMediaFilePath = getM3sMediaBaseDir() + getFileSeparator() + getOriginalFolder()
-		+ getFileSeparator() + todaysDate + getFileSeparator()
+		String orignalMediaFilePath = m3sMediaBaseDir + File.separator + originalFolder
+		+ File.separator + todaysDate + File.separator
 		+ mediaId.toString()
 		+ getFileExtension(mediaTypeId, ORIGINAL);
 
@@ -84,14 +81,14 @@ public class MediaFileManagement {
 			FileUtils.moveFile(file, newFile);
 
 			// the path of this media depends on the visibility -> ya no!
-			thumbMediaFilePath = getM3sMediaBaseDir()
-			+ getFileSeparator() + getThumbFolder();
-			bigMediaFilePath = getM3sMediaBaseDir()
-			+ getFileSeparator() + getBigFolder();
+			thumbMediaFilePath = m3sMediaBaseDir
+			+ File.separator + thumbFolder;
+			bigMediaFilePath = m3sMediaBaseDir
+			+ File.separator + bigFolder;
 
-			thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
+			thumbMediaFilePath = thumbMediaFilePath + File.separator
 			+ todaysDate;
-			bigMediaFilePath = bigMediaFilePath + getFileSeparator()
+			bigMediaFilePath = bigMediaFilePath + File.separator
 			+ todaysDate;
 			// creates the folder with the date to keep media organized(in case its
 			// not created before)
@@ -106,11 +103,11 @@ public class MediaFileManagement {
 		}
 		logger.debug("Fin prueba de mover archivo con apache commons-io");
 
-		thumbMediaFilePath = thumbMediaFilePath + getFileSeparator()
+		thumbMediaFilePath = thumbMediaFilePath + File.separator
 		+ mediaId.toString()
 		+ getFileExtension(mediaTypeId, THUMB);
 
-		bigMediaFilePath = bigMediaFilePath + getFileSeparator()
+		bigMediaFilePath = bigMediaFilePath + File.separator
 		+ mediaId.toString()
 		+ getFileExtension(mediaTypeId, BIG);
 
@@ -192,8 +189,7 @@ public class MediaFileManagement {
 	 * @return la extension apropiada para el multimedio
 	 * @throws IllegalArgumentException
 	 */
-	private String getFileExtension(Integer mediaTypeId, int mediaSize)
-	throws IllegalArgumentException {
+	private String getFileExtension(Integer mediaTypeId, int mediaSize) throws IllegalArgumentException {
 
 		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
 			return ".jpg";
@@ -216,17 +212,10 @@ public class MediaFileManagement {
 	}
 
 	/**
-	 * @param fileSeparator the fileSeparator to set
+	 * @return the thumbFolder
 	 */
-	public void setFileSeparator(String fileSeparator) {
-		this.fileSeparator = fileSeparator;
-	}
-
-	/**
-	 * @return the fileSeparator
-	 */
-	public String getFileSeparator() {
-		return fileSeparator;
+	public String getThumbFolder() {
+		return thumbFolder;
 	}
 
 	/**
@@ -237,10 +226,10 @@ public class MediaFileManagement {
 	}
 
 	/**
-	 * @return the thumbFolder
+	 * @return the bigFolder
 	 */
-	public String getThumbFolder() {
-		return thumbFolder;
+	public String getBigFolder() {
+		return bigFolder;
 	}
 
 	/**
@@ -251,10 +240,10 @@ public class MediaFileManagement {
 	}
 
 	/**
-	 * @return the bigFolder
+	 * @return the originalFolder
 	 */
-	public String getBigFolder() {
-		return bigFolder;
+	public String getOriginalFolder() {
+		return originalFolder;
 	}
 
 	/**
@@ -265,10 +254,10 @@ public class MediaFileManagement {
 	}
 
 	/**
-	 * @return the originalFolder
+	 * @return the m3sMediaBaseDir
 	 */
-	public String getOriginalFolder() {
-		return originalFolder;
+	public String getM3sMediaBaseDir() {
+		return m3sMediaBaseDir;
 	}
 
 	/**
@@ -278,11 +267,5 @@ public class MediaFileManagement {
 		this.m3sMediaBaseDir = m3sMediaBaseDir;
 	}
 
-	/**
-	 * @return the m3sMediaBaseDir
-	 */
-	public String getM3sMediaBaseDir() {
-		return m3sMediaBaseDir;
-	}
 
 }

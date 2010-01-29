@@ -74,8 +74,7 @@ public class ImportFromFile {
 	MediaFileManagement mediaFileManagement;
 	
 	//constants
-	private String realBatchMediaDir;
-	private String realImportFilesDir;
+	//private String realBatchMediaDir;
 	
 	private static Logger logger = Logger.getLogger(ImportFromFile.class);
 
@@ -87,11 +86,12 @@ public class ImportFromFile {
 	 *          'Properties.REAL_IMPORT_FILES_DIR' constant + importFileName
 	 * @param fileType
 	 *          what kind of file is, by now the only suported is xls
+	 * @param importationBatchMediaPath real path where the media is going to be ready for the importation          
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void ImportMedia(String importFileName, ImportationFileEntity fileType)
+	public void ImportMedia(String importFileName, ImportationFileEntity fileType, String importationBatchMediaPath)
 			throws FileNotFoundException, IOException, IllegalArgumentException {
 		logger.debug("\nImportacion de archivos en lote con archivo: " + importFileName);
 
@@ -117,9 +117,9 @@ public class ImportFromFile {
 				uacm = getUAC(fileParser, i);
 				logger.debug("Ya se obtuvieron los metadatos De Autoría y Derechos de Uso.");
 
-				logger.debug("Importando " + getFileNamesToImport(fileNameColumnValue).size() + " elementos correspondientes a la fila");
+				logger.debug("Importando " + getFileNamesToImport(fileNameColumnValue,importationBatchMediaPath).size() + " elementos correspondientes a la fila");
 				// for init
-				for (String fileName : getFileNamesToImport(fileNameColumnValue)) {
+				for (String fileName : getFileNamesToImport(fileNameColumnValue, importationBatchMediaPath)) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '" + fileName + "'");
 					tmDTO = metadataManager.getTechMetadataFromFile(gm.getMediaTypeKey(), fileName);
 					if(tmDTO==null)
@@ -165,9 +165,10 @@ public class ImportFromFile {
 	 * with many filenames, but if the row only contains a single file that will be returned.
    *
 	 * @param fileNameColumnValue
+	 * @param importationBatchMediaPath real path where the media is going to be ready for the importation
 	 * @return
 	 */
-	private List<String> getFileNamesToImport(String fileNameColumnValue){
+	private List<String> getFileNamesToImport(String fileNameColumnValue, String importationBatchMediaPath){
 		
 		List<String> fileNames = new ArrayList<String>();
 		
@@ -175,7 +176,7 @@ public class ImportFromFile {
 		// uses and copyrigth values will be shared for various registries. The image will change.
 		if (fileNameColumnValue.lastIndexOf("*") != -1) {
 			logger.debug("Use wildcard.");
-			String folderName = realBatchMediaDir;
+			String folderName = importationBatchMediaPath;
 			if (fileNameColumnValue.lastIndexOf(File.separator) != -1) {
 				folderName = folderName.concat(fileNameColumnValue);
 				folderName = folderName.substring(0, folderName.lastIndexOf(File.separator) + 1);
@@ -197,7 +198,7 @@ public class ImportFromFile {
 			logger.debug("Total de coincidencias: " + fileNames.size());
 
 		} else {
-			fileNames.add(realBatchMediaDir + fileNameColumnValue);
+			fileNames.add(importationBatchMediaPath + fileNameColumnValue);
 		}
 		
 		
@@ -819,34 +820,6 @@ public class ImportFromFile {
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
-	}
-
-	/**
-	 * @return the realBatchMediaDir
-	 */
-	public String getRealBatchMediaDir() {
-		return realBatchMediaDir;
-	}
-
-	/**
-	 * @param realBatchMediaDir the realBatchMediaDir to set
-	 */
-	public void setRealBatchMediaDir(String realBatchMediaDir) {
-		this.realBatchMediaDir = realBatchMediaDir;
-	}
-
-	/**
-	 * @return the realImportFilesDir
-	 */
-	public String getRealImportFilesDir() {
-		return realImportFilesDir;
-	}
-
-	/**
-	 * @param realImportFilesDir the realImportFilesDir to set
-	 */
-	public void setRealImportFilesDir(String realImportFilesDir) {
-		this.realImportFilesDir = realImportFilesDir;
 	}
 
 

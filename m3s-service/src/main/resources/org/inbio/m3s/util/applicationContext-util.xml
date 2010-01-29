@@ -6,7 +6,6 @@
 
 <!-- MediaFileManagement (1 version)-->
   <bean id="mediaFileManagement" class="org.inbio.m3s.util.MediaFileManagement"> 
-  	<property name="fileSeparator" value="/"/>
   	<property name="thumbFolder" value="THUMB"/>
   	<property name="bigFolder" value="BIG"/>
   	<property name="originalFolder" value="ORIGINAL"/>

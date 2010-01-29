@@ -70,8 +70,6 @@
   
 <!-- importFromFile (3 versiones, ¿¿seran mas??)-->  
   <bean id="ARAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
-  	<property name="realBatchMediaDir" value="/root/m3sTempImages/INBio/"/>
-  	<property name="realImportFilesDir" value="/mnt/m3sImages/INBio/IMPORT_FILES/"/>
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
   	<property name="mediaManager" ref="ARAMediaManager"/>
   	<property name="taxonomyManager" ref="ARATaxonomyManager"/>
