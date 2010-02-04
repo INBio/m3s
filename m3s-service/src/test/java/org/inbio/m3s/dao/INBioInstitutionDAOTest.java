@@ -8,6 +8,7 @@ import org.inbio.m3s.dto.agent.InstitutionLiteDTOFactory;
 import org.inbio.m3s.model.atta.INBioInstitution;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
+@SuppressWarnings("unused")
 public class INBioInstitutionDAOTest extends AbstractDependencyInjectionSpringContextTests{
 
 	@Override

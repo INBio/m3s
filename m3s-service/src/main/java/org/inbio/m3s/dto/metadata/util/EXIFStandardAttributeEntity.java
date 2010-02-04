@@ -7,7 +7,7 @@ package org.inbio.m3s.dto.metadata.util;
  * @author jgutierrez
  *
  */
-public enum EXIFStandardAttributeEntity {
+public enum EXIFStandardAttributeEntity{
 	
 	ISO(0, "ISOSpeedRatings"), 
 	CAMARA_MAKER(1, "Make"), 

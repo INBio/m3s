@@ -3,6 +3,7 @@
  */
 package org.inbio.m3s.service;
 
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 
 
@@ -11,6 +12,14 @@ import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
  *
  */
 public interface MetadataManager {
+	
+	/**
+	 * 
+	 * @param mediaKey
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public MetadataDTO getMetadataByMedia(String mediaKey) throws IllegalArgumentException;
 
 	/**
 	 * 

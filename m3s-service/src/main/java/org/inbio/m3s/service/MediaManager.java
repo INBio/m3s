@@ -26,7 +26,7 @@ public interface MediaManager {
 	
 	public void updateGM(GeneralMetadataDTO newGm) throws IllegalArgumentException;
 	
-	public UsesAndCopyrightsDTO getUACM(String mediaKey) throws IllegalArgumentException;
+	//public UsesAndCopyrightsDTO getUACM(String mediaKey) throws IllegalArgumentException;
 	
 	/**
 	 * 
@@ -34,7 +34,7 @@ public interface MediaManager {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public GeneralMetadataDTO getGeneralMetadataByMedia(String mediaKey) throws IllegalArgumentException;
+	//public GeneralMetadataDTO getGeneralMetadataByMedia(String mediaKey) throws IllegalArgumentException;
 	
 	
 	public Integer insertNewMedia(GeneralMetadataDTO gm, UsesAndCopyrightsDTO uac, TechnicalMetadataDTO tmDTO) throws IllegalArgumentException;

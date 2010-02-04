@@ -24,9 +24,9 @@ public class AgentManagerTest extends AbstractServiceTest{
 	
 	protected static String testInstitutionName = "BM - Herbarium, British Museum (Natural History). London";
 	protected static String testInstitutionKey = "1";
-	//protected static String testPersonName = "Eduardo Boza";
-	protected static String testPersonName = "Jaime Gutiérrez";
-	protected static String testPersonKey = "640";
+	protected static String testPersonName = "Eduardo Boza";
+	//protected static String testPersonName = "Jaime Gutiérrez";
+	protected static String testPersonKey = "13965";
 	
 	public void testGetInstitutionLiteByName(){
 		logger.info("testGetInstitutionLiteByName");

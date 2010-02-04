@@ -65,7 +65,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	public List<TaxonLiteDTO> getTaxonsIncludedIn(String taxonDefaultName,
 			TaxonomicalRangeEntity taxonomicalRange) {
 		
@@ -108,7 +107,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getAllSpecimensLiteForMedia(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SpecimenLiteDTO> getAllSpecimensLiteForMedia(String mediaKey) {
 		
 		List<SpecimenMediaId> smIdList = specimenMediaDAO.findAllByMediaId(new Integer(mediaKey));
@@ -119,7 +117,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getAllObservationsLiteForMedia(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<ObservationLiteDTO> getAllObservationsLiteForMedia(String mediaKey)
 			throws IllegalArgumentException {
 		
@@ -131,7 +128,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getSpecimenLiteForGatheringCode(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SpecimenLiteDTO> getSpecimenLiteForGatheringCode(String gatheringCode) throws IllegalArgumentException {
 		logger.debug("getSpecimenLiteForGatheringCode... start");
 		GatheringLiteDTO glDTO = BotanyUtils.getGatheringLiteDTOFromCode(gatheringCode);
@@ -142,7 +138,12 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 		List<Specimen> sList = specimenDAO.findByGatheringNumberAndGatheringPersonId(new Integer(plDTO.getPersonKey()), new Integer(glDTO.getGatheringKey()));
 		logger.debug("number of results: "+ sList.size());
 		
-		return slDTOFactory.createDTOList(sList);
+		List<SpecimenLiteDTO> smLiteDTOList = new ArrayList<SpecimenLiteDTO>();
+		for(Specimen s : sList){
+			smLiteDTOList.add(new SpecimenLiteDTO(s.getSpecimenId().toString()));
+		}
+		
+		return smLiteDTOList;
 	}
 	
 
@@ -227,7 +228,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getTaxonLiteFromObservationId(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<TaxonLiteDTO> getTaxonLiteFromObservationId(String observationKey)
 			throws IllegalArgumentException {
 		List<Taxon> tList = taxonDAO.findByObservationId(new Integer(observationKey));
@@ -248,7 +248,6 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getTaxonLite(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<TaxonLiteDTO> getTaxonLite(String defaultName)
 			throws IllegalArgumentException {
 		List<Taxon> tList = taxonDAO.findAllByName(defaultName);

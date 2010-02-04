@@ -21,7 +21,7 @@ import org.inbio.m3s.service.TaxonomyManager;
  * @author jgutierrez
  *
  */
-public class BriefMediaOutputDTOFactory extends BaseDTOFactory {
+public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMediaOutputDTO> {
 
 	private static Logger logger = Logger.getLogger(BriefMediaOutputDTOFactory.class);
 
@@ -29,12 +29,11 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory {
 	private TaxonomyManager taxonomyManager;
 	private AgentManager agentManager;
 	
-	public Object createDTO(Object mediaLiteObject) {
+	public BriefMediaOutputDTO createDTO(MediaLite mediaLiteObject) {
 		
 		if(mediaLiteObject == null)
 			return null;
-		MediaLite ml = (MediaLite) mediaLiteObject;
-		return createBriefMediaOutputDTO(ml);
+		return createBriefMediaOutputDTO(mediaLiteObject);
 	}
 	
 	/**

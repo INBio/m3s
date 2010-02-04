@@ -1,19 +1,18 @@
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class KeywordCategory extends DBLogEntity implements Serializable {
+public class KeywordCategory extends LogGenericEntity {
 
 	/**
 	 * 

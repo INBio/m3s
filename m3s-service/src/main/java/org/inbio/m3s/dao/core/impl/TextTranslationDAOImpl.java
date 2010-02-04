@@ -7,18 +7,17 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.TextTranslationDAO;
 import org.inbio.m3s.model.core.TextTranslation;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
  *
  */
-public class TextTranslationDAOImpl extends HibernateDaoSupport implements
-		TextTranslationDAO {
+public class TextTranslationDAOImpl extends GenericBaseDAOImpl<TextTranslation, Integer> implements TextTranslationDAO {
 
 	public TextTranslation finByIdAndLanguage(final Integer id, final Integer languageId) {
 		logger.debug("TextTranslation... start ");

@@ -6,8 +6,6 @@ import org.inbio.m3s.dao.core.MediaAttributeValueDAO;
 import org.inbio.m3s.dao.core.MediaDAO;
 import org.inbio.m3s.dto.mediaattribute.MediaAttributeValueFullDTO;
 import org.inbio.m3s.dto.mediaattribute.MediaAttributeValueFullDTOFactory;
-import org.inbio.m3s.model.core.Media;
-import org.inbio.m3s.model.core.MediaAttribute;
 import org.inbio.m3s.model.core.MediaAttributeValue;
 import org.inbio.m3s.model.core.MediaAttributeValueId;
 import org.inbio.m3s.service.MediaAttributeManager;
@@ -47,10 +45,8 @@ public class MediaAttributeManagerImpl implements MediaAttributeManager {
 
 		try {
 
-			Media media = (Media) mediaDAO.findById(Media.class, mavFull.getMediaId());
-			MediaAttribute ma = (MediaAttribute) getMaDAO().findById(MediaAttribute.class, mavFull.getMediaAttributeId());
 			MediaAttributeValueId mavId = new MediaAttributeValueId(mavFull.getMediaAttributeId(), mavFull.getMediaId());
-			MediaAttributeValue mav = new MediaAttributeValue(mavId, ma, media);
+			MediaAttributeValue mav = new MediaAttributeValue(mavId);
 
 			mav.setValueVarchar(mavFull.getValueVarchar());
 			mav.setValueNumber(mavFull.getValueNumber());
@@ -70,10 +66,8 @@ public class MediaAttributeManagerImpl implements MediaAttributeManager {
 			throws IllegalArgumentException {
 		try {
 
-			Media media = (Media) mediaDAO.findById(Media.class, mavFull.getMediaId());
-			MediaAttribute ma = (MediaAttribute) getMaDAO().findById(MediaAttribute.class, mavFull.getMediaAttributeId());
 			MediaAttributeValueId mavId = new MediaAttributeValueId(mavFull.getMediaAttributeId(), mavFull.getMediaId());
-			MediaAttributeValue mav = new MediaAttributeValue(mavId, ma, media);
+			MediaAttributeValue mav = new MediaAttributeValue(mavId);
 
 			mav.setValueVarchar(mavFull.getValueVarchar());
 			mav.setValueNumber(mavFull.getValueNumber());

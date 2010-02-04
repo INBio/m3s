@@ -7,9 +7,10 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.ImportControlDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.core.ImportControl;
+import org.inbio.m3s.model.core.ImportControlId;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -17,7 +18,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class ImportControlDAOImpl extends BaseDAOImpl implements ImportControlDAO {
+public class ImportControlDAOImpl extends GenericBaseDAOImpl<ImportControl, ImportControlId> implements ImportControlDAO {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.ImportControlDAO#getImportControlList(java.lang.String, int)

@@ -8,6 +8,8 @@ package org.inbio.m3s.dao.core;
  * que se reparten entre varias tablas: Media, Person, Institution, etc, etc
  * 
  * @author jgutierrez
+ * 
+ * @deprecated NO ES UN DAO, es de manager
  *
  */
 public interface StatisticsDAO {

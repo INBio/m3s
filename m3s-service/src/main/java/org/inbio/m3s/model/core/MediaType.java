@@ -1,99 +1,82 @@
+/* M3S - multimedia management system
+*
+* Copyright (C) 2009  INBio - Instituto Nacional de Biodiversidad, Costa Rica
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.inbio.m3s.model.core;
 
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class MediaType extends DBLogEntity implements java.io.Serializable {
+public class MediaType extends LogGenericEntity {
 
 	/** NPI */
 	private static final long serialVersionUID = 3399750864350074030L;
 
 	private Integer mediaTypeId;
 
-	private Text textByDescriptionTextId;
-
-	private Text textByNameTextId;
-
-	private Integer mediaCategoryId;
+	//private Text textByNameTextId;
+	private Integer mediaTypeNameTextId;
 	
-	private MediaCategory mediaCategory;
-
-	//private Set<Media> medias = new HashSet<Media>(0);
-
-	private Set<MediaAttributeType> mediaAttributeTypes = new HashSet<MediaAttributeType>(0);
+	//private Text textByDescriptionTextId;
+	private Integer mediaTypeDescriptionTextId;
+	
+	private Integer mediaCategoryId;
 
 	public MediaType() {
 	}
 
-	public MediaType(Text textByNameTextId, MediaCategory mediaCategory) {
-		this.textByNameTextId = textByNameTextId;
-		this.mediaCategory = mediaCategory;
-	}
-
 	/**
 	 * 
-	 * @param textByDescriptionTextId
-	 * @param textByNameTextId
+	 * @param mediaTypeDescriptionTextId
+	 * @param mediaTypeNameTextId
 	 * @param mediaCategoryId
-	 * @param mediaCategory
 	 * @param creationDate
 	 * @param createdBy
 	 * @param lastModificationDate
 	 * @param lastModificationBy
-	 * @param mediaAttributeTypes
 	 */
-	public MediaType(Text textByDescriptionTextId, Text textByNameTextId,
-			Integer mediaCategoryId,
-			MediaCategory mediaCategory, Date creationDate, String createdBy,
-			Date lastModificationDate, String lastModificationBy,
-			//Set<Media> medias, 
-			Set<MediaAttributeType> mediaAttributeTypes) {
-		this.textByDescriptionTextId = textByDescriptionTextId;
-		this.textByNameTextId = textByNameTextId;
-		this.setMediaCategoryId(mediaCategoryId);
-		this.mediaCategory = mediaCategory;
+	public MediaType(Integer mediaTypeDescriptionTextId, Integer mediaTypeNameTextId,
+			Integer mediaCategoryId, Date creationDate, String createdBy,
+			Date lastModificationDate, String lastModificationBy) {
+		this.mediaTypeDescriptionTextId = mediaTypeDescriptionTextId;
+		this.mediaTypeNameTextId = mediaTypeNameTextId;
+		this.mediaCategoryId = mediaCategoryId;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		//this.medias = medias;
-		this.mediaAttributeTypes = mediaAttributeTypes;
 	}
 	
-	/**
-	 * 
-	 * @param textByDescriptionTextId
-	 * @param textByNameTextId
-	 * @param mediaCategory
-	 * @param creationDate
-	 * @param createdBy
-	 * @param lastModificationDate
-	 * @param lastModificationBy
-	 * @param mediaAttributeTypes
-	 */
-	public MediaType(Text textByDescriptionTextId, Text textByNameTextId,
-			MediaCategory mediaCategory, Date creationDate, String createdBy,
-			Date lastModificationDate, String lastModificationBy,
-			//Set<Media> medias, 
-			Set<MediaAttributeType> mediaAttributeTypes) {
-		this.textByDescriptionTextId = textByDescriptionTextId;
-		this.textByNameTextId = textByNameTextId;
-		this.mediaCategory = mediaCategory;
+
+	public MediaType(Integer mediaTypeDescriptionTextId, Integer mediaTypeNameTextId, 
+			Date creationDate, String createdBy,
+			Date lastModificationDate, String lastModificationBy) {
+		this.mediaTypeDescriptionTextId = mediaTypeDescriptionTextId;
+		this.mediaTypeNameTextId = mediaTypeNameTextId;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		//this.medias = medias;
-		this.mediaAttributeTypes = mediaAttributeTypes;
 	}
 
 	public Integer getMediaTypeId() {
@@ -102,47 +85,6 @@ public class MediaType extends DBLogEntity implements java.io.Serializable {
 
 	public void setMediaTypeId(Integer mediaTypeId) {
 		this.mediaTypeId = mediaTypeId;
-	}
-
-	public Text getTextByDescriptionTextId() {
-		return this.textByDescriptionTextId;
-	}
-
-	public void setTextByDescriptionTextId(Text textByDescriptionTextId) {
-		this.textByDescriptionTextId = textByDescriptionTextId;
-	}
-
-	public Text getTextByNameTextId() {
-		return this.textByNameTextId;
-	}
-
-	public void setTextByNameTextId(Text textByNameTextId) {
-		this.textByNameTextId = textByNameTextId;
-	}
-
-	public MediaCategory getMediaCategory() {
-		return this.mediaCategory;
-	}
-
-	public void setMediaCategory(MediaCategory mediaCategory) {
-		this.mediaCategory = mediaCategory;
-	}
-/*
-	public Set<Media> getMedias() {
-		return this.medias;
-	}
-
-	public void setMedias(Set<Media> medias) {
-		this.medias = medias;
-	}
-*/
-	public Set<MediaAttributeType> getMediaAttributeTypes() {
-		return this.mediaAttributeTypes;
-	}
-
-	public void setMediaAttributeTypes(
-			Set<MediaAttributeType> mediaAttributeTypes) {
-		this.mediaAttributeTypes = mediaAttributeTypes;
 	}
 
 	/**
@@ -157,6 +99,34 @@ public class MediaType extends DBLogEntity implements java.io.Serializable {
 	 */
 	public Integer getMediaCategoryId() {
 		return mediaCategoryId;
+	}
+
+	/**
+	 * @return the mediaTypeNameTextId
+	 */
+	public Integer getMediaTypeNameTextId() {
+		return mediaTypeNameTextId;
+	}
+
+	/**
+	 * @param mediaTypeNameTextId the mediaTypeNameTextId to set
+	 */
+	public void setMediaTypeNameTextId(Integer mediaTypeNameTextId) {
+		this.mediaTypeNameTextId = mediaTypeNameTextId;
+	}
+
+	/**
+	 * @return the mediaTypeDescriptionTextId
+	 */
+	public Integer getMediaTypeDescriptionTextId() {
+		return mediaTypeDescriptionTextId;
+	}
+
+	/**
+	 * @param mediaTypeDescriptionTextId the mediaTypeDescriptionTextId to set
+	 */
+	public void setMediaTypeDescriptionTextId(Integer mediaTypeDescriptionTextId) {
+		this.mediaTypeDescriptionTextId = mediaTypeDescriptionTextId;
 	}
 
 }

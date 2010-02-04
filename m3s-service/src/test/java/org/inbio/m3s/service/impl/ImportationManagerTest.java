@@ -17,6 +17,7 @@ import org.inbio.m3s.service.ImportationManager;
  * @author jgutierrez
  *
  */
+@SuppressWarnings("unused")
 public class ImportationManagerTest extends AbstractServiceTest{
 
 	

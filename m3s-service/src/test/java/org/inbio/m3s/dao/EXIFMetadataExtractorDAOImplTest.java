@@ -6,6 +6,7 @@ import org.inbio.m3s.dto.metadata.util.EXIFStandardAttributeEntity;
 import org.inbio.m3s.model.core.SecurityUsers;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
+@SuppressWarnings("unused")
 public class EXIFMetadataExtractorDAOImplTest extends AbstractDependencyInjectionSpringContextTests{
 
 	@Override

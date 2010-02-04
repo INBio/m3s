@@ -16,15 +16,22 @@ public enum MetadataStandardEntity {
 
 	EXIF(1, "EXIF", EXIFMetadataExtractorDAOImpl.class.getName()),
 	FILE_INFO(2, "File Information", FileInfoMetadataExtractorImpl.class.getName()),  
-	MET(16, "MET",VIDEOMDMetadataExtractorImpl.class.getName());
+	MET(3, "MET",VIDEOMDMetadataExtractorImpl.class.getName()),
+	MIGRATION(4, "Migration",null),
+	YOUTUBE_VIDEO(5, "Youtube Video",null);
 	
 	private int id;
 	private String name;
-	private String implementingClass;
+	/*
+	 * implementing class to extract metadata from the original file.
+	 * If null means that their is no way to extract data.
+	 */
+	private String implementingClass; 
 	
 	/**
 	 * @param id
 	 * @param name
+	 * @param implementingClass
 	 */
 	private MetadataStandardEntity(int id, String name, String implementingClass) {
 		this.id = id;
@@ -55,9 +62,17 @@ public enum MetadataStandardEntity {
 		return implementingClass;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public MetadataExtractorDAO getMetadataExtractorDAOImpl() throws IllegalArgumentException{
 		try {
-			return (MetadataExtractorDAO) Class.forName(this.implementingClass).newInstance();
+			if(this.implementingClass != null)
+			  return (MetadataExtractorDAO) Class.forName(this.implementingClass).newInstance();
+			else
+				return null;
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e.getMessage());

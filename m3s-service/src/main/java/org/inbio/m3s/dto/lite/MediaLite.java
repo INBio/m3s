@@ -3,15 +3,16 @@
  */
 package org.inbio.m3s.dto.lite;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * @deprecated
  * @author jgutierrez
  *
  */
-public class MediaLite implements Serializable{
+public class MediaLite extends LogGenericEntity{
 
 	private static final long serialVersionUID = 4258439259282403505L;
 
@@ -38,8 +39,6 @@ public class MediaLite implements Serializable{
 	private String series;
 
 	private char isPublic;
-
-	private char isBackup;
 
 	private Date creationDate;
 
@@ -69,13 +68,12 @@ public class MediaLite implements Serializable{
 	 * @param title
 	 * @param series
 	 * @param isPublic
-	 * @param isBackup
 	 * @param creationDate
 	 * @param createdBy
 	 * @param lastModificationDate
 	 * @param lastModificationBy
 	 */
-	public MediaLite(Integer mediaId, Integer mediaTypeId, Integer usePolicy, Integer authorPersonId, Integer ownerPersonId, Integer ownerInstitutionId, String description, Integer siteId, String siteDescription, String title, String series, char isPublic, char isBackup, Date creationDate, String createdBy, Date lastModificationDate, String lastModificationBy) {
+	public MediaLite(Integer mediaId, Integer mediaTypeId, Integer usePolicy, Integer authorPersonId, Integer ownerPersonId, Integer ownerInstitutionId, String description, Integer siteId, String siteDescription, String title, String series, char isPublic, Date creationDate, String createdBy, Date lastModificationDate, String lastModificationBy) {
 		super();
 		this.mediaId = mediaId;
 		this.mediaTypeId = mediaTypeId;
@@ -89,7 +87,6 @@ public class MediaLite implements Serializable{
 		this.title = title;
 		this.series = series;
 		this.isPublic = isPublic;
-		this.isBackup = isBackup;
 		this.creationDate = creationDate;
 		this.createdBy = createdBy;
 		this.lastModificationDate = lastModificationDate;
@@ -150,20 +147,6 @@ public class MediaLite implements Serializable{
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/**
-	 * @return the isBackup
-	 */
-	public char getIsBackup() {
-		return isBackup;
-	}
-
-	/**
-	 * @param isBackup the isBackup to set
-	 */
-	public void setIsBackup(char isBackup) {
-		this.isBackup = isBackup;
 	}
 
 	/**

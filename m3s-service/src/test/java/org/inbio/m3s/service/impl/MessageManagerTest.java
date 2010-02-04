@@ -21,6 +21,7 @@ import org.inbio.m3s.service.MessageManager;
  * @author jgutierrez
  *
  */
+@SuppressWarnings("unused")
 public class MessageManagerTest extends AbstractServiceTest{
 
 	protected static Log logger = LogFactory.getLog(MessageManagerTest.class);

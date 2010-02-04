@@ -13,6 +13,7 @@ import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
 /**
  * @author jgutierrez
  * 
+ * 
  */
 public class TechnicalMetadataDTO extends BaseDTO{
 

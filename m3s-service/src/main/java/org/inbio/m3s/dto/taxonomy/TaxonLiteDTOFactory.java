@@ -11,15 +11,15 @@ import org.inbio.m3s.model.taxonomy.Taxon;
  * @author jgutierrez
  *
  */
-public class TaxonLiteDTOFactory extends BaseDTOFactory {
+public class TaxonLiteDTOFactory extends BaseDTOFactory<Taxon,TaxonLiteDTO> {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dto.DTOFactory#createDTO(java.lang.Object)
 	 */
-	public Object createDTO(Object entity) {
-		if(entity == null)
+	public TaxonLiteDTO createDTO(Taxon t) {
+		if(t == null)
 				return null;
-		Taxon t = (Taxon) entity;
+		
 		TaxonLiteDTO dto = new TaxonLiteDTO();
 		populateTaxonLite(t, dto);
 		return dto;

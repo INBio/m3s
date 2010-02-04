@@ -1,56 +1,58 @@
+/* M3S - multimedia management system
+*
+* Copyright (C) 2009  INBio - Instituto Nacional de Biodiversidad, Costa Rica
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class Project extends DBLogEntity implements Serializable {
+public class Project extends LogGenericEntity {
 
 	private static final long serialVersionUID = 2782827914571243164L;
 
 	private Integer projectId;
 
-	private SecurityUsers securityUsers;
+	private String projectManagerUserName;
 
 	private String name;
 
 	private String description;
 
-	private Set<UserProjectPrivilege> userProjectPrivileges = new HashSet<UserProjectPrivilege>(0);
-
-	private Set<MediaProject> mediaProjects = new HashSet<MediaProject>(0);
 
 	public Project() {
 	}
 
-	public Project(SecurityUsers securityUsers, String name) {
-		this.securityUsers = securityUsers;
-		this.name = name;
-	}
-
-	public Project(SecurityUsers securityUsers, String name,
+	public Project(String projectManagerUserName, String name,
 			String description, Date creationDate, String createdBy,
-			Date lastModificationDate, String lastModificationBy,
-			Set<UserProjectPrivilege> userProjectPrivileges,
-			Set<MediaProject> mediaProjects) {
-		this.securityUsers = securityUsers;
+			Date lastModificationDate, String lastModificationBy) {
+		this.projectManagerUserName = projectManagerUserName;
 		this.name = name;
 		this.description = description;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		this.userProjectPrivileges = userProjectPrivileges;
-		this.mediaProjects = mediaProjects;
 	}
 
 	public Integer getProjectId() {
@@ -59,14 +61,6 @@ public class Project extends DBLogEntity implements Serializable {
 
 	public void setProjectId(Integer projectId) {
 		this.projectId = projectId;
-	}
-
-	public SecurityUsers getSecurityUsers() {
-		return this.securityUsers;
-	}
-
-	public void setSecurityUsers(SecurityUsers securityUsers) {
-		this.securityUsers = securityUsers;
 	}
 
 	public String getName() {
@@ -85,21 +79,18 @@ public class Project extends DBLogEntity implements Serializable {
 		this.description = description;
 	}
 
-	public Set<UserProjectPrivilege> getUserProjectPrivileges() {
-		return this.userProjectPrivileges;
+	/**
+	 * @return the projectManagerUserName
+	 */
+	public String getProjectManagerUserName() {
+		return projectManagerUserName;
 	}
 
-	public void setUserProjectPrivileges(
-			Set<UserProjectPrivilege> userProjectPrivileges) {
-		this.userProjectPrivileges = userProjectPrivileges;
-	}
-
-	public Set<MediaProject> getMediaProjects() {
-		return this.mediaProjects;
-	}
-
-	public void setMediaProjects(Set<MediaProject> mediaProjects) {
-		this.mediaProjects = mediaProjects;
+	/**
+	 * @param projectManagerUserName the projectManagerUserName to set
+	 */
+	public void setProjectManagerUserName(String projectManagerUserName) {
+		this.projectManagerUserName = projectManagerUserName;
 	}
 
 }

@@ -1,10 +1,9 @@
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 
 /**
@@ -12,7 +11,7 @@ import org.inbio.m3s.model.DBLogEntity;
  * @author jgutierrez
  *
  */
-public class Text extends DBLogEntity implements Serializable {
+public class Text extends LogGenericEntity {
 
 	/**
 	 * 

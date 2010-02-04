@@ -10,15 +10,14 @@ import org.inbio.m3s.model.core.MediaAttributeValue;
  * @author jgutierrez
  *
  */
-public class MediaAttributeValueFullDTOFactory extends BaseDTOFactory {
+public class MediaAttributeValueFullDTOFactory extends BaseDTOFactory<MediaAttributeValue,MediaAttributeValueFullDTO> {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dto.DTOFactory#createDTO(java.lang.Object)
 	 */
-	public Object createDTO(Object entity) {
-		if(entity == null)
+	public MediaAttributeValueFullDTO createDTO(MediaAttributeValue mav) {
+		if(mav == null)
 				return null;
-		MediaAttributeValue mav = (MediaAttributeValue) entity;
 		MediaAttributeValueFullDTO dto = new MediaAttributeValueFullDTO();
 		populateMediaAttributeValueFull(mav, dto);
 		return dto;

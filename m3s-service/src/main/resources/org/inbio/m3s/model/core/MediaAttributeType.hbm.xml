@@ -14,21 +14,17 @@
 				<column name="media_attribute_id" />
 			</key-property>
 		</composite-id>
-		<many-to-one name="mediaType"
-			class="org.inbio.m3s.model.core.MediaType" update="false"
-			insert="false" fetch="select">
-			<column name="media_type_id" not-null="true" />
-		</many-to-one>
-		<many-to-one name="mediaAttribute"
-			class="org.inbio.m3s.model.core.MediaAttribute" update="false"
-			insert="false" fetch="select">
-			<column name="media_attribute_id" not-null="true" />
-		</many-to-one>
-		<many-to-one name="metadataStandard"
-			class="org.inbio.m3s.model.core.MetadataStandard"
-			fetch="select">
-			<column name="metadata_standard_id" not-null="true" />
-		</many-to-one>
+		
+		<property name="mediaTypeId" update="false" insert="false" type="int">
+            <column name="media_type_id" not-null="true" />
+        </property>
+        <property name="mediaAttributeId" update="false" insert="false"  type="int">
+            <column name="media_attribute_id" not-null="true" />
+        </property>
+        <property name="metadataStandardId" update="false" insert="false"  type="int">
+            <column name="metadata_standard_id" not-null="true" />
+        </property>
+        
 		<property name="creationDate" type="date">
 			<column name="creation_date" length="4" />
 		</property>

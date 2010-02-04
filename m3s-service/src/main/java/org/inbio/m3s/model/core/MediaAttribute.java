@@ -1,133 +1,124 @@
+/* M3S - multimedia management system
+*
+* Copyright (C) 2009  INBio - Instituto Nacional de Biodiversidad, Costa Rica
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
- * 
  * @author jgutierrez
- *
  */
-public class MediaAttribute extends DBLogEntity implements Serializable {
+public class MediaAttribute extends LogGenericEntity {
 
 	private static final long serialVersionUID = -7359379744017180231L;
 
 	private Integer mediaAttributeId;
-
-	private Text textByDescriptionTextId;
-
-	private Text textByNameTextId;
-
-	private String mediaAttributeTableName;
+	
+	// to be resolver in a properties i10n file
+	private String descriptionTextKey;
+	
+	// to be resolver in a properties i10n file
+	private String nameTextKey;
 
 	private char mediaAttributeValueType;
 
-	private char mediaAttributeTypePredefined;
-
-	private Set<MediaAttributeValue> mediaAttributeValues = new HashSet<MediaAttributeValue>(
-			0);
-
-	//private Set<MediaAttributeType> mediaAttributeTypes = new HashSet<MediaAttributeType>(0);
 
 	public MediaAttribute() {
 	}
 
-	public MediaAttribute(char mediaAttributeValueType,
-			char mediaAttributeTypePredefined) {
+	public MediaAttribute(Integer mediaAttributeId, String nameTextKey, 
+			String descriptionTextKey, char mediaAttributeValueType) {
+		this.mediaAttributeId = mediaAttributeId;
+		this.nameTextKey = nameTextKey;
+		this.descriptionTextKey = descriptionTextKey;
 		this.mediaAttributeValueType = mediaAttributeValueType;
-		this.mediaAttributeTypePredefined = mediaAttributeTypePredefined;
 	}
 
-	public MediaAttribute(Text textByDescriptionTextId, Text textByNameTextId,
-			String mediaAttributeTableName, char mediaAttributeValueType,
-			Date creationDate, String createdBy, Date lastModificationDate,
-			String lastModificationBy, char mediaAttributeTypePredefined,
-			Set<MediaAttributeValue> mediaAttributeValues
-			//,Set<MediaAttributeType> mediaAttributeTypes
-			) {
-		this.textByDescriptionTextId = textByDescriptionTextId;
-		this.textByNameTextId = textByNameTextId;
-		this.mediaAttributeTableName = mediaAttributeTableName;
+
+	public MediaAttribute(String descriptionTextKey, String nameTextKey,
+			char mediaAttributeValueType, Date creationDate, 
+			String createdBy, Date lastModificationDate,
+			String lastModificationBy) {
+		this.descriptionTextKey = descriptionTextKey;
+		this.nameTextKey = nameTextKey;
 		this.mediaAttributeValueType = mediaAttributeValueType;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		this.mediaAttributeTypePredefined = mediaAttributeTypePredefined;
-		this.mediaAttributeValues = mediaAttributeValues;
-		//this.mediaAttributeTypes = mediaAttributeTypes;
 	}
 
+	/**
+	 * @return the mediaAttributeId
+	 */
 	public Integer getMediaAttributeId() {
-		return this.mediaAttributeId;
+		return mediaAttributeId;
 	}
 
+	/**
+	 * @param mediaAttributeId the mediaAttributeId to set
+	 */
 	public void setMediaAttributeId(Integer mediaAttributeId) {
 		this.mediaAttributeId = mediaAttributeId;
 	}
 
-	public Text getTextByDescriptionTextId() {
-		return this.textByDescriptionTextId;
+	/**
+	 * @return the descriptionTextKey
+	 */
+	public String getDescriptionTextKey() {
+		return descriptionTextKey;
 	}
 
-	public void setTextByDescriptionTextId(Text textByDescriptionTextId) {
-		this.textByDescriptionTextId = textByDescriptionTextId;
+	/**
+	 * @param descriptionTextKey the descriptionTextKey to set
+	 */
+	public void setDescriptionTextKey(String descriptionTextKey) {
+		this.descriptionTextKey = descriptionTextKey;
 	}
 
-	public Text getTextByNameTextId() {
-		return this.textByNameTextId;
+	/**
+	 * @return the nameTextKey
+	 */
+	public String getNameTextKey() {
+		return nameTextKey;
 	}
 
-	public void setTextByNameTextId(Text textByNameTextId) {
-		this.textByNameTextId = textByNameTextId;
+	/**
+	 * @param nameTextKey the nameTextKey to set
+	 */
+	public void setNameTextKey(String nameTextKey) {
+		this.nameTextKey = nameTextKey;
 	}
 
-	public String getMediaAttributeTableName() {
-		return this.mediaAttributeTableName;
-	}
-
-	public void setMediaAttributeTableName(String mediaAttributeTableName) {
-		this.mediaAttributeTableName = mediaAttributeTableName;
-	}
-
+	/**
+	 * @return the mediaAttributeValueType
+	 */
 	public char getMediaAttributeValueType() {
-		return this.mediaAttributeValueType;
+		return mediaAttributeValueType;
 	}
 
+	/**
+	 * @param mediaAttributeValueType the mediaAttributeValueType to set
+	 */
 	public void setMediaAttributeValueType(char mediaAttributeValueType) {
 		this.mediaAttributeValueType = mediaAttributeValueType;
 	}
 
-	public char getMediaAttributeTypePredefined() {
-		return this.mediaAttributeTypePredefined;
-	}
-
-	public void setMediaAttributeTypePredefined(
-			char mediaAttributeTypePredefined) {
-		this.mediaAttributeTypePredefined = mediaAttributeTypePredefined;
-	}
-
-	public Set<MediaAttributeValue> getMediaAttributeValues() {
-		return this.mediaAttributeValues;
-	}
-
-	public void setMediaAttributeValues(
-			Set<MediaAttributeValue> mediaAttributeValues) {
-		this.mediaAttributeValues = mediaAttributeValues;
-	}
-/*
-	public Set<MediaAttributeType> getMediaAttributeTypes() {
-		return this.mediaAttributeTypes;
-	}
-
-	public void setMediaAttributeTypes(
-			Set<MediaAttributeType> mediaAttributeTypes) {
-		this.mediaAttributeTypes = mediaAttributeTypes;
-	}
-*/
 }

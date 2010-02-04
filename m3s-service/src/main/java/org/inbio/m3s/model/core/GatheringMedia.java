@@ -1,6 +1,6 @@
 package org.inbio.m3s.model.core;
 
-import java.io.Serializable;
+import org.inbio.m3s.model.LogGenericEntity;
 
 
 /**
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author jgutierrez
  *
  */
-public class GatheringMedia implements Serializable {
+public class GatheringMedia extends LogGenericEntity {
 
 	private static final long serialVersionUID = 1572311198816336616L;
 

@@ -8,11 +8,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.inbio.m3s.dao.core.MediaCategoryDAO;
-import org.inbio.m3s.dao.core.MediaTypeDAO;
 import org.inbio.m3s.dao.core.MediaUseDAO;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
 import org.inbio.m3s.dto.message.MediaCategoryDTO;
-import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.service.MessageManager;
@@ -34,18 +32,6 @@ public class DataCache {
 
 	private static Logger logger = Logger.getLogger(DataCache.class);
 
-	public static boolean peopleInCache = false;
-
-	public static List<String> peopleNames = new ArrayList<String>();
-
-	public static List<Integer> peopleDBIds = new ArrayList<Integer>();
-
-	public static boolean institutionsInCache = false;
-
-	public static List<String> institutionsNames = new ArrayList<String>();
-
-	public static List<Integer> institutionsDBIds = new ArrayList<Integer>();
-
 	public static boolean mediaUsesInCache = false;
 	
 	public static Integer mediaUses4Language = null;
@@ -65,73 +51,6 @@ public class DataCache {
 	public static List<String> mediaCategoriesNames;
 
 	public static List<Integer> mediaCategoriesDBIds;
-
-	public static boolean mediaTypesInCache = false;
-
-	public static String mediaType4Category = "";
-
-	public static List<String> mediaTypesNames;
-
-	public static List<Integer> mediaTypesDBIds;
-
-	/**
-	 * sets the peopleNames and peopleDBIds
-	 * 
-	 */
-	/*
-	public static void initPeopleInfo() {
-		//logger.debug("getting People Info...");
-
-		PersonDAO personDAO = (PersonDAO) ServiceUtil.appContext.getBean("INBioPersonDAO");
-		
-		try {
-			List<PersonDTOLite> peopleInfo = personDAO.listAllLite();
-
-			peopleDBIds = new ArrayList<Integer>();
-			peopleNames = new ArrayList<String>();
-
-			for(PersonDTOLite personDTOLite : peopleInfo){
-				peopleDBIds.add(personDTOLite.getPersonId());
-				peopleNames.add(personDTOLite.getDisplayName());
-			}
-
-			//logger.debug("getting People Info... is now on cache!.");
-			peopleInCache = true;
-
-		} catch (Exception e) {
-			//logger.error("Something gets wrong on initPeopleInfo.");
-			//logger.error(e.getMessage());
-		}
-	}
-	*/
-
-	/*
-	public static void initInstitutionsInfo() {
-		//logger.debug("getting Institutions Info...");
-
-		InstitutionDAO institutionDAO = (InstitutionDAO) ServiceUtil.appContext.getBean("INBioInstitutionDAO");
-		
-		try {
-			List<InstitutionDTOLite> instutionsInfo = institutionDAO.listAllLite();
-
-			institutionsDBIds = new ArrayList<Integer>();
-			institutionsNames = new ArrayList<String>();
-			
-			for(InstitutionDTOLite institutionDTOLite: instutionsInfo){
-				institutionsNames.add(institutionDTOLite.getName());
-				institutionsDBIds.add(institutionDTOLite.getInstitutionId());
-			}
-
-			//logger.debug("getting Institutions Info...... is now on cache!.");
-			institutionsInCache = true;
-
-		} catch (Exception e) {
-			//logger.error("Something gets wrong on initInstitutionsInfo.");
-			//logger.error(e.getMessage());
-		}
-
-	}
-*/
 	
 	public static void initMediaUsesInfo() {
 		//logger.debug("getting Media uses Info... using default language");
@@ -216,38 +135,7 @@ public class DataCache {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param categoryName
-	 * @throws IllegalArgumentException
-	 */
-	public static void initMediaTypesInfo(String categoryName)
-			throws IllegalArgumentException {
-
-		logger.debug("getting Media Types Info... for category '"
-				+ categoryName + "'.");
-
-		MediaCategoryDAO mediaCategoryDAO = (MediaCategoryDAO) ServiceUtil.appContext.getBean("mediaCategoryDAO");
-		MediaCategoryDTO mediaCategoryLite = mediaCategoryDAO.getMediaCategoryLite(categoryName);
-		MediaTypeDAO mediaTypeDAO = (MediaTypeDAO) ServiceUtil.appContext.getBean("mediaTypeDAO");
-		List<MediaTypeDTO> mediaTypeList = mediaTypeDAO.listAllForMediaCategoryLite(Integer.valueOf(mediaCategoryLite.getMediaCategoryKey()));
-
-		// If both queries go ok, then set the new iniformation in their
-		// adecuate place
-		mediaTypesNames = new ArrayList<String>();
-		mediaTypesDBIds = new ArrayList<Integer>();
 		
-		for(MediaTypeDTO mtl : mediaTypeList){
-			mediaTypesNames.add(mtl.getMediaTypeName());
-			mediaTypesDBIds.add(Integer.valueOf(mtl.getMediaTypeKey()));
-		}
-		
-		logger.debug("getting Media Types Info...  mediaTypes info for category '"
-						+ categoryName + "' is now on cache!.");
-
-		mediaType4Category = categoryName;
-		mediaTypesInCache = true;
-	}
 	/**
 	 * @return the mediaUses4Language
 	 */

@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.PersonDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.ara.ARAPerson;
 import org.inbio.m3s.model.ara.PersonProfile;
 import org.inbio.m3s.model.general.Person;
@@ -20,8 +20,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
-	
+public class ARAPersonDAOImpl extends GenericBaseDAOImpl<Person,Integer> implements PersonDAO {		
 	private static Logger logger = Logger.getLogger(ARAPersonDAOImpl.class);
 
 	private static final String PERSON_PROFILE_CLASS = ""+PersonProfile.class.getCanonicalName();
@@ -32,9 +31,9 @@ public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 		
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<Object> findAll(Class entityClass) {
+		public List<Person> findAll(Class entityClass) {
 			HibernateTemplate template = getHibernateTemplate();
-			return (List<Object>) template.execute(new HibernateCallback() {
+			return (List<Person>) template.execute(new HibernateCallback() {
 				public Object doInHibernate(Session session) {
 					Query query = session.createQuery(
 							"select pp.person"
@@ -100,8 +99,8 @@ public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 		 * @see org.inbio.m3s.dao.impl.BaseDAOImpl#create(java.lang.Object)
 		 */
 		@Override
-		public void create(Object entity) throws IllegalArgumentException {
-			super.create((ARAPerson) entity);
+		public void create(Person person) throws IllegalArgumentException {
+			super.create((ARAPerson) person);
 		}
 
 		/*
@@ -110,8 +109,8 @@ public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 		 * @see org.inbio.m3s.dao.BaseDAO#delete(java.lang.Object)
 		 */
 		@Override
-		public void update(Object entity) throws IllegalArgumentException {
-			super.update((ARAPerson) entity);
+		public void update(Person person) throws IllegalArgumentException {
+			super.update((ARAPerson) person);
 		}
 
 		/*
@@ -120,19 +119,18 @@ public class ARAPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 		 * @see org.inbio.m3s.dao.BaseDAO#update(java.lang.Object)
 		 */
 		@Override
-		public void delete(Object entity) throws IllegalArgumentException {
-			super.delete((ARAPerson) entity);
+		public void delete(Person person) throws IllegalArgumentException {
+			super.delete((ARAPerson) person);
 		}
 		
 		/*
 		 * (non-Javadoc)
 		 * @see org.inbio.m3s.dao.BaseDAO#findById(java.lang.Class, java.lang.Object)
 		 */
-		@SuppressWarnings("unchecked")
 		@Override
-		public Object findById(Class entityClass, Object Id) throws IllegalArgumentException {
-			return super.findById(ARAPerson.class,Id);
+		public Person findById(Class<Person> entityClass, Integer id) throws IllegalArgumentException {
+			HibernateTemplate template = getHibernateTemplate();
+			return (Person) template.get(ARAPerson.class, id);
 		}
-
 		
 }

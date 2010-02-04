@@ -1,25 +1,43 @@
+/* M3S - multimedia management system
+*
+* Copyright (C) 2009  INBio - Instituto Nacional de Biodiversidad, Costa Rica
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class Media extends DBLogEntity implements Serializable {
+public class Media extends LogGenericEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer mediaId;
 
-	private MediaType mediaType;
+	//private MediaType mediaType;
+	private Integer mediaTypeId;
 
-	private UsePolicy usePolicy;
+	//private UsePolicy usePolicy;
+	private Integer usePolicyId;
 
 	private Integer authorPersonId;
 
@@ -45,31 +63,11 @@ public class Media extends DBLogEntity implements Serializable {
 
 	private char isPublic;
 
-	private char isBackup;
-
 	private Integer oldImageFile;
 
 	private Integer oldImageId;
 
 	private String contents;
-
-	//private Set<MediaKeyword> mediaKeywords = new HashSet<MediaKeyword>(0);
-
-	//private Set<GatheringMedia> gatheringMedias = new HashSet<GatheringMedia>(0);
-
-	//private Set<SpecimenMedia> specimenMedias = new HashSet<SpecimenMedia>(0);
-
-	//private Set<MediaAttributeValue> mediaAttributeValues = new HashSet<MediaAttributeValue>(0);
-
-	//private Set<MediaProject> mediaProjects = new HashSet<MediaProject>(0);
-
-	//private Set<TypeSpecimenMedia> typeSpecimenMedias = new HashSet<TypeSpecimenMedia>(0);
-
-	//private Set<TaxonMediaDAO> taxonMedias = new HashSet<TaxonMediaDAO>(0);
-
-	//private Set<ObservedTaxonMedia> observedTaxonMedias = new HashSet<ObservedTaxonMedia>(0);
-
-	//private Set<MediaUseMedia> mediaUseMedias = new HashSet<MediaUseMedia>(0);
 
 	private Integer mediaDateYear;
 
@@ -80,38 +78,25 @@ public class Media extends DBLogEntity implements Serializable {
 	public Media() {
 	}
 
-	public Media(UsePolicy usePolicy, MediaType mediaType, char isPublic,
-			char isBackup) {
-		this.usePolicy = usePolicy;
-		this.mediaType = mediaType;
+	public Media(Integer usePolicyId, Integer mediaTypeId, char isPublic) {
+		this.usePolicyId = usePolicyId;
+		this.mediaTypeId = mediaTypeId;
 		this.isPublic = isPublic;
-		this.isBackup = isBackup;
 	}
 
-	public Media(UsePolicy usePolicy, MediaType mediaType,
+	public Media(Integer usePolicyId, Integer mediaTypeId,
 			Integer authorPersonId, Integer ownerPersonId,
 			Integer ownerInstitutionId, String description, String location,
 			String highResolutionVolume, String highResolutionFileName,
 			Integer siteId, String siteDescription, String title,
-			String series, char isPublic, char isBackup, Integer oldImageFile,
+			String series, char isPublic, Integer oldImageFile,
 			Integer oldImageId, String contents, Date creationDate,
 			String createdBy, Date lastModificationDate,
 			String lastModificationBy, 
-			/*
-			Set<MediaKeyword> mediaKeywords,
-			Set<GatheringMedia> gatheringMedias,
-			Set<SpecimenMedia> specimenMedias,
-			Set<MediaAttributeValue> mediaAttributeValues,
-			Set<MediaProject> mediaProjects,
-			Set<TypeSpecimenMedia> typeSpecimenMedias,
-			Set<TaxonMediaDAO> taxonMedias,
-			Set<ObservedTaxonMedia> observedTaxonMedias,
-			Set<MediaUseMedia> mediaUseMedias,
-			*/ 
 			Integer mediaDateYear,
 			Integer mediaDateMonth, Integer mediaDateDay) {
-		this.usePolicy = usePolicy;
-		this.mediaType = mediaType;
+		this.usePolicyId = usePolicyId;
+		this.mediaTypeId = mediaTypeId;
 		this.authorPersonId = authorPersonId;
 		this.ownerPersonId = ownerPersonId;
 		this.ownerInstitutionId = ownerInstitutionId;
@@ -124,7 +109,6 @@ public class Media extends DBLogEntity implements Serializable {
 		this.title = title;
 		this.series = series;
 		this.isPublic = isPublic;
-		this.isBackup = isBackup;
 		this.oldImageFile = oldImageFile;
 		this.oldImageId = oldImageId;
 		this.contents = contents;
@@ -132,17 +116,6 @@ public class Media extends DBLogEntity implements Serializable {
 		this.setCreatedBy(createdBy);
 		this.setLastModificationDate(lastModificationDate);
 		this.setLastModificationBy(lastModificationBy);
-		/*
-		this.mediaKeywords = mediaKeywords;
-		this.gatheringMedias = gatheringMedias;
-		this.specimenMedias = specimenMedias;
-		this.mediaAttributeValues = mediaAttributeValues;
-		this.mediaProjects = mediaProjects;
-		this.typeSpecimenMedias = typeSpecimenMedias;
-		this.taxonMedias = taxonMedias;
-		this.observedTaxonMedias = observedTaxonMedias;
-		this.mediaUseMedias = mediaUseMedias;
-		*/
 		this.mediaDateYear = mediaDateYear;
 		this.mediaDateMonth = mediaDateMonth;
 		this.mediaDateDay = mediaDateDay;
@@ -154,22 +127,6 @@ public class Media extends DBLogEntity implements Serializable {
 
 	public void setMediaId(Integer mediaId) {
 		this.mediaId = mediaId;
-	}
-
-	public MediaType getMediaType() {
-		return this.mediaType;
-	}
-
-	public void setMediaType(MediaType mediaType) {
-		this.mediaType = mediaType;
-	}
-
-	public UsePolicy getUsePolicy() {
-		return this.usePolicy;
-	}
-
-	public void setUsePolicy(UsePolicy usePolicy) {
-		this.usePolicy = usePolicy;
 	}
 
 	public Integer getAuthorPersonId() {
@@ -267,15 +224,7 @@ public class Media extends DBLogEntity implements Serializable {
 	public void setIsPublic(char isPublic) {
 		this.isPublic = isPublic;
 	}
-
-	public char getIsBackup() {
-		return this.isBackup;
-	}
-
-	public void setIsBackup(char isBackup) {
-		this.isBackup = isBackup;
-	}
-
+	
 	public Integer getOldImageFile() {
 		return this.oldImageFile;
 	}
@@ -342,5 +291,33 @@ public class Media extends DBLogEntity implements Serializable {
 	 */
 	public Integer getMediaDateDay() {
 		return mediaDateDay;
+	}
+
+	/**
+	 * @return the mediaTypeId
+	 */
+	public Integer getMediaTypeId() {
+		return mediaTypeId;
+	}
+
+	/**
+	 * @param mediaTypeId the mediaTypeId to set
+	 */
+	public void setMediaTypeId(Integer mediaTypeId) {
+		this.mediaTypeId = mediaTypeId;
+	}
+
+	/**
+	 * @return the usePolicyId
+	 */
+	public Integer getUsePolicyId() {
+		return usePolicyId;
+	}
+
+	/**
+	 * @param usePolicyId the usePolicyId to set
+	 */
+	public void setUsePolicyId(Integer usePolicyId) {
+		this.usePolicyId = usePolicyId;
 	}
 }

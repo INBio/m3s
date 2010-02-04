@@ -3,7 +3,6 @@
  */
 package org.inbio.m3s.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.inbio.m3s.dto.message.KeywordDTO;
@@ -18,7 +17,6 @@ import org.inbio.m3s.exception.MediaTypeNotFoundException;
 import org.inbio.m3s.exception.MediaUseNotFoundException;
 import org.inbio.m3s.exception.ProjectNotFoundException;
 import org.inbio.m3s.exception.UsePolicyNotFoundException;
-import org.inbio.m3s.util.StringUtil;
 
 /**
  * @author jgutierrez
@@ -63,12 +61,6 @@ public interface MessageManager {
 	 * @return
 	 */
 	public List<KeywordDTO> getKeywordsFromStringList(String textualKeywords) throws KeywordNotFoundException;
-	/**
-	 * @deprecated
-	 * @param mediaTypeName
-	 * @return
-	 */
-	public List<String> getTMRowTexts(String mediaTypeName);
 	
 	/**
 	 * 

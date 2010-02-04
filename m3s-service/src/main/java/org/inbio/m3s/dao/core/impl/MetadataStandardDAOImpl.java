@@ -20,7 +20,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class MetadataStandardDAOImpl extends HibernateDaoSupport implements MetadataStandardDAO {
 	
-	//private static Logger logger = Logger.getLogger(MetadataStandardDAOImpl.class);
 	
 	/*
 	 * (non-Javadoc)

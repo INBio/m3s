@@ -10,11 +10,8 @@
 	<!-- BaseDAO Bean-->
   <bean id="superBaseDAO" abstract="true">
 	<property name="sessionFactory" ref="sessionFactory"/>
-	<!--<property name="sessionFactory" ref="coffeaSessionFactory"/>-->
-	<!--<property name="sessionFactory" ref="fornaxSessionFactory"/>-->
-	<!--<property name="sessionFactory" ref="museoNacionalFornaxSessionFactory"/> -->
   </bean>
-  <bean id="baseDAORO" class="org.inbio.m3s.dao.impl.BaseDAOImpl" parent="superBaseDAO"/>
+  <bean id="baseDAORO" class="org.inbio.m3s.dao.GenericBaseDAOImpl" parent="superBaseDAO"/>
 
 	
   <!-- Hibernate/postgres DAO Implementations -->
@@ -23,10 +20,7 @@
   <bean id="keywordDAO" class="org.inbio.m3s.dao.core.impl.KeywordDAOImpl" parent="baseDAORO"/>
   <bean id="mediaAttributeDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeDAOImpl" parent="baseDAORO"/>
   <bean id="mediaAttributeTypeDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeTypeDAOImpl" parent="baseDAORO"/>  
-  <bean id="mediaAttributeValueDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeValueDAOImpl" parent="baseDAORO">
-  	<property name="mediaDAO" ref="mediaDAO"/>
-  	<property name="mediaAttributeDAO" ref="mediaAttributeDAO" />
-  </bean>
+  <bean id="mediaAttributeValueDAO" class="org.inbio.m3s.dao.core.impl.MediaAttributeValueDAOImpl" parent="baseDAORO"/>
   <bean id="mediaCategoryDAO" class="org.inbio.m3s.dao.core.impl.MediaCategoryDAOImpl" parent="baseDAORO"/>
   <bean id="mediaDAO" class="org.inbio.m3s.dao.core.impl.MediaDAOImpl" parent="baseDAORO"/>  
   <bean id="mediaKeywordDAO" class="org.inbio.m3s.dao.core.impl.MediaKeywordDAOImpl" parent="baseDAORO"/>

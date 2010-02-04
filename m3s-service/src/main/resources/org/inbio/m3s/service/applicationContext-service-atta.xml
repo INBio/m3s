@@ -12,10 +12,36 @@
     <property name="personLiteDTOFactory" ref="personLiteDTOFactory"/>    
   </bean>
 
+  <!-- Metadata Manager (3 version)-->  
+  <bean id="ATTAMetadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
+  </bean>
+  <!-- Metadata Manager (3 version)-->  
+  <bean id="M3SMetadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="taxonomyManager" ref="M3STaxonomyManager"/>
+  </bean>  
+
 <!-- Media Attribute (3 versiones)-->  
   <bean id="ATTAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>    
     <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
     <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
     <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
@@ -32,11 +58,12 @@
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="ATTAMetadataManager"/>
   </bean>
   <bean id="M3SMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>    
     <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
     <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
     <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
@@ -53,7 +80,7 @@
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="M3SAgentManager"/>
     <property name="taxonomyManager" ref="M3STaxonomyManager"/> 
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="M3SMetadataManager"/>
   </bean>
   
   <!--  SearchManager -->
@@ -117,7 +144,7 @@
   	<property name="siteManager" ref="ATTASiteManager"/>
   	<property name="agentManager" ref="ATTAAgentManager"/>
   	<property name="messageManager" ref="messageManager"/>  
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="ATTAMetadataManager"/>
   </bean>  
   <bean id="M3SImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">  	
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
@@ -127,7 +154,7 @@
   	<property name="siteManager" ref="ATTASiteManager"/>
   	<property name="agentManager" ref="M3SAgentManager"/>
   	<property name="messageManager" ref="messageManager"/>
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="M3SMetadataManager"/>
   </bean>  
   
 <!-- importThread (1 versiones, seran 3)-->  

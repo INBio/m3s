@@ -3,10 +3,11 @@
  */
 package org.inbio.m3s.service.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.config.Properties;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
+import org.inbio.m3s.dto.metadata.util.MediaAttributeEntity;
 import org.inbio.m3s.service.AbstractServiceTest;
 import org.inbio.m3s.service.MetadataManager;
 
@@ -14,21 +15,45 @@ import org.inbio.m3s.service.MetadataManager;
  * @author jgutierrez
  *
  */
+@SuppressWarnings("unused")
 public class MetadataManagerTest extends AbstractServiceTest{
-	
-	protected static Log logger = LogFactory.getLog(MetadataManagerTest.class);
 
+	/*	*/
+	public void testGetMetadataByMedia(){
+		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);	
+		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
+		MetadataDTO mDTO = mm.getMetadataByMedia("26");
+		logger.info(mDTO.toString());
+		
+		logger.info("media attribute id: "+String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+		TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+		logger.info("el youtube video Id");
+		logger.info(maDTO.toString());
+		
+	}
+
+	
+	/*
+	public void testGetTechMetadataByMedia(){
+		
+		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
+		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
+		
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("26");
+		logger.info(tmDTO.toString());
+	}
+	*/
+	
 	/*
 	public void testGetTechMetadataByMediaType(){
 		
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
 		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMediaType("1");
+		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMediaType("5");
 		logger.info(tmDTO.toString());
 	}
-	*/
-	
+*/
 	
 	/*
 	public void testGetTechMetadataFromFile(){
@@ -57,15 +82,6 @@ public class MetadataManagerTest extends AbstractServiceTest{
 	}
 	*/
 	
-	
-	public void testGetTechMetadataByMedia(){
-		
-		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
-		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
-		
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataByMedia("100096");
-		logger.info(tmDTO.toString());
-	}
 	
 
 }

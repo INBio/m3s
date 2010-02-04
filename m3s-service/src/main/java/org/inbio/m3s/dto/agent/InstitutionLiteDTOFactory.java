@@ -10,17 +10,16 @@ import org.inbio.m3s.model.general.Institution;
  * @author jgutierrez
  *
  */
-public class InstitutionLiteDTOFactory extends BaseDTOFactory {
+public class InstitutionLiteDTOFactory extends BaseDTOFactory<Institution,InstitutionLiteDTO> {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dto.DTOFactory#createDTO(java.lang.Object)
 	 */
-	public Object createDTO(Object entity) {
+	public InstitutionLiteDTO createDTO(Institution entity) {
 		if(entity == null)
 				return null;
-		Institution i = (Institution) entity;
 		InstitutionLiteDTO dto = new InstitutionLiteDTO();
-		populateInstitutionLite(i, dto);
+		populateInstitutionLite(entity, dto);
 		return dto;
 	}
 

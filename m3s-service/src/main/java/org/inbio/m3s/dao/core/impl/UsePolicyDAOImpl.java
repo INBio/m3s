@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.UsePolicyDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.dao.DataCache;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.service.MessageManager;
@@ -21,7 +21,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class UsePolicyDAOImpl extends BaseDAOImpl implements UsePolicyDAO {
+public class UsePolicyDAOImpl extends GenericBaseDAOImpl<UsePolicy, Integer> implements UsePolicyDAO {
 	
 	private static Logger logger = Logger.getLogger(UsePolicyDAOImpl.class);
 

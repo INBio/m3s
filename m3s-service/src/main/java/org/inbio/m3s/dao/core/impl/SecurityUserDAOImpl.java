@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.SecurityUserDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.core.SecurityUsers;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -17,7 +17,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class SecurityUserDAOImpl extends BaseDAOImpl implements SecurityUserDAO {
+public class SecurityUserDAOImpl extends GenericBaseDAOImpl<SecurityUsers, String> implements SecurityUserDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<SecurityUsers> findAllByUserName(final String username)

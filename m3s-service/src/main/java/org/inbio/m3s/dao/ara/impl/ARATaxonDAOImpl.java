@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.TaxonDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.ara.ARATaxon;
 import org.inbio.m3s.model.taxonomy.Taxon;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
+public class ARATaxonDAOImpl extends GenericBaseDAOImpl<Taxon,Integer> implements TaxonDAO {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.TaxonDAO#findAllByName(java.lang.String)
@@ -161,7 +161,7 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	public Taxon findByNameAndRange(final String taxonDefaultName,final Integer taxonomicalRangeId) {
 		logger.debug("findByNameAndRange with taxonDefaultName["+taxonDefaultName+"] and Range["+taxonomicalRangeId+"]");
 		HibernateTemplate template = getHibernateTemplate();
-		return (Taxon) template.execute(new HibernateCallback() {
+		return (ARATaxon) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select t from ARATaxon as t"
@@ -212,56 +212,8 @@ public class ARATaxonDAOImpl extends BaseDAOImpl implements TaxonDAO {
 	public Taxon findBySpecimenId(Integer specimenId)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return new Taxon(new Integer(7), new Integer(1), "falta hacer", new Date(), "falta hacer", new Integer(1), "falta hacer");
+		return (ARATaxon) new Taxon(new Integer(7), new Integer(1), "falta hacer", new Date(), "falta hacer", new Integer(1), "falta hacer");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.inbio.m3s.dao.impl.BaseDAOImpl#create(java.lang.Object)
-	 */
-	@Override
-	public void create(Object entity) throws IllegalArgumentException {
-		super.create((ARATaxon) entity);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.inbio.m3s.dao.BaseDAO#delete(java.lang.Object)
-	 */
-	@Override
-	public void update(Object entity) throws IllegalArgumentException {
-		super.update((ARATaxon) entity);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.inbio.m3s.dao.BaseDAO#update(java.lang.Object)
-	 */
-	@Override
-	public void delete(Object entity) throws IllegalArgumentException {
-		super.delete((ARATaxon) entity);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.inbio.m3s.dao.BaseDAO#findById(java.lang.Class, java.lang.Object)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object findById(Class entityClass, Object Id) throws IllegalArgumentException {
-		return super.findById(ARATaxon.class,Id);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.inbio.m3s.dao.BaseDAO#findAll(java.lang.Class)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> findAll(Class entityClass) throws IllegalArgumentException {
-		return super.findAll(ARATaxon.class);
-	}
 
 }

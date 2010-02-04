@@ -20,24 +20,26 @@ package org.inbio.m3s.dto;
 
 import java.util.List;
 
+import org.inbio.m3s.model.LogGenericEntity;
+
 /**
  *
  * @author jgutierrez
  * Based on dmartin code, in the GBIF customizable portal.
  */
-public interface DTOFactory {
+public interface DTOFactory<E extends LogGenericEntity, D extends BaseDTO> {
     
     /**
      * 
      * @param entity
      * @return
      */
-	public Object createDTO(Object entity);
+	public D createDTO(E entity);
 
 	/**
      *
      * @param entitiesList
      * @return
      */
-	public List createDTOList(List entitiesList);
+	public List<D> createDTOList(List<E> entitiesList);
 }

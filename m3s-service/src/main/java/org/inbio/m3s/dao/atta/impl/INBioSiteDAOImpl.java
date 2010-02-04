@@ -6,20 +6,22 @@ package org.inbio.m3s.dao.atta.impl;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.SiteDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
+import org.inbio.m3s.model.general.Site;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 /**
  * @author jgutierrez
  * 
- * Este DAO debe ser elaborado de nuevo, pues no cumple con el patron DAO.
  * 
  * ATTA session
  * 
+ * @deprecated Este DAO debe ser elaborado de nuevo, pues no cumple con el patron DAO.
+ * 
  */
-public class INBioSiteDAOImpl extends BaseDAOImpl implements SiteDAO  {
+public class INBioSiteDAOImpl extends GenericBaseDAOImpl<Site, Integer> implements SiteDAO  {
 
 	private static Logger logger = Logger.getLogger(INBioSiteDAOImpl.class);
 

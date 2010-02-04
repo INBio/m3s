@@ -17,6 +17,7 @@ import org.inbio.m3s.service.util.ImportFromFile;
  * @author jgutierrez
  *
  */
+@SuppressWarnings("unused")
 public class ImportFromFileTest extends AbstractServiceTest{
 
 /*	

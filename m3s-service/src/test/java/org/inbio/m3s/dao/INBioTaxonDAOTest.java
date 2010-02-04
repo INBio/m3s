@@ -4,6 +4,7 @@ package org.inbio.m3s.dao;
 
 import org.inbio.m3s.dao.core.TaxonDAO;
 import org.inbio.m3s.model.atta.INBioTaxon;
+import org.inbio.m3s.model.taxonomy.Taxon;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 public class INBioTaxonDAOTest extends AbstractDependencyInjectionSpringContextTests{
@@ -26,30 +27,30 @@ public class INBioTaxonDAOTest extends AbstractDependencyInjectionSpringContextT
 
 		TaxonDAO taxonDAO = (TaxonDAO) applicationContext.getBean("INBioTaxonDAO");
 		
-		INBioTaxon t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(63799));
+		INBioTaxon t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(63799));
 		
 		System.out.println(t.toString());
 
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(2));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(2));
 		System.out.println(t.toString());
 
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(5));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(5));
 		System.out.println(t.toString());
 
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(119));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(119));
 		System.out.println(t.toString());
 
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(29));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(29));
 		System.out.println(t.toString());
 
 		
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(881));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(881));
 		System.out.println(t.toString());
 		
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(3474));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(3474));
 		System.out.println(t.toString());
 		
-		t = (INBioTaxon) taxonDAO.findById(INBioTaxon.class, new Integer(13024));
+		t = (INBioTaxon) taxonDAO.findById(Taxon.class, new Integer(13024));
 		System.out.println(t.toString());
 		
 		assertTrue( true );

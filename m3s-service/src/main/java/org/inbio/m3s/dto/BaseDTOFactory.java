@@ -21,13 +21,15 @@ package org.inbio.m3s.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.inbio.m3s.model.LogGenericEntity;
+
 /**
  *
  * @author jgutierrez
  *
  * Based on dmartin code, in the GBIF customizable portal.
  */
-public abstract class BaseDTOFactory implements DTOFactory {
+public abstract class BaseDTOFactory<E extends LogGenericEntity, D extends BaseDTO> implements DTOFactory<E,D> {
 
 
     /**
@@ -35,11 +37,11 @@ public abstract class BaseDTOFactory implements DTOFactory {
      * @param entitiesList
      * @return
      */
-	public List createDTOList(List entitiesList) {
+	public List<D> createDTOList(List<E> entitiesList) {
 		if(entitiesList==null)
 			return null;
-		List dtoList = new ArrayList();
-		for (Object entity: entitiesList)
+		List<D> dtoList = new ArrayList<D>();
+		for (E entity: entitiesList)
 			dtoList.add(createDTO(entity));
 		return dtoList;
 	}

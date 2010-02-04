@@ -28,7 +28,7 @@ public class StatisticsDAOImpl extends HibernateDaoSupport implements Statistics
 		return (Long) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select count(m) from Media m where m.mediaType.mediaTypeId = "
+						"select count(m) from Media m where m.mediaTypeId = "
 						+ DSC_MEDIA_TYPE_ID);
 				query.setCacheable(true);
 				return query.list().get(0);
@@ -60,7 +60,7 @@ public class StatisticsDAOImpl extends HibernateDaoSupport implements Statistics
 		return (Long) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
-						"select count(m) from Media m where m.mediaType.mediaTypeId = "
+						"select count(m) from Media m where m.mediaTypeId = "
 							+ MOV_VIDEO_MEDIA_TYPE_ID);
 				query.setCacheable(true);
 				return query.list().get(0);

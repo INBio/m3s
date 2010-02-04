@@ -7,13 +7,12 @@
         <id name="keywordId" type="java.lang.Integer">
             <column name="keyword_id" />
             <generator class="increment" />
-        </id>
-        <many-to-one name="text" class="org.inbio.m3s.model.core.Text" fetch="select">
-            <column name="name_concept_id" not-null="true" />
-        </many-to-one>
-        <many-to-one name="keywordCategory" class="org.inbio.m3s.model.core.KeywordCategory" fetch="select">
-            <column name="keyword_category_id" not-null="true" />
-        </many-to-one>
+        </id>       
+ 
+        <property name="nameTextId" column="name_concept_id" not-null="true" insert="false" update="false"/>
+
+        <property name="keywordCategoryId" column="keyword_category_id" not-null="true" insert="false" update="false"/>
+        
         <property name="creationDate" type="date">
             <column name="creation_date" length="4" />
         </property>
@@ -26,13 +25,5 @@
         <property name="lastModificationBy" type="string">
             <column name="last_modification_by" length="20" />
         </property>
-        <!--
-        <set name="mediaKeywords" inverse="true">
-            <key>
-                <column name="keyword_id" not-null="true" />
-            </key>
-            <one-to-many class="org.inbio.m3s.persistence.core.MediaKeyword" />
-        </set>
-         -->
     </class>
 </hibernate-mapping>

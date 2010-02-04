@@ -17,6 +17,7 @@ import org.inbio.m3s.service.TaxonomyManager;
  * @author jgutierrez
  *
  */
+@SuppressWarnings("unused")
 public class TaxonomyManagerTest extends AbstractServiceTest{
 	
 	protected static Log logger = LogFactory.getLog(TaxonomyManagerTest.class);

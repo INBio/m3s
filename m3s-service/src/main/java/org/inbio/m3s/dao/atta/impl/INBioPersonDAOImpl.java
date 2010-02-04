@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.PersonDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.atta.INBioPerson;
 import org.inbio.m3s.model.general.Person;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -18,9 +18,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
-	
-	//private static Logger logger = Logger.getLogger(INBioPersonDAOImpl.class);
+public class INBioPersonDAOImpl extends GenericBaseDAOImpl<Person,Integer> implements PersonDAO {	
 
 	public static final Integer IMAGES_PROCESOR_PROFILE_ID = new Integer(12);
 	public static final Integer IMAGES_AUTHOR_PROFILE_ID = new Integer(21);
@@ -30,9 +28,9 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> findAll(Class entityClass) {
+	public List<Person> findAll(Class entityClass) {
 		HibernateTemplate template = getHibernateTemplate();
-		return (List<Object>) template.execute(new HibernateCallback() {
+		return (List<Person>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select pp.person"
@@ -119,8 +117,8 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 	 * @see org.inbio.m3s.dao.impl.BaseDAOImpl#create(java.lang.Object)
 	 */
 	@Override
-	public void create(Object entity) throws IllegalArgumentException {
-		super.create((INBioPerson) entity);
+	public void create(Person person) throws IllegalArgumentException {
+		super.create((INBioPerson) person);
 	}
 
 	/*
@@ -129,8 +127,8 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 	 * @see org.inbio.m3s.dao.BaseDAO#delete(java.lang.Object)
 	 */
 	@Override
-	public void update(Object entity) throws IllegalArgumentException {
-		super.update((INBioPerson) entity);
+	public void update(Person person) throws IllegalArgumentException {
+		super.update((INBioPerson) person);
 	}
 
 	/*
@@ -139,19 +137,18 @@ public class INBioPersonDAOImpl extends BaseDAOImpl implements PersonDAO {
 	 * @see org.inbio.m3s.dao.BaseDAO#update(java.lang.Object)
 	 */
 	@Override
-	public void delete(Object entity) throws IllegalArgumentException {
-		super.delete((INBioPerson) entity);
+	public void delete(Person person) throws IllegalArgumentException {
+		super.delete((INBioPerson) person);
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.dao.BaseDAO#findById(java.lang.Class, java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object findById(Class entityClass, Object Id) throws IllegalArgumentException {
-		return super.findById(INBioPerson.class,Id);
+	public Person findById(Class<Person> entityClass, Integer id) throws IllegalArgumentException {
+		HibernateTemplate template = getHibernateTemplate();
+		return (Person) template.get(INBioPerson.class, id);
 	}
-
 
 }

@@ -3,15 +3,16 @@
  */
 package org.inbio.m3s.dto.mediaattribute;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import org.inbio.m3s.dto.BaseDTO;
 
 
 /**
  * @author jgutierrez
  *
  */
-public class MediaAttributeValueFullDTO implements Serializable {
+public class MediaAttributeValueFullDTO extends BaseDTO {
 
 	/**
 	 * 

@@ -1,11 +1,13 @@
 package org.inbio.m3s.model.core;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author jgutierrez
  *
  */
-public class MediaAttributeValueId implements java.io.Serializable {
+public class MediaAttributeValueId implements Serializable {
 
 	private static final long serialVersionUID = -2978868652169454300L;
 

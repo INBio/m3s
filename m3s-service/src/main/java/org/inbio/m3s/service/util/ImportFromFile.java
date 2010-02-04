@@ -14,11 +14,8 @@ import org.apache.log4j.Logger;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
-import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
@@ -444,55 +441,6 @@ public class ImportFromFile {
 		}
 	}
 
-	
-	/**
-	 * 
-	 * @param projects
-	 * @return
-	 * @deprecated
-	 * @use MessageManager.getProjectsFromStringList()
-	 */
-	private List<ProjectDTO> getProjectLiteList(String projects) {
-
-		List<Object> projectsTextualNameList = StringUtil.getIndividualItems(projects, String.class);
-		List<ProjectDTO> projectsList = new ArrayList<ProjectDTO>();
-		
-		logger.debug("Translating GMTV to DBValues... [" + projectsTextualNameList.size() + "] projects found");
-		
-		
-		for(Object projectName : projectsTextualNameList){
-			projectsList.add(messageManager.getProjectByName((String)projectName));
-			logger.debug("Translating GMTV to DBValues... adding project name: '" + (String)projectName + "'.");
-		}
-		
-		return projectsList;
-	}
-
-	/**
-	 * Parsea el texto que viene del archivo excell, que tiene una estructura de
-	 * valores separados por ';' y devuelve una lista de objetos TextInfo.
-	 * 
-	 * @param textualKeywords
-	 *          String values separated by the default delimiter. (probably ';')
-	 * @return
-	 * @deprecated
-	 */
-	private List<KeywordDTO> getKeywords(String textualKeywords) throws KeywordNotFoundException {
-		
-		
-		KeywordDTO klDTO;
-		List<KeywordDTO> klDTOList = new ArrayList<KeywordDTO>();
-		
-		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,java.lang.String.class);
-		
-		for(Object elem : separatedValues){
-			klDTO = messageManager.getKeywordLite((String)elem, MessageManager.DEFAULT_LANGUAGE);
-			klDTOList.add(klDTO);
-		}
-		
-		return klDTOList;
-	}
-
 	/**
 	 * 
 	 * Gets the UsesAndCopyrightsTV info directly from the importFile
@@ -548,19 +496,10 @@ public class ImportFromFile {
 			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
 			
 			// mediaUses
-			String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
-			uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
-			info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
-	
-			// backup value
-			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_BACKUP_DATA);
-			if(isAfirmativeText(booleanLiteralValue))
-				uacDTO.setIsBackup(new Character('Y'));
-			else
-				uacDTO.setIsBackup(new Character('N'));
-			info.writeResult(rowNumber, ImportFileParser.IS_BACKUP_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Is backup: '" + uacDTO.getIsBackup() + "'");
+			//String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
+			//uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
+			//info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
+			//logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
 	
 			// set is Public
 			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_PUBLIC_DATA);
@@ -600,32 +539,6 @@ public class ImportFromFile {
 			throw new IllegalArgumentException(ynvnfe.getMessage());
 		}				
 		
-	}
-
-	
-	/**
-	 * 
-	 * TODO: revisar fue hecho a la carrera
-	 * 
-	 * @param mediaUsesText
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private List<MediaUseDTO> getMediaUsesList(String mediaUsesText) {
-		logger.debug("getMediaUsesList... start");		
-		MediaUseDTO muDTO;
-		List<MediaUseDTO> muDTOList = new ArrayList<MediaUseDTO>();
-
-		List<String> mediaUseTextualNameList = (List) StringUtil.getIndividualItems(mediaUsesText, String.class);
-		logger.debug("...["+ mediaUseTextualNameList.size() + "] media uses found");
-		
-		for(String mediaUseName : mediaUseTextualNameList){
-			muDTO = messageManager.getMediaUseByNameAndLanguage(mediaUseName, MessageManager.DEFAULT_LANGUAGE_KEY);
-			muDTOList.add(muDTO);
-			logger.debug("...adding mediaUse id: '"+ muDTO.getMediaUseKey() + "'.");
-		}
-				
-		return muDTOList;
 	}
 
 	/**

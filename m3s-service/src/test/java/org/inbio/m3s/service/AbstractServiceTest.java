@@ -44,14 +44,14 @@ public abstract class AbstractServiceTest extends AbstractDependencyInjectionSpr
 		return new String [] {
 				//"classpath*:org/inbio/m3s/*.xml",
 				//"classpath*:org/inbio/m3s/**/log4j.xml",
-				"classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml",
-				//"classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml",
+				//"classpath*:org/inbio/m3s/dao/applicationContext-dao-ara.xml",
+				"classpath*:org/inbio/m3s/dao/applicationContext-dao-atta.xml",
 				"classpath*:org/inbio/m3s/dao/applicationContext-dao.xml",
 				"classpath*:org/inbio/m3s/dao/applicationContext-factories.xml",
 				"classpath*:org/inbio/m3s/dto/applicationContext-factories.xml",
 				//"classpath*:org/inbio/m3s/model/**/*.xml",
-				"classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml",
-				//"classpath*:org/inbio/m3s/service/applicationContext-service-atta.xml",
+				//"classpath*:org/inbio/m3s/service/applicationContext-service-ara.xml",
+				"classpath*:org/inbio/m3s/service/applicationContext-service-atta.xml",
 				"classpath*:org/inbio/m3s/service/applicationContext-service.xml",
 				"classpath*:org/inbio/m3s/util/applicationContext-util.xml"
 				};
@@ -77,7 +77,7 @@ public abstract class AbstractServiceTest extends AbstractDependencyInjectionSpr
 	protected void onSetUp() throws Exception {
 		//logger.trace("onSetup(): entered method.");
 
-		SessionFactory sessionFactory = (SessionFactory) getBean("coffeaSessionFactory");
+		SessionFactory sessionFactory = (SessionFactory) getBean("sessionFactory");
 		Session session = sessionFactory.openSession();
 
 		SessionHolder holder = new SessionHolder(session);
@@ -91,7 +91,7 @@ public abstract class AbstractServiceTest extends AbstractDependencyInjectionSpr
 		//logger.trace("onTearDown(): entered method.");
 		super.onTearDown();
 
-		SessionFactory sessionFactory = (SessionFactory) getBean("coffeaSessionFactory");
+		SessionFactory sessionFactory = (SessionFactory) getBean("sessionFactory");
 		SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
 		Session session = holder.getSession();
 		if (session.isOpen()) {

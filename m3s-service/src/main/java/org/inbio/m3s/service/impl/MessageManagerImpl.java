@@ -77,12 +77,12 @@ public class MessageManagerImpl implements MessageManager {
 			throws IllegalArgumentException {
 		
 		List<KeywordDTO> kDTOList = new ArrayList<KeywordDTO>();
-		List<Object> kList = keywordDAO.findAll(Keyword.class);
+		List<Keyword> kList = keywordDAO.findAll(Keyword.class);
 		TextTranslation tt;
 		
-		for(Object k : kList){
-			tt = textTranslationDAO.finByIdAndLanguage(((Keyword) k).getText().getTextId(), languageId);
-			kDTOList.add(new KeywordDTO(((Keyword)k).getKeywordId().toString(), tt.getName()));
+		for(Keyword k : kList){
+			tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), languageId);
+			kDTOList.add(new KeywordDTO(String.valueOf(k.getKeywordId()), tt.getName()));
 		}
 		
 		return kDTOList;
@@ -109,50 +109,15 @@ public class MessageManagerImpl implements MessageManager {
 		}
 		
 		return klDTOList;
-	}	
-	
-	
-	
-	/**
-	 * Gets the tecnical metadata texts to be display in each row of the
-	 * felxtable. This method uses the Properties.DEFAULT_LANGUAGE as parameter
-	 * for the query
-	 * 
-	 * @param mediaTypeName
-	 *            the name of the media attribute
-	 * @return a list of string values, get(N) should be display on row N.
-	 * 
-	 */
-	public List<String> getTMRowTexts(String mediaTypeName) {
-		//logger.debug("getting TM row texts...");
-		MediaTypeDTO mediaTypeLite = mediaTypeDAO.getMediaTypeLite(mediaTypeName);
-		
-		//Integer mediaTypeDBId = MediaTypeDAO.getMediaTypeDBId(mediaTypeName);
-		List<String> rowTexts = textTranslationDAO.findTechnicalMetadataTexts(Integer.valueOf(mediaTypeLite.getMediaTypeKey()), MessageManager.DEFAULT_LANGUAGE);
-		//logger.debug("getting TM row texts... mediaType '" + mediaTypeName
-		//		+ "' with DBId[:" + mediaTypeLite.getMediaTypeId() + "]");
+	}		
 
-		// if theres no arguments something its wrong
-		if (rowTexts.size() == 0) {
-			//logger
-			//		.debug("getting TM row texts... No media Atributes for that mediaType");
-			throw new IllegalArgumentException(
-					"Check the arguments of the query");
-		}
-
-		//logger.debug("getting TM row texts... get [" + rowTexts.size()
-		//		+ "] result");
-		//logger.debug("getting TM row texts... done");
-		return rowTexts;
-
-	}
 
 	public List<UsePolicyDTO> getAllUsePolicies() throws IllegalArgumentException {
 		List<UsePolicyDTO> upDTOList = new ArrayList<UsePolicyDTO>();
-		List<Object> upList =  usePolicyDAO.findAll(UsePolicy.class);
+		List<UsePolicy> upList =  usePolicyDAO.findAll(UsePolicy.class);
 		TextTranslation tt;
 		
-		for(Object up : upList){
+		for(UsePolicy up : upList){
 			tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
 			upDTOList.add(new UsePolicyDTO(((UsePolicy) up).getUsePolicyId().toString(), tt.getName()));
 		}
@@ -187,10 +152,10 @@ public class MessageManagerImpl implements MessageManager {
 
 	public List<MediaCategoryDTO> getAllMediaCategories() {
 		List<MediaCategoryDTO> mcDTOList = new ArrayList<MediaCategoryDTO>();
-		List<Object> mcList =   mediaCategoryDAO.findAll(MediaCategory.class);
+		List<MediaCategory> mcList =   mediaCategoryDAO.findAll(MediaCategory.class);
 		TextTranslation tt;
 		
-		for(Object mc : mcList){
+		for(MediaCategory mc : mcList){
 			tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
 			mcDTOList.add(new MediaCategoryDTO(((MediaCategory) mc).getMediaCategoryId().toString(), tt.getName()));
 		}
@@ -218,12 +183,12 @@ public class MessageManagerImpl implements MessageManager {
 	
 	public List<MediaTypeDTO> getAllMediaTypes() {
 		List<MediaTypeDTO> mtDTOList = new ArrayList<MediaTypeDTO>();
-		List<Object> mtList =   mediaTypeDAO.findAll(MediaType.class);
+		List<MediaType> mtList = mediaTypeDAO.findAll(MediaType.class);
 		TextTranslation tt;
 		
-		for(Object mt : mtList){
-			tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
-			mtDTOList.add(new MediaTypeDTO(((MediaType) mt).getMediaTypeId(), tt.getName()));
+		for(MediaType mt : mtList){
+			tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LANGUAGE);
+			mtDTOList.add(new MediaTypeDTO(mt.getMediaTypeId(), tt.getName()));
 		}
 		
 		return mtDTOList;
@@ -232,9 +197,9 @@ public class MessageManagerImpl implements MessageManager {
 
 
 	public MediaTypeDTO getMediaType(String mediaTypeKey) throws IllegalArgumentException {
-		MediaType mt = (MediaType) mediaTypeDAO.findById(MediaType.class, Integer.valueOf(mediaTypeKey));
+		MediaType mt = mediaTypeDAO.findById(MediaType.class, Integer.valueOf(mediaTypeKey));
 		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LANGUAGE);
 		return new MediaTypeDTO(mediaTypeKey, tt.getName());
 	}
 	
@@ -252,10 +217,10 @@ public class MessageManagerImpl implements MessageManager {
 
 	public List<ProjectDTO> getAllProjects() {
 		List<ProjectDTO> pDTOList = new ArrayList<ProjectDTO>();
-		List<Object> pList =   projectDAO.findAll(Project.class);
+		List<Project> pList =   projectDAO.findAll(Project.class);
 		
-		for(Object project : pList)
-			pDTOList.add((ProjectDTO) projectDTOFactory.createDTO((Project) project));
+		for(Project project : pList)
+			pDTOList.add((ProjectDTO) projectDTOFactory.createDTO(project));
 		
 		return pDTOList;
 	}
@@ -263,8 +228,8 @@ public class MessageManagerImpl implements MessageManager {
 
 
 	public ProjectDTO getProjectById(String projectKey) {
-		Project project = (Project) projectDAO.findById(UsePolicy.class, Integer.valueOf(projectKey));
-		return (ProjectDTO) projectDTOFactory.createDTO((Project) project);
+		Project project = projectDAO.findById(Project.class, Integer.valueOf(projectKey));
+		return (ProjectDTO) projectDTOFactory.createDTO(project);
 	}
 
 

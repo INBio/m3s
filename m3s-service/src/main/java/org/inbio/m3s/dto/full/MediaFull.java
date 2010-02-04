@@ -47,8 +47,6 @@ public class MediaFull implements Serializable {
 
 	private char isPublic;
 
-	private char isBackup;
-
 	private Integer oldImageFile;
 
 	private Integer oldImageId;
@@ -110,7 +108,6 @@ public class MediaFull implements Serializable {
 	 * @param title
 	 * @param series
 	 * @param isPublic
-	 * @param isBackup
 	 * @param oldImageFile
 	 * @param oldImageId
 	 * @param contents
@@ -131,7 +128,7 @@ public class MediaFull implements Serializable {
 	 * @param lastModificationDate
 	 * @param lastModificationBy
 	 */
-	public MediaFull(Integer mediaId, Integer mediaTypeId, Integer usePolicy, Integer authorPersonId, Integer ownerPersonId, Integer ownerInstitutionId, String description, String location, String highResolutionVolume, String highResolutionFileName, Integer siteId, String siteDescription, String title, String series, char isPublic, char isBackup, Integer oldImageFile, Integer oldImageId, String contents, Set<Integer> keywordIds, Set<Integer> gatheringIds, Set<Integer> specimenIds, Set<Integer> mediaAttributeIds, Set<Integer> projectIds, Set<Integer> typeSpecimenIds, Set<Integer> taxonIds, Set<Integer> observedTaxonIds, Set<Integer> mediaUseIds, Integer mediaDateYear, Integer mediaDateMonth, Integer mediaDateDay, Date creationDate, String createdBy, Date lastModificationDate, String lastModificationBy) {
+	public MediaFull(Integer mediaId, Integer mediaTypeId, Integer usePolicy, Integer authorPersonId, Integer ownerPersonId, Integer ownerInstitutionId, String description, String location, String highResolutionVolume, String highResolutionFileName, Integer siteId, String siteDescription, String title, String series, char isPublic, Integer oldImageFile, Integer oldImageId, String contents, Set<Integer> keywordIds, Set<Integer> gatheringIds, Set<Integer> specimenIds, Set<Integer> mediaAttributeIds, Set<Integer> projectIds, Set<Integer> typeSpecimenIds, Set<Integer> taxonIds, Set<Integer> observedTaxonIds, Set<Integer> mediaUseIds, Integer mediaDateYear, Integer mediaDateMonth, Integer mediaDateDay, Date creationDate, String createdBy, Date lastModificationDate, String lastModificationBy) {
 		super();
 		this.mediaId = mediaId;
 		this.mediaTypeId = mediaTypeId;
@@ -148,7 +145,6 @@ public class MediaFull implements Serializable {
 		this.title = title;
 		this.series = series;
 		this.isPublic = isPublic;
-		this.isBackup = isBackup;
 		this.oldImageFile = oldImageFile;
 		this.oldImageId = oldImageId;
 		this.contents = contents;
@@ -280,20 +276,6 @@ public class MediaFull implements Serializable {
 	 */
 	public void setHighResolutionVolume(String highResolutionVolume) {
 		this.highResolutionVolume = highResolutionVolume;
-	}
-
-	/**
-	 * @return the isBackup
-	 */
-	public char getIsBackup() {
-		return isBackup;
-	}
-
-	/**
-	 * @param isBackup the isBackup to set
-	 */
-	public void setIsBackup(char isBackup) {
-		this.isBackup = isBackup;
 	}
 
 	/**

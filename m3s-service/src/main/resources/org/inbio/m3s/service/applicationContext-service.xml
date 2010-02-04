@@ -29,18 +29,9 @@
   </bean>
 
 <!-- Media Attribute (3 versiones)-->  
-  
-  <!-- Metadata Manager (1 version)-->
-  <bean id="metadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
-  	<property name="mediaDAO" ref="mediaDAO"/>
-    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
-    <property name="textTranslationDAO" ref="textTranslationDAO"/>
-    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
-    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
-  </bean>
 
    
-  <!-- Message Manager (1 version)-->
+  <!-- Message Manager (1 version)  -->
   <bean id="messageManager" class="org.inbio.m3s.service.impl.MessageManagerImpl">
   	<property name="keywordDAO" ref="keywordDAO"/>
     <property name="textTranslationDAO" ref="textTranslationDAO"/>

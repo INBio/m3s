@@ -13,7 +13,6 @@ import org.inbio.m3s.model.core.MediaKeyword;
 import org.inbio.m3s.model.core.MediaKeywordId;
 import org.inbio.m3s.model.core.MediaProject;
 import org.inbio.m3s.model.core.MediaProjectId;
-import org.inbio.m3s.model.core.MediaType;
 import org.inbio.m3s.model.core.MediaUse;
 import org.inbio.m3s.model.core.MediaUseMedia;
 import org.inbio.m3s.model.core.MediaUseMediaId;
@@ -24,7 +23,6 @@ import org.inbio.m3s.model.core.SpecimenMedia;
 import org.inbio.m3s.model.core.SpecimenMediaId;
 import org.inbio.m3s.model.core.TaxonMedia;
 import org.inbio.m3s.model.core.TaxonMediaId;
-import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.dao.core.GatheringMediaDAO;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dao.core.MediaAttributeDAO;
@@ -47,6 +45,7 @@ import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.dto.message.ProjectDTOFactory;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
 import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
@@ -68,6 +67,7 @@ public class MediaManagerImpl implements MediaManager {
 	
 	private MediaDAO mediaDAO;
 	private ProjectDAO projectDAO;
+	private ProjectDTOFactory projectDTOFactory;
 	private MediaAttributeDAO mediaAttributeDAO;
 	private MediaAttributeValueDAO mediaAttributeValueDAO;
 	private MediaProjectDAO mediaProjectDAO;
@@ -131,30 +131,23 @@ public class MediaManagerImpl implements MediaManager {
 
 			if (DBUAC.getUsePolicyKey().equals(newUAC.getUsePolicyKey()) == false) {
 				logger.debug("updating the UACM... updating use policy");
-				UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(newUAC.getUsePolicyKey()));
-				theMedia.setUsePolicy(theUsePolicy);
+				//UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(newUAC.getUsePolicyKey()));
+				theMedia.setUsePolicyId(Integer.valueOf(newUAC.getUsePolicyKey()));
 			}
 			logger.debug("updating the UACM... updating use policy DONE");
 
 			// list of integers
-			if(DBUAC.getMediaUsesList().equals(newUAC.getMediaUsesList()) == false) {
+			//if(DBUAC.getMediaUsesList().equals(newUAC.getMediaUsesList()) == false) {
 						
-				logger.debug("updating the UACM... updating media uses");
+		//		logger.debug("updating the UACM... updating media uses");
 
-				deleteMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
+		//		deleteMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
 
-				if (newUAC.getMediaUsesList() != null) {
-					addMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
-				}
-			}
-			logger.debug("updating the UACM... updating media uses DONE");
-
-			// isBackup;
-			if (DBUAC.getIsBackup().equals(newUAC.getIsBackup()) == false) {
-				logger.debug("updating the UACM... updating is backup");
-				theMedia.setIsBackup(newUAC.getIsBackup());
-			}
-			logger.debug("updating the UACM... updating is backup DONE");
+		//		if (newUAC.getMediaUsesList() != null) {
+		//			addMediaUses(newUAC.getMediaKey(), newUAC.getMediaUsesList());
+		//		}
+		//	}
+		//	logger.debug("updating the UACM... updating media uses DONE");
 
 			// isPublic;
 			if (DBUAC.getIsPublic().equals(newUAC.getIsPublic()) == false) {
@@ -217,8 +210,8 @@ public class MediaManagerImpl implements MediaManager {
 			logger.debug("updating the GM... 02");
 			if (DBGm.getMediaTypeKey().equals(newGm.getMediaTypeKey()) == false) {
 				logger.debug("updating the GM... updating mediaType");
-				MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class, Integer.valueOf(newGm.getMediaTypeKey()));
-				theMedia.setMediaType(theMediaType);
+				//MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class, Integer.valueOf(newGm.getMediaTypeKey()));
+				theMedia.setMediaTypeId(Integer.valueOf(newGm.getMediaTypeKey()));
 			}
 
 			logger.debug("updating the GM... 03");
@@ -325,7 +318,7 @@ public class MediaManagerImpl implements MediaManager {
 		try {
 			// makes the other queries to complete the metadata			
 			//uac.setMediaUsesList(mediaUseDAO.getMediaUsesLite(Integer.valueOf(mediaKey), MessageManager.DEFAULT_LANGUAGE));
-			uac.setMediaUsesList(mediaUseDAO.findAllByMediaAndLanguage(mediaKey, MessageManager.DEFAULT_LANGUAGE_KEY));
+			//uac.setMediaUsesList(mediaUseDAO.findAllByMediaAndLanguage(mediaKey, MessageManager.DEFAULT_LANGUAGE_KEY));
 			
 
 			logger.info("getting UACM... done");
@@ -365,9 +358,13 @@ public class MediaManagerImpl implements MediaManager {
 			gm.setAssociatedGatheringsList(glDTOList);
 	
 			// projects
-			List<ProjectDTO> projectLiteList = null;
-			projectLiteList = projectDAO.getAllProjectLiteForMedia(Integer.valueOf(mediaKey));
-			gm.setProjectsList(projectLiteList);
+			//List<ProjectDTO> projectLiteList = null;
+			//projectLiteList = projectDAO.getAllProjectLiteForMedia(Integer.valueOf(mediaKey));
+			//gm.setProjectsList(projectLiteList);
+			// projects
+			List<Project> projects = projectDAO.findAllByMedia(Integer.valueOf(mediaKey));
+			List<ProjectDTO> projectsList = projectDTOFactory.createDTOList(projects);
+			gm.setProjectsList(projectsList);			
 
 			// TODO: setSeries
 			// TODO: setSynapticCollections
@@ -401,7 +398,7 @@ public class MediaManagerImpl implements MediaManager {
 	 * method needs the data from the GeneralMetadataDTO and the UsesAndCopyrightsDTO
 	 * objects. Then when the core elements are saved, invokes the setGM, setUAC
 	 * and setTM methods to complete the insertion. the not null elements to be
-	 * inserted here are: mediaType, usePolicy, isPublic and isBackup
+	 * inserted here are: mediaType, usePolicy and isPublic.
 	 * 
 	 * @return the mediaId
 	 * @throws IllegalArgumentException
@@ -413,17 +410,16 @@ public class MediaManagerImpl implements MediaManager {
 		Media theMedia = new Media();
 
 		// sets backup and public properties of the media
-		theMedia.setIsBackup(uac.getIsBackup());
 		theMedia.setIsPublic(uac.getIsPublic());
 
 		try {
 
 			// sets the Media elements that need DB conection
-			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
-			theMedia.setMediaType(theMediaType);
+			//MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
+			theMedia.setMediaTypeId(Integer.valueOf(gm.getMediaTypeKey()));
 
-			UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class,Integer.valueOf(uac.getUsePolicyKey()));
-			theMedia.setUsePolicy(theUsePolicy);
+			//UsePolicy theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class,Integer.valueOf(uac.getUsePolicyKey()));
+			theMedia.setUsePolicyId(Integer.valueOf(uac.getUsePolicyKey()));
 
 			// saves the Media Object in the database
 			theMedia.setCreatedBy(gm.getUsername());
@@ -481,8 +477,8 @@ public class MediaManagerImpl implements MediaManager {
 			logger.info("seting GeneralMetadataDTO... description set["+theMedia.getDescription()+"]");
 
 			// sets the Media type
-			MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
-			theMedia.setMediaType(theMediaType);
+			//MediaType theMediaType = (MediaType) mediaTypeDAO.findById(MediaType.class,Integer.valueOf(gm.getMediaTypeKey()));
+			theMedia.setMediaTypeId(Integer.valueOf(gm.getMediaTypeKey()));
 			logger.info("seting GeneralMetadataDTO... mediaType set");
 
 			// set the associatedSpecimens
@@ -553,7 +549,6 @@ public class MediaManagerImpl implements MediaManager {
 		logger.info(uac.toString());
 
 		Media theMedia;
-		UsePolicy theUsePolicy;
 
 		try {
 
@@ -575,15 +570,12 @@ public class MediaManagerImpl implements MediaManager {
 			else
 				theMedia.setOwnerInstitutionId(Integer.valueOf(uac.getInstitutionOwnerKey()));
 
-			// set usePolicyID
-			theUsePolicy = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(uac.getUsePolicyKey()));
-			theMedia.setUsePolicy(theUsePolicy);
+			theMedia.setUsePolicyId(Integer.valueOf(uac.getUsePolicyKey()));
 
 			// set mediaUsesIds
-			if(uac.getMediaUsesList()!=null)
-				addMediaUses(uac.getMediaKey(), uac.getMediaUsesList());
+			//if(uac.getMediaUsesList()!=null)
+			//	addMediaUses(uac.getMediaKey(), uac.getMediaUsesList());
 
-			theMedia.setIsBackup(uac.getIsBackup());
 			theMedia.setIsPublic(uac.getIsPublic());
 
 			// saves the Media Object in the database
@@ -1533,6 +1525,20 @@ public class MediaManagerImpl implements MediaManager {
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
+	}
+
+	/**
+	 * @return the projectDTOFactory
+	 */
+	public ProjectDTOFactory getProjectDTOFactory() {
+		return projectDTOFactory;
+	}
+
+	/**
+	 * @param projectDTOFactory the projectDTOFactory to set
+	 */
+	public void setProjectDTOFactory(ProjectDTOFactory projectDTOFactory) {
+		this.projectDTOFactory = projectDTOFactory;
 	}
 
 }

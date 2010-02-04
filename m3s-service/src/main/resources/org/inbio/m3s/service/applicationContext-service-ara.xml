@@ -12,10 +12,24 @@
     <property name="personLiteDTOFactory" ref="personLiteDTOFactory"/>    
   </bean>
 
+  <!-- Metadata Manager (3 version)-->  
+  <bean id="ARAMetadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="keywordDAO" ref="keywordDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+  </bean>  
+  
 <!-- Media Attribute (3 versiones)-->  
   <bean id="ARAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
     <property name="mediaDAO" ref="mediaDAO"/>
     <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>    
     <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
     <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
     <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
@@ -32,7 +46,7 @@
     <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
     <property name="agentManager" ref="ARAAgentManager"/>
     <property name="taxonomyManager" ref="ARATaxonomyManager"/> 
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="ARAMetadataManager"/>
   </bean>
     
   <!--  SearchManager -->
@@ -77,7 +91,7 @@
   	<property name="siteManager" ref="ARASiteManager"/>
   	<property name="agentManager" ref="ARAAgentManager"/>
   	<property name="messageManager" ref="messageManager"/>  
-    <property name="metadataManager" ref="metadataManager"/>
+    <property name="metadataManager" ref="ARAMetadataManager"/>
   </bean>  
 
   

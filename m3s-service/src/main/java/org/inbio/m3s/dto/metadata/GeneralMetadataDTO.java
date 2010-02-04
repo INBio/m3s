@@ -20,6 +20,9 @@ import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
  * 
  * @author jgutierrez
  * 
+ * @deprecated
+ * @use MetadataDTO
+ * 
  */
 public class GeneralMetadataDTO extends BaseDTO {
 

@@ -13,9 +13,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.ImportControlDAO;
 import org.inbio.m3s.dao.core.SecurityUserDAO;
-import org.inbio.m3s.dto.DTOFactory;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOFull;
+import org.inbio.m3s.dto.importcontrol.ImportControlDTOFullFactory;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOLite;
+import org.inbio.m3s.dto.importcontrol.ImportControlDTOLiteFactory;
 import org.inbio.m3s.model.core.ImportControl;
 import org.inbio.m3s.model.core.ImportControlId;
 import org.inbio.m3s.model.core.SecurityUsers;
@@ -33,15 +34,14 @@ public class ImportationManagerImpl implements ImportationManager {
 	
 	private SecurityUserDAO securityUserDAO;
 
-	private DTOFactory importControlFullDTOFactory;
+	private ImportControlDTOFullFactory importControlFullDTOFactory;
 	
-	private DTOFactory importControlLiteDTOFactory;
+	private ImportControlDTOLiteFactory importControlLiteDTOFactory;
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.ImportationManager#getImportControlDTOFullList(java.lang.String, int)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<ImportControlDTOFull> getImportControlDTOFullList(String username,
 			int quantity) throws IllegalArgumentException {
 
@@ -49,7 +49,7 @@ public class ImportationManagerImpl implements ImportationManager {
 		List<ImportControl> icList = importControlDAO.getImportControlList(
 				username, quantity);
 		logger.debug("total ImportControls = " + icList.size());
-		return (List<ImportControlDTOFull>) importControlFullDTOFactory.createDTOList(icList);
+		return importControlFullDTOFactory.createDTOList(icList);
 	}
 
 	/*
@@ -164,22 +164,6 @@ public class ImportationManagerImpl implements ImportationManager {
 	}
 
 	/**
-	 * @param importControlFullDTOFactory
-	 *          the importControlFullDTOFactory to set
-	 */
-	public void setImportControlFullDTOFactory(
-			DTOFactory importControlFullDTOFactory) {
-		this.importControlFullDTOFactory = importControlFullDTOFactory;
-	}
-
-	/**
-	 * @return the importControlFullDTOFactory
-	 */
-	public DTOFactory getImportControlFullDTOFactory() {
-		return importControlFullDTOFactory;
-	}
-
-	/**
 	 * @param securityUserDAO the securityUserDAO to set
 	 */
 	public void setSecurityUserDAO(SecurityUserDAO securityUserDAO) {
@@ -194,17 +178,34 @@ public class ImportationManagerImpl implements ImportationManager {
 	}
 
 	/**
-	 * @param importControlLiteDTOFactory the importControlLiteDTOFactory to set
+	 * @return the importControlFullDTOFactory
 	 */
-	public void setImportControlLiteDTOFactory(DTOFactory importControlLiteDTOFactory) {
-		this.importControlLiteDTOFactory = importControlLiteDTOFactory;
+	public ImportControlDTOFullFactory getImportControlFullDTOFactory() {
+		return importControlFullDTOFactory;
+	}
+
+	/**
+	 * @param importControlFullDTOFactory the importControlFullDTOFactory to set
+	 */
+	public void setImportControlFullDTOFactory(
+			ImportControlDTOFullFactory importControlFullDTOFactory) {
+		this.importControlFullDTOFactory = importControlFullDTOFactory;
 	}
 
 	/**
 	 * @return the importControlLiteDTOFactory
 	 */
-	public DTOFactory getImportControlLiteDTOFactory() {
+	public ImportControlDTOLiteFactory getImportControlLiteDTOFactory() {
 		return importControlLiteDTOFactory;
 	}
 
+	/**
+	 * @param importControlLiteDTOFactory the importControlLiteDTOFactory to set
+	 */
+	public void setImportControlLiteDTOFactory(
+			ImportControlDTOLiteFactory importControlLiteDTOFactory) {
+		this.importControlLiteDTOFactory = importControlLiteDTOFactory;
+	}
+
+	
 }

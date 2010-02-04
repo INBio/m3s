@@ -3,14 +3,17 @@
  */
 package org.inbio.m3s.dao.ara.impl;
 
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.SiteDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
+import org.inbio.m3s.model.general.Site;
 
 /**
  * @author jgutierrez
+ * 
+ * TODO: faltan las implementaciones para ARA
  *
  */
-public class ARASiteDAOImpl extends BaseDAOImpl implements SiteDAO {
+public class ARASiteDAOImpl extends GenericBaseDAOImpl<Site, Integer> implements SiteDAO {
 
 	public String getSiteDBIdFromSpecimenNumber(Integer specimenDBId)
 			throws IllegalArgumentException {

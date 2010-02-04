@@ -10,15 +10,14 @@ import org.inbio.m3s.model.core.ImportControl;
  * @author jgutierrez
  *
  */
-public class ImportControlDTOFullFactory extends BaseDTOFactory {
+public class ImportControlDTOFullFactory extends BaseDTOFactory<ImportControl, ImportControlDTOFull> {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dto.DTOFactory#createDTO(java.lang.Object)
 	 */
-	public Object createDTO(Object entity) {
-		if(entity == null)
+	public ImportControlDTOFull createDTO(ImportControl ic) {
+		if(ic == null)
 				return null;
-		ImportControl ic = (ImportControl) entity;
 		ImportControlDTOFull dto = new ImportControlDTOFull();
 		populateImportControl(ic, dto);
 		return dto;

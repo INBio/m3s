@@ -5,7 +5,7 @@ package org.inbio.m3s.dao.core;
 
 import java.util.List;
 
-import org.inbio.m3s.dao.BaseDAO;
+import org.inbio.m3s.dao.GenericBaseDAO;
 import org.inbio.m3s.model.general.Institution;
 
 /**
@@ -13,7 +13,7 @@ import org.inbio.m3s.model.general.Institution;
  * 
  *
  */
-public interface InstitutionDAO extends BaseDAO{
+public interface InstitutionDAO extends GenericBaseDAO<Institution, Integer>{
 	/**
 	 * 
 	 * @param institutionName

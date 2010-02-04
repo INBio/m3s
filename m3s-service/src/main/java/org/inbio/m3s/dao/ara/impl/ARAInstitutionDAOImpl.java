@@ -7,11 +7,10 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.InstitutionDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.model.ara.ARAInstitution;
 import org.inbio.m3s.model.general.Institution;
-import org.inbio.m3s.model.general.Person;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -19,9 +18,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO {
-
-	//private static Logger logger = Logger.getLogger(ARAInstitutionDAOImpl.class);
+public class ARAInstitutionDAOImpl extends GenericBaseDAOImpl<Institution,Integer> implements InstitutionDAO {
 	
 	/*
 	 * (non-Javadoc)
@@ -71,8 +68,8 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	 * @see org.inbio.m3s.dao.impl.BaseDAOImpl#create(java.lang.Object)
 	 */
 	@Override
-	public void create(Object entity) throws IllegalArgumentException {
-		super.create((ARAInstitution) entity);
+	public void create(Institution institution) throws IllegalArgumentException {
+		super.create((ARAInstitution) institution);
 	}
 
 	/*
@@ -81,8 +78,8 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	 * @see org.inbio.m3s.dao.BaseDAO#delete(java.lang.Object)
 	 */
 	@Override
-	public void update(Object entity) throws IllegalArgumentException {
-		super.update((ARAInstitution) entity);
+	public void update(Institution institution) throws IllegalArgumentException {
+		super.update((ARAInstitution) institution);
 	}
 
 	/*
@@ -91,18 +88,18 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	 * @see org.inbio.m3s.dao.BaseDAO#update(java.lang.Object)
 	 */
 	@Override
-	public void delete(Object entity) throws IllegalArgumentException {
-		super.delete((ARAInstitution) entity);
+	public void delete(Institution institution) throws IllegalArgumentException {
+		super.delete((ARAInstitution) institution);
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.dao.BaseDAO#findById(java.lang.Class, java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object findById(Class entityClass, Object Id) throws IllegalArgumentException {
-		return super.findById(ARAInstitution.class,Id);
+	public Institution findById(Class<Institution> entityClass, Integer id) throws IllegalArgumentException {
+		HibernateTemplate template = getHibernateTemplate();
+		return (Institution) template.get(ARAInstitution.class, id);
 	}
 	
 	/*
@@ -111,9 +108,10 @@ public class ARAInstitutionDAOImpl extends BaseDAOImpl implements InstitutionDAO
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> findAll(Class entityClass) throws IllegalArgumentException {
-		return super.findAll(ARAInstitution.class);
+	public List<Institution> findAll(Class<Institution> entityClass) throws IllegalArgumentException {
+		//return super.findAll(ARAInstitution.class);
+		HibernateTemplate template = getHibernateTemplate();
+		return template.loadAll(ARAInstitution.class);
 	}
-
 
 }

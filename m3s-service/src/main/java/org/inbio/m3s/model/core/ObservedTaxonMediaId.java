@@ -1,9 +1,10 @@
 package org.inbio.m3s.model.core;
 
-import java.io.Serializable;
+
+import org.inbio.m3s.model.LogGenericEntity;
 
 
-public class ObservedTaxonMediaId implements Serializable {
+public class ObservedTaxonMediaId extends LogGenericEntity {
 
 
 	private static final long serialVersionUID = -4360795480632373839L;

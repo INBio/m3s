@@ -1,13 +1,14 @@
 package org.inbio.m3s.dao.core;
 
-import org.inbio.m3s.dao.BaseDAO;
+import org.inbio.m3s.dao.GenericBaseDAO;
+import org.inbio.m3s.model.general.Site;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public interface SiteDAO extends BaseDAO{
+public interface SiteDAO extends GenericBaseDAO<Site, Integer>{
 	
 	@Deprecated
 	public String getSiteDBIdFromSpecimenNumber(Integer specimenDBId) throws IllegalArgumentException;

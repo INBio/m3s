@@ -12,9 +12,11 @@
 	<category name="org.inbio">
 		<priority value="ALL"/>
 	</category>
+	<!-- 
 	<category name="org.inbio.m3s.service.impl">
-		<priority value="DEBUG"/>
+		<priority value="ERROR"/>
 	</category>
+	 -->
 	
 	<category name="org">
 		<priority value="ERROR"/>

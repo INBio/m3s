@@ -1,17 +1,16 @@
 package org.inbio.m3s.model.core;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class TextTranslation extends DBLogEntity implements Serializable {
+public class TextTranslation extends LogGenericEntity {
 
 	/** NPI */
 	private static final long serialVersionUID = 1733974936541986181L;

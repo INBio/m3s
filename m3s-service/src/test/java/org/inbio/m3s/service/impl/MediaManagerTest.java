@@ -16,17 +16,6 @@ import org.inbio.m3s.service.MediaManager;
  */
 public class MediaManagerTest extends AbstractServiceTest{
 
-	public void testGetGM(){
-		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
-		GeneralMetadataDTO gmDTO = mm.getGeneralMetadataByMedia("100024");
-		System.out.println(gmDTO.toString());
-	}
-	
-	public void testGetUACM(){
-		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
-		UsesAndCopyrightsDTO uacDTO = mm.getUACM("100024");
-		System.out.println(uacDTO.toString());
-	}
 	
 	/*
 	public void testInsertNewMedia(){

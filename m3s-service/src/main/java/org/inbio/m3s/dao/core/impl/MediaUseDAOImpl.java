@@ -9,9 +9,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MediaUseDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dao.DataCache;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
+import org.inbio.m3s.model.core.MediaUse;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -19,7 +20,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  * 
  */
-public class MediaUseDAOImpl extends BaseDAOImpl  implements MediaUseDAO {
+public class MediaUseDAOImpl extends GenericBaseDAOImpl<MediaUse, Integer>  implements MediaUseDAO {
 
 	private static Logger logger = Logger.getLogger(MediaUseDAOImpl.class);
 

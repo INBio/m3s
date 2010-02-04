@@ -10,13 +10,12 @@ import org.inbio.m3s.model.core.Project;
  * @author jgutierrez
  *
  */
-public class ProjectDTOFactory extends BaseDTOFactory{
+public class ProjectDTOFactory extends BaseDTOFactory<Project,ProjectDTO>{
 
-	public Object createDTO(Object entity) {
-		if(entity == null)
+	public ProjectDTO createDTO(Project p) {
+		if(p == null)
 			return null;
 		
-		Project p = (Project) entity;
 		return new ProjectDTO(p.getProjectId(), p.getName());
 	}
 

@@ -3,13 +3,13 @@
  */
 package org.inbio.m3s.dto.taxonomy;
 
-import java.io.Serializable;
+import org.inbio.m3s.dto.BaseDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public class ObservationLiteDTO implements Serializable{
+public class ObservationLiteDTO  extends BaseDTO{
 	
 	/* */
 	private static final long serialVersionUID = 1L;

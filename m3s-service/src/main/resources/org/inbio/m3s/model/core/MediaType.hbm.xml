@@ -9,21 +9,13 @@
 			<column name="media_type_id" />
 			<generator class="increment" />
 		</id>
-		<many-to-one name="textByDescriptionTextId"
-			class="org.inbio.m3s.model.core.Text" fetch="select">
-			<column name="description_text_id" />
-		</many-to-one>
-		<many-to-one name="textByNameTextId"
-			class="org.inbio.m3s.model.core.Text" fetch="select">
-			<column name="name_text_id" not-null="true" />
-		</many-to-one>
 		
+		<property name="mediaTypeNameTextId" column="name_text_id" not-null="true" insert="false" update="false"/>
+
 		<property name="mediaCategoryId" column="media_category_id" not-null="true" insert="false" update="false"/>
-		<many-to-one name="mediaCategory" class="org.inbio.m3s.model.core.MediaCategory" fetch="select">
-			<column name="media_category_id" not-null="true" />
-		</many-to-one>
 		
-		
+		<property name="mediaTypeDescriptionTextId" column="description_text_id" insert="false" update="false"/>
+		 
 		<property name="creationDate" type="date">
 			<column name="creation_date" length="4" />
 		</property>
@@ -36,20 +28,5 @@
 		<property name="lastModificationBy" type="string">
 			<column name="last_modification_by" length="20" />
 		</property>
-		<!--
-		<set name="medias" inverse="true">
-			<key>
-				<column name="media_type_id" not-null="true" />
-			</key>
-			<one-to-many class="org.inbio.m3s.model.core.Media" />
-		</set>
-		 -->
-		<set name="mediaAttributeTypes" inverse="true">
-			<key>
-				<column name="media_type_id" not-null="true" />
-			</key>
-			<one-to-many
-				class="org.inbio.m3s.model.core.MediaAttributeType" />
-		</set>
 	</class>
 </hibernate-mapping>

@@ -3,14 +3,15 @@
  */
 package org.inbio.m3s.dto.importcontrol;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import org.inbio.m3s.dto.BaseDTO;
 
 /**
  * @author jgutierrez
  *
  */
-public class ImportControlDTOFull implements Serializable {
+public class ImportControlDTOFull extends BaseDTO{
 
 	private static final long serialVersionUID = 6031170297863901696L;
 	

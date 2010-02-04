@@ -1,17 +1,15 @@
 package org.inbio.m3s.model.core;
 
-
-import java.io.Serializable;
 import java.util.Date;
 
-import org.inbio.m3s.model.DBLogEntity;
+import org.inbio.m3s.model.LogGenericEntity;
 
 /**
  * 
  * @author jgutierrez
  *
  */
-public class Privilege extends DBLogEntity implements Serializable {
+public class Privilege extends LogGenericEntity {
 
 	private static final long serialVersionUID = 7997101139869693755L;
 

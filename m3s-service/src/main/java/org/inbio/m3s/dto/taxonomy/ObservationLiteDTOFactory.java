@@ -10,17 +10,16 @@ import org.inbio.m3s.model.core.ObservedTaxonMediaId;
  * @author jgutierrez
  *
  */
-public class ObservationLiteDTOFactory extends BaseDTOFactory {
+public class ObservationLiteDTOFactory extends BaseDTOFactory<ObservedTaxonMediaId,ObservationLiteDTO> {
 
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.dto.DTOFactory#createDTO(java.lang.Object)
 	 */
-	public Object createDTO(Object entity) {
-		if(entity == null)
+	public ObservationLiteDTO createDTO(ObservedTaxonMediaId otmId) {
+		if(otmId == null)
 				return null;
 		
-		else if(entity.getClass() == ObservedTaxonMediaId.class){
-			ObservedTaxonMediaId otmId = (ObservedTaxonMediaId) entity;
+		else if(otmId.getClass() == ObservedTaxonMediaId.class){
 			return new ObservationLiteDTO(String.valueOf(otmId.getObservationId()));
 		} 
 		

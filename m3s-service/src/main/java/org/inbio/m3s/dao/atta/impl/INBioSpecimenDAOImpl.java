@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.SpecimenDAO;
-import org.inbio.m3s.dao.impl.BaseDAOImpl;
 
 import org.inbio.m3s.model.general.Specimen;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * @author jgutierrez
  *
  */
-public class INBioSpecimenDAOImpl extends BaseDAOImpl implements SpecimenDAO {
+public class INBioSpecimenDAOImpl extends GenericBaseDAOImpl<Specimen, Integer> implements SpecimenDAO {
 	
 	private static Logger logger = Logger.getLogger(INBioSpecimenDAOImpl.class);
 	

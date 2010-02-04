@@ -3,8 +3,11 @@
  */
 package org.inbio.m3s.dao.core;
 
+
 /**
  * @author jgutierrez
+ * 
+ * @deprecated NO ES UN DAO, es de manager
  *
  */
 public interface UserPrivilegeDAO {

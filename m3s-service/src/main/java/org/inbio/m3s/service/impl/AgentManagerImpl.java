@@ -66,10 +66,9 @@ public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getAllLite()
 	 */
-	@SuppressWarnings("unchecked")
 	public List<InstitutionLiteDTO> getAllInstitutionLite() throws IllegalArgumentException {
 		
-		List<Object> iList = institutionDAO.findAll(Institution.class);
+		List<Institution> iList = institutionDAO.findAll(Institution.class);
 		return (List<InstitutionLiteDTO>) institutionLiteDTOFactory.createDTOList(iList);
 	}
 	
@@ -77,12 +76,11 @@ public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getPersonLiteByName(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public PersonLiteDTO getPersonLiteByName(String name) throws PersonNotFoundException {
 		
 		logger.debug("getPersonLiteByName["+name+"]");
 		
-		List<Object> pList = personDAO.findAll(Person.class);
+		List<Person> pList = personDAO.findAll(Person.class);
 		if(pList==null)
 			throw new PersonNotFoundException("The person ["+name+"] cannot be found the database", null, name);
 		List<PersonLiteDTO> pLiteDTOList = personLiteDTOFactory.createDTOList(pList);
@@ -110,10 +108,9 @@ public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getAllLite()
 	 */
-	@SuppressWarnings("unchecked")
 	public List<PersonLiteDTO> getAllPersonLite() throws IllegalArgumentException {
 		
-		List<Object> pList = personDAO.findAll(Person.class);
+		List<Person> pList = personDAO.findAll(Person.class);
 		return (List<PersonLiteDTO>) personLiteDTOFactory.createDTOList(pList);
 	}
 
@@ -138,7 +135,6 @@ public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getAllGatheringResponsibleLite()
 	 */
-	@SuppressWarnings("unchecked")
 	public List<PersonLiteDTO> getAllGatheringResponsibleLite() throws IllegalArgumentException {
 		
 		List<Person> pList = personDAO.findAllGatheringResponsible();
@@ -149,7 +145,6 @@ public class AgentManagerImpl implements AgentManager, AutoCompleteManager {
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.AgentManager#getGatheringResposibleLiteByName(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public PersonLiteDTO getGatheringResposibleLiteByName(String personName)
 			throws IllegalArgumentException {
 		

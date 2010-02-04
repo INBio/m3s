@@ -16,6 +16,7 @@ public class TechnicalMetadataItemDTO implements Serializable {
 
 	private String mediaAttributeKey;
 	
+	/* A key that should be resolved in a properties i10n file */
 	private String mediaAttributeName;
 
 	private String value;
