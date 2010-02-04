@@ -3,7 +3,6 @@
  */
 package org.inbio.m3s.web.controller.media;
 
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +18,10 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
+import org.inbio.m3s.dto.metadata.util.MediaAttributeEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.service.AgentManager;
@@ -35,13 +36,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author jgutierrez
- *
+ * 
  */
-public class MediaPageController extends SimpleController{
-	
-	protected static Log logger = LogFactory.getLog(MediaPageController.class);
-	
-	//web parameters
+/**
+ * @author jgutierrez
+ * 
+ */
+public class VideoPageController extends SimpleController {
+
+	protected static Log logger = LogFactory.getLog(VideoPageController.class);
+
+	// web parameters
+	private String metadataVideoId;
 	private String metadataId;
 	private String metadataTitle;
 	private String metadataDescription;
@@ -50,162 +56,190 @@ public class MediaPageController extends SimpleController{
 	private String metadataKeywords;
 	private String metadataAssociatedToValueType;
 	private String metadataAssociatedToValue;
-	
-	private String metadataTaxonomy; 
+	private String metadataTaxonomy;
 	private String metadataSiteDescription;
 	private String metadataMediaAuthor;
 	private String metadataOwnerType;
 	private String metadataOwnerValue;
 	private String metadataUsePolicy;
 	private String metadataMediaVisible;
-	
-	//in case of error
+
+	// in case of error
 	private String errorViewName = "mediaPage";
-	
-	private MessageManager messageManager;
 	private MetadataManager metadataManager;
+	private MessageManager messageManager;
 	private TaxonomyManager taxonomyManager;
 	private AgentManager agentManager;
-	
 	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.inbio.m3s.web.controller.reusable.SimpleController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 * 
+	 * @see
+	 * org.inbio.m3s.web.controller.reusable.SimpleController#handleRequestInternal
+	 * (javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
-		
+
 		ModelAndView mav = super.handleRequestInternal(request, response);
-		
-		//String mediaId = request.getParameter(metadataMediaId);
-		//mav.addObject("mediaId", mediaId);
-		
+
+		// String mediaId = request.getParameter(metadataMediaId);
+		// mav.addObject("mediaId", mediaId);
+
 		ValidationException ve = new ValidationException();
 		ve.setViewName(errorViewName);
 
 		String mediaKey = request.getParameter(metadataId);
-		if(StringUtils.isBlank(mediaKey)){
-			//enviar msj de que esta jodido
+		if (StringUtils.isBlank(mediaKey)) {
+			// enviar msj de que esta jodido
 			ve.setErrorMessageKey("error.edit.01");
 			throw ve;
-		} else if(!StringUtils.isNumeric(mediaKey)){
-			//esta jodido porque tiene valores NO numericos
+		} else if (!StringUtils.isNumeric(mediaKey)) {
+			// esta jodido porque tiene valores NO numericos
 			ve.setErrorMessageKey("error.edit.02");
 			throw ve;
 		}
-		
+
 		MetadataDTO mDTO = null;
-		try{
+
+		try {
 			mDTO = metadataManager.getMetadataByMedia(mediaKey);
-		} catch(Exception e){
-			//esta jodido porque no se encontro nada para ese multimedio
+
+		} catch (Exception e) {
+			// esta jodido porque no se encontro nada para ese multimedio
 			ve.setErrorMessageKey("error.edit.03");
 			throw ve;
 		}
 
-		try{
+		try {
+			
+			//video Id!
+			TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+			mav.addObject(metadataVideoId, maDTO.getValue());
+			
 			mav.addObject(metadataId, mediaKey);
 			mav.addObject(metadataTitle, mDTO.getTitle());
 			mav.addObject(metadataDescription, mDTO.getDescription());
-			
-			//Tipo de multimedios
-			MediaTypeDTO mediaTypeDTO = messageManager.getMediaType(mDTO.getMediaTypeKey());
+
+			// Tipo de multimedios
+			MediaTypeDTO mediaTypeDTO = messageManager.getMediaType(mDTO
+					.getMediaTypeKey());
 			mav.addObject(metadataMediaCategory, mediaTypeDTO.getMediaTypeName());
 
-			//projects
+			// projects
 			List<ProjectDTO> pDTOList = mDTO.getProjectsList();
-			String projectsList ="";
-			for(ProjectDTO pDTO : pDTOList)
-				projectsList = projectsList + pDTO.getName() + StringUtil.TEXT_DELIMITER;
+			String projectsList = "";
+			for (ProjectDTO pDTO : pDTOList)
+				projectsList = projectsList + pDTO.getName()
+						+ StringUtil.TEXT_DELIMITER;
 			mav.addObject(metadataProjects, projectsList);
 
-			//keywords
+			// keywords
 			List<KeywordDTO> kDTOList = mDTO.getKeywordsList();
-			String keywordsList ="";
-			for(KeywordDTO kDTO : kDTOList)
-				keywordsList = keywordsList + kDTO.getName() + StringUtil.TEXT_DELIMITER;
+			String keywordsList = "";
+			for (KeywordDTO kDTO : kDTOList)
+				keywordsList = keywordsList + kDTO.getName()
+						+ StringUtil.TEXT_DELIMITER;
 			mav.addObject(metadataKeywords, keywordsList);
-			
-			//Tipos de Asociaciones
-			List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
+
+			// Tipos de Asociaciones
+			List<KeyValueDTO> associatedToValues = messageManager
+					.getAllAssociatedToValues();
 			mav.addObject("associatedToValues", associatedToValues);
 
 			String associatedToType;
 			String associatedToValue;
 
 			logger.debug("Discovering the association type:");
-			if (mDTO.getAssociatedSpecimensList() != null && mDTO.getAssociatedSpecimensList().size() != 0) {
+			if (mDTO.getAssociatedSpecimensList() != null
+					&& mDTO.getAssociatedSpecimensList().size() != 0) {
 				associatedToType = AssociatedToEntity.SPECIMEN_NUMBER.getNameKey();
-				associatedToValue = mDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
-			} else if (mDTO.getAssociatedObservationsList() != null && mDTO.getAssociatedObservationsList().size() != 0) {
+				associatedToValue = mDTO.getAssociatedSpecimensList().get(0)
+						.getSpecimenKey();
+			} else if (mDTO.getAssociatedObservationsList() != null
+					&& mDTO.getAssociatedObservationsList().size() != 0) {
 				associatedToType = AssociatedToEntity.OBSERVATION_NUMBER.getNameKey();
-				associatedToValue = mDTO.getAssociatedObservationsList().get(0).getObservationKey();			
-			} else if (mDTO.getAssociatedGatheringsList() != null && mDTO.getAssociatedGatheringsList().size() != 0) {
-				GatheringLiteDTO glDTO = mDTO.getAssociatedGatheringsList().get(0);		
+				associatedToValue = mDTO.getAssociatedObservationsList().get(0)
+						.getObservationKey();
+			} else if (mDTO.getAssociatedGatheringsList() != null
+					&& mDTO.getAssociatedGatheringsList().size() != 0) {
+				GatheringLiteDTO glDTO = mDTO.getAssociatedGatheringsList().get(0);
 				String gatheringPersonName = glDTO.getResponsiblePersonName();
 				associatedToType = AssociatedToEntity.GATHERING_CODE.getNameKey();
-				associatedToValue = gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
+				associatedToValue = gatheringPersonName + StringUtil.TEXT_DELIMITER
+						+ glDTO.getGatheringKey();
 			} else {
 				associatedToType = AssociatedToEntity.NO_ASSOCIATION.getNameKey();
 				associatedToValue = "";
-			}		
+			}
 
-			logger.debug(" Associated Type: "+ associatedToType);
-			logger.debug(" Associated Value: "+ associatedToValue);
+			logger.debug(" Associated Type: " + associatedToType);
+			logger.debug(" Associated Value: " + associatedToValue);
 			mav.addObject(metadataAssociatedToValueType, associatedToType);
 			mav.addObject(metadataAssociatedToValue, associatedToValue);
-			
-		  //taxonomy
-			mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(mDTO.getTaxonsList()));
 
-			//site description
+			// taxonomy
+			mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(mDTO
+					.getTaxonsList()));
+
+			// site description
 			mav.addObject(metadataSiteDescription, mDTO.getSiteDescription());
 
-			//Author
-			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(mDTO.getAuthorKey());
-			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());			
+			// Author
+			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(mDTO
+					.getAuthorKey());
+			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
 
-			//Tipos de Dueños de Imágenes -- esto debe ser eliminado
-			logger.debug("personOwnerKey '"+mDTO.getPersonOwnerKey()+"'");
-			logger.debug("institutionOwnerKey '"+mDTO.getInstitutionOwnerKey()+"'");
-			//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
-			if(mDTO.getPersonOwnerKey() != null){
+			// Tipos de Dueños de Imágenes -- esto debe ser eliminado
+			// List<KeyValueDTO> ownerValues =
+			// messageManager.getAllMediaOwnerValues();
+			// mav.addObject("mediaOwners", ownerValues);
+
+			logger.debug("personOwnerKey '" + mDTO.getPersonOwnerKey() + "'");
+			logger.debug("institutionOwnerKey '" + mDTO.getInstitutionOwnerKey()
+					+ "'");
+			// mav.addObject(metadataAssociatedToValueType, gmDTO.get);
+			if (mDTO.getPersonOwnerKey() != null) {
 				logger.debug("person Owner");
-				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(mDTO.getPersonOwnerKey());
+				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(mDTO
+						.getPersonOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerPersonDTO.getName());
-				//mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.PERSON.getId()));
-			} else{
+				// mav.addObject(metadataOwnerType,
+				// String.valueOf(OwnerEntity.PERSON.getId()));
+			} else {
 				logger.debug("institution Owner");
-				InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(mDTO.getInstitutionOwnerKey());
+				InstitutionLiteDTO ownerInstitutionDTO = agentManager
+						.getInstitutionLite(mDTO.getInstitutionOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
-				//mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
-			}			
-			
-		//Políticas de Uso
-			UsePolicyDTO usePolicyDTO = messageManager.getUsePolicy(mDTO.getUsePolicyKey());
+				// mav.addObject(metadataOwnerType,
+				// String.valueOf(OwnerEntity.INSTITUTION.getId()));
+			}
+
+			// Políticas de Uso
+			// List<UsePolicyDTO> usePolicies = messageManager.getAllUsePolicies();
+			// mav.addObject("usePolicies", usePolicies);
+			UsePolicyDTO usePolicyDTO = messageManager.getUsePolicy(mDTO
+					.getUsePolicyKey());
 			mav.addObject(metadataUsePolicy, usePolicyDTO.getName());
-			logger.debug(metadataUsePolicy+"'"+usePolicyDTO.getName()+"'");
+			logger.debug(metadataUsePolicy + "'" + usePolicyDTO.getName() + "'");
 
 			if (mDTO.getIsPublic().charValue() == 'Y')
 				mav.addObject(metadataMediaVisible, "checked");
 			else
-				mav.addObject(metadataMediaVisible, null);		
-			
-			
-		} catch (Exception e){
-			//esta jodido cargando los metadatos :s
+				mav.addObject(metadataMediaVisible, null);
+
+		} catch (Exception e) {
+			// esta jodido cargando los metadatos :s
 			ve.setErrorMessageKey("error.edit.04");
 			throw ve;
 		}
-		
-		return mav;
-			
-		
-	}
 
+		return mav;
+
+	}
 
 	/**
 	 * @return the errorViewName
@@ -214,14 +248,13 @@ public class MediaPageController extends SimpleController{
 		return errorViewName;
 	}
 
-
 	/**
-	 * @param errorViewName the errorViewName to set
+	 * @param errorViewName
+	 *          the errorViewName to set
 	 */
 	public void setErrorViewName(String errorViewName) {
 		this.errorViewName = errorViewName;
 	}
-
 
 	/**
 	 * @return the metadataId
@@ -230,14 +263,13 @@ public class MediaPageController extends SimpleController{
 		return metadataId;
 	}
 
-
 	/**
-	 * @param metadataId the metadataId to set
+	 * @param metadataId
+	 *          the metadataId to set
 	 */
 	public void setMetadataId(String metadataId) {
 		this.metadataId = metadataId;
 	}
-
 
 	/**
 	 * @return the messageManager
@@ -246,9 +278,9 @@ public class MediaPageController extends SimpleController{
 		return messageManager;
 	}
 
-
 	/**
-	 * @param messageManager the messageManager to set
+	 * @param messageManager
+	 *          the messageManager to set
 	 */
 	public void setMessageManager(MessageManager messageManager) {
 		this.messageManager = messageManager;
@@ -261,14 +293,13 @@ public class MediaPageController extends SimpleController{
 		return taxonomyManager;
 	}
 
-
 	/**
-	 * @param taxonomyManager the taxonomyManager to set
+	 * @param taxonomyManager
+	 *          the taxonomyManager to set
 	 */
 	public void setTaxonomyManager(TaxonomyManager taxonomyManager) {
 		this.taxonomyManager = taxonomyManager;
 	}
-
 
 	/**
 	 * @return the agentManager
@@ -277,14 +308,13 @@ public class MediaPageController extends SimpleController{
 		return agentManager;
 	}
 
-
 	/**
-	 * @param agentManager the agentManager to set
+	 * @param agentManager
+	 *          the agentManager to set
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
 	}
-
 
 	/**
 	 * @return the taxonGuiOrDTOConverter
@@ -293,15 +323,14 @@ public class MediaPageController extends SimpleController{
 		return taxonGuiOrDTOConverter;
 	}
 
-
 	/**
-	 * @param taxonGuiOrDTOConverter the taxonGuiOrDTOConverter to set
+	 * @param taxonGuiOrDTOConverter
+	 *          the taxonGuiOrDTOConverter to set
 	 */
 	public void setTaxonGuiOrDTOConverter(
 			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
 		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
 	}
-
 
 	/**
 	 * @return the metadataTitle
@@ -310,14 +339,13 @@ public class MediaPageController extends SimpleController{
 		return metadataTitle;
 	}
 
-
 	/**
-	 * @param metadataTitle the metadataTitle to set
+	 * @param metadataTitle
+	 *          the metadataTitle to set
 	 */
 	public void setMetadataTitle(String metadataTitle) {
 		this.metadataTitle = metadataTitle;
 	}
-
 
 	/**
 	 * @return the metadataDescription
@@ -326,14 +354,13 @@ public class MediaPageController extends SimpleController{
 		return metadataDescription;
 	}
 
-
 	/**
-	 * @param metadataDescription the metadataDescription to set
+	 * @param metadataDescription
+	 *          the metadataDescription to set
 	 */
 	public void setMetadataDescription(String metadataDescription) {
 		this.metadataDescription = metadataDescription;
 	}
-
 
 	/**
 	 * @return the metadataMediaCategory
@@ -342,14 +369,13 @@ public class MediaPageController extends SimpleController{
 		return metadataMediaCategory;
 	}
 
-
 	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
+	 * @param metadataMediaCategory
+	 *          the metadataMediaCategory to set
 	 */
 	public void setMetadataMediaCategory(String metadataMediaCategory) {
 		this.metadataMediaCategory = metadataMediaCategory;
 	}
-
 
 	/**
 	 * @return the metadataProjects
@@ -358,14 +384,13 @@ public class MediaPageController extends SimpleController{
 		return metadataProjects;
 	}
 
-
 	/**
-	 * @param metadataProjects the metadataProjects to set
+	 * @param metadataProjects
+	 *          the metadataProjects to set
 	 */
 	public void setMetadataProjects(String metadataProjects) {
 		this.metadataProjects = metadataProjects;
 	}
-
 
 	/**
 	 * @return the metadataKeywords
@@ -374,14 +399,13 @@ public class MediaPageController extends SimpleController{
 		return metadataKeywords;
 	}
 
-
 	/**
-	 * @param metadataKeywords the metadataKeywords to set
+	 * @param metadataKeywords
+	 *          the metadataKeywords to set
 	 */
 	public void setMetadataKeywords(String metadataKeywords) {
 		this.metadataKeywords = metadataKeywords;
 	}
-
 
 	/**
 	 * @return the metadataAssociatedToValueType
@@ -390,15 +414,14 @@ public class MediaPageController extends SimpleController{
 		return metadataAssociatedToValueType;
 	}
 
-
 	/**
-	 * @param metadataAssociatedToValueType the metadataAssociatedToValueType to set
+	 * @param metadataAssociatedToValueType
+	 *          the metadataAssociatedToValueType to set
 	 */
 	public void setMetadataAssociatedToValueType(
 			String metadataAssociatedToValueType) {
 		this.metadataAssociatedToValueType = metadataAssociatedToValueType;
 	}
-
 
 	/**
 	 * @return the metadataAssociatedToValue
@@ -407,14 +430,13 @@ public class MediaPageController extends SimpleController{
 		return metadataAssociatedToValue;
 	}
 
-
 	/**
-	 * @param metadataAssociatedToValue the metadataAssociatedToValue to set
+	 * @param metadataAssociatedToValue
+	 *          the metadataAssociatedToValue to set
 	 */
 	public void setMetadataAssociatedToValue(String metadataAssociatedToValue) {
 		this.metadataAssociatedToValue = metadataAssociatedToValue;
 	}
-
 
 	/**
 	 * @return the metadataTaxonomy
@@ -423,14 +445,13 @@ public class MediaPageController extends SimpleController{
 		return metadataTaxonomy;
 	}
 
-
 	/**
-	 * @param metadataTaxonomy the metadataTaxonomy to set
+	 * @param metadataTaxonomy
+	 *          the metadataTaxonomy to set
 	 */
 	public void setMetadataTaxonomy(String metadataTaxonomy) {
 		this.metadataTaxonomy = metadataTaxonomy;
 	}
-
 
 	/**
 	 * @return the metadataSiteDescription
@@ -439,14 +460,13 @@ public class MediaPageController extends SimpleController{
 		return metadataSiteDescription;
 	}
 
-
 	/**
-	 * @param metadataSiteDescription the metadataSiteDescription to set
+	 * @param metadataSiteDescription
+	 *          the metadataSiteDescription to set
 	 */
 	public void setMetadataSiteDescription(String metadataSiteDescription) {
 		this.metadataSiteDescription = metadataSiteDescription;
 	}
-
 
 	/**
 	 * @return the metadataMediaAuthor
@@ -455,14 +475,13 @@ public class MediaPageController extends SimpleController{
 		return metadataMediaAuthor;
 	}
 
-
 	/**
-	 * @param metadataMediaAuthor the metadataMediaAuthor to set
+	 * @param metadataMediaAuthor
+	 *          the metadataMediaAuthor to set
 	 */
 	public void setMetadataMediaAuthor(String metadataMediaAuthor) {
 		this.metadataMediaAuthor = metadataMediaAuthor;
 	}
-
 
 	/**
 	 * @return the metadataOwnerType
@@ -471,14 +490,13 @@ public class MediaPageController extends SimpleController{
 		return metadataOwnerType;
 	}
 
-
 	/**
-	 * @param metadataOwnerType the metadataOwnerType to set
+	 * @param metadataOwnerType
+	 *          the metadataOwnerType to set
 	 */
 	public void setMetadataOwnerType(String metadataOwnerType) {
 		this.metadataOwnerType = metadataOwnerType;
 	}
-
 
 	/**
 	 * @return the metadataOwnerValue
@@ -487,14 +505,13 @@ public class MediaPageController extends SimpleController{
 		return metadataOwnerValue;
 	}
 
-
 	/**
-	 * @param metadataOwnerValue the metadataOwnerValue to set
+	 * @param metadataOwnerValue
+	 *          the metadataOwnerValue to set
 	 */
 	public void setMetadataOwnerValue(String metadataOwnerValue) {
 		this.metadataOwnerValue = metadataOwnerValue;
 	}
-
 
 	/**
 	 * @return the metadataUsePolicy
@@ -503,14 +520,13 @@ public class MediaPageController extends SimpleController{
 		return metadataUsePolicy;
 	}
 
-
 	/**
-	 * @param metadataUsePolicy the metadataUsePolicy to set
+	 * @param metadataUsePolicy
+	 *          the metadataUsePolicy to set
 	 */
 	public void setMetadataUsePolicy(String metadataUsePolicy) {
 		this.metadataUsePolicy = metadataUsePolicy;
 	}
-
 
 	/**
 	 * @return the metadataMediaVisible
@@ -519,14 +535,13 @@ public class MediaPageController extends SimpleController{
 		return metadataMediaVisible;
 	}
 
-
 	/**
-	 * @param metadataMediaVisible the metadataMediaVisible to set
+	 * @param metadataMediaVisible
+	 *          the metadataMediaVisible to set
 	 */
 	public void setMetadataMediaVisible(String metadataMediaVisible) {
 		this.metadataMediaVisible = metadataMediaVisible;
 	}
-
 
 	/**
 	 * @return the metadataManager
@@ -535,14 +550,27 @@ public class MediaPageController extends SimpleController{
 		return metadataManager;
 	}
 
-
 	/**
-	 * @param metadataManager the metadataManager to set
+	 * @param metadataManager
+	 *          the metadataManager to set
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
 	}
 
+	/**
+	 * @return the metadataVideoId
+	 */
+	public String getMetadataVideoId() {
+		return metadataVideoId;
+	}
+
+	/**
+	 * @param metadataVideoId
+	 *          the metadataVideoId to set
+	 */
+	public void setMetadataVideoId(String metadataVideoId) {
+		this.metadataVideoId = metadataVideoId;
+	}
 
 }
-

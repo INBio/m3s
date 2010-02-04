@@ -15,13 +15,12 @@ import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.service.AgentManager;
-import org.inbio.m3s.service.MediaManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.util.StringUtil;
 import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
@@ -66,7 +65,7 @@ public class EditStep2PageController extends AbstractController{
 	//managers, handlers, converters, utils & etc
 	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
 	private MetadataHandler metadataHandler;
-	private MediaManager mediaManager;
+	private MetadataManager metadataManager;
 	private AgentManager agentManager;
 
 	
@@ -98,11 +97,9 @@ public class EditStep2PageController extends AbstractController{
 		}
 		
 		//getting the metadata
-		GeneralMetadataDTO gmDTO = null;
-		UsesAndCopyrightsDTO uacDTO = null;
+		MetadataDTO mDTO = null;
 		try{
-			gmDTO = mediaManager.getGeneralMetadataByMedia(mediaKey);
-			uacDTO = mediaManager.getUACM(mediaKey);
+			mDTO = metadataManager.getMetadataByMedia(mediaKey);
 		} catch(Exception e){
 			//esta jodido porque no se encontro nada para ese multimedio
 			ve.setErrorMessageKey("error.edit.03");
@@ -112,22 +109,22 @@ public class EditStep2PageController extends AbstractController{
 		try{
 			mav.addObject(metadataId, mediaKey);
 			logger.debug(metadataId+" "+mediaKey);
-			mav.addObject(metadataTitle, gmDTO.getTitle());
-			logger.debug(metadataTitle+" "+gmDTO.getTitle());
-			mav.addObject(metadataDescription, gmDTO.getDescription());
+			mav.addObject(metadataTitle, mDTO.getTitle());
+			logger.debug(metadataTitle+" "+mDTO.getTitle());
+			mav.addObject(metadataDescription, mDTO.getDescription());
 
 			//Tipo de multimedio seleccionado
-			mav.addObject(metadataMediaCategory, gmDTO.getMediaTypeKey());
+			mav.addObject(metadataMediaCategory, mDTO.getMediaTypeKey());
 
 			//projects
-			List<ProjectDTO> pDTOList = gmDTO.getProjectsList();
+			List<ProjectDTO> pDTOList = mDTO.getProjectsList();
 			String projectsList ="";
 			for(ProjectDTO pDTO : pDTOList)
 				projectsList = projectsList + pDTO.getName() + StringUtil.TEXT_DELIMITER;
 			mav.addObject(metadataProjects, projectsList);
 
 			//keywords
-			List<KeywordDTO> kDTOList = gmDTO.getKeywordsList();
+			List<KeywordDTO> kDTOList = mDTO.getKeywordsList();
 			String keywordsList ="";
 			for(KeywordDTO kDTO : kDTOList)
 				keywordsList = keywordsList + kDTO.getName() + StringUtil.TEXT_DELIMITER;
@@ -138,14 +135,14 @@ public class EditStep2PageController extends AbstractController{
 			String associatedToValue;
 
 			logger.debug("Discovering the association type:");
-			if (gmDTO.getAssociatedSpecimensList() != null && gmDTO.getAssociatedSpecimensList().size() != 0) {
+			if (mDTO.getAssociatedSpecimensList() != null && mDTO.getAssociatedSpecimensList().size() != 0) {
 				associatedToType = AssociatedToEntity.SPECIMEN_NUMBER.getId();
-				associatedToValue = gmDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
-			} else if (gmDTO.getAssociatedObservationsList() != null && gmDTO.getAssociatedObservationsList().size() != 0) {
+				associatedToValue = mDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
+			} else if (mDTO.getAssociatedObservationsList() != null && mDTO.getAssociatedObservationsList().size() != 0) {
 				associatedToType = AssociatedToEntity.OBSERVATION_NUMBER.getId();
-				associatedToValue = gmDTO.getAssociatedObservationsList().get(0).getObservationKey();			
-			} else if (gmDTO.getAssociatedGatheringsList() != null && gmDTO.getAssociatedGatheringsList().size() != 0) {
-				GatheringLiteDTO glDTO = gmDTO.getAssociatedGatheringsList().get(0);		
+				associatedToValue = mDTO.getAssociatedObservationsList().get(0).getObservationKey();			
+			} else if (mDTO.getAssociatedGatheringsList() != null && mDTO.getAssociatedGatheringsList().size() != 0) {
+				GatheringLiteDTO glDTO = mDTO.getAssociatedGatheringsList().get(0);		
 				String gatheringPersonName = glDTO.getResponsiblePersonName();
 				associatedToType = AssociatedToEntity.GATHERING_CODE.getId();
 				associatedToValue = gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
@@ -160,37 +157,37 @@ public class EditStep2PageController extends AbstractController{
 			mav.addObject(metadataAssociatedToValue, associatedToValue);
 
 			//taxonomy
-			mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(gmDTO.getTaxonsList()));
+			mav.addObject(metadataTaxonomy, taxonGuiOrDTOConverter.toString(mDTO.getTaxonsList()));
 
 			//site description
-			mav.addObject(metadataSiteDescription, gmDTO.getSiteDescription());
+			mav.addObject(metadataSiteDescription, mDTO.getSiteDescription());
 
 			//Author
-			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(uacDTO.getAuthorKey());
+			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(mDTO.getAuthorKey());
 			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
 
 
-			logger.debug("personOwnerKey '"+uacDTO.getPersonOwnerKey()+"'");
-			logger.debug("institutionOwnerKey '"+uacDTO.getInstitutionOwnerKey()+"'");
+			logger.debug("personOwnerKey '"+mDTO.getPersonOwnerKey()+"'");
+			logger.debug("institutionOwnerKey '"+mDTO.getInstitutionOwnerKey()+"'");
 			//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
-			if(uacDTO.getPersonOwnerKey() != null){
+			if(mDTO.getPersonOwnerKey() != null){
 				logger.debug("person Owner");
-				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(uacDTO.getPersonOwnerKey());
+				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(mDTO.getPersonOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerPersonDTO.getName());
 				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.PERSON.getId()));
 			} else{
 				logger.debug("institution Owner");
-				InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(uacDTO.getInstitutionOwnerKey());
+				InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(mDTO.getInstitutionOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
 				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
 			}
 
 
 			//Políticas de Uso
-			mav.addObject(metadataUsePolicy, uacDTO.getUsePolicyKey());
-			logger.debug(metadataUsePolicy+"'"+uacDTO.getUsePolicyKey()+"'");
+			mav.addObject(metadataUsePolicy, mDTO.getUsePolicyKey());
+			logger.debug(metadataUsePolicy+"'"+mDTO.getUsePolicyKey()+"'");
 
-			if (uacDTO.getIsPublic().charValue() == 'Y')
+			if (mDTO.getIsPublic().charValue() == 'Y')
 				mav.addObject(metadataMediaVisible, "checked");
 			else
 				mav.addObject(metadataMediaVisible, null);
@@ -626,26 +623,6 @@ public class EditStep2PageController extends AbstractController{
 		this.metadataHandler = metadataHandler;
 	}
 
-
-
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
-	}
-
-
-
 	/**
 	 * @return the agentManager
 	 */
@@ -660,6 +637,24 @@ public class EditStep2PageController extends AbstractController{
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
+	}
+
+
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 }

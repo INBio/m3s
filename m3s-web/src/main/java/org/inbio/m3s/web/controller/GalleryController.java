@@ -14,17 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
-import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.service.AgentManager;
-import org.inbio.m3s.service.MediaManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SearchManager;
 import org.inbio.m3s.util.StringUtil;
 import org.inbio.m3s.web.controller.reusable.SimpleController;
@@ -45,7 +42,7 @@ public class GalleryController extends SimpleController {
 	// "application/x-unknown-mime-type";
 	
 	private SearchManager searchManager;
-	private MediaManager mediaManager;
+	private MetadataManager metadataManager;
 	private AgentManager agentManager;	
 	
 	//DTOFactory/Service Mixture
@@ -114,7 +111,7 @@ public class GalleryController extends SimpleController {
 				int totalResults = searchManager.getTotalResults(sctList); 
 				List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
 
-				GeneralMetadataDTO gmDTO;
+				MetadataDTO mDTO;
 				MediaLite ml;
 				List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
 				BriefMediaOutputDTO bmoDTO;
@@ -122,19 +119,19 @@ public class GalleryController extends SimpleController {
 				
 				for(Integer mediaId : mediaIdsList){
 					ml = mediaDAO.getMediaLite(mediaId);
-					gmDTO = mediaManager.getGeneralMetadataByMedia(String.valueOf(mediaId));
+					mDTO = metadataManager.getMetadataByMedia(String.valueOf(mediaId));
 					
 					bmoDTO = (BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml);
 				
 					//modify info2, set the association type
 					//biodiversity information (associated to?)
 					logger.debug("Discovering the association type:");
-					if (gmDTO.getAssociatedSpecimensList() != null && gmDTO.getAssociatedSpecimensList().size() != 0) {
-						info2 = "Número de Especimen: "+gmDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
-					} else if (gmDTO.getAssociatedObservationsList() != null && gmDTO.getAssociatedObservationsList().size() != 0) {
-						info2 = "Número de Observación: "+gmDTO.getAssociatedObservationsList().get(0).getObservationKey();
-					} else if (gmDTO.getAssociatedGatheringsList() != null && gmDTO.getAssociatedGatheringsList().size() != 0) {
-						GatheringLiteDTO glDTO = gmDTO.getAssociatedGatheringsList().get(0);		
+					if (mDTO.getAssociatedSpecimensList() != null && mDTO.getAssociatedSpecimensList().size() != 0) {
+						info2 = "Número de Especimen: "+mDTO.getAssociatedSpecimensList().get(0).getSpecimenKey();
+					} else if (mDTO.getAssociatedObservationsList() != null && mDTO.getAssociatedObservationsList().size() != 0) {
+						info2 = "Número de Observación: "+mDTO.getAssociatedObservationsList().get(0).getObservationKey();
+					} else if (mDTO.getAssociatedGatheringsList() != null && mDTO.getAssociatedGatheringsList().size() != 0) {
+						GatheringLiteDTO glDTO = mDTO.getAssociatedGatheringsList().get(0);		
 						String gatheringPersonName = glDTO.getResponsiblePersonName();
 						info2 = "Código de Colecta: "+gatheringPersonName + StringUtil.TEXT_DELIMITER + glDTO.getGatheringKey();
 					} else {
@@ -243,97 +240,6 @@ public class GalleryController extends SimpleController {
 		
 		return interfaceElements;
 	}	
-	
-	
-	/**
-	 * 
-	 * @param gmDTO
-	 * @param uacDTO
-	 * @return
-	 */
-	private String addItem(GeneralMetadataDTO gmDTO, UsesAndCopyrightsDTO uacDTO){
-		String imageSize = "thumb";
-		String linkImageSize = "big";
-		String baseURL = "/m3sINBio/getImage?";
-		String mediaId = gmDTO.getMediaKey();
-		
-		//taxonomia o titulo
-		String info1 = "";
-		/*
-		if(gmDTO.getTaxonomyInfo()!=null){
-			if(gmTO.getTaxonomyInfo().size() > 0){
-			TaxonomyManager taxonomyManager = (TaxonomyManager) ServiceUtil.appContext.getBean(Properties.TAXONOMY_MANAGER);
-			TaxonLiteDTO tlDTO = (TaxonLiteDTO) taxonomyManager.getTaxonLiteById((String) gmGWTDTO.getTaxonomyInfo().get(0));
-			info1 = tlDTO.getDefaultName();
-			} else
-				info1="";
-		} else if (gmGWTDTO.getTitle()!=null)
-			info1= "Titulo: "+gmGWTDTO.getTitle();
-		else
-			info1="";
-		*/
-		
-		//bio information
-		String info2 = "";
-		/*
-		if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.GATHERING_CODE.intValue())
-			info2 = "Código de Colecta: "+gmGWTDTO.getAssociatedToInfo().getValue();
-		else if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.SPECIMEN_NUMBER.intValue())
-			info2 = "Número de Especimen: "+gmGWTDTO.getAssociatedToInfo().getValue();
-		else if(gmGWTDTO.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.OBSERVATION_NUMBER.intValue())
-			info2 = "Número de Observación: "+gmGWTDTO.getAssociatedToInfo().getValue();
-		else //if(gmtv.getAssociatedToInfo().getType().intValue() == AssociatedToConstants.NO_ASSOCIATION.intValue())
-			info2 = "Sin información asociada";		
-		 */
-		
-		//autor de la foto.
-		PersonLiteDTO plDTO =  agentManager.getPersonLite(uacDTO.getAuthorKey());
-		String info3 = "Autor: "+ plDTO.getName();
-		
-		return
-			"<div class=\"imagesRightPanel\"> <a href=\""+baseURL+"size="+linkImageSize+"&id="+mediaId+"\">"
-		+ "<div class=\"thumb-image\" style=\"background-image: url("+baseURL+"size="+imageSize+"&id="+mediaId+")\"></div>"
-		+ "<div class=\"gwt-Label imaName\">"+info1+"</div>"
-		+ "<div class=\"imaInfo\">"+info1+"</div>"
-		+ "<div class=\"imaInfo\">"+info2+"</div>"
-		+ "</a> </div>"
-		+	 "<td style=\"vertical-align: top;\" align=\"left\"/>"
-		 +  "<table style=\"width: 170px; height: 220px;\" class=\"imagesRightPanel\" cellpadding=\"0\" cellspacing=\"0\">"
-		 +   "<tbody>"
-		 +    "<tr>"
-		 +     "<td style=\"vertical-align: top;\" align=\"left\">"
-		 +      "<table style=\"width: 170px; height: 170px;\" cellpadding=\"0\" cellspacing=\"0\">"
-		 +       "<tbody>"
-		 +        "<tr>"
-		 +         "<td style=\"vertical-align: middle;\" height=\"\" width=\"\" align=\"center\">"
-		 +          "<img title=\"titulo1\" src=\""+baseURL+"size="+imageSize+"&id="+mediaId+"\" class=\"gwt-Image\">"
-		 +         "</td>"
-		 +        "</tr>"
-		 +       "</tbody>"
-		 +      "</table>"
-		 +     "</td>"
-		 +    "</tr>"
-		 +    "<tr>"
-		 +     "<td style=\"vertical-align: top;\" align=\"left\">"
-		 +      "<div class=\"gwt-Label imaName\">"+info1+"</div>"
-		 +     "</td>"
-		 +    "</tr>"
-		 +    "<tr>"
-		 +     "<td style=\"vertical-align: top;\" align=\"left\">"
-		 +      "<div class=\"imaInfo\">"+info2+"</div>"
-		 +     "</td>"
-		 +    "</tr>"
-		 +    "<tr>"
-		 +     "<td style=\"vertical-align: top;\" align=\"left\">"
-		 +      "<div class=\"imaInfo\">"+info3+"</div>"
-		 +     "</td>"
-		 +    "</tr>"
-		 +   "</tbody>"
-		 +  "</table>"
-		 + "</td>"
-		;
-		
-	}
 
 	/**
 	 * @return the searchManager
@@ -347,20 +253,6 @@ public class GalleryController extends SimpleController {
 	 */
 	public void setSearchManager(SearchManager searchManager) {
 		this.searchManager = searchManager;
-	}
-
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
 	}
 
 	/**
@@ -474,6 +366,20 @@ public class GalleryController extends SimpleController {
 	 */
 	public void setMetadataCss(String metadataCss) {
 		this.metadataCss = metadataCss;
+	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}		
 
 }

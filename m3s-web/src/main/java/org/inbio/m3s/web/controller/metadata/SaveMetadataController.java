@@ -20,7 +20,6 @@ import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
@@ -275,18 +274,15 @@ public class SaveMetadataController implements Controller {
 			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
 
 			// mediaUses
-			uacDTO.setMediaUsesList(new ArrayList<MediaUseDTO>());
+			//uacDTO.setMediaUsesList(new ArrayList<MediaUseDTO>());
 	
-			// backup and visible value
+			// visible value
 			if(mediaVisible == null){
-				uacDTO.setIsBackup(new Character('N'));
 				uacDTO.setIsPublic(new Character('N'));			
 			} else{
-				uacDTO.setIsBackup(new Character('Y'));
 				uacDTO.setIsPublic(new Character('Y'));
 			}
 			
-			logger.debug("Is backup: '" + uacDTO.getIsBackup() + "'");
 			logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
 	
 			logger.debug("\nGetting uses and copyrigths metadata its done");

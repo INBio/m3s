@@ -63,6 +63,12 @@
     <put name="content" value="/WEB-INF/jsp/media/mediaPage.jsp"/>
   </definition>
   
+  <!-- video page -->
+  <definition name="videoPage" extends="mainTemplate">
+    <put name="title" value="Multimedia"/>        
+    <put name="content" value="/WEB-INF/jsp/media/videoPage.jsp"/>
+  </definition>
+  
   <!-- login -->
   <definition name="login" extends="mainTemplate">
     <put name="title" value="Please Login"/>	    

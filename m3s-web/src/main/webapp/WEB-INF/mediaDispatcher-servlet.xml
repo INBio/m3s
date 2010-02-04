@@ -18,9 +18,11 @@
     </property>
     -->
     <property name="mappings">
-      <props>
+      <props>      
         <!-- Media Page  -->
-        <prop key="/media/**/**">mediaPage</prop>    
+        <prop key="/**">mediaPage</prop>
+        <!-- Video Page -->
+        <prop key="/video/**/**">videoPage</prop>    
       </props>
     </property>
   </bean>      
