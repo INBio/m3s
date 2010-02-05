@@ -8,7 +8,6 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.core.MetadataStandardDAO;
-import org.inbio.m3s.dto.full.MetadataStandardFull;
 import org.inbio.m3s.dto.lite.MetadataStandardLiteDTO;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -25,7 +24,6 @@ public class MetadataStandardDAOImpl extends HibernateDaoSupport implements Meta
 	 * (non-Javadoc)
 	 * 
 	 * @see org.inbio.m3s.dao.interfaces.MetadataStandardDAO#getMetadataStandardFull(java.lang.Integer)
-	 */
 	public MetadataStandardFull getMetadataStandardFull(final Integer MetadataStandardId)
 			throws IllegalArgumentException {
 		HibernateTemplate template = getHibernateTemplate();
@@ -42,7 +40,7 @@ public class MetadataStandardDAOImpl extends HibernateDaoSupport implements Meta
 			}
 		});
 	}
-
+	 */
 
 	@SuppressWarnings("unchecked")
 	public List<MetadataStandardLiteDTO> getMetadataStandardLite(final Integer mediaTypeDBId, final Integer languageId) throws IllegalArgumentException {
