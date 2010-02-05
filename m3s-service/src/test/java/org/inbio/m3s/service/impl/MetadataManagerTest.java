@@ -31,6 +31,21 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		logger.info(maDTO.toString());
 		
 	}
+	
+	/*
+	public void testInsertNewMedia(){
+		
+		MediaManager mm = (MediaManager) getBean(Properties.MEDIA_MANAGER);	
+				
+		GeneralMetadataDTO gm = new GeneralMetadataDTO("title", "description", new Integer(1),null,"site description");
+		UsesAndCopyrightsDTO uac = new UsesAndCopyrightsDTO(new Integer(10017),null,new Integer(1),new Integer(2),'N','Y'); 
+		TechnicalMetadataDTO tm = mm.getTM(new Integer(100015));
+		
+		Integer mediaId = mm.insertNewMedia(gm, uac, tm);
+		
+		System.out.println("media insertado = "+mediaId);
+	}
+*/
 
 	
 	/*

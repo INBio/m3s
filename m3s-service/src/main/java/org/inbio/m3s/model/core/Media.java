@@ -33,10 +33,8 @@ public class Media extends LogGenericEntity {
 
 	private Integer mediaId;
 
-	//private MediaType mediaType;
 	private Integer mediaTypeId;
 
-	//private UsePolicy usePolicy;
 	private Integer usePolicyId;
 
 	private Integer authorPersonId;

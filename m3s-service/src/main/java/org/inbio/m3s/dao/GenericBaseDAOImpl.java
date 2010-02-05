@@ -36,6 +36,7 @@ public class GenericBaseDAOImpl<E extends LogGenericEntity,I extends Object> ext
 	 */
 	public void create(E entity) {
 		HibernateTemplate template = getHibernateTemplate();
+		entity.setCreateLogValues();
 		template.persist(entity);
 		template.flush();
 		
@@ -47,7 +48,7 @@ public class GenericBaseDAOImpl<E extends LogGenericEntity,I extends Object> ext
 	 */
 	public void update(E entity) {
 		HibernateTemplate template = getHibernateTemplate();
-		entity.setCreateLogValues();
+		entity.setUpdateLogValues();
 		template.update(entity);
 		template.flush();
 	}
@@ -58,7 +59,6 @@ public class GenericBaseDAOImpl<E extends LogGenericEntity,I extends Object> ext
 	 */
 	public void delete(E entity) {
 		HibernateTemplate template = getHibernateTemplate();
-		entity.setUpdateLogValues();
 		template.delete(entity);
 		template.flush();		
 	}

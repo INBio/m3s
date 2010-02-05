@@ -7,10 +7,8 @@ package org.inbio.m3s.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.config.Properties;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.service.AbstractServiceTest;
-import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.TaxonomyManager;
 
 /**

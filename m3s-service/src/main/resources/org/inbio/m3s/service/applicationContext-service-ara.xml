@@ -14,40 +14,31 @@
 
   <!-- Metadata Manager (3 version)-->  
   <bean id="ARAMetadataManager" class="org.inbio.m3s.service.impl.MetadataManagerImpl">
+    <!-- dao  y dto factories-->
     <property name="mediaDAO" ref="mediaDAO"/>
-    <property name="keywordDAO" ref="keywordDAO"/>
-    <property name="projectDAO" ref="projectDAO"/>
-    <property name="projectDTOFactory" ref="projectDTOFactory"/>
-    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
-    <property name="textTranslationDAO" ref="textTranslationDAO"/>
-    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
-    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
-  </bean>  
-  
-<!-- Media Attribute (3 versiones)-->  
-  <bean id="ARAMediaManager" class="org.inbio.m3s.service.impl.MediaManagerImpl">
-    <property name="mediaDAO" ref="mediaDAO"/>
-    <property name="projectDAO" ref="projectDAO"/>
-    <property name="projectDTOFactory" ref="projectDTOFactory"/>    
-    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
-    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
     <property name="mediaProjectDAO" ref="mediaProjectDAO"/>
     <property name="mediaKeywordDAO" ref="mediaKeywordDAO"/>
     <property name="mediaUseDAO" ref="mediaUseDAO"/>
+    
     <property name="mediaUseMediaDAO" ref="mediaUseMediaDAO"/>
-    <property name="mediaTypeDAO" ref="mediaTypeDAO"/>
     <property name="taxonMediaDAO" ref="taxonMediaDAO"/>
     <property name="gatheringMediaDAO" ref="gatheringMediaDAO"/>
     <property name="specimenMediaDAO" ref="specimenMediaDAO"/>
+
     <property name="observationMediaDAO" ref="observationMediaDAO"/>
-    <property name="usePolicyDAO" ref="usePolicyDAO"/>
+    <property name="mediaAttributeDAO" ref="mediaAttributeDAO"/>
+    <property name="textTranslationDAO" ref="textTranslationDAO"/>
+    <property name="mediaAttributeTypeDAO" ref="mediaAttributeTypeDAO"/>
+    
+    <property name="mediaAttributeValueDAO" ref="mediaAttributeValueDAO"/>
+    <property name="projectDAO" ref="projectDAO"/>
+    <property name="projectDTOFactory" ref="projectDTOFactory"/>                
     <property name="keywordDAO" ref="keywordDAO"/>
-    <property name="mediaAttributeManager" ref="mediaAttributeManager"/>
+    
+    <!-- Managers -->
     <property name="agentManager" ref="ARAAgentManager"/>
-    <property name="taxonomyManager" ref="ARATaxonomyManager"/> 
-    <property name="metadataManager" ref="ARAMetadataManager"/>
-  </bean>
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+  </bean>  
     
   <!--  SearchManager -->
   <bean id="ARASearchManager" class="org.inbio.m3s.service.impl.SearchManagerImpl">
@@ -84,14 +75,16 @@
   
 <!-- importFromFile (3 versiones, ¿¿seran mas??)-->  
   <bean id="ARAImportFromFile" class="org.inbio.m3s.service.util.ImportFromFile">
+    <!-- daos -->
+    <property name="siteDAO" ref="ARASiteDAO"/>
+    <!-- managers -->
+    <property name="taxonomyManager" ref="ARATaxonomyManager"/>
+    <property name="siteManager" ref="ARASiteManager"/>
+    <property name="agentManager" ref="ARAAgentManager"/>
+    <property name="messageManager" ref="messageManager"/>  
+    <property name="metadataManager" ref="ARAMetadataManager"/>    
+    <!-- util -->
   	<property name="mediaFileManagement" ref="mediaFileManagement"/>
-  	<property name="mediaManager" ref="ARAMediaManager"/>
-  	<property name="taxonomyManager" ref="ARATaxonomyManager"/>
-  	<property name="siteDAO" ref="ARASiteDAO"/>
-  	<property name="siteManager" ref="ARASiteManager"/>
-  	<property name="agentManager" ref="ARAAgentManager"/>
-  	<property name="messageManager" ref="messageManager"/>  
-    <property name="metadataManager" ref="ARAMetadataManager"/>
   </bean>  
 
   

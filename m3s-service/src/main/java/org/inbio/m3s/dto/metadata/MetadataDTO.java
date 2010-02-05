@@ -50,6 +50,34 @@ public class MetadataDTO extends BaseDTO {
 	//other metadata mediaAttributes associated to the mediaType
 	private List<TechnicalMetadataItemDTO> items; //mediaAttributes list
 	
+	
+	/**
+	 */
+	public MetadataDTO() {
+		super();
+	}
+	
+	/**
+	 * @param mediaKey
+	 * @param title
+	 * @param description
+	 * @param mediaTypeKey
+	 * @param siteKey
+	 * @param siteDescription
+	 * @param username
+	 */
+	public MetadataDTO(String mediaKey, String title, String description,
+			String mediaTypeKey, String siteKey, String siteDescription, String username) {
+		this.mediaKey = mediaKey;
+		this.title = title;
+		this.description = description;
+		this.mediaTypeKey = mediaTypeKey;
+		this.siteKey = siteKey;
+		this.siteDescription = siteDescription;
+		super.setUsername(username);
+		
+	}
+	
 	/**
 	 * 
 	 */

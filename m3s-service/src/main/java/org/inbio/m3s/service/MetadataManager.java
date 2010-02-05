@@ -3,8 +3,18 @@
  */
 package org.inbio.m3s.service;
 
+import java.util.List;
+
+import org.inbio.m3s.dto.message.KeywordDTO;
+import org.inbio.m3s.dto.message.ProjectDTO;
+import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
+import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
+import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
+import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
+import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 
 
 /**
@@ -20,12 +30,30 @@ public interface MetadataManager {
 	 * @throws IllegalArgumentException
 	 */
 	public MetadataDTO getMetadataByMedia(String mediaKey) throws IllegalArgumentException;
+	
+	/**
+	 * 
+	 * @param metadataDTO
+	 * @throws IllegalArgumentException
+	 */
+	public void updateMetadata(MetadataDTO metadataDTO) throws IllegalArgumentException; 
+	
+	/**
+	 * Saves a new MetadataDTO in the database
+	 * 
+	 * @param metadataDTO
+	 * @return the ID of the new Media
+	 * @throws IllegalArgumentException
+	 */
+	public Integer saveMetadata(MetadataDTO metadataDTO) throws IllegalArgumentException;
 
 	/**
 	 * 
-	 * @param techMetadataDTO
+	 * @param mediaKey
+	 * @param mediaAttributesList
+	 * @throws IllegalArgumentException
 	 */
-	public void saveTechnicalMetadata(TechnicalMetadataDTO techMetadataDTO);
+	public void saveTechnicalMetadata(String mediaKey, List<TechnicalMetadataItemDTO> mediaAttributesList) throws IllegalArgumentException;
 
 	/**
 	 * Gets the Technical Metadata information from the database.
@@ -57,5 +85,33 @@ public interface MetadataManager {
 	 */
 	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress);
 	
+	
+	/**  Are this methods private?**/
+	
+	public void addProjectsList(String mediaKey, List<ProjectDTO> projectLiteList) throws IllegalArgumentException;
+	
+	public void addKeywordsList(String mediaKey, List<KeywordDTO> keywordsList) throws IllegalArgumentException;
+
+	public void deleteKeywords(String mediaKey, List<KeywordDTO> keywordsList) throws IllegalArgumentException;
+
+	public void addMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList) throws IllegalArgumentException;
+
+	public void deleteMediaUses(String mediaKey, List<MediaUseDTO> mediaUsesList) throws IllegalArgumentException;
+
+	public void addTaxons(String mediaKey, List<TaxonLiteDTO> taxonsList) throws IllegalArgumentException;
+
+	public void deleteTaxons(String mediaKey, List<TaxonLiteDTO> taxonsList) throws IllegalArgumentException;
+	
+	public void addGatherings(String mediaKey, List<GatheringLiteDTO> gatheringsList) throws IllegalArgumentException;
+
+	public void deleteGatherings(String mediaKey, List<GatheringLiteDTO> gatheringsList) throws IllegalArgumentException;
+
+	public void addSpecimens(String mediaKey, List<SpecimenLiteDTO> specimensList) throws IllegalArgumentException;
+
+	public void deleteSpecimens(String mediaKey, List<SpecimenLiteDTO> specimensList) throws IllegalArgumentException;
+
+	public void addObservations(String mediaKey, List<ObservationLiteDTO> observationsList) throws IllegalArgumentException;
+	
+	public void deleteObservations(String mediaKey, List<ObservationLiteDTO> observationsList) throws IllegalArgumentException;
 
 }

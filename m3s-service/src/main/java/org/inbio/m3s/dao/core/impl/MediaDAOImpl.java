@@ -24,8 +24,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.model.core.Media;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -127,7 +125,6 @@ public class MediaDAOImpl extends GenericBaseDAOImpl<Media,Integer> implements M
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.MediaDAO#getGeneralMetadataDTO(java.lang.String)
 	 * @deprecated
-	 */
 	public GeneralMetadataDTO getGeneralMetadataDTO(final String mediaId) {
 		logger.debug("getGeneralMetadataDTO with param [" + mediaId + "]");
 		HibernateTemplate template = getHibernateTemplate();
@@ -145,12 +142,12 @@ public class MediaDAOImpl extends GenericBaseDAOImpl<Media,Integer> implements M
 			}
 		});
 	}
+		 */
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.dao.core.MediaDAO#getUsesAndCopyrightsDTO(java.lang.Integer)
 	 * @deprecated
-	 */
 	public UsesAndCopyrightsDTO getUsesAndCopyrightsDTO(final Integer mediaId) {
 		logger.debug("UsesAndCopyrightsDTO with param [" + mediaId + "]");
 		HibernateTemplate template = getHibernateTemplate();
@@ -168,6 +165,7 @@ public class MediaDAOImpl extends GenericBaseDAOImpl<Media,Integer> implements M
 			}
 		});
 	}
+ */
 
 
 }

@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.inbio.m3s.dao.GenericBaseDAO;
 import org.inbio.m3s.dto.lite.MediaLite;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.model.core.Media;
 
 public interface MediaDAO extends GenericBaseDAO<Media, Integer>{
@@ -36,10 +34,10 @@ public interface MediaDAO extends GenericBaseDAO<Media, Integer>{
 	public MediaLite getMediaLite(Integer mediaId) throws IllegalArgumentException;  
 	@Deprecated
 	public List<MediaLite> getMediaLiteForTaxonId(Integer taxonId) throws IllegalArgumentException;
-	@Deprecated
-	public GeneralMetadataDTO getGeneralMetadataDTO(String mediaKey);
-	@Deprecated
-	public UsesAndCopyrightsDTO getUsesAndCopyrightsDTO(Integer mediaId);
+	//@Deprecated
+	//public GeneralMetadataDTO getGeneralMetadataDTO(String mediaKey);
+	//@Deprecated
+	//public UsesAndCopyrightsDTO getUsesAndCopyrightsDTO(Integer mediaId);
 
 	
 }

@@ -15,10 +15,9 @@ import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.ImportationFileEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
@@ -37,7 +36,6 @@ import org.inbio.m3s.exception.ProjectNotFoundException;
 import org.inbio.m3s.exception.TaxonNotFoundException;
 import org.inbio.m3s.exception.YesNoValueNotFoundException;
 import org.inbio.m3s.service.AgentManager;
-import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SiteManager;
@@ -60,7 +58,6 @@ public class ImportFromFile {
 	SiteDAO siteDAO;
 	
 	//managers
-	MediaManager mediaManager;
 	TaxonomyManager taxonomyManager;
 	SiteManager siteManager;
 	AgentManager agentManager;
@@ -70,8 +67,6 @@ public class ImportFromFile {
 	//util clases
 	MediaFileManagement mediaFileManagement;
 	
-	//constants
-	//private String realBatchMediaDir;
 	
 	private static Logger logger = Logger.getLogger(ImportFromFile.class);
 
@@ -93,8 +88,7 @@ public class ImportFromFile {
 			throws FileNotFoundException, IOException, IllegalArgumentException {
 		logger.debug("\nImportacion de archivos en lote con archivo: " + importFileName);
 
-		GeneralMetadataDTO gm;
-		UsesAndCopyrightsDTO uacm;
+		MetadataDTO mDTO;
 		TechnicalMetadataDTO tmDTO;
 		ImportFileParser fileParser = getImportFileParser(importFileName, fileType);
 		String fileNameColumnValue;
@@ -108,24 +102,21 @@ public class ImportFromFile {
 				fileNameColumnValue = fileParser.read(i, ImportFileParser.FILE_NAME_DATA);
 				String resultStatus = "";
 
-				
-				gm = getGM(fileParser, i);
-				logger.debug("Ya se obtuvieron los metadatos Generales.");
-				
-				uacm = getUAC(fileParser, i);
-				logger.debug("Ya se obtuvieron los metadatos De Autoría y Derechos de Uso.");
+				mDTO = getMetadata(fileParser, i);
+				logger.debug("Ya se obtuvieron los metadatos.");
 
 				logger.debug("Importando " + getFileNamesToImport(fileNameColumnValue,importationBatchMediaPath).size() + " elementos correspondientes a la fila");
 				// for init
 				for (String fileName : getFileNamesToImport(fileNameColumnValue, importationBatchMediaPath)) {
 					logger.debug("Extrayendo metadatos técnicos del archivo: '" + fileName + "'");
-					tmDTO = metadataManager.getTechMetadataFromFile(gm.getMediaTypeKey(), fileName);
+					tmDTO = metadataManager.getTechMetadataFromFile(mDTO.getMediaTypeKey(), fileName);
 					if(tmDTO==null)
-						tmDTO = metadataManager.getTechMetadataByMediaType(gm.getMediaTypeKey());
+						tmDTO = metadataManager.getTechMetadataByMediaType(mDTO.getMediaTypeKey());
 
-					if (mediaFileManagement.isFileReadable(fileName))
-						mediaId = mediaManager.insertNewMedia(gm, uacm, tmDTO);
-					else{
+					if (mediaFileManagement.isFileReadable(fileName)){
+						mDTO.setItems(tmDTO.getItems());
+						mediaId = metadataManager.saveMetadata(mDTO);
+					} else{
 						fileParser.writeResult(i, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede abrir el archivo: '" + fileName + "'.");
 						throw new IllegalArgumentException("file '" + fileName + "' is not readable.");
 					}
@@ -134,7 +125,7 @@ public class ImportFromFile {
 					// FIXME: only for jpg's... not really a bug! ;).
 					// organizeAndCleanFiles(mediaFileName, mediaId.toString() + ".jpg",mediaId);
 					// organizeAndCleanFiles(fileName, mediaId.toString() + ".jpg",mediaId);
-					mediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(gm.getMediaTypeKey()),mediaFilesPath);
+					mediaFileManagement.organizeAndCleanFiles(fileName, mediaId, Integer.valueOf(mDTO.getMediaTypeKey()),mediaFilesPath);
 
 					resultStatus = resultStatus.concat("Medio guardado con exito, ID #"	+ mediaId.toString() + ".");
 				}
@@ -155,7 +146,8 @@ public class ImportFromFile {
 		logger.info("Importacion concluida.");
 	}
 	
-	
+
+
 	/**
 	 * Get the names of the files to be imported.
 	 * 
@@ -233,21 +225,19 @@ public class ImportFromFile {
 	}
 
 
-
-
 	/**
-	 * Gets the GeneralmetadaTV indo directly from the importFile
 	 * 
 	 * @param info
 	 *          the representation of the import info file
 	 * @param rowNumber
 	 *          the number of row being process
-	 * @return a GeneralMetadataTV object
+	 * @return
 	 * @throws IllegalArgumentException
 	 *           if some information is wrong or in bad format
 	 */
-	private GeneralMetadataDTO getGM(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
-		GeneralMetadataDTO gmDTO = new GeneralMetadataDTO();
+	private MetadataDTO getMetadata(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
+
+		MetadataDTO mDTO = new MetadataDTO();
 		Integer associationTypeCode;
 		String associatedToValue = null;
 		String siteDescription;
@@ -255,41 +245,42 @@ public class ImportFromFile {
 		String kingdom;
 		List<TaxonLiteDTO> taxonsList = new ArrayList<TaxonLiteDTO>();
 		TaxonLiteDTO tlDTO = null;
+		String booleanLiteralValue;
 
 		//Media Key
-		gmDTO.setMediaKey(null);
+		mDTO.setMediaKey(null);
 
-		logger.debug("\nGetting general metadata");
+		logger.debug("\nGetting metadata");
 
 		try {
 			//Title
-			gmDTO.setTitle(info.read(rowNumber, ImportFileParser.TITLE_DATA));
+			mDTO.setTitle(info.read(rowNumber, ImportFileParser.TITLE_DATA));
 			info.writeResult(rowNumber, ImportFileParser.TITLE_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Title: '" + gmDTO.getTitle() + "'");
+			logger.debug("Title: '" + mDTO.getTitle() + "'");
 
 			//Description
-			gmDTO.setDescription(info.read(rowNumber, ImportFileParser.DESCRIPTION_DATA));
+			mDTO.setDescription(info.read(rowNumber, ImportFileParser.DESCRIPTION_DATA));
 			info.writeResult(rowNumber, ImportFileParser.DESCRIPTION_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Description: '" + gmDTO.getDescription() + "'");
+			logger.debug("Description: '" + mDTO.getDescription() + "'");
 
 			//Media Type
 			MediaTypeDTO mtDTO =  messageManager.getMediaTypeByName(info.read(rowNumber, ImportFileParser.MEDIA_TYPE_DATA));
-			gmDTO.setMediaTypeKey(mtDTO.getMediaTypeKey());
-			logger.debug("Media Type: '" + gmDTO.getMediaTypeKey() + "'");
+			mDTO.setMediaTypeKey(mtDTO.getMediaTypeKey());
+			logger.debug("Media Type: '" + mDTO.getMediaTypeKey() + "'");
 
 			//Projects
 			String projects = info.read(rowNumber, ImportFileParser.PROJECTS_DATA);
 			//gmDTO.setProjectsList(getProjectLiteList(projects));
-			gmDTO.setProjectsList(messageManager.getProjectsFromStringList(projects));
+			mDTO.setProjectsList(messageManager.getProjectsFromStringList(projects));
 			info.writeResult(rowNumber, ImportFileParser.PROJECTS_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Projects: '" + gmDTO.getProjectsList().size() + "'");
+			logger.debug("Projects: '" + mDTO.getProjectsList().size() + "'");
 
 			// keywords
 			String keywords = info.read(rowNumber, ImportFileParser.KEYWORDS_DATA);
 			//gmDTO.setKeywordsList(getKeywords(keywords));
-			gmDTO.setKeywordsList(messageManager.getKeywordsFromStringList(keywords));
+			mDTO.setKeywordsList(messageManager.getKeywordsFromStringList(keywords));
 			info.writeResult(rowNumber, ImportFileParser.KEYWORDS_DATA,	ImportFileParser.SUCCESFUL);
-			logger.debug("Keywords: '" + gmDTO.getKeywordsList().size() + "'");
+			logger.debug("Keywords: '" + mDTO.getKeywordsList().size() + "'");
 			
 			// asociation type and value
 			associationTypeCode = getAssociationTypeCode(info.read(rowNumber,ImportFileParser.ASOCIATION_TYPE_DATA));
@@ -298,25 +289,25 @@ public class ImportFromFile {
 
 			//AssociatedTo....			
 			List<SpecimenLiteDTO> associatedSpecimensList = new ArrayList<SpecimenLiteDTO>();
-			gmDTO.setAssociatedSpecimensList(associatedSpecimensList);
+			mDTO.setAssociatedSpecimensList(associatedSpecimensList);
 			List<ObservationLiteDTO> associatedObservationsList =  new ArrayList<ObservationLiteDTO>();
-			gmDTO.setAssociatedObservationsList(associatedObservationsList);
+			mDTO.setAssociatedObservationsList(associatedObservationsList);
 			List<GatheringLiteDTO> associatedGatheringsList = new ArrayList<GatheringLiteDTO>();
-			gmDTO.setAssociatedGatheringsList(associatedGatheringsList);
+			mDTO.setAssociatedGatheringsList(associatedGatheringsList);
 			
 			if (associationTypeCode.equals(AssociatedToEntity.SPECIMEN_NUMBER.getId())) {
 				logger.debug("Associated to Specimen Number");
 					
 					SpecimenLiteDTO slDTO = new SpecimenLiteDTO(associatedToValue);
 					associatedSpecimensList.add(slDTO);
-					gmDTO.setAssociatedSpecimensList(associatedSpecimensList);
+					mDTO.setAssociatedSpecimensList(associatedSpecimensList);
 					logger.debug("Associated To Specimen Number... done");
 			
 			} else if (associationTypeCode.equals(AssociatedToEntity.OBSERVATION_NUMBER.getId())) {
 				logger.debug("Associated to Observation Number");
 				ObservationLiteDTO olDTO = new ObservationLiteDTO(associatedToValue);
 				associatedObservationsList.add(olDTO);
-				gmDTO.setAssociatedObservationsList(associatedObservationsList);
+				mDTO.setAssociatedObservationsList(associatedObservationsList);
 				logger.debug("Associated To Observation Number... done");
 
 			} else if (associationTypeCode.equals(AssociatedToEntity.GATHERING_CODE.getId())) {
@@ -331,7 +322,7 @@ public class ImportFromFile {
 				logger.debug(glDTO.toString());
 				
 				associatedGatheringsList.add(glDTO);
-				gmDTO.setAssociatedGatheringsList(associatedGatheringsList);
+				mDTO.setAssociatedGatheringsList(associatedGatheringsList);
 					
 				logger.debug("Associated To Collect Number... done");
 			}
@@ -376,9 +367,9 @@ public class ImportFromFile {
 
 			}
 
-			gmDTO.setTaxonsList(taxonsList);
+			mDTO.setTaxonsList(taxonsList);
 			info.writeResult(rowNumber, ImportFileParser.TAXONOMY_DATA,	ImportFileParser.SUCCESFUL);
-			logger.debug("Taxonomy elements: '" + gmDTO.getTaxonsList().size() + "'");
+			logger.debug("Taxonomy elements: '" + mDTO.getTaxonsList().size() + "'");
 
 			// this.setSynapticCollectionListValue(generalMetadata
 			// .getSynopticColletion());
@@ -397,17 +388,59 @@ public class ImportFromFile {
 					siteDescription = siteManager.getSiteFromGatheringCode(associatedToValue);
 				}
 			}
-			gmDTO.setSiteDescription(siteDescription);
-			gmDTO.setSiteKey(null);
+			mDTO.setSiteDescription(siteDescription);
+			mDTO.setSiteKey(null);
 			info.writeResult(rowNumber, ImportFileParser.SITE_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Site Description: '" + gmDTO.getSiteDescription() + "'");
-			logger.debug("Site Key: '" + gmDTO.getSiteKey() + "'");
+			logger.debug("Site Description: '" + mDTO.getSiteDescription() + "'");
+			logger.debug("Site Key: '" + mDTO.getSiteKey() + "'");
+			
+			// set author
+			String authorName = info.read(rowNumber,	ImportFileParser.AUTHOR_PERSON_NAME_DATA);
+			PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
+			mDTO.setAuthorKey(plDTO.getPersonKey());
+			info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Author Key: '" + mDTO.getAuthorKey() + "'");
+			
+			// owner type: institutionOwnerId and AuthorOwnerId
+			String ownerTypeText = info.read(rowNumber, ImportFileParser.OWNER_TYPE_DATA);
+			String ownerNameText = info.read(rowNumber, ImportFileParser.OWNER_FIRST_DATA);
+			Integer ownerTypeId = getOwnerType(ownerTypeText);
+			if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
+				InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerNameText);
+				mDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
+				mDTO.setPersonOwnerKey(null);
+			} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
+				PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerNameText);
+				mDTO.setPersonOwnerKey(oplDTO.getPersonKey());
+				mDTO.setInstitutionOwnerKey(null);
+			} else {
+				logger.error("No valid owner Type... debería tirarse una excepcion");	
+			}
+			info.writeResult(rowNumber, ImportFileParser.OWNER_TYPE_DATA, ImportFileParser.SUCCESFUL);
+			logger.debug("Author Owner Type: '" + mDTO.getAuthorKey() + "'");
+			logger.debug("Institution Owner Type: '" + mDTO.getInstitutionOwnerKey() + "'");
+	
+			// use policy
+			UsePolicyDTO upDTO = messageManager.getUsePolicyByName(info.read(rowNumber, ImportFileParser.USE_POLICY_DATA));
+			mDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
+			info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Use policy: '" + mDTO.getUsePolicyKey() + "'");	
+			
+	
+			// set is Public
+			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_PUBLIC_DATA);
+			if(isAfirmativeText(booleanLiteralValue))
+				mDTO.setIsPublic(new Character('Y'));
+			else
+				mDTO.setIsPublic(new Character('N'));
+			info.writeResult(rowNumber, ImportFileParser.IS_PUBLIC_DATA,ImportFileParser.SUCCESFUL);
+			logger.debug("Is public: '" + mDTO.getIsPublic() + "'");			
 			
 			
-			logger.debug("Getting general metadataDTO its done\n");
-			logger.info(gmDTO.toString());
+			logger.debug("Getting metadataDTO its done\n");
+			logger.info(mDTO.toString());
 			
-			return gmDTO;
+			return mDTO;
 
 		} catch (MediaTypeNotFoundException mtnfe) {
 			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de Medio: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
@@ -434,86 +467,7 @@ public class ImportFromFile {
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + atnfe.getNotFoundAssociationType() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(atnfe.getMessage());
 
-		}	catch (Exception e) {
-			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " '" + e.getMessage() + "'");
-			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
-			throw new IllegalArgumentException(e.getMessage());
-		}
-	}
-
-	/**
-	 * 
-	 * Gets the UsesAndCopyrightsTV info directly from the importFile
-	 * 
-	 * @param info
-	 *          the representation of the import info file
-	 * @param rowNumber
-	 *          the number of row being process
-	 * @return a UsesAndCopyrightsTV object
-	 * @throws IllegalArgumentException
-	 *           if some information is wrong or in bad format
-	 */
-	private UsesAndCopyrightsDTO getUAC(ImportFileParser info, int rowNumber) throws IllegalArgumentException {
-		UsesAndCopyrightsDTO uacDTO = new UsesAndCopyrightsDTO();
-		String booleanLiteralValue;
-
-		uacDTO.setMediaKey(null);
-
-		logger.debug("\nGetting uses and copyrigths metadata TV");
-		
-		try{
-	
-			// set author
-			String authorName = info.read(rowNumber,	ImportFileParser.AUTHOR_PERSON_NAME_DATA);
-			PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
-			uacDTO.setAuthorKey(plDTO.getPersonKey());
-			info.writeResult(rowNumber, ImportFileParser.AUTHOR_PERSON_NAME_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Author Key: '" + uacDTO.getAuthorKey() + "'");
-			
-			// owner type: institutionOwnerId and AuthorOwnerId
-			String ownerTypeText = info.read(rowNumber, ImportFileParser.OWNER_TYPE_DATA);
-			String ownerNameText = info.read(rowNumber, ImportFileParser.OWNER_FIRST_DATA);
-			Integer ownerTypeId = getOwnerType(ownerTypeText);
-			if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
-				InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerNameText);
-				uacDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
-				uacDTO.setPersonOwnerKey(null);
-			} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
-				PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerNameText);
-				uacDTO.setPersonOwnerKey(oplDTO.getPersonKey());
-				uacDTO.setInstitutionOwnerKey(null);
-			} else {
-				logger.error("No valid owner Type... debería tirarse una excepcion");	
-			}
-			info.writeResult(rowNumber, ImportFileParser.OWNER_TYPE_DATA, ImportFileParser.SUCCESFUL);
-			logger.debug("Author Owner Type: '" + uacDTO.getAuthorKey() + "'");
-			logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
-	
-			// use policy
-			UsePolicyDTO upDTO = messageManager.getUsePolicyByName(info.read(rowNumber, ImportFileParser.USE_POLICY_DATA));
-			uacDTO.setUsePolicyKey(upDTO.getUsePolicyKey());
-			info.writeResult(rowNumber, ImportFileParser.USE_POLICY_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
-			
-			// mediaUses
-			//String mediaUsesText = info.read(rowNumber,ImportFileParser.MEDIA_USES_DATA);
-			//uacDTO.setMediaUsesList(getMediaUsesList(mediaUsesText));
-			//info.writeResult(rowNumber, ImportFileParser.MEDIA_USES_DATA,ImportFileParser.SUCCESFUL);
-			//logger.debug("Media Uses: '" + uacDTO.getMediaUsesList().size() + "'");
-	
-			// set is Public
-			booleanLiteralValue = info.read(rowNumber, ImportFileParser.IS_PUBLIC_DATA);
-			if(isAfirmativeText(booleanLiteralValue))
-				uacDTO.setIsPublic(new Character('Y'));
-			else
-				uacDTO.setIsPublic(new Character('N'));
-			info.writeResult(rowNumber, ImportFileParser.IS_PUBLIC_DATA,ImportFileParser.SUCCESFUL);
-			logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
-	
-			logger.debug("\nGetting uses and copyrigths metadata its done");
-			return uacDTO;
-		
-		}  catch (PersonNotFoundException pnfe) {
+		}	catch (PersonNotFoundException pnfe) {
 			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
 			throw new IllegalArgumentException(pnfe.getMessage());
@@ -537,9 +491,14 @@ public class ImportFromFile {
 			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " 'No se puede reconoger el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo.");
 			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo..");
 			throw new IllegalArgumentException(ynvnfe.getMessage());
-		}				
 		
+		} catch (Exception e) {
+			info.writeResult(rowNumber, ImportFileParser.FINAL_RESULT,ImportFileParser.ERROR + " '" + e.getMessage() + "'");
+			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
+			throw new IllegalArgumentException(e.getMessage());
+		}
 	}
+
 
 	/**
 	 * 
@@ -639,39 +598,13 @@ public class ImportFromFile {
 	private final static String NEGATIVE_TEXT = "No";
 
 	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
-	}
-
-	/**
-	 * @return the taxonomyManager
-	 */
-	public TaxonomyManager getTaxonomyManager() {
-		return taxonomyManager;
-	}
-
-	/**
-	 * @param taxonomyManager the taxonomyManager to set
-	 */
-	public void setTaxonomyManager(TaxonomyManager taxonomyManager) {
-		this.taxonomyManager = taxonomyManager;
-	}
-
-	/**
 	 * @return the siteDAO
 	 */
 	public SiteDAO getSiteDAO() {
 		return siteDAO;
 	}
+
+
 
 	/**
 	 * @param siteDAO the siteDAO to set
@@ -680,12 +613,34 @@ public class ImportFromFile {
 		this.siteDAO = siteDAO;
 	}
 
+
+
+	/**
+	 * @return the taxonomyManager
+	 */
+	public TaxonomyManager getTaxonomyManager() {
+		return taxonomyManager;
+	}
+
+
+
+	/**
+	 * @param taxonomyManager the taxonomyManager to set
+	 */
+	public void setTaxonomyManager(TaxonomyManager taxonomyManager) {
+		this.taxonomyManager = taxonomyManager;
+	}
+
+
+
 	/**
 	 * @return the siteManager
 	 */
 	public SiteManager getSiteManager() {
 		return siteManager;
 	}
+
+
 
 	/**
 	 * @param siteManager the siteManager to set
@@ -694,12 +649,16 @@ public class ImportFromFile {
 		this.siteManager = siteManager;
 	}
 
+
+
 	/**
 	 * @return the agentManager
 	 */
 	public AgentManager getAgentManager() {
 		return agentManager;
 	}
+
+
 
 	/**
 	 * @param agentManager the agentManager to set
@@ -708,12 +667,16 @@ public class ImportFromFile {
 		this.agentManager = agentManager;
 	}
 
+
+
 	/**
 	 * @return the messageManager
 	 */
 	public MessageManager getMessageManager() {
 		return messageManager;
 	}
+
+
 
 	/**
 	 * @param messageManager the messageManager to set
@@ -722,6 +685,8 @@ public class ImportFromFile {
 		this.messageManager = messageManager;
 	}
 
+
+
 	/**
 	 * @return the metadataManager
 	 */
@@ -729,12 +694,15 @@ public class ImportFromFile {
 		return metadataManager;
 	}
 
+
+
 	/**
 	 * @param metadataManager the metadataManager to set
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
 	}
+
 
 
 	/**
@@ -745,15 +713,13 @@ public class ImportFromFile {
 	}
 
 
+
 	/**
 	 * @param mediaFileManagement the mediaFileManagement to set
 	 */
 	public void setMediaFileManagement(MediaFileManagement mediaFileManagement) {
 		this.mediaFileManagement = mediaFileManagement;
 	}
-
-
-
 
 
 }
