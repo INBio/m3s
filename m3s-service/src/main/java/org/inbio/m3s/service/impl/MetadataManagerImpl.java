@@ -412,36 +412,36 @@ public class MetadataManagerImpl implements MetadataManager {
 			
 			// set the associatedSpecimens
 			if(metadataDTO.getAssociatedSpecimensList()!=null)
-				addSpecimens(metadataDTO.getMediaKey(), metadataDTO.getAssociatedSpecimensList());
+				addSpecimens(String.valueOf(theMedia.getMediaId()), metadataDTO.getAssociatedSpecimensList());
 			logger.debug("Saving MetadataDTO... AsociatedSpecimens set");
 			
 			// set the associatedObservations
 			if(metadataDTO.getAssociatedObservationsList()!=null)
-				addObservations(metadataDTO.getMediaKey(), metadataDTO.getAssociatedObservationsList());
+				addObservations(String.valueOf(theMedia.getMediaId()), metadataDTO.getAssociatedObservationsList());
 			logger.debug("Saving MetadataDTO... AsociatedObservations set");
 			
 			// set the associatedCollections
 			if(metadataDTO.getAssociatedGatheringsList()!=null)
-				addGatherings(metadataDTO.getMediaKey(), metadataDTO.getAssociatedGatheringsList());
+				addGatherings(String.valueOf(theMedia.getMediaId()), metadataDTO.getAssociatedGatheringsList());
 			logger.debug("Saving MetadataDTO... AsociatedCollects set");
 			
 			//projects
 			if(metadataDTO.getProjectsList()!=null)
-				addProjectsList(metadataDTO.getMediaKey(), metadataDTO.getProjectsList());
+				addProjectsList(String.valueOf(theMedia.getMediaId()), metadataDTO.getProjectsList());
 			logger.debug("Saving MetadataDTO... Projects set");
 			
 			// set the associatedTaxonomy
 			if(metadataDTO.getTaxonsList()!=null)
-				addTaxons(metadataDTO.getMediaKey(), metadataDTO.getTaxonsList());
+				addTaxons(String.valueOf(theMedia.getMediaId()), metadataDTO.getTaxonsList());
 			logger.debug("Saving MetadataDTO... Taxonomy set");
 
 			// keyWords
 			if(metadataDTO.getKeywordsList()!=null)
-				addKeywordsList(metadataDTO.getMediaKey(), metadataDTO.getKeywordsList());
+				addKeywordsList(String.valueOf(theMedia.getMediaId()), metadataDTO.getKeywordsList());
 			logger.debug("Saving MetadataDTO... Keywords set");
 
 			
-	    this.saveTechnicalMetadata(metadataDTO.getMediaKey(), metadataDTO.getItems());
+	    this.saveTechnicalMetadata(String.valueOf(theMedia.getMediaId()), metadataDTO.getItems());
 	    
 			/* is not necessary 
 			// saves the Media Object in the database
