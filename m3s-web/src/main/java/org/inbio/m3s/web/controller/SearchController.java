@@ -18,7 +18,6 @@ import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.service.AgentManager;
-import org.inbio.m3s.service.MediaManager;
 import org.inbio.m3s.service.SearchManager;
 import org.inbio.m3s.web.controller.reusable.SimpleController;
 import org.inbio.m3s.web.exception.ValidationException;
@@ -35,7 +34,6 @@ public class SearchController extends SimpleController {
 	
 	//managers
 	private SearchManager searchManager;
-	private MediaManager mediaManager;
 	private AgentManager agentManager;	
 
 	//DTOFactory/Service Mixture
@@ -227,20 +225,6 @@ public class SearchController extends SimpleController {
 	 */
 	public void setSearchManager(SearchManager searchManager) {
 		this.searchManager = searchManager;
-	}
-
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
 	}
 
 	/**

@@ -101,6 +101,7 @@ public class EditStep2PageController extends AbstractController{
 		try{
 			mDTO = metadataManager.getMetadataByMedia(mediaKey);
 		} catch(Exception e){
+			logger.debug("No se encontro multimedio con el id "+mediaKey);
 			//esta jodido porque no se encontro nada para ese multimedio
 			ve.setErrorMessageKey("error.edit.03");
 			throw ve;
@@ -169,17 +170,18 @@ public class EditStep2PageController extends AbstractController{
 
 			logger.debug("personOwnerKey '"+mDTO.getPersonOwnerKey()+"'");
 			logger.debug("institutionOwnerKey '"+mDTO.getInstitutionOwnerKey()+"'");
-			//mav.addObject(metadataAssociatedToValueType, gmDTO.get);
-			if(mDTO.getPersonOwnerKey() != null){
+			if(mDTO.getPersonOwnerKey() !=null){
 				logger.debug("person Owner");
 				PersonLiteDTO ownerPersonDTO = agentManager.getPersonLite(mDTO.getPersonOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerPersonDTO.getName());
 				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.PERSON.getId()));
+				logger.debug("person Owner2");
 			} else{
 				logger.debug("institution Owner");
 				InstitutionLiteDTO ownerInstitutionDTO = agentManager.getInstitutionLite(mDTO.getInstitutionOwnerKey());
 				mav.addObject(metadataOwnerValue, ownerInstitutionDTO.getName());
 				mav.addObject(metadataOwnerType, String.valueOf(OwnerEntity.INSTITUTION.getId()));
+				logger.debug("institution Owner2");
 			}
 
 
@@ -199,6 +201,7 @@ public class EditStep2PageController extends AbstractController{
 			
 		} catch (Exception e){
 			//esta jodido cargando los metadatos :s
+			logger.debug("Error cargando los metadatos para mediaId: "+mediaKey);
 			ve.setErrorMessageKey("error.edit.04");
 			throw ve;
 		}

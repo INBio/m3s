@@ -5,9 +5,7 @@ package org.inbio.m3s.web.controller.metadata;
 
 
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,38 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.inbio.m3s.dao.core.SiteDAO;
-import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
-import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.metadata.GeneralMetadataDTO;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
-import org.inbio.m3s.dto.metadata.UsesAndCopyrightsDTO;
-import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
-import org.inbio.m3s.dto.metadata.util.OwnerEntity;
-import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
-import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
-import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
-import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
-import org.inbio.m3s.exception.AssociationTypeNotFoundException;
-import org.inbio.m3s.exception.InstitutionNotFoundException;
-import org.inbio.m3s.exception.KeywordNotFoundException;
-import org.inbio.m3s.exception.MediaTypeNotFoundException;
-import org.inbio.m3s.exception.MediaUseNotFoundException;
-import org.inbio.m3s.exception.OwnerTypeNotFoundException;
-import org.inbio.m3s.exception.PersonNotFoundException;
-import org.inbio.m3s.exception.ProjectNotFoundException;
-import org.inbio.m3s.exception.TaxonNotFoundException;
-import org.inbio.m3s.exception.YesNoValueNotFoundException;
-import org.inbio.m3s.service.AgentManager;
-import org.inbio.m3s.service.MediaManager;
-import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.MetadataManager;
-import org.inbio.m3s.service.SiteManager;
-import org.inbio.m3s.service.util.ImportFileParser;
 import org.inbio.m3s.util.MediaFileManagement;
-import org.inbio.m3s.util.StringUtil;
 import org.inbio.m3s.web.controller.metadata.MetadataHandler;
-import org.inbio.m3s.web.converter.TaxonGuiOrDTOConverter;
 import org.inbio.m3s.web.exception.ValidationException;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -92,14 +63,8 @@ public class SaveMetadataController implements Controller {
 	private String errorFormActionValue;//=saveMetadata.html
 	
 	//Managers, Handlers and Utils (etc)
-	private MediaManager mediaManager;
 	private MetadataManager metadataManager;
-	private MessageManager messageManager;
-	private AgentManager agentManager;
-	private SiteManager siteManager;
-	private SiteDAO siteDAO;
 	private MediaFileManagement mediaFileManagement;
-	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
 	private MetadataHandler metadataHandler;
 	
 	
@@ -148,13 +113,11 @@ public class SaveMetadataController implements Controller {
 		logger.debug("mediaVisible: "+mediaVisible);
 				
 		try {
-		  GeneralMetadataDTO gmDTO = getGM(title,description,mediaTypeId,siteDescription,projects,keywords,
-				associationTypeCode, associatedToValue, taxonomy);
-		  gmDTO.setUsername(userName);
-		
-		  UsesAndCopyrightsDTO uacDTO = getUAC(authorName, ownerTypeId, ownerName, usePolicyKey, mediaVisible);
-		  uacDTO.setUsername(userName);
-		
+			
+			MetadataDTO mDTO = metadataHandler.setMetadataDTO(null,title,description,
+					mediaTypeId,null,siteDescription,projects,keywords,associationTypeCode,
+					associatedToValue,taxonomy,authorName, ownerTypeId, ownerName, 
+					usePolicyKey, mediaVisible,userName);
 		
 		  String[] fileNames = StringUtils.split(fileName, ';');
 		  String mediaKeys = "";
@@ -164,18 +127,19 @@ public class SaveMetadataController implements Controller {
 		  for(String individualFileName : fileNames){
 
 				logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+individualFileName + "'");
-				tmDTO = metadataManager.getTechMetadataFromFile(gmDTO.getMediaTypeKey(), filePath + individualFileName); //el segundo parametro es el path completo de la imagen
+				tmDTO = metadataManager.getTechMetadataFromFile(mDTO.getMediaTypeKey(), filePath + individualFileName); //el segundo parametro es el path completo de la imagen
 				if(tmDTO==null)
-					tmDTO = metadataManager.getTechMetadataByMediaType(gmDTO.getMediaTypeKey());
-				tmDTO.setUsername(userName);
+					tmDTO = metadataManager.getTechMetadataByMediaType(mDTO.getMediaTypeKey());
+				//tmDTO.setUsername(userName);
 				
-				mediaId = mediaManager.insertNewMedia(gmDTO, uacDTO, tmDTO);
+				mDTO.setItems(tmDTO.getItems());
+				mediaId = metadataManager.saveMetadata(mDTO);
 				mediaKeys = mediaKeys + String.valueOf(mediaId) + "  ";
 				
 				// FIXME: only for jpg's... not really a bug! ;).
 				//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
 				//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
-				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(gmDTO.getMediaTypeKey()), mediaFilesPath);
+				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(mDTO.getMediaTypeKey()), mediaFilesPath);
 		  }
 		
 		
@@ -224,202 +188,6 @@ public class SaveMetadataController implements Controller {
 	}
 	
 	
-	/**
-	 * 
-	 * Gets the UsesAndCopyrightsTV info directly from the importFile
-	 * @param authorName 
-	 * @param ownerName 
-	 * @param ownerTypeId 
-	 * @param mediaVisible 
-	 * 
-	 * @param info
-	 *          the representation of the import info file
-	 * @param rowNumber
-	 *          the number of row being process
-	 * @return a UsesAndCopyrightsTV object
-	 * @throws IllegalArgumentException
-	 *           if some information is wrong or in bad format
-	 */
-	private UsesAndCopyrightsDTO getUAC(String authorName, Integer ownerTypeId, String ownerName, 
-			String usePolicyKey, String mediaVisible) throws IllegalArgumentException {
-		UsesAndCopyrightsDTO uacDTO = new UsesAndCopyrightsDTO();
-
-		uacDTO.setMediaKey(null);
-
-		logger.debug("\nGetting uses and copyrigths metadata TV");
-		
-		try{
-	
-			// set author
-			PersonLiteDTO plDTO = agentManager.getPersonLiteByName(authorName);
-			uacDTO.setAuthorKey(plDTO.getPersonKey());
-			logger.debug("Author Key: '" + uacDTO.getAuthorKey() + "'");
-			
-			if (ownerTypeId.equals(OwnerEntity.INSTITUTION.getId())) {
-				InstitutionLiteDTO iLiteDTO = agentManager.getInstitutionLiteByName(ownerName);
-				uacDTO.setInstitutionOwnerKey(iLiteDTO.getInstitutionKey());
-				uacDTO.setPersonOwnerKey(null);
-			} else if (ownerTypeId.equals(OwnerEntity.PERSON.getId())) {
-				PersonLiteDTO oplDTO = agentManager.getPersonLiteByName(ownerName);
-				uacDTO.setPersonOwnerKey(oplDTO.getPersonKey());
-				uacDTO.setInstitutionOwnerKey(null);
-			} else {
-				logger.error("No valid owner Type... debería tirarse una excepcion");	
-			}
-			logger.debug("Author Owner Type: '" + uacDTO.getAuthorKey() + "'");
-			logger.debug("Institution Owner Type: '" + uacDTO.getInstitutionOwnerKey() + "'");
-	
-			// use policy
-			uacDTO.setUsePolicyKey(usePolicyKey);
-			logger.debug("Use policy: '" + uacDTO.getUsePolicyKey() + "'");	
-
-			// mediaUses
-			//uacDTO.setMediaUsesList(new ArrayList<MediaUseDTO>());
-	
-			// visible value
-			if(mediaVisible == null){
-				uacDTO.setIsPublic(new Character('N'));			
-			} else{
-				uacDTO.setIsPublic(new Character('Y'));
-			}
-			
-			logger.debug("Is public: '" + uacDTO.getIsPublic() + "'");
-	
-			logger.debug("\nGetting uses and copyrigths metadata its done");
-			return uacDTO;
-		
-		}  catch (PersonNotFoundException pnfe) {
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Persona: '" + pnfe.getNotFoundPerson() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(pnfe.getMessage());
-		
-		} catch (InstitutionNotFoundException infe) {
-		  logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Institucion: '" + infe.getNotFoundInstitution() + "' en la Base de Datos.");
-		  throw new IllegalArgumentException(infe.getMessage());
-		  
-		} catch (OwnerTypeNotFoundException otnfe){
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Tipo de dueño: '" + otnfe.getNotFoundOwnerType() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(otnfe.getMessage());
-		
-		} catch (MediaUseNotFoundException munfe){
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Uso para el Medio: '" + munfe.getNotFoundMediaUse() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(munfe.getMessage());
-
-		} catch (YesNoValueNotFoundException ynvnfe){
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el valor: '" + ynvnfe.getNotFoundYesNoValue() + "' como afirmativo o negativo..");
-			throw new IllegalArgumentException(ynvnfe.getMessage());
-		}				
-		
-	}
-	
-	
-	/*
-	 *  Copy & Paste de ImportFromFile.java
-	 * 
-	 */
-	private GeneralMetadataDTO getGM(String title, String description, String mediaTypeId,
-			String siteDescription, String projects, String keywords, Integer associationTypeCode, 
-			String associatedToValue, String taxonomy) throws IllegalArgumentException {
-		
-		GeneralMetadataDTO gmDTO = new GeneralMetadataDTO(null,title,description,mediaTypeId,null,siteDescription);
-		List<TaxonLiteDTO> taxonsList = new ArrayList<TaxonLiteDTO>();
-		
-		try {
-			//el primer nulo es el mediaId, como es nuevo siempre ira en null
-			//y el el otro valor que esta en null es el siteKey... ¿?
-			gmDTO.setProjectsList(messageManager.getProjectsFromStringList(projects));
-			gmDTO.setKeywordsList(messageManager.getKeywordsFromStringList(keywords));
-			
-			//AssociatedTo....			
-			List<SpecimenLiteDTO> associatedSpecimensList = new ArrayList<SpecimenLiteDTO>();
-			gmDTO.setAssociatedSpecimensList(associatedSpecimensList);
-			List<ObservationLiteDTO> associatedObservationsList =  new ArrayList<ObservationLiteDTO>();
-			gmDTO.setAssociatedObservationsList(associatedObservationsList);
-			List<GatheringLiteDTO> associatedGatheringsList = new ArrayList<GatheringLiteDTO>();
-			gmDTO.setAssociatedGatheringsList(associatedGatheringsList);
-			
-			if (associationTypeCode.equals(AssociatedToEntity.SPECIMEN_NUMBER.getId())) {
-				logger.debug("Associated to Specimen Number");
-					
-					SpecimenLiteDTO slDTO = new SpecimenLiteDTO(associatedToValue);
-					associatedSpecimensList.add(slDTO);
-					gmDTO.setAssociatedSpecimensList(associatedSpecimensList);
-					logger.debug("Associated To Specimen Number... done");
-			
-			} else if (associationTypeCode.equals(AssociatedToEntity.OBSERVATION_NUMBER.getId())) {
-				logger.debug("Associated to Observation Number");
-				ObservationLiteDTO olDTO = new ObservationLiteDTO(associatedToValue);
-				associatedObservationsList.add(olDTO);
-				gmDTO.setAssociatedObservationsList(associatedObservationsList);
-				logger.debug("Associated To Observation Number... done");
-
-			} else if (associationTypeCode.equals(AssociatedToEntity.GATHERING_CODE.getId())) {
-				logger.debug("Associated to Gathering Code");
-				List<Object> temp = StringUtil.getIndividualItems(associatedToValue,java.lang.String.class);
-				
-				String gatheringPersonName = (String) temp.get(0);
-				String gatheringNumber = (String) temp.get(1);
-				PersonLiteDTO pLite = agentManager.getGatheringResposibleLiteByName(gatheringPersonName);
-				logger.debug(pLite.toString());
-				GatheringLiteDTO glDTO = new GatheringLiteDTO(gatheringNumber, pLite.getName());
-				logger.debug(glDTO.toString());
-				
-				associatedGatheringsList.add(glDTO);
-				gmDTO.setAssociatedGatheringsList(associatedGatheringsList);
-					
-				logger.debug("Associated To Collect Number... done");
-			}
-			
-			//taxonomy
-			logger.debug("taxonomy: '" + taxonomy + "'");
-			taxonsList = taxonGuiOrDTOConverter.toDTOList(taxonomy);
-			gmDTO.setTaxonsList(taxonsList);
-			logger.debug("Taxonomy elements: '" + gmDTO.getTaxonsList().size() + "'");
-
-			
-		// TODO: has to fix the siteId stuff
-			// site Description
-			if (siteDescription == null || siteDescription.compareTo("") == 0) {
-
-				if (associationTypeCode.equals(AssociatedToEntity.SPECIMEN_NUMBER.getId())) {
-					siteDescription = siteDAO.getSiteDBIdFromSpecimenNumber(new Integer(associatedToValue));
-				} else if (associationTypeCode.equals(AssociatedToEntity.OBSERVATION_NUMBER.getId())) {
-					siteDescription = siteDAO.getiteDBIdFromObservationNumber(new Integer(associatedToValue));
-				} else if (associationTypeCode.equals(AssociatedToEntity.GATHERING_CODE.getId())) {
-					siteDescription = siteManager.getSiteFromGatheringCode(associatedToValue);
-				}
-			}
-			gmDTO.setSiteDescription(siteDescription);
-			gmDTO.setSiteKey(null);
-			logger.debug("Site Description: '" + gmDTO.getSiteDescription() + "'");
-			logger.debug("Site Key: '" + gmDTO.getSiteKey() + "'");
-			
-			return gmDTO;
-			
-		} catch (MediaTypeNotFoundException mtnfe) {
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + mtnfe.getNotFoundMediaType() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(mtnfe.getMessage());
-		
-		} catch (ProjectNotFoundException pnfe) {
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Proyecto: '" + pnfe.getNotFoundProject() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(pnfe.getMessage());
-		
-		} catch (KeywordNotFoundException knfe) {
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar la Palabra Clave: '" + knfe.getNotFoundKeyword() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(knfe.getMessage());
-			
-		} catch (TaxonNotFoundException tnfe) {
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + tnfe.getNotFoundTaxonName() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(tnfe.getMessage());
-		
-		} catch (AssociationTypeNotFoundException atnfe){
-			logger.error(ImportFileParser.ERROR + " 'No se puede encontrar el Taxon: '" + atnfe.getNotFoundAssociationType() + "' en la Base de Datos.");
-			throw new IllegalArgumentException(atnfe.getMessage());
-
-		}	catch (Exception e) {
-			logger.error(ImportFileParser.ERROR + " '" + e.getMessage() + "'");
-			throw new IllegalArgumentException(e.getMessage());
-		}
-	}
 
 
 	/**
@@ -710,23 +478,6 @@ public class SaveMetadataController implements Controller {
 		this.metadataMediaVisible = metadataMediaVisible;
 	}
 
-
-	/**
-	 * @return the mediaManager
-	 */
-	public MediaManager getMediaManager() {
-		return mediaManager;
-	}
-
-
-	/**
-	 * @param mediaManager the mediaManager to set
-	 */
-	public void setMediaManager(MediaManager mediaManager) {
-		this.mediaManager = mediaManager;
-	}
-
-
 	/**
 	 * @return the metadataManager
 	 */
@@ -742,71 +493,6 @@ public class SaveMetadataController implements Controller {
 		this.metadataManager = metadataManager;
 	}
 
-
-	/**
-	 * @return the messageManager
-	 */
-	public MessageManager getMessageManager() {
-		return messageManager;
-	}
-
-
-	/**
-	 * @param messageManager the messageManager to set
-	 */
-	public void setMessageManager(MessageManager messageManager) {
-		this.messageManager = messageManager;
-	}
-
-
-	/**
-	 * @return the agentManager
-	 */
-	public AgentManager getAgentManager() {
-		return agentManager;
-	}
-
-
-	/**
-	 * @param agentManager the agentManager to set
-	 */
-	public void setAgentManager(AgentManager agentManager) {
-		this.agentManager = agentManager;
-	}
-
-
-	/**
-	 * @return the siteManager
-	 */
-	public SiteManager getSiteManager() {
-		return siteManager;
-	}
-
-
-	/**
-	 * @param siteManager the siteManager to set
-	 */
-	public void setSiteManager(SiteManager siteManager) {
-		this.siteManager = siteManager;
-	}
-
-
-	/**
-	 * @return the siteDAO
-	 */
-	public SiteDAO getSiteDAO() {
-		return siteDAO;
-	}
-
-
-	/**
-	 * @param siteDAO the siteDAO to set
-	 */
-	public void setSiteDAO(SiteDAO siteDAO) {
-		this.siteDAO = siteDAO;
-	}
-
-
 	/**
 	 * @return the mediaFileManagement
 	 */
@@ -820,23 +506,6 @@ public class SaveMetadataController implements Controller {
 	 */
 	public void setMediaFileManagement(MediaFileManagement mediaFileManagement) {
 		this.mediaFileManagement = mediaFileManagement;
-	}
-
-
-	/**
-	 * @return the taxonGuiOrDTOConverter
-	 */
-	public TaxonGuiOrDTOConverter getTaxonGuiOrDTOConverter() {
-		return taxonGuiOrDTOConverter;
-	}
-
-
-	/**
-	 * @param taxonGuiOrDTOConverter the taxonGuiOrDTOConverter to set
-	 */
-	public void setTaxonGuiOrDTOConverter(
-			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
-		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
 	}
 
 
