@@ -19,7 +19,7 @@
                 <ref bean="mediaAuthorNameFilter" />
                 <ref bean="keywordFilter" />
                 <ref bean="projectFilter" />
-                <ref bean="orderTaxonFilter" />   
+                <!-- <ref bean="orderTaxonFilter" /> -->   
                 <ref bean="familyTaxonFilter" />                
                 <ref bean="genusTaxonFilter" />
                 <ref bean="speciesTaxonFilter" />
@@ -113,7 +113,7 @@
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
         <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
-        <property name="autoCompleteUrl" value="ajax/taxonName" />
+        <property name="autoCompleteUrl" value="ajax/taxonsByFamily" />
     </bean>
 
     <bean id="genusTaxonFilter" parent="baseFilter">
@@ -122,7 +122,7 @@
         <property name="displayName" value="search.filters.taxon.genus" />
         <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATAPROVIDERID" />
-        <property name="autoCompleteUrl" value="ajax/taxonName" />
+        <property name="autoCompleteUrl" value="ajax/taxonsByGenus" />
     </bean>
 
     <bean id="speciesTaxonFilter" parent="baseFilter">
@@ -131,7 +131,7 @@
         <property name="displayName" value="search.filters.taxon.species" />
          <!-- falta revisar estos -->
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATARESOURCEID" />
-        <property name="autoCompleteUrl" value="ajax/taxonName" />
+        <property name="autoCompleteUrl" value="ajax/taxonsBySpecies" />
     </bean>
 
     <!-- filter helper for scientific name 

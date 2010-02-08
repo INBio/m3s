@@ -1,4 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
+<body onload="document.getElementById('editValueInput').focus();"/>
 <%--
 Usado por:
 
@@ -16,6 +17,6 @@ Usado por:
     </label>
     <br/>
 
-    <input type="submit" value="<spring:message code="buton.continue"/>" />
+    <input id="editValueInput" type="submit" value="<spring:message code="buton.continue"/>" />
   </form>
 </div>

@@ -100,10 +100,13 @@ public class MultipleImagesUploadController extends SimpleFormController {
 				}
 				
 				String systemFileName;
+				File fileToMove;
 				
 				for(MultipartFile file: multipleImagesBean.getFiles()){
 					systemFileName = fileId+filesCount+"."+fileExtension;
-					file.transferTo(new File(filePath+systemFileName));
+					fileToMove = new File(filePath+systemFileName);
+					fileToMove.setWritable(true, false);
+					file.transferTo(fileToMove);
 				
 					try{
 							ImageMagickAPI.createThumb(filePath+systemFileName, filePath+"thumb-"+systemFileName);

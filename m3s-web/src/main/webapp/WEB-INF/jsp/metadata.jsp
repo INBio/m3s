@@ -122,7 +122,7 @@
     <input id="kingdomId" type="text" tabindex="9"/>
     <div id="taxonomyKingdomContainer" class="yui-skin-m3s"></div>    
   </label>
-  <m3s:autoComplete containerId="taxonomyKingdomContainer" inputId="kingdomId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
+  <m3s:autoComplete containerId="taxonomyKingdomContainer" inputId="kingdomId" url="${pageContext.request.contextPath}/ajax/taxonsByKingdom"/>
   <label>
     <input type="button" name="agregar" value="agregar" onclick="javascript:checkAndAddTaxonomy('${pageContext.request.contextPath}');"/>
   </label>

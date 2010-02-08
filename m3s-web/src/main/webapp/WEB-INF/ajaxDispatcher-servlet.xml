@@ -19,6 +19,10 @@
             
                 <!-- AutoComplete  -->
                 <prop key="/taxonName/**/**">taxonNameAutoCompleteController</prop>
+                <prop key="/taxonsByKingdom/**/**">taxonomyAutoCompleteController</prop>
+                <prop key="/taxonsByFamily/**/**">taxonomyAutoCompleteController</prop>
+                <prop key="/taxonsByGenus/**/**">taxonomyAutoCompleteController</prop>
+                <prop key="/taxonsBySpecies/**/**">taxonomyAutoCompleteController</prop>
                 <prop key="/personName/**/**">mediaAuthorNameAutoCompleteController</prop>
                 <prop key="/institutionName/**/**">institutionNameAutoCompleteController</prop>
                 <prop key="/projectName/**/**">projectNameAutoCompleteController</prop>
@@ -33,8 +37,9 @@
                 <prop key="/siteByObservationNumber/**/**">associatedToController</prop>
                 <prop key="/siteByGatheringCode/**/**">associatedToController</prop>
                 
-                <!-- DataTable  -->
+                <!-- DataTable 
                 <prop key="/importationData/**/**">dataTableController</prop>
+                 -->
             </props>
         </property>
     </bean>

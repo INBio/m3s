@@ -9,12 +9,9 @@
 	</appender>
 	<appender name="FILE" class="org.apache.log4j.FileAppender">
 		<param name="Threshold" value="all"/>
-		<!--Larus  y Coffea  --> 
-		<!-- <param name="File" value="/usr/share/tomcat5.5/logs/m3s.log"/>-->
-		<param name="File" value="./target/m3s-dev.log" />
-		
-		<!-- <param name="File" value="/home/jgutierrez/workspace/m3s-v2.1/m3s-web/logs/m3s.log"/> -->
-		
+		<!--Lucina  y Coffea  --> 
+		<param name="File" value="/usr/share/tomcat5.5/logs/m3s.log"/>
+		<!-- <param name="File" value="./target/m3s-dev.log" /> -->
 		<param name="Append" value="true"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<!--param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}]  %m%n"/-->

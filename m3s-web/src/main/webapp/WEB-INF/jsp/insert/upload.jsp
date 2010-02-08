@@ -6,7 +6,9 @@ Usado por:
   * ../insert/step3.jsp
  --%>
  
-<div id="insert-upload-form">
+ 
+<div id="insertRadioButtonsDiv" class="insert-type">
+
   <%-- Radio Buttons  --%>      
   <input type="radio" name="fileType" value="jpgImage" checked="checked" onclick="javascript:viewJpgImageDivs()" >
   <spring:message code="insert.image.jpg"/>
@@ -19,29 +21,36 @@ Usado por:
   <input type="radio" name="fileType" value="video" disabled="disabled">
   <spring:message code="insert.video.mov"/>
   <br>
+  
+</div>
       
+<div id="uploadMethodDiv" class="upload-files-form">
   <%--imagenes --%>
   <div id="jpgImageFormDiv" style="display: block">
     <form method="post" enctype="multipart/form-data" action="<c:out value="${jpgImagesFormAction}"/>">
       <%-- Nombre del Usuario --%>
-      <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
+      <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>"/>
           
-      <p>1. <input type="file" name="file1"></p>
-      <br>
-      <p>2. <input type="file" name="file2"></p>
-      <br>
-      <p>3. <input type="file" name="file3"></p>
-      <br>
-      <p>4. <input type="file" name="file4"></p>
-      <br>
-      <p>5. <input type="file" name="file5"></p>
-      <br>
-      <p>6. <input type="file" name="file6"></p>
-      <br>
+        <label>1.<input type="file" name="file1"></label>
+        <label>2.<input type="file" name="file2"></label>
+        <label>3. <input type="file" name="file3"></label>
+        <label>4. <input type="file" name="file4"></label>
+        <label>5. <input type="file" name="file5"></label>
+        <label>6. <input type="file" name="file6"></label>
+        <br>
           
       <input type="submit" value="<spring:message code="buton.continue"/>" />
       <br>
     </form>
+     <div id="jpgImageHelpDiv" class="upload-help">      
+      <p>
+        <label>
+          <spring:message code="insert.jpg.help1"/>
+          <br>
+        </label>
+        <br>
+      </p>
+    </div>
   </div>
       
   <%--importacion --%>
@@ -57,22 +66,7 @@ Usado por:
       <input type="submit" value="<spring:message code="buton.continue"/>" />
       <br>
     </form>
-  </div>
-  
-  <%-- Help --%>    
-  <div id="uploadHelpDiv">
-      
-    <div id="jpgImageHelpDiv" style="display: block">      
-      <p>
-        <label>
-          <spring:message code="insert.jpg.help1"/>
-          <br>
-        </label>
-        <br>
-      </p>
-    </div>
-
-    <div id="importationHelpDiv" style="display: none">      
+    <div id="importationHelpDiv" class="upload-help">      
       <p>
         <label>
           <spring:message code="insert.excel.help1"/>
@@ -85,9 +79,9 @@ Usado por:
         <br>
       </p>
     </div>
-  
-  </div>  
-</div>  
+  </div>
+</div><%-- selection mode --%>
+
  
 <script type="text/javascript">
 <%--
@@ -96,8 +90,6 @@ Usado por:
  */
  --%>
 function cleanHelpDivs(){   
-  document.getElementById('jpgImageHelpDiv').style.display='none';
-  document.getElementById('importationHelpDiv').style.display='none';
   document.getElementById('jpgImageFormDiv').style.display='none';
   document.getElementById('importationFormDiv').style.display='none';
   
@@ -105,13 +97,11 @@ function cleanHelpDivs(){
 
 function viewJpgImageDivs(){
   cleanHelpDivs();
-  document.getElementById('jpgImageHelpDiv').style.display='block';
   document.getElementById('jpgImageFormDiv').style.display='block';
 }
 
 function viewImportationDivs(){
   cleanHelpDivs();
-  document.getElementById('importationHelpDiv').style.display='block';
   document.getElementById('importationFormDiv').style.display='block';
 }
 </script>

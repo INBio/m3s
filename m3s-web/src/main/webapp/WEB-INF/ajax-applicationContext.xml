@@ -6,6 +6,12 @@
       <!-- check constants.properties-->
       <property name="autoCompleteManager" ref="${taxonNameAutoCompleteManager}"/>         
     </bean>
+
+    <!-- taxon name search support  -->
+    <bean id="taxonomyAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.TaxonomyAutoCompleteController">
+      <!-- check constants.properties-->
+      <property name="taxonomyManager" ref="${taxonomyManager}"/>         
+    </bean>
     
     <!-- Media Author Name search support  -->
     <bean id="mediaAuthorNameAutoCompleteController" class="org.inbio.m3s.web.controller.ajax.AutoCompleteController">
@@ -36,9 +42,10 @@
       <property name="siteDAO" ref="${siteDAO}"/>     
     </bean>  
 
-    <!-- Data Table  -->
+    <!-- Data Table  
     <bean id="dataTableController" class="org.inbio.m3s.web.controller.ajax.DataTableController">
       <property name="importationManager" ref="importationManager"/>
     </bean>  
+    -->
                  
 </beans>

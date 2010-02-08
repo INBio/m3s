@@ -92,7 +92,16 @@ public class UploadImportationFileController extends SimpleFormController {
 				ve.setErrorMessageKey("error.insert.01");
 				throw ve;
 			} else{
-					importationFile.transferTo(new File(importFilePath+systemFileName));
+				logger.debug("despues del else.");
+				File f = new File(importFilePath+systemFileName);
+				importationFile.transferTo(f);
+				f.setWritable(true, false);
+				//f.setExecutable(true, false);
+				//if(f.canWrite())
+				//	logger.debug("se puede escribir");
+				//else
+				//	logger.debug("NOOOOOOOO se puede escribir");
+				
 			}
 
 			
@@ -102,7 +111,7 @@ public class UploadImportationFileController extends SimpleFormController {
 			
 			if(systemFileName != null)
 				//executeImport(userName,fileName);
-				importThread.run(ImportationFileEntity.MS_EXCEL_FILE, userName, systemFileName, "originalName",importFilePath,importationBatchMediaPath,mediaFilesPath);
+				importThread.run(ImportationFileEntity.MS_EXCEL_FILE, userName, systemFileName, importationFile.getOriginalFilename(),importFilePath,importationBatchMediaPath,mediaFilesPath);
 			
 			return mav;
 		
