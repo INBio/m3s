@@ -45,7 +45,7 @@ public class MediaAttributeTypeDAOImpl extends GenericBaseDAOImpl<MediaAttribute
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select mat from MediaAttributeType as mat"
-						+ " where mat.mediaType.mediaTypeId = " + mediaTypeKey);
+						+ " where mat.mediaTypeId = " + mediaTypeKey);
 				query.setCacheable(true);
 				return query.list();
 			}

@@ -73,6 +73,24 @@ public class INBioTaxonDAOImpl extends GenericBaseDAOImpl<Taxon, Integer> implem
 		});
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Taxon> findAllByRangeAndPartialNamePaginated(final Integer taxonimicalRangeId, final String partialTaxonName) {
+		logger.debug("findAllByRangeAndPartialNamePaginated, taxonimicalRangeId["+taxonimicalRangeId+"] and  partialTaxonName["+partialTaxonName+"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from INBioTaxon as t"
+						+ " where t.taxonomicalRangeId = :taxonimicalRangeId"
+						+ " and t.defaultName like :defaultName");
+				query.setParameter("taxonimicalRangeId", taxonimicalRangeId);
+				query.setParameter("defaultName", partialTaxonName);
+				query.setCacheable(true);
+				return query.list();
+			}
+		});
+	}	
 	
 	/**
 	 * 
@@ -194,7 +212,7 @@ public class INBioTaxonDAOImpl extends GenericBaseDAOImpl<Taxon, Integer> implem
 			}
 		});
 	}
-
+	
 
 	@SuppressWarnings("unchecked")
 	public List<Taxon> findByOrder(final Integer orderTaxonId) {

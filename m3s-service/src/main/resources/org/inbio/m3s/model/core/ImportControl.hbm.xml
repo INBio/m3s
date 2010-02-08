@@ -14,11 +14,6 @@
 				<column name="user_name" length="16" />
 			</key-property>
 		</composite-id>
-		<many-to-one name="securityUsers"
-			class="org.inbio.m3s.model.core.SecurityUsers" update="false"
-			insert="false" fetch="select">
-			<column name="user_name" length="16" not-null="true" />
-		</many-to-one>
 		<property name="status" type="string">
 			<column name="status" length="0" not-null="true" />
 		</property>

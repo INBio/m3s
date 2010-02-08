@@ -39,9 +39,20 @@ public enum MediaAttributeEntity {
 	DURATION(28,"duration","",'V'),
 	NUMBER_OF_CHANNELS(29,"number_of_channels","",'V'),
 	SAMPLIG_FREQUENCY(30,"sampling_frecuency","",'V'),
-	YOUTUBE_ID(31,"youtube_id","",'V')
+	PREVIOUS_CATEGORY(31,"previous_category","",'V'), //categoria anterior
+	FILM_BRAND(32,"film_brand","",'V'),
+	SCANNING_DATE(33,"scanning_date","",'D'),
+	IMAGE_DATE(34,"image_date","",'D'),
+	YOUTUBE_ID(35,"youtube_id","",'V')
 	; 
 
+	/* A que estandard pertenecen:
+	 *  del 01 al 15 -> EXIF
+	 *  del 16 al 18 -> file type
+	 *  del 19 al 30 -> MET (video) 
+	 *  del 31 al 34 -> migración
+	 *  del 35 al 35 -> video youtube
+	 */
 
 
 	//in older versions> *media_attribute.media_attribute_id*

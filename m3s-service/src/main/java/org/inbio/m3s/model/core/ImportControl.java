@@ -12,8 +12,6 @@ public class ImportControl extends LogGenericEntity {
 
 	private ImportControlId id;
 
-	private SecurityUsers securityUsers;
-
 	private String status;
 
 	private String userFileName;
@@ -21,26 +19,23 @@ public class ImportControl extends LogGenericEntity {
 	public ImportControl() {
 	}
 
-	public ImportControl(SecurityUsers securityUsers,String status, String userFileName) {
-		this.securityUsers = securityUsers;
+	public ImportControl(String status, String userFileName) {
 		this.status = status;
 		this.userFileName = userFileName;
 	}
 	
-	public ImportControl(ImportControlId id, SecurityUsers securityUsers,
+	public ImportControl(ImportControlId id,
 			String status, String userFileName) {
 		this.id = id;
-		this.securityUsers = securityUsers;
 		this.status = status;
 		this.userFileName = userFileName;
 	}
 
-	public ImportControl(ImportControlId id, SecurityUsers securityUsers,
-			String status, Date creationDate, String createdBy,
+	public ImportControl(ImportControlId id, String status, 
+			Date creationDate, String createdBy,
 			Date lastModificationDate, String lastModificationBy,
 			String userFileName) {
 		this.id = id;
-		this.securityUsers = securityUsers;
 		this.status = status;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
@@ -61,14 +56,6 @@ public class ImportControl extends LogGenericEntity {
 
 	public void setId(ImportControlId id) {
 		this.id = id;
-	}
-
-	public SecurityUsers getSecurityUsers() {
-		return this.securityUsers;
-	}
-
-	public void setSecurityUsers(SecurityUsers securityUsers) {
-		this.securityUsers = securityUsers;
 	}
 
 	public String getStatus() {

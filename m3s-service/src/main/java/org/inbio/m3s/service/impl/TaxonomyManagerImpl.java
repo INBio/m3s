@@ -26,6 +26,7 @@ import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTOFactory;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
 import org.inbio.m3s.exception.TaxonNotFoundException;
+import org.inbio.m3s.model.general.Person;
 import org.inbio.m3s.model.general.Specimen;
 import org.inbio.m3s.model.core.GatheringMediaId;
 import org.inbio.m3s.model.core.ObservedTaxonMediaId;
@@ -82,6 +83,26 @@ public class TaxonomyManagerImpl implements TaxonomyManager {
 		return null;
 	}
 
+	/**
+	 * Ideal option for auto complete graphical elements 
+	 * 
+	 */
+	public List<TaxonLiteDTO> getTaxonsByPatialNameAndTaxonomicalRange(String taxonName,TaxonomicalRangeEntity taxonomicalRange) {
+		List<Taxon> taxons =taxonDAO.findAllByRangeAndPartialNamePaginated(taxonomicalRange.getId(),"%"+taxonName+"%");
+		if(taxons!=null){
+			logger.debug("Total de taxones: "+ taxons.size());
+			
+			for(Taxon t : taxons){
+				logger.debug("Taxon Id: "+ t.getTaxonId());
+				logger.debug("Taxonomical Range Id: "+ t.getTaxonomicalRangeId());
+				logger.debug("DefaultName: "+ t.getDefaultName());
+				logger.debug("");
+			}
+			
+		}
+		return tlDTOFactory.createDTOList(taxons);
+	}	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.inbio.m3s.service.TaxonomyManager#getAllGatheringsLiteForMedia(java.lang.String)

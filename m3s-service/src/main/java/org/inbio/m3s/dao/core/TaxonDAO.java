@@ -28,6 +28,14 @@ public interface TaxonDAO extends GenericBaseDAO<Taxon, Integer> {
 	 * @throws IllegalArgumentException
 	 */
 	public List<Taxon> findAllByPartialNamePaginated(String partialTaxonName, int maxResults) throws IllegalArgumentException;
+	
+	/**
+	 * 
+	 * @param taxonimicalRangeId
+	 * @param partialTaxonName
+	 * @return
+	 */
+	public List<Taxon> findAllByRangeAndPartialNamePaginated(final Integer taxonimicalRangeId,final String partialTaxonName);
 
 	public Taxon findByDefaultNameAndKingdomId(String defaultName, Integer kingdomTaxonId) throws TaxonNotFoundException;
 

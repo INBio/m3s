@@ -19,7 +19,6 @@ import org.inbio.m3s.dto.importcontrol.ImportControlDTOLite;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOLiteFactory;
 import org.inbio.m3s.model.core.ImportControl;
 import org.inbio.m3s.model.core.ImportControlId;
-import org.inbio.m3s.model.core.SecurityUsers;
 import org.inbio.m3s.service.ImportationManager;
 
 /**
@@ -96,12 +95,12 @@ public class ImportationManagerImpl implements ImportationManager {
 
 		logger.debug("createImportControl... start");
 		
-		SecurityUsers su = (SecurityUsers) securityUserDAO.findById(SecurityUsers.class, icLite.getUsername());
-		if(su == null){
-			throw new IllegalArgumentException("not valid username: "+icLite.getUsername());
-		}
-		ImportControlId icId = new ImportControlId(icLite.getSystemFileName(), su.getName());
-		ImportControl ic = new ImportControl(icId, su, icLite.getStatus(), icLite.getUserFileName());
+		//SecurityUsers su = (SecurityUsers) securityUserDAO.findById(SecurityUsers.class, icLite.getUsername());
+		//if(su == null){
+		//	throw new IllegalArgumentException("not valid username: "+icLite.getUsername());
+		//}
+		ImportControlId icId = new ImportControlId(icLite.getSystemFileName(), icLite.getUsername());
+		ImportControl ic = new ImportControl(icId, icLite.getStatus(), icLite.getUserFileName());
 		
 		// TODO the log of the database tables is not OK
 		// sets the date of the creation

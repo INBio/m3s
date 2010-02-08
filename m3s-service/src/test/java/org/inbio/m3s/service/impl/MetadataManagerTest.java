@@ -18,7 +18,7 @@ import org.inbio.m3s.service.MetadataManager;
 @SuppressWarnings("unused")
 public class MetadataManagerTest extends AbstractServiceTest{
 
-	/*	*/
+	/*
 	public void testGetMetadataByMedia(){
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);	
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
@@ -31,6 +31,20 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		logger.info(maDTO.toString());
 		
 	}
+	*/
+	
+		/**/
+		public void testGetTechMetadataFromFile(){
+			
+			MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
+			logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
+			
+			TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/Desktop/Foto.jpg");
+			//TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/20090730-122053-75DE823CB57784B15DC524EABD8B181B1-Norops-capito.jpg");
+			//TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/mnt/m3sImages/INBio/TEMP_MEDIA_DIR/20100205-153921-jgutierrez17fr0vfnv9tmf1.jpg");
+			logger.info(tmDTO.toString());
+		}
+		
 	
 	/*
 	public void testInsertNewMedia(){
@@ -69,18 +83,6 @@ public class MetadataManagerTest extends AbstractServiceTest{
 		logger.info(tmDTO.toString());
 	}
 */
-	
-	/*
-	public void testGetTechMetadataFromFile(){
-		
-		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);
-		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
-		
-		//TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/Desktop/Foto.jpg");
-		TechnicalMetadataDTO tmDTO = mm.getTechMetadataFromFile("1", "/home/jgutierrez/SoftwareTools/apache-tomcat-6.0.16/webapps/m3sINBioFiles/TEMP_MEDIA_DIR/20090730-122053-75DE823CB57784B15DC524EABD8B181B1-Norops-capito.jpg");
-		logger.info(tmDTO.toString());
-	}
-	*/
 	
 	/*
 	public void testSaveTechnicalMetadata(){

@@ -547,8 +547,7 @@ public class MetadataManagerImpl implements MetadataManager {
 	 * org.inbio.m3s.service.MetadataManager#getTechMetadataFromFile(java.lang
 	 * .String, java.lang.String)
 	 */
-	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey,
-			String fileAddress) {
+	public TechnicalMetadataDTO getTechMetadataFromFile(String mediaTypeKey, String fileAddress) {
 
 		logger.debug("getTechMetadataFromFile with mediaTypeKey [" + mediaTypeKey
 				+ "] for:" + fileAddress);
@@ -562,17 +561,13 @@ public class MetadataManagerImpl implements MetadataManager {
 
 		try {
 
-			for (MediaAttributeType mat : mediaAttributeTypeDAO
-					.findAllByMediaType(mediaTypeKey)) {
+			for (MediaAttributeType mat : mediaAttributeTypeDAO.findAllByMediaType(mediaTypeKey)) {
 
 				metadataStandardEntity = MetadataStandardEntity.getById(mat.getMetadataStandardId().intValue());
-				logger.debug("Metadata Standard Implementation Class: "
-						+ metadataStandardEntity.getImplementingClass());
-				metadataExtractorDAO = metadataStandardEntity
-						.getMetadataExtractorDAOImpl();
+				logger.debug("Metadata Standard Implementation Class: "+ metadataStandardEntity.getImplementingClass());
+				metadataExtractorDAO = metadataStandardEntity.getMetadataExtractorDAOImpl();
 				metadataExtractorDAO.init(fileAddress);
-				value = metadataExtractorDAO.getAttributeValue(mat
-						.getStandardAttributeId());
+				value = metadataExtractorDAO.getAttributeValue(mat.getStandardAttributeId());
 
 				ma = (MediaAttribute) mediaAttributeDAO.findById(MediaAttribute.class,
 						mat.getMediaAttributeId());
@@ -587,6 +582,8 @@ public class MetadataManagerImpl implements MetadataManager {
 			return tmDTO;
 
 		} catch (Exception e) {
+			logger.error("volo una exception>");
+			logger.error(e.getMessage());
 			return null;
 
 		}

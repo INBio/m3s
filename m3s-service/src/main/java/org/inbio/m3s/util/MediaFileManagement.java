@@ -79,8 +79,8 @@ public class MediaFileManagement {
 			// file.
 			logger.debug("archivo destino: '" + newFile.getCanonicalPath() + "'.");
 			FileUtils.moveFile(file, newFile);
-
-			// the path of this media depends on the visibility -> ya no!
+			
+			//
 			thumbMediaFilePath = mediaFilesPath + thumbFolder;
 			bigMediaFilePath = mediaFilesPath + bigFolder;
 

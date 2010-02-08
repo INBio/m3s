@@ -28,6 +28,7 @@ public interface TaxonomyManager {
 	 */
 	public List<TaxonLiteDTO> getTaxonsIncludedIn(String taxonDefaultName, TaxonomicalRangeEntity taxonomicalRange);
 	
+	public List<TaxonLiteDTO> getTaxonsByPatialNameAndTaxonomicalRange(String taxonName,TaxonomicalRangeEntity taxonomicalRange);
 
 	/**
 	 * Este metodo esta bien hecho, para este manager ;)

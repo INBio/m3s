@@ -13,4 +13,7 @@ public class ARATaxon extends Taxon {
 	
 	private static final long serialVersionUID = 1L;
 
+	public ARATaxon(){
+		
+	}
 }
