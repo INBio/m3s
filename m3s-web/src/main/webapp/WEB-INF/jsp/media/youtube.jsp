@@ -39,9 +39,6 @@
   </script>
 </head>
 
-<h2><spring:message code="media.profile.title"/></h2>
-
     
 <div id="videoDiv">Loading...</div>
  
-<tiles:insert page="/WEB-INF/jsp/media/mediaMetadata.jsp"/>

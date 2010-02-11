@@ -6,14 +6,14 @@
               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.4.xsd"> 
                            
  
-  <http>
+  <http access-denied-page="/accessDeniedPage.html">
     <!--<intercept-url pattern="/login.html*" />-->
     <!--<intercept-url pattern="/home.html*"  />-->
     <!--<intercept-url pattern="/index.*" access="ROLE_GUEST,ROLE_USER"/> -->
     <intercept-url pattern="/search/*" access="ROLE_USER" />
-    <intercept-url pattern="/insert*" access="ROLE_USER" />
-    <intercept-url pattern="/edit.*" access="ROLE_USER" />
-    <intercept-url pattern="/import.*" access="ROLE_USER" />
+    <intercept-url pattern="/insert*" access="ROLE_ADMIN" />
+    <intercept-url pattern="/edit.*" access="ROLE_ADMIN" />
+    <intercept-url pattern="/import.*" access="ROLE_ADMIN" />
     <intercept-url pattern="/media*" access="ROLE_USER" />
     <intercept-url pattern="/ajax*" access="ROLE_USER" />
     <anonymous username="guest" granted-authority="ROLE_GUEST"/>

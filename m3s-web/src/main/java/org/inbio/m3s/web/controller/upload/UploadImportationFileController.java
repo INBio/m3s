@@ -105,13 +105,13 @@ public class UploadImportationFileController extends SimpleFormController {
 			}
 
 			
-			List<ImportControlDTOFull> importationHistoryListDTO = importationManager.getImportControlDTOFullList(userName, 20);
-			logger.debug("results:"+importationHistoryListDTO.size());
-			mav.addObject(importationHistoryKey, importationHistoryListDTO);
-			
 			if(systemFileName != null)
 				//executeImport(userName,fileName);
 				importThread.run(ImportationFileEntity.MS_EXCEL_FILE, userName, systemFileName, importationFile.getOriginalFilename(),importFilePath,importationBatchMediaPath,mediaFilesPath);
+			
+			List<ImportControlDTOFull> importationHistoryListDTO = importationManager.getImportControlDTOFullList(userName, 20);
+			logger.debug("results:"+importationHistoryListDTO.size());
+			mav.addObject(importationHistoryKey, importationHistoryListDTO);
 			
 			return mav;
 		

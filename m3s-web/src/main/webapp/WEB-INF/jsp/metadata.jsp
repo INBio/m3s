@@ -33,6 +33,9 @@
   <input type="hidden" id="fileNameId" name="fileName" value="<c:out value="${fileName}"/>" />
   <%-- ...mediaId es usado para la edición... --%>
   <input type="hidden" name="mediaId" value="<c:out value="${mediaId}"/>" />
+  <%-- ...mediaId es usado para los video de youtube --%>
+  <input type="hidden" name="youtubeVideoId" value="<c:out value="${youtubeVideoId}"/>" />
+  
   
   <%--Titulo --%>
   <label>

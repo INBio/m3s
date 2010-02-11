@@ -21,13 +21,15 @@
   <!-- insert page -->
   <bean id="insertController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="insertStep1"/>
-    
+    <!-- 
     <property name="modelElements">
       <map>
         <entry key="jpgImagesFormAction" value="uploadImages.html"/>
         <entry key="excelFormAction" value="uploadImportationFile.html"/>
+        <entry key="youtubeFormAction" value="insertYoutubeVideo.html"/>
       </map>
     </property>
+     -->
   </bean>    
   
   <!-- uploads Image files controller -->
@@ -83,6 +85,7 @@
     <property name="metadataOwnerValue" value="ownerValue"/>
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>
+    <property name="youtubeVideoIdKey" value="youtubeVideoId"/>  
 
     <!-- in case of error -->
     <property name="errorViewName" value="insertStep2"/>
@@ -142,6 +145,32 @@
     <property name="importationManager" ref="importationManager"/>  
 
   </bean>
+
+  <!-- shows the metadata form for the youtube videos -->
+  <bean id="insertYoutubeVideoController" class="org.inbio.m3s.web.controller.upload.YoutubeVideoUploadController">
+    <!-- constantes -->
+    <property name="filePath" value="${temporalFilesPath}"/>
+    <property name="fileExtension" value="jpg"/>
+    
+    <!-- Model & JSP -->
+    <property name="viewName" value="insertStep2"/> <!-- De la clase simpleController -->
+    <property name="metadataUsernameKey" value="username"/>
+    <property name="youtubeVideoIdKey" value="youtubeVideoId"/>            
+    <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->    
+    <property name="formActionKey" value="formAction"/>
+    <property name="formActionValue" value="saveMetadata.html"/>      
+    <property name="metadataMediaVisibleKey" value="mediaVisible"/>
+    <property name="metadataMediaVisibleValue" value="checked"/>        
+    
+    <!-- in case of error -->
+    <property name="errorViewName" value="insertStep1"/>
+    <property name="errorFormActionKey" value="jpgImagesFormAction"/>
+    <property name="errorFormActionValue" value="uploadImages.html"/>
+    
+    <!-- Managers  -->  
+    <property name="metadataHandler" ref="metadataHandler"/>          
+  </bean>  
+  
 
   <!-- edit page (1) -->
   <bean id="editController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
@@ -265,6 +294,7 @@
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
     <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
     <property name="metadataProjects" value="projects"/>
     <property name="metadataKeywords" value="keywords"/>
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
@@ -285,49 +315,8 @@
     <!-- check constants.properties-->
     <property name="metadataManager" ref="${metadataManager}"/>
     <property name="taxonomyManager" ref="${taxonomyManager}"/>
-    <property name="agentManager" ref="${agentManager}"/>
-    
+    <property name="agentManager" ref="${agentManager}"/>    
   </bean>  
-
-  <!-- media page (nice view) -->
-  <bean id="videoPage" class="org.inbio.m3s.web.controller.media.VideoPageController">
-    <property name="viewName" value="videoPage"/>
-    <property name="modelElements">
-      <map>
-        <entry key="videoIdKey" value="qArIX10HZP4"/>
-      </map>
-    </property>
-
-  <!--  metadata -->
-    <!-- <property name="metadataUsername" value="username"/> -->
-    <property name="metadataVideoId" value="videoIdKey"/>
-    <property name="metadataId" value="id"/>
-    <property name="metadataTitle" value="title"/>  
-    <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
-    <property name="metadataProjects" value="projects"/>
-    <property name="metadataKeywords" value="keywords"/>
-    <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
-    <property name="metadataAssociatedToValue" value="associatedToValue"/>
-    <property name="metadataTaxonomy" value="taxonomy"/>
-    <property name="metadataSiteDescription" value="siteDescription"/>
-    <property name="metadataMediaAuthor" value="mediaAuthor"/>    
-    <property name="metadataOwnerType" value="ownerType"/>
-    <property name="metadataOwnerValue" value="ownerValue"/>
-    <property name="metadataUsePolicy" value="usePolicy"/>
-    <property name="metadataMediaVisible" value="mediaVisible"/>
-    
-    <!-- Converters  -->
-    <property name="taxonGuiOrDTOConverter" ref="taxonGuiOrDTOConverter"/>
-    
-    <!-- Managers  -->  
-    <property name="messageManager" ref="messageManager"/>  
-    <!-- check constants.properties-->
-    <property name="taxonomyManager" ref="${taxonomyManager}"/>
-    <property name="agentManager" ref="${agentManager}"/>
-    <property name="metadataManager" ref="${metadataManager}"/>           
-     
-  </bean>
   
   
   <!-- image dispatcher -->
@@ -392,5 +381,15 @@
     <property name="thumbImageCode" value="1"/>
     <property name="bigImageCode" value="2"/>
   </bean> 
+  
+  <!-- video dispatcher -->
+  <bean id="videoController" class="org.inbio.m3s.web.controller.dispatcher.VideoController">
+    <property name="mediaDAO" ref="mediaDAO"/>
+    
+    <!-- check constants.properties-->
+    <property name="temporalFilesPath" value="${temporalFilesPath}"/>
+    <property name="mediaFilesPath" value="${mediaFilesPath}"/>
+    <property name="bigMediaFolder" value="${bigMediaFolder}"/>
+  </bean>  
 
 </beans>

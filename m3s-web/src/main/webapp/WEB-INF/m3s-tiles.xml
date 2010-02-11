@@ -17,6 +17,11 @@
     <put name="title" value="Welcome to M3S"/>	    
     <put name="content" value="/WEB-INF/jsp/home.jsp"/>
   </definition>
+
+  <definition name="accessDeniedPage" extends="mainTemplate">
+    <put name="title" value="Welcome to M3S"/>      
+    <put name="content" value="/WEB-INF/jsp/error/403.jsp"/>
+  </definition>
   
   <!--  insert image -->
   <definition name="insertStep1" extends="mainTemplate">
@@ -31,11 +36,11 @@
     <put name="title" value="Process Done"/>	    
     <put name="content" value="/WEB-INF/jsp/insert/step3.jsp"/>
   </definition>
-  
   <definition name="insertStep2Excel" extends="mainTemplate">
     <put name="title" value="Importing From Excel File"/>      
     <put name="content" value="/WEB-INF/jsp/insert/step2Excel.jsp"/>
   </definition>  
+  
   
   <!--  edit image -->
   <definition name="editStep1" extends="mainTemplate">
@@ -61,12 +66,6 @@
   <definition name="mediaPage" extends="mainTemplate">
     <put name="title" value="Multimedia"/>        
     <put name="content" value="/WEB-INF/jsp/media/mediaPage.jsp"/>
-  </definition>
-  
-  <!-- video page -->
-  <definition name="videoPage" extends="mainTemplate">
-    <put name="title" value="Multimedia"/>        
-    <put name="content" value="/WEB-INF/jsp/media/videoPage.jsp"/>
   </definition>
   
   <!-- login -->

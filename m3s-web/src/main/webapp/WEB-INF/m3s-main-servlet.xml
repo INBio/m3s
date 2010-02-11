@@ -27,18 +27,22 @@
         <!-- Importation file -->
         <prop key="/uploadImportationFile.html">uploadImportationFileController</prop>
         <prop key="/importationFileTable.html">importationFileTableController</prop>
-        
+        <!-- Youtube videos  -->
+        <prop key="/insertYoutubeVideo.html">insertYoutubeVideoController</prop>
         
         <!-- Edit -->
         <prop key="/edit.html">editController</prop>
         <prop key="/editMedia.html">editStep2PageController</prop>
         <prop key="/updateMetadata.html">updateMetadataController</prop>
         
-        <!-- Image dispatcher controller -->
+        <!-- Media dispatcher controller -->
         <prop key="/getImage">imageController</prop>
+        <prop key="/getVideo">videoController</prop>
 
-        <!-- Login -->
+        <!-- Login & security -->
         <prop key="/login.html">loginPageController</prop>
+        <prop key="/accessDeniedPage.html">accessDeniedPageController</prop>
+        
       </props>
     </property>
   </bean>
@@ -78,6 +82,10 @@
     <!-- Managers  
     <property name="messageManager" ref="messageManager"/>	
     -->
+  </bean>
+  
+  <bean id="accessDeniedPageController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
+    <property name="viewName" value="accessDeniedPage"/>
   </bean>
   
   

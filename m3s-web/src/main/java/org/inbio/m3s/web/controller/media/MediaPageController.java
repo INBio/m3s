@@ -19,8 +19,10 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
+import org.inbio.m3s.dto.metadata.util.MediaAttributeEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.service.AgentManager;
@@ -45,6 +47,7 @@ public class MediaPageController extends SimpleController{
 	private String metadataId;
 	private String metadataTitle;
 	private String metadataDescription;
+	private String mediaTypeIdKey;//=mediaTypeId
 	private String metadataMediaCategory;
 	private String metadataProjects;
 	private String metadataKeywords;
@@ -113,7 +116,16 @@ public class MediaPageController extends SimpleController{
 			
 			//Tipo de multimedios
 			MediaTypeDTO mediaTypeDTO = messageManager.getMediaType(mDTO.getMediaTypeKey());
+			mav.addObject(mediaTypeIdKey, mediaTypeDTO.getMediaTypeKey());
 			mav.addObject(metadataMediaCategory, mediaTypeDTO.getMediaTypeName());
+			
+			//Si es video saca los metadatos acá:
+			if( StringUtils.equals(mediaTypeDTO.getMediaTypeKey(), "6") ){
+				TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+				logger.debug("el youtube video Id");
+				logger.debug(maDTO.toString());
+				mav.addObject("videoIdKey",maDTO.getValue());
+			}
 
 			//projects
 			List<ProjectDTO> pDTOList = mDTO.getProjectsList();
@@ -541,6 +553,22 @@ public class MediaPageController extends SimpleController{
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
+	}
+
+
+	/**
+	 * @return the mediaTypeIdKey
+	 */
+	public String getMediaTypeIdKey() {
+		return mediaTypeIdKey;
+	}
+
+
+	/**
+	 * @param mediaTypeIdKey the mediaTypeIdKey to set
+	 */
+	public void setMediaTypeIdKey(String mediaTypeIdKey) {
+		this.mediaTypeIdKey = mediaTypeIdKey;
 	}
 
 

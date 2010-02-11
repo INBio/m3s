@@ -18,8 +18,8 @@ Usado por:
   <spring:message code="insert.excel.batch"/>
   <br>
   
-  <input type="radio" name="fileType" value="video" disabled="disabled">
-  <spring:message code="insert.video.mov"/>
+  <input type="radio" name="fileType" value="video" onclick="javascript:viewYoutubeVideoDivs()" >
+  <spring:message code="insert.youtube.title"/>
   <br>
   
 </div>
@@ -27,7 +27,7 @@ Usado por:
 <div id="uploadMethodDiv" class="upload-files-form">
   <%--imagenes --%>
   <div id="jpgImageFormDiv" style="display: block">
-    <form method="post" enctype="multipart/form-data" action="<c:out value="${jpgImagesFormAction}"/>">
+    <form method="post" enctype="multipart/form-data" action="uploadImages.html">
       <%-- Nombre del Usuario --%>
       <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>"/>
           
@@ -55,7 +55,7 @@ Usado por:
       
   <%--importacion --%>
   <div id="importationFormDiv" style="display: none">
-    <form method="post" enctype="multipart/form-data" action="<c:out value="${excelFormAction}"/>">
+    <form method="post" enctype="multipart/form-data" action="uploadImportationFile.html">
       <%-- Nombre del Usuario --%>
       <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
 
@@ -80,6 +80,37 @@ Usado por:
       </p>
     </div>
   </div>
+  
+  <%--youtube videos --%>
+  <div id="youtubeVideoFormDiv" style="display: none">
+  <form method="post" enctype="multipart/form-data" action="insertYoutubeVideo.html">
+      <%-- Nombre del Usuario --%>
+      <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>" />
+
+      <%-- Id del video a subir --%>
+      <label>
+        <b><spring:message code="metadata.label.youtube.id"/>:</b>
+      </label>
+      <label>
+        <input type="text" name="youtubeVideoId" value="<c:out value="${youtubeVideoId}"/>" size="40" tabindex="1"/>
+      </label>
+      <br>          
+      
+      <input type="submit" value="<spring:message code="buton.continue"/>" />
+      <br>
+    </form>
+    <div id="youtubeVideoHelpDiv" class="upload-help">      
+      <p>
+        <label>
+          <spring:message code="insert.youtube.help1"/>
+          <br>
+          <spring:message code="insert.youtube.help2"/>
+          <br>
+        </label>
+        <br>
+      </p>
+    </div>
+  </div>
 </div><%-- selection mode --%>
 
  
@@ -92,7 +123,7 @@ Usado por:
 function cleanHelpDivs(){   
   document.getElementById('jpgImageFormDiv').style.display='none';
   document.getElementById('importationFormDiv').style.display='none';
-  
+  document.getElementById('youtubeVideoFormDiv').style.display='none';
 }
 
 function viewJpgImageDivs(){
@@ -103,5 +134,10 @@ function viewJpgImageDivs(){
 function viewImportationDivs(){
   cleanHelpDivs();
   document.getElementById('importationFormDiv').style.display='block';
+}
+
+function viewYoutubeVideoDivs(){
+  cleanHelpDivs();
+  document.getElementById('youtubeVideoFormDiv').style.display='block';
 }
 </script>

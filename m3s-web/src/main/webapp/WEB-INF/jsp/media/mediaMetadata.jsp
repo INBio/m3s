@@ -132,7 +132,7 @@
     <b><spring:message code="metadata.label.visible.to.all"/>:</b>
   </label>
   <label>
-    <input type="checkbox" name="mediaVisible" <c:if test="${not empty mediaVisible}"> checked="checked"</c:if> tabindex="15"/>
+    <input type="checkbox" name="mediaVisible" <c:if test="${not empty mediaVisible}"> checked="checked"</c:if> tabindex="15" disabled="disabled"/>
   </label>
   <br/>
   

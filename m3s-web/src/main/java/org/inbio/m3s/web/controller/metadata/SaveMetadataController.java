@@ -5,7 +5,9 @@ package org.inbio.m3s.web.controller.metadata;
 
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
+import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
+import org.inbio.m3s.dto.metadata.util.MediaAttributeEntity;
 import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.util.MediaFileManagement;
 import org.inbio.m3s.web.controller.metadata.MetadataHandler;
@@ -57,6 +61,8 @@ public class SaveMetadataController implements Controller {
 	private String metadataUsePolicy;
 	private String metadataMediaVisible;	
 	
+	private String youtubeVideoIdKey;//=  youtubeVideoIdKey
+	
 	//Error management
 	private String errorViewName; //="insertStep2"
 	private String errorFormActionKey;//=formAction
@@ -93,9 +99,12 @@ public class SaveMetadataController implements Controller {
 		ownerName = URLDecoder.decode(ownerName, "UTF-8");
 		String usePolicyKey = request.getParameter(metadataUsePolicy);
 		String mediaVisible = request.getParameter(metadataMediaVisible);
+		String youtubeVideoId = request.getParameter(youtubeVideoIdKey);
+		
 		
 		logger.debug("filePath: "+filePath);
 		logger.debug("fileName: "+fileName);
+		logger.debug("youtubeVideoId: "+youtubeVideoId);
 		logger.debug("userName: "+userName);
 		logger.debug("title: "+title);
 		logger.debug("description: "+description);
@@ -123,24 +132,38 @@ public class SaveMetadataController implements Controller {
 		  String mediaKeys = "";
 		  TechnicalMetadataDTO tmDTO;
 		  Integer mediaId;
+		  
+		  
+		  
+		  //youtube video
+		  if(StringUtils.equals(mediaTypeId, "6")){
+				logger.debug("Agregando los metadatos de video youtube");
+				List<TechnicalMetadataItemDTO> items = new ArrayList<TechnicalMetadataItemDTO>();
+				TechnicalMetadataItemDTO attribute  =new TechnicalMetadataItemDTO(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()), "",youtubeVideoId);
+				logger.debug("attribute:"+ attribute.toString());
+				items.add(attribute);
+				mDTO.setItems(items);
+	  		mediaId = metadataManager.saveMetadata(mDTO);
+		  	mediaKeys = mediaKeys + String.valueOf(mediaId) + "  ";
+		  	mediaFileManagement.organizeAndCleanFiles(filePath + fileName, mediaId, Integer.valueOf(mDTO.getMediaTypeKey()), mediaFilesPath);
+			} else{
 		
-		  for(String individualFileName : fileNames){
+		    for(String individualFileName : fileNames){
 
-				logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+individualFileName + "'");
-				tmDTO = metadataManager.getTechMetadataFromFile(mDTO.getMediaTypeKey(), filePath + individualFileName); //el segundo parametro es el path completo de la imagen
-				if(tmDTO==null)
-					tmDTO = metadataManager.getTechMetadataByMediaType(mDTO.getMediaTypeKey());
-				//tmDTO.setUsername(userName);
+				  logger.debug("Extrayendo metadatos técnicos del archivo: '" + filePath+individualFileName + "'");
+				  tmDTO = metadataManager.getTechMetadataFromFile(mDTO.getMediaTypeKey(), filePath + individualFileName); //el segundo parametro es el path completo de la imagen
+				  if(tmDTO==null)
+				  	tmDTO = metadataManager.getTechMetadataByMediaType(mDTO.getMediaTypeKey());
 				
-				mDTO.setItems(tmDTO.getItems());
-				mediaId = metadataManager.saveMetadata(mDTO);
-				mediaKeys = mediaKeys + String.valueOf(mediaId) + "  ";
+		  		mDTO.setItems(tmDTO.getItems());
+		  		mediaId = metadataManager.saveMetadata(mDTO);
+			  	mediaKeys = mediaKeys + String.valueOf(mediaId) + "  ";
+		
+			    mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(mDTO.getMediaTypeKey()), mediaFilesPath);
 				
-				// FIXME: only for jpg's... not really a bug! ;).
-				//revisar este metodo porque si le mando como primer parametro solo el nombre del archivo lo intenta
-				//buscar en /var/lib/tomcat5.5/temp/laPrueba2.jpg lo que estaría muy bien...
-				mediaFileManagement.organizeAndCleanFiles(filePath + individualFileName, mediaId, Integer.valueOf(mDTO.getMediaTypeKey()), mediaFilesPath);
-		  }
+		    }
+
+			}  
 		
 		
 		mav.addObject("mediaId", mediaKeys);
@@ -160,6 +183,8 @@ public class SaveMetadataController implements Controller {
 			modelElements.put(errorFormActionKey, errorFormActionValue);
 			
 			modelElements.put("mediaId", fileName);
+			
+			modelElements.put(youtubeVideoIdKey, youtubeVideoId);
 			
 			modelElements.put(fileNameKey, fileName);
 			modelElements.put(metadataTitle, title);
@@ -586,6 +611,26 @@ public class SaveMetadataController implements Controller {
 	 */
 	public void setMediaFilesPath(String mediaFilesPath) {
 		this.mediaFilesPath = mediaFilesPath;
+	}
+
+
+
+
+	/**
+	 * @return the youtubeVideoIdKey
+	 */
+	public String getYoutubeVideoIdKey() {
+		return youtubeVideoIdKey;
+	}
+
+
+
+
+	/**
+	 * @param youtubeVideoIdKey the youtubeVideoIdKey to set
+	 */
+	public void setYoutubeVideoIdKey(String youtubeVideoIdKey) {
+		this.youtubeVideoIdKey = youtubeVideoIdKey;
 	}
 
 }
