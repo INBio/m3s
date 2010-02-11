@@ -269,8 +269,6 @@ public class MetadataManagerImpl implements MetadataManager {
 
 			}
 
-			// TODO: set the series
-
 			logger.debug("updating Metadata... 06 - keywords");
 			// keywords
 			if(dbMetadataDTO.getKeywordsList().equals(metadataDTO.getKeywordsList()) == false) {
@@ -443,10 +441,7 @@ public class MetadataManagerImpl implements MetadataManager {
 			
 	    this.saveTechnicalMetadata(String.valueOf(theMedia.getMediaId()), metadataDTO.getItems());
 	    
-			/* is not necessary 
-			// saves the Media Object in the database
-			mediaDAO.update(theMedia);
-			 */
+
 			
 		} catch (Exception he) {
 			logger.error("There was a hibernate exeption in the insertMedia");
@@ -492,24 +487,27 @@ public class MetadataManagerImpl implements MetadataManager {
 		
 		for (TechnicalMetadataItemDTO tmiDTO : tmDTO.getItems()) {
 			mavId = new MediaAttributeValueId(new Integer(tmiDTO.getMediaAttributeKey()), media.getMediaId());
-			mav = (MediaAttributeValue) mediaAttributeValueDAO.findById(
-					MediaAttributeValue.class, mavId);
-			mae = MediaAttributeEntity.getById(mavId.getMediaAttributeId());
-			switch ( mae.getMediaAttributeValueType()) {
-			case 'V':
-				tmiDTO.setValue(mav.getValueVarchar());
-				break;
-			case 'N':
-				if (mav.getValueNumber() != null)
-					tmiDTO.setValue(mav.getValueNumber().toString());
-				else
-					tmiDTO.setValue(null);
-				break;
-			case 'D':
-				tmiDTO.setValue(mav.getValueDate().toString());
-				break;
-			default:
+			mav = (MediaAttributeValue) mediaAttributeValueDAO.findById(MediaAttributeValue.class, mavId);
+			if(mav==null){
 				tmiDTO.setValue("");
+			} else{
+			  mae = MediaAttributeEntity.getById(mavId.getMediaAttributeId());
+			  switch ( mae.getMediaAttributeValueType()) {
+			  case 'V':
+				  tmiDTO.setValue(mav.getValueVarchar());
+				  break;
+			  case 'N':
+			  	if (mav.getValueNumber() != null)
+				  	tmiDTO.setValue(mav.getValueNumber().toString());
+			  	else
+		  			tmiDTO.setValue(null);
+	  			break;
+			  case 'D':
+				  tmiDTO.setValue(mav.getValueDate().toString());
+				  break;
+			  default:
+				  tmiDTO.setValue("");
+			  }
 			}
 
 		}

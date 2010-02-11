@@ -32,6 +32,7 @@ public class MediaFileManagement {
 	public int BIG = 2;
 	//FIXME: esto no deberia estar aca
 	public Integer DSC_MEDIA_TYPE_ID = new Integer(1);
+	public Integer YOUTUBE_VIDEO_TYPE_ID = new Integer(6);
 	//FIXME: esto no deberia estar aca	
 	public Integer MOV_VIDEO_MEDIA_TYPE_ID = new Integer(4);
 
@@ -154,7 +155,7 @@ public class MediaFileManagement {
 			String thumbMediaFilePath, String bigMediaFilePath) throws IllegalArgumentException {
 
 		try{
-			if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
+			if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID) || mediaTypeId.equals(YOUTUBE_VIDEO_TYPE_ID)) {
 				ImageMagickAPI.createThumb(originalMediaFilePath, thumbMediaFilePath);
 				ImageMagickAPI.writeStandardSize(originalMediaFilePath, bigMediaFilePath);
 
@@ -189,7 +190,7 @@ public class MediaFileManagement {
 	 */
 	private String getFileExtension(Integer mediaTypeId, int mediaSize) throws IllegalArgumentException {
 
-		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID)) {
+		if (mediaTypeId.equals(DSC_MEDIA_TYPE_ID) || mediaTypeId.equals(YOUTUBE_VIDEO_TYPE_ID)) {
 			return ".jpg";
 
 		} else if (mediaTypeId.equals(MOV_VIDEO_MEDIA_TYPE_ID)) {
