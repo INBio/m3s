@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.inbio.m3s.MultipleFilesUploadBean;
 import org.inbio.m3s.util.ImageMagickAPI;
+import org.inbio.m3s.dto.metadata.util.MediaTypeEntity;
 import org.inbio.m3s.web.controller.metadata.MetadataHandler;
 import org.inbio.m3s.web.exception.ValidationException;
 
@@ -40,6 +41,8 @@ public class MultipleImagesUploadController extends SimpleFormController {
 	//model & JSP
 	private String metadataUsernameKey; //="username"
 	private String fileNameKey;//=fileName
+	private String mediaTypeIdKey; //mediaTypeId
+	private String mediaTypeNameKey; //mediaTypeName
 	
 	private String formActionKey; //="formAction"
 	private String formActionValue; //para el siguiente form...
@@ -134,6 +137,11 @@ public class MultipleImagesUploadController extends SimpleFormController {
 				Map<String,Object> metadataModelValues = new HashMap<String, Object>();
 				metadataModelValues = metadataHandler.getMetadata(metadataModelValues);
 				mav.addAllObjects(metadataModelValues);
+				
+				//setting mediaType to Image
+				mav.addObject(mediaTypeIdKey,MediaTypeEntity.DSC_IMAGE.getMediaTypeId());
+				mav.addObject(mediaTypeNameKey,MediaTypeEntity.DSC_IMAGE.getNamekey());
+				
 				
 			return mav;
 		
@@ -372,6 +380,41 @@ public class MultipleImagesUploadController extends SimpleFormController {
 		this.metadataHandler = metadataHandler;
 	}
 
+
+
+	/**
+	 * @return the mediaTypeIdKey
+	 */
+	public String getMediaTypeIdKey() {
+		return mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeIdKey the mediaTypeIdKey to set
+	 */
+	public void setMediaTypeIdKey(String mediaTypeIdKey) {
+		this.mediaTypeIdKey = mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @return the mediaTypeNameKey
+	 */
+	public String getMediaTypeNameKey() {
+		return mediaTypeNameKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeNameKey the mediaTypeNameKey to set
+	 */
+	public void setMediaTypeNameKey(String mediaTypeNameKey) {
+		this.mediaTypeNameKey = mediaTypeNameKey;
+	}
 
 }
 

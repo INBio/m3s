@@ -17,11 +17,13 @@
     <put name="title" value="Welcome to M3S"/>	    
     <put name="content" value="/WEB-INF/jsp/home.jsp"/>
   </definition>
-
-  <definition name="accessDeniedPage" extends="mainTemplate">
-    <put name="title" value="Welcome to M3S"/>      
-    <put name="content" value="/WEB-INF/jsp/error/403.jsp"/>
+  
+  <!-- Help Pages -->
+  <definition name="keywordsList" extends="mainTemplate">
+    <put name="title" value="Help"/>      
+    <put name="content" value="/WEB-INF/jsp/help/keywords.jsp"/>
   </definition>
+  
   
   <!--  insert image -->
   <definition name="insertStep1" extends="mainTemplate">
@@ -72,7 +74,15 @@
   <definition name="login" extends="mainTemplate">
     <put name="title" value="Please Login"/>	    
     <put name="content" value="/WEB-INF/jsp/login.jsp"/>
-  </definition>  
+  </definition>
+  <definition name="accessDeniedPage" extends="mainTemplate">
+    <put name="title" value="Error Page"/>      
+    <put name="content" value="/WEB-INF/jsp/error/403.jsp"/>
+  </definition>
+  <definition name="error404" extends="mainTemplate">
+    <put name="title" value="Error Page"/>      
+    <put name="content" value="/WEB-INF/jsp/error/404.jsp"/>
+  </definition>          
   
   <!-- Gallery -->
   <definition name="galleryTemplate" page="/layouts/galleryTemplate.jsp">

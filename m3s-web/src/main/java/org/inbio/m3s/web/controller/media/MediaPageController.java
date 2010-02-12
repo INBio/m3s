@@ -16,13 +16,13 @@ import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
-import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
 import org.inbio.m3s.dto.metadata.util.MediaAttributeEntity;
+import org.inbio.m3s.dto.metadata.util.MediaTypeEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.service.AgentManager;
@@ -47,8 +47,8 @@ public class MediaPageController extends SimpleController{
 	private String metadataId;
 	private String metadataTitle;
 	private String metadataDescription;
-	private String mediaTypeIdKey;//=mediaTypeId
-	private String metadataMediaCategory;
+	private String mediaTypeIdKey;
+	private String mediaTypeNameKey;//=mediaTypeName
 	private String metadataProjects;
 	private String metadataKeywords;
 	private String metadataAssociatedToValueType;
@@ -110,17 +110,19 @@ public class MediaPageController extends SimpleController{
 		}
 
 		try{
+			mav.addObject("mDTO",mDTO);
+			
 			mav.addObject(metadataId, mediaKey);
 			mav.addObject(metadataTitle, mDTO.getTitle());
 			mav.addObject(metadataDescription, mDTO.getDescription());
 			
 			//Tipo de multimedios
-			MediaTypeDTO mediaTypeDTO = messageManager.getMediaType(mDTO.getMediaTypeKey());
-			mav.addObject(mediaTypeIdKey, mediaTypeDTO.getMediaTypeKey());
-			mav.addObject(metadataMediaCategory, mediaTypeDTO.getMediaTypeName());
+			MediaTypeEntity mediaType = MediaTypeEntity.getById(Integer.valueOf(mDTO.getMediaTypeKey()).intValue());
+			mav.addObject(mediaTypeIdKey, mDTO.getMediaTypeKey());
+			mav.addObject(mediaTypeNameKey, mediaType.getNamekey());
 			
 			//Si es video saca los metadatos acá:
-			if( StringUtils.equals(mediaTypeDTO.getMediaTypeKey(), "6") ){
+			if( mediaType == MediaTypeEntity.YOUTUBE_VIDEO) {
 				TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
 				logger.debug("el youtube video Id");
 				logger.debug(maDTO.toString());
@@ -348,22 +350,6 @@ public class MediaPageController extends SimpleController{
 
 
 	/**
-	 * @return the metadataMediaCategory
-	 */
-	public String getMetadataMediaCategory() {
-		return metadataMediaCategory;
-	}
-
-
-	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
-	 */
-	public void setMetadataMediaCategory(String metadataMediaCategory) {
-		this.metadataMediaCategory = metadataMediaCategory;
-	}
-
-
-	/**
 	 * @return the metadataProjects
 	 */
 	public String getMetadataProjects() {
@@ -553,6 +539,22 @@ public class MediaPageController extends SimpleController{
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
+	}
+
+
+	/**
+	 * @return the mediaTypeNameKey
+	 */
+	public String getMediaTypeNameKey() {
+		return mediaTypeNameKey;
+	}
+
+
+	/**
+	 * @param mediaTypeNameKey the mediaTypeNameKey to set
+	 */
+	public void setMediaTypeNameKey(String mediaTypeNameKey) {
+		this.mediaTypeNameKey = mediaTypeNameKey;
 	}
 
 

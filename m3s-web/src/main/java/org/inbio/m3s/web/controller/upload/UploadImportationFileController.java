@@ -113,6 +113,7 @@ public class UploadImportationFileController extends SimpleFormController {
 			logger.debug("results:"+importationHistoryListDTO.size());
 			mav.addObject(importationHistoryKey, importationHistoryListDTO);
 			
+			
 			return mav;
 		
 		} catch (Exception e){

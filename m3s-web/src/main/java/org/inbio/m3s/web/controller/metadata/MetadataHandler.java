@@ -48,7 +48,6 @@ public class MetadataHandler {
 	private SiteDAO siteDAO;
 	private TaxonGuiOrDTOConverter taxonGuiOrDTOConverter;
 	
-	private String metadataMediaTypes = "mediaTypes";
 	private String metadataAssociatedToValues = "associatedToValues";
 	private String metadataUsePolicies = "usePolicies";
 	/* MediaOwner Widget */
@@ -62,13 +61,7 @@ public class MetadataHandler {
 	 * @return
 	 */
 	public Map<String,Object> getMetadata(Map<String,Object> modelElements){
-		
-	  //Tipos de multimedios
-		List<MediaTypeDTO>  mediaTypes = messageManager.getAllMediaTypes();
-		modelElements.put(metadataMediaTypes, mediaTypes);
-		/* esta linea siguiente establece cual es el valor seleccionado!*/
-		//modelElements.put(metadataMediaCategory, gmDTO.getMediaTypeKey());
-		
+				
 		//Tipos de Asociaciones
 		List<KeyValueDTO> associatedToValues = messageManager.getAllAssociatedToValues();
 		modelElements.put(metadataAssociatedToValues, associatedToValues);
@@ -335,22 +328,6 @@ public class MetadataHandler {
 	public void setTaxonGuiOrDTOConverter(
 			TaxonGuiOrDTOConverter taxonGuiOrDTOConverter) {
 		this.taxonGuiOrDTOConverter = taxonGuiOrDTOConverter;
-	}
-
-
-	/**
-	 * @return the metadataMediaTypes
-	 */
-	public String getMetadataMediaTypes() {
-		return metadataMediaTypes;
-	}
-
-
-	/**
-	 * @param metadataMediaTypes the metadataMediaTypes to set
-	 */
-	public void setMetadataMediaTypes(String metadataMediaTypes) {
-		this.metadataMediaTypes = metadataMediaTypes;
 	}
 
 

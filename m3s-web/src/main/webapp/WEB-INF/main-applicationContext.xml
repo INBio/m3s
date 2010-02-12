@@ -21,15 +21,6 @@
   <!-- insert page -->
   <bean id="insertController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="insertStep1"/>
-    <!-- 
-    <property name="modelElements">
-      <map>
-        <entry key="jpgImagesFormAction" value="uploadImages.html"/>
-        <entry key="excelFormAction" value="uploadImportationFile.html"/>
-        <entry key="youtubeFormAction" value="insertYoutubeVideo.html"/>
-      </map>
-    </property>
-     -->
   </bean>    
   
   <!-- uploads Image files controller -->
@@ -41,6 +32,8 @@
     <!-- constantes -->
     <property name="filePath" value="${temporalFilesPath}"/>
     <property name="fileExtension" value="jpg"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>
     
     <!-- Model & JSP -->
     <property name="metadataUsernameKey" value="username"/>            
@@ -73,7 +66,8 @@
     
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>  
     <property name="metadataProjects" value="projects"/>
     <property name="metadataKeywords" value="keywords"/>
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
@@ -86,6 +80,7 @@
     <property name="metadataUsePolicy" value="usePolicy"/>
     <property name="metadataMediaVisible" value="mediaVisible"/>
     <property name="youtubeVideoIdKey" value="youtubeVideoId"/>  
+    
 
     <!-- in case of error -->
     <property name="errorViewName" value="insertStep2"/>
@@ -155,7 +150,9 @@
     <!-- Model & JSP -->
     <property name="viewName" value="insertStep2"/> <!-- De la clase simpleController -->
     <property name="metadataUsernameKey" value="username"/>
-    <property name="youtubeVideoIdKey" value="youtubeVideoId"/>            
+    <property name="youtubeVideoIdKey" value="youtubeVideoId"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>                
     <property name="fileNameKey" value="fileName"/><!-- Nombre de los archivos en el servidor, separados por ';' -->    
     <property name="formActionKey" value="formAction"/>
     <property name="formActionValue" value="saveMetadata.html"/>      
@@ -194,7 +191,8 @@
     <property name="metadataId" value="mediaId"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>
     <property name="metadataProjects" value="projects"/>
     <property name="metadataKeywords" value="keywords"/>
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
@@ -232,7 +230,8 @@
     <property name="fileNameCode" value="mediaId"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
+    <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>
     <property name="metadataProjects" value="projects"/>
     <property name="metadataKeywords" value="keywords"/>
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
@@ -259,7 +258,6 @@
   <!--  Este bean apoya en la búsqueda de metadatos -->
   <bean id="metadataHandler" class="org.inbio.m3s.web.controller.metadata.MetadataHandler">
     <!-- metadata values -->
-    <property name="metadataMediaTypes" value="mediaTypes"/>
     <property name="metadataAssociatedToValues" value="associatedToValues"/>
     <property name="metadataUsePolicies" value="usePolicies"/>
     
@@ -293,8 +291,8 @@
     <property name="metadataId" value="id"/>
     <property name="metadataTitle" value="title"/>  
     <property name="metadataDescription" value="description"/>
-    <property name="metadataMediaCategory" value="mediaCategories"/>
     <property name="mediaTypeIdKey" value="mediaTypeId"/>
+    <property name="mediaTypeNameKey" value="mediaTypeName"/>
     <property name="metadataProjects" value="projects"/>
     <property name="metadataKeywords" value="keywords"/>
     <property name="metadataAssociatedToValueType" value="associatedToValueType"/>
@@ -363,9 +361,12 @@
   
   <!-- importation files dispatcher -->
   <bean id="importationFile" class="org.inbio.m3s.web.controller.ImportationFileDispatcherController">
-    <property name="contentTypeMetadata" value="application/vnd.ms-excel"/>
+    <!-- <property name="contentTypeMetadata" value="application/vnd.ms-excel"/> -->
+    <property name="contentTypeMetadata" value="application/msexcel"/>
     <property name="fileIdMetadata" value="id"/>
     <property name="importationPath" value="${importationFilesPath}"/>
+    <!-- Managers  -->  
+    <property name="importationManager" ref="importationManager"/>  
   </bean> 
 
   <!-- image dispatcher -->

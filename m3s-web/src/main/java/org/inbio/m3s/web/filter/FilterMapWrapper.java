@@ -14,7 +14,6 @@
  ***************************************************************************/
 package org.inbio.m3s.web.filter;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,40 +41,7 @@ public class FilterMapWrapper {
 				return filterDTO;
 		}
 		return null;
-	}
-
-	/**
-	 * Retrieves a list Filter by category and subcategory.
-	 * @param category
-	 * @param subcategory
-	 * @return the list of filters
-	public List<FilterDTO> getFiltersByCategory(String category, String subcategory){
-		
-		if (category==null)
-			return filters;
-		
-		List<FilterDTO> categoryFilters = new LinkedList<FilterDTO>();
-		
-		for(FilterDTO filterDTO: filters){
-			if (category!=null && category.equals(filterDTO.getCategory() )){
-				if (subcategory!=null && subcategory.equals(filterDTO.getSubcategory()))
-					categoryFilters.add(filterDTO);
-				else if (subcategory==null)
-					categoryFilters.add(filterDTO);	
-			}
-		}
-		return categoryFilters;
-	}
-	*/
-	
-	/**
-	 * Retrieves a list Filter by category.
-	 * @param category
-	 * @return the list of filters
-	public List<FilterDTO> getFiltersByCategory(String category){
-		return getFiltersByCategory(category, null);
-	}
-		 */		
+	}	
 
 	/**
 	 * @return the filters

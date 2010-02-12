@@ -43,6 +43,8 @@
         <prop key="/login.html">loginPageController</prop>
         <prop key="/accessDeniedPage.html">accessDeniedPageController</prop>
         
+        <!-- Help pages -->
+        <prop key="/help/keywords.html">keywordsListController</prop>
       </props>
     </property>
   </bean>
@@ -66,26 +68,19 @@
     </bean>
  -->  
     
-  
-  <bean id="loginPageController" class="org.inbio.m3s.web.controller.LoginPageController">
-    <!-- View -->
+  <!-- org.inbio.m3s.web.controller.LoginPageController -->
+  <bean id="loginPageController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="login"/>
-    <!--  Form Action -->
-    <!--  arreglar esto 
-    <property name="formActionValue" value="saveMetadata.html"/>
-    -->
-  	<!--  metadata 
-    <property name="metadataSserName" value="userName"/>
-    <property name="metadataPassword" value="password"/>
-    -->  
-       
-    <!-- Managers  
-    <property name="messageManager" ref="messageManager"/>	
-    -->
   </bean>
   
   <bean id="accessDeniedPageController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
     <property name="viewName" value="accessDeniedPage"/>
+  </bean>
+
+  <!-- Help with the keywords  -->  
+  <bean id="keywordsListController" class="org.inbio.m3s.web.controller.help.KeywordsHelpController">
+    <property name="viewName" value="keywordsList"/>
+    <property name="messageManager" ref="messageManager"/>
   </bean>
   
   

@@ -54,21 +54,18 @@
     <textarea name="description" rows="4" cols="50" tabindex="2"><c:out value="${description}"/></textarea>
   </label>
   <br/>
-  
-  <%--Categoria --%>
+
+  <%-- ...mediaTypeId --%>
+  <input type="hidden" name="mediaTypeId" value="<c:out value="${mediaTypeId}"/>" />
+  <%--Categoria - MediaType --%>
   <label>
     <b><spring:message code="metadata.label.media.category"/>:</b>
   </label>
-  <label>    
-    <select name="mediaCategories" id="mediaCategoriesId" tabindex="3">
-      <c:forEach items="${mediaTypes}" var="mediaType">
-        <option value="<c:out value="${mediaType.mediaTypeKey}"/>"<c:if test="${mediaType.mediaTypeKey == mediaCategories}"> selected="selected"</c:if>>
-          <c:out value="${mediaType.mediaTypeName}"/>
-        </option>
-      </c:forEach>
-    </select>
+  <label>
+    <spring:message code="${mediaTypeName}"/>
   </label>
   <br/> 
+  
       
   <%--Proyectos --%>
   <label>
@@ -92,6 +89,9 @@
     <div id="keywordsContainer" class="yui-skin-m3s"></div>
   </label>
   <m3s:autoComplete containerId="keywordsContainer" inputId="keywordId" url="${pageContext.request.contextPath}/ajax/keyword" multiValue="true"/>
+  <label>
+    <a href="<c:out value="${pageContext.request.contextPath}"/>/help/keywords.html" target="_blank"><spring:message code="metadata.keywords.help"/></a>
+  </label>
   <br/>
   
   <%--Asociado A --%>

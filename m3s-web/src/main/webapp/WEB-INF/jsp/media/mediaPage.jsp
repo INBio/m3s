@@ -2,8 +2,9 @@
 
 
 <h2><spring:message code="media.profile.title"/></h2>
-<%-- --%>
 
+
+<%-- Según el tipo de multimedio mostrará el adecuado elemento gráfico --%>
 <c:if test="${mediaTypeId == 1}">
   <tiles:insert page="/WEB-INF/jsp/media/image.jsp"/>
 </c:if>
@@ -20,4 +21,6 @@
  
 
 <tiles:insert page="/WEB-INF/jsp/media/mediaMetadata.jsp"/>
+
+<tiles:insert page="/WEB-INF/jsp/media/mediaAttributes.jsp"/>
 

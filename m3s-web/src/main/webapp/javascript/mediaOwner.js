@@ -27,7 +27,6 @@ function changeMediaOwnerInput() {
 //element.parentNode.removeChild(element);
 
 				
-	
 	//add the new input field
 	var newInput = document.createElement('INPUT');
 	newInput.name = "ownerValue";

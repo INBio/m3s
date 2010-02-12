@@ -42,47 +42,53 @@ public class VideoController extends AbstractController {
 	 * javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest,
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) throws Exception {
 
 		String mediaAddress;
-		
-		Integer videoId = Integer.valueOf(httpServletRequest.getParameter("id"));
-		MediaLite mediaLite = mediaDAO.getMediaLite(videoId);
+		try {
+			Integer videoId = Integer.valueOf(httpServletRequest.getParameter("id"));
+			MediaLite mediaLite = mediaDAO.getMediaLite(videoId);
 
-		// Is Visible?
-		if (mediaLite.getIsPublic() == 'Y')
-			mediaAddress = getPath(videoId, mediaLite.getCreationDate().toString());
-		else {
-			logger.error("image with id=" + videoId + " isn't visible");
-			mediaAddress = temporalFilesPath + "unavailable.png";
+			// Is Visible?
+			if (mediaLite.getIsPublic() == 'Y')
+				mediaAddress = getPath(videoId, mediaLite.getCreationDate().toString());
+			else {
+				logger.error("image with id=" + videoId + " isn't visible");
+				mediaAddress = temporalFilesPath + "unavailable.png";
+			}
+
+			// starting the delivering of the image
+
+			ServletOutputStream out = httpServletResponse.getOutputStream(); // binary
+			// output
+			int contentLength = 0;
+			BufferedInputStream input = null;
+
+			// Open image file.
+			// Prepare file object.
+			File file = new File(mediaAddress);
+			input = new BufferedInputStream(new FileInputStream(file));
+			contentLength = input.available();
+
+			// has to be gotten from the fileMiMEType metadata value
+			httpServletResponse.setContentType("video/x-flv");
+
+			// Write file contents to response.
+			while (contentLength-- > 0) {
+				out.write(input.read());
+			}
+
+			out.flush();
+			out.close();
+
+			return null;
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return new ModelAndView("error404");
 		}
-
-		// starting the delivering of the image
-
-		ServletOutputStream out = httpServletResponse.getOutputStream(); // binary
-																																			// output
-		int contentLength = 0;
-		BufferedInputStream input = null;
-
-		// Open image file.
-		// Prepare file object.
-		File file = new File(mediaAddress);
-		input = new BufferedInputStream(new FileInputStream(file));
-		contentLength = input.available();
-
-		// has to be gotten from the fileMiMEType metadata value
-		httpServletResponse.setContentType("video/x-flv");
-
-		// Write file contents to response.
-		while (contentLength-- > 0) {
-			out.write(input.read());
-		}
-
-		out.flush();
-		out.close();
-
-		return null;
 	}
 
 	/**
@@ -91,10 +97,11 @@ public class VideoController extends AbstractController {
 	 * @param imageId
 	 * @return the real path of the image on the file system
 	 */
-	private String getPath(Integer imageId, String imageCreationDate) throws IllegalArgumentException {
+	private String getPath(Integer imageId, String imageCreationDate)
+			throws IllegalArgumentException {
 
 		String path = mediaFilesPath + File.separator + bigMediaFolder;
-		
+
 		// creation date folder
 		path = path.concat(File.separator + imageCreationDate);
 
@@ -118,7 +125,8 @@ public class VideoController extends AbstractController {
 	}
 
 	/**
-	 * @param temporalFilesPath the temporalFilesPath to set
+	 * @param temporalFilesPath
+	 *          the temporalFilesPath to set
 	 */
 	public void setTemporalFilesPath(String temporalFilesPath) {
 		this.temporalFilesPath = temporalFilesPath;
@@ -132,7 +140,8 @@ public class VideoController extends AbstractController {
 	}
 
 	/**
-	 * @param mediaFilesPath the mediaFilesPath to set
+	 * @param mediaFilesPath
+	 *          the mediaFilesPath to set
 	 */
 	public void setMediaFilesPath(String mediaFilesPath) {
 		this.mediaFilesPath = mediaFilesPath;
@@ -146,7 +155,8 @@ public class VideoController extends AbstractController {
 	}
 
 	/**
-	 * @param bigMediaFolder the bigMediaFolder to set
+	 * @param bigMediaFolder
+	 *          the bigMediaFolder to set
 	 */
 	public void setBigMediaFolder(String bigMediaFolder) {
 		this.bigMediaFolder = bigMediaFolder;
@@ -160,11 +170,11 @@ public class VideoController extends AbstractController {
 	}
 
 	/**
-	 * @param mediaDAO the mediaDAO to set
+	 * @param mediaDAO
+	 *          the mediaDAO to set
 	 */
 	public void setMediaDAO(MediaDAO mediaDAO) {
 		this.mediaDAO = mediaDAO;
 	}
-
 
 }

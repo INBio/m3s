@@ -17,6 +17,7 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;
+import org.inbio.m3s.dto.metadata.util.MediaTypeEntity;
 import org.inbio.m3s.dto.metadata.util.OwnerEntity;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
 import org.inbio.m3s.service.AgentManager;
@@ -44,7 +45,8 @@ public class EditStep2PageController extends AbstractController{
 	private String metadataId;
 	private String metadataTitle;
 	private String metadataDescription;
-	private String metadataMediaCategory;
+	private String mediaTypeIdKey;
+	private String mediaTypeNameKey;
 	private String metadataProjects;
 	private String metadataKeywords;
 	private String metadataAssociatedToValueType;
@@ -115,7 +117,9 @@ public class EditStep2PageController extends AbstractController{
 			mav.addObject(metadataDescription, mDTO.getDescription());
 
 			//Tipo de multimedio seleccionado
-			mav.addObject(metadataMediaCategory, mDTO.getMediaTypeKey());
+			mav.addObject(mediaTypeIdKey, mDTO.getMediaTypeKey());
+			MediaTypeEntity mte = MediaTypeEntity.getById(Integer.valueOf(mDTO.getMediaTypeKey()).intValue());
+			mav.addObject(mediaTypeNameKey, mte.getNamekey());
 
 			//projects
 			List<ProjectDTO> pDTOList = mDTO.getProjectsList();
@@ -316,24 +320,6 @@ public class EditStep2PageController extends AbstractController{
 	 */
 	public void setMetadataDescription(String metadataDescription) {
 		this.metadataDescription = metadataDescription;
-	}
-
-
-
-	/**
-	 * @return the metadataMediaCategory
-	 */
-	public String getMetadataMediaCategory() {
-		return metadataMediaCategory;
-	}
-
-
-
-	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
-	 */
-	public void setMetadataMediaCategory(String metadataMediaCategory) {
-		this.metadataMediaCategory = metadataMediaCategory;
 	}
 
 
@@ -658,6 +644,42 @@ public class EditStep2PageController extends AbstractController{
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
+	}
+
+
+
+	/**
+	 * @return the mediaTypeIdKey
+	 */
+	public String getMediaTypeIdKey() {
+		return mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeIdKey the mediaTypeIdKey to set
+	 */
+	public void setMediaTypeIdKey(String mediaTypeIdKey) {
+		this.mediaTypeIdKey = mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @return the mediaTypeNameKey
+	 */
+	public String getMediaTypeNameKey() {
+		return mediaTypeNameKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeNameKey the mediaTypeNameKey to set
+	 */
+	public void setMediaTypeNameKey(String mediaTypeNameKey) {
+		this.mediaTypeNameKey = mediaTypeNameKey;
 	}
 
 }

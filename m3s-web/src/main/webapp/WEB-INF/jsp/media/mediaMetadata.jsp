@@ -11,6 +11,14 @@
   </label>
 </c:if>
 
+<%--Identificador --%>
+<label>
+  <b><spring:message code="metadata.label.id"/></b>
+</label>
+<label>
+  <c:out value="${id}"/>
+</label>
+<br/>
   
 <%--Titulo --%>
 <label>
@@ -31,12 +39,12 @@
   <br/>
   
   
-  <%--Categoria --%> 
+  <%--Media Type --%> 
   <label>
     <b><spring:message code="metadata.label.media.category"/></b>
   </label>
   <label>
-    <c:out value="${mediaType}"/>
+  <spring:message code="${mediaTypeName}"/>
   </label>
   <br/> 
   

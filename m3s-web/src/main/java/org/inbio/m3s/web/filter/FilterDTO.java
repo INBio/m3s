@@ -14,7 +14,6 @@
  ***************************************************************************/
 package org.inbio.m3s.web.filter;
 
-import java.util.List;
 import java.util.Map;
 
 //import org.gbif.portal.web.content.filter.FilterHelper;

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
+import org.inbio.m3s.dto.metadata.util.MediaTypeEntity;
 import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.web.exception.ValidationException;
 
@@ -38,7 +39,8 @@ public class UpdateMetadataController implements Controller {
 	private String metadataUsername;
 	private String metadataTitle;
 	private String metadataDescription;
-	private String metadataMediaCategory;
+	private String mediaTypeIdKey;
+	private String mediaTypeNameKey;
 	private String metadataProjects;
 	private String metadataKeywords;
 	private String metadataAssociatedToValueType;
@@ -73,7 +75,7 @@ public class UpdateMetadataController implements Controller {
 		String userName = request.getParameter(metadataUsername);
 		String title = request.getParameter(metadataTitle);
 		String description = request.getParameter(metadataDescription);
-		String mediaTypeId = request.getParameter(metadataMediaCategory);
+		String mediaTypeId = request.getParameter(mediaTypeIdKey);
 		String projects = request.getParameter(metadataProjects);
 		String keywords = request.getParameter(metadataKeywords);
 		Integer associationTypeCode = Integer.valueOf(request.getParameter(metadataAssociatedToValueType));
@@ -136,10 +138,11 @@ public class UpdateMetadataController implements Controller {
 			
 			modelElements.put(fileNameCode, mediaId);
 			modelElements.put("mediaId", mediaId);
-			//modelElements.put(metadataUsername, userName);
 			modelElements.put(metadataTitle, title);
 			modelElements.put(metadataDescription, description);
-			modelElements.put(metadataMediaCategory, mediaTypeId);
+			modelElements.put(mediaTypeIdKey, mediaTypeId);
+			MediaTypeEntity mte = MediaTypeEntity.getById(Integer.valueOf(mediaTypeId));
+			modelElements.put(mediaTypeNameKey, mte.getNamekey());
 			modelElements.put(metadataProjects, projects);
 			modelElements.put(metadataKeywords, keywords);
 			modelElements.put(metadataAssociatedToValueType, associationTypeCode.toString());
@@ -287,26 +290,6 @@ public class UpdateMetadataController implements Controller {
 	public void setMetadataDescription(String metadataDescription) {
 		this.metadataDescription = metadataDescription;
 	}
-
-
-
-	/**
-	 * @return the metadataMediaCategory
-	 */
-	public String getMetadataMediaCategory() {
-		return metadataMediaCategory;
-	}
-
-
-
-	/**
-	 * @param metadataMediaCategory the metadataMediaCategory to set
-	 */
-	public void setMetadataMediaCategory(String metadataMediaCategory) {
-		this.metadataMediaCategory = metadataMediaCategory;
-	}
-
-
 
 	/**
 	 * @return the metadataProjects
@@ -593,6 +576,42 @@ public class UpdateMetadataController implements Controller {
 	 */
 	public void setMetadataManager(MetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
+	}
+
+
+
+	/**
+	 * @return the mediaTypeIdKey
+	 */
+	public String getMediaTypeIdKey() {
+		return mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeIdKey the mediaTypeIdKey to set
+	 */
+	public void setMediaTypeIdKey(String mediaTypeIdKey) {
+		this.mediaTypeIdKey = mediaTypeIdKey;
+	}
+
+
+
+	/**
+	 * @return the mediaTypeNameKey
+	 */
+	public String getMediaTypeNameKey() {
+		return mediaTypeNameKey;
+	}
+
+
+
+	/**
+	 * @param mediaTypeNameKey the mediaTypeNameKey to set
+	 */
+	public void setMediaTypeNameKey(String mediaTypeNameKey) {
+		this.mediaTypeNameKey = mediaTypeNameKey;
 	}
 	
 
