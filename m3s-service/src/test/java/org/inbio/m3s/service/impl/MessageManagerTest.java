@@ -13,6 +13,8 @@ import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
+import org.inbio.m3s.exception.UsePolicyNotFoundException;
+import org.inbio.m3s.model.core.UsePolicy;
 import org.inbio.m3s.service.AbstractServiceTest;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MessageManager;
@@ -26,6 +28,7 @@ public class MessageManagerTest extends AbstractServiceTest{
 
 	protected static Log logger = LogFactory.getLog(MessageManagerTest.class);
 	
+	/*
 	public void testSpanishKeywords(){
 		
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
@@ -44,6 +47,7 @@ public class MessageManagerTest extends AbstractServiceTest{
     }
 		
 	}
+	*/
 	
 	public void testGetAllUsePolicies(){
 		
@@ -63,6 +67,28 @@ public class MessageManagerTest extends AbstractServiceTest{
     }
 	}
 	
+public void testGetUsePolicyByName(){
+		try {
+		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
+		UsePolicyDTO kl = sm.getUsePolicyByName("Consultar con el autor");
+		if(kl == null){
+    	
+   	 System.out.println("No hay UsePolicyDTO para esos paremetros");
+    
+    } else { 
+
+	    	 System.out.println("con el id["+kl.getUsePolicyKey()+"] y el nombre ="+kl.getName() );
+    }
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	
+	//public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws UsePolicyNotFoundException {
+
+	
+	/*
 	public void testGetAllAssociatedToValues(){
 		logger.info("testGetAllAssociatedToValues");
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);
@@ -73,6 +99,6 @@ public class MessageManagerTest extends AbstractServiceTest{
 		}
 		
 	}
-
+*/
 
 }

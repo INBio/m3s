@@ -17,4 +17,7 @@ public interface ImportControlDAO extends GenericBaseDAO<ImportControl, ImportCo
 
 	public List<ImportControl> getImportControlList(String username, int quantity) throws IllegalArgumentException;
 	
+	public ImportControl findBySystemFileName(String systemFileName) throws IllegalArgumentException;
+	
+	
 }

@@ -122,7 +122,7 @@ public class MetadataManagerImpl implements MetadataManager {
 			mDTO.setDescription(m.getDescription());
 			mDTO.setMediaTypeKey(String.valueOf(m.getMediaTypeId()));
 			mDTO.setSiteKey(String.valueOf(m.getSiteId()));
-			mDTO.setSiteDescription(m.getDescription());
+			mDTO.setSiteDescription(m.getSiteDescription());
 			mDTO.setAuthorKey(String.valueOf(m.getAuthorPersonId()));
 			
 			if(m.getOwnerPersonId() == null){

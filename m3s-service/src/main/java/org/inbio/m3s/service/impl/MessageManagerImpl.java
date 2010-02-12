@@ -143,11 +143,11 @@ public class MessageManagerImpl implements MessageManager {
 	public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws UsePolicyNotFoundException {
 		UsePolicy up = (UsePolicy) usePolicyDAO.findByName(usePolicyName);
 		if(up==null)
-			throw new KeywordNotFoundException("The use policy ["+usePolicyName+"] cannot be found the database", null, usePolicyName);
+			throw new UsePolicyNotFoundException("The use policy ["+usePolicyName+"] cannot be found the database", null, usePolicyName);
 		//TextTranslation tt;
 		//tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
 		return new UsePolicyDTO(up.getUsePolicyId() , usePolicyName);
-}
+	}
 	
 
 	public List<MediaCategoryDTO> getAllMediaCategories() {

@@ -43,6 +43,25 @@ public class ImportControlDAOImpl extends GenericBaseDAOImpl<ImportControl, Impo
 		});		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.ImportControlDAO#findBySystemFileName(java.lang.String)
+	 */
+	public ImportControl findBySystemFileName(final String systemFileName)
+			throws IllegalArgumentException {
+		HibernateTemplate template = getHibernateTemplate();
+		return (ImportControl) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select ip"
+							+ " from ImportControl as ip"
+							+ " where ip.id.systemFileName = :systemFileName");
+				query.setParameter("systemFileName", systemFileName);
+				return query.uniqueResult();
+			}
+		});
+	}
+
 
 
 }

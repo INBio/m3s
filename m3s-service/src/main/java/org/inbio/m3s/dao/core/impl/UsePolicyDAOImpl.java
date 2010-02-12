@@ -104,7 +104,7 @@ public class UsePolicyDAOImpl extends GenericBaseDAOImpl<UsePolicy, Integer> imp
 
 
 	public UsePolicy findByName(final String usePolicyText) {
-		logger.debug("findByName");
+		logger.debug("findByName with param["+usePolicyText+"]");
 		HibernateTemplate template = getHibernateTemplate();
 		return (UsePolicy) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
