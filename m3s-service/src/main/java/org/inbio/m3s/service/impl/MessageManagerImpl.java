@@ -73,8 +73,7 @@ public class MessageManagerImpl implements MessageManager {
 	/* (non-Javadoc)
 	 * @see org.inbio.m3s.service.MessageManager#getAllKeywordLite(java.lang.Integer)
 	 */
-	public List<KeywordDTO> getAllKeywordLite(Integer languageId)
-			throws IllegalArgumentException {
+	public List<KeywordDTO> getAllKeywordLite(Integer languageId) throws IllegalArgumentException {
 		
 		List<KeywordDTO> kDTOList = new ArrayList<KeywordDTO>();
 		List<Keyword> kList = keywordDAO.findAll(Keyword.class);
@@ -82,7 +81,8 @@ public class MessageManagerImpl implements MessageManager {
 		
 		for(Keyword k : kList){
 			tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), languageId);
-			kDTOList.add(new KeywordDTO(String.valueOf(k.getKeywordId()), tt.getName()));
+			if(tt!=null)
+				kDTOList.add(new KeywordDTO(String.valueOf(k.getKeywordId()), tt.getName()));
 		}
 		
 		return kDTOList;

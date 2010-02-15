@@ -9,6 +9,9 @@
 	</appender>
 
 	<!-- Alter the logging of known libs -->
+	<category name="org.inbio.m3s.dao.core.impl">
+      <priority value="ERROR"/>
+    </category>
 	<category name="org.inbio">
 		<priority value="ALL"/>
 	</category>
@@ -16,7 +19,7 @@
 	<category name="org.inbio.m3s.service.impl">
 		<priority value="ERROR"/>
 	</category>
-	 -->
+	 --> 
 	
 	<category name="org">
 		<priority value="ERROR"/>

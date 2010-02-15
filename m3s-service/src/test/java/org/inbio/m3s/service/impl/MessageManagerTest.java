@@ -28,27 +28,29 @@ public class MessageManagerTest extends AbstractServiceTest{
 
 	protected static Log logger = LogFactory.getLog(MessageManagerTest.class);
 	
-	/*
+	
 	public void testSpanishKeywords(){
 		
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
 		List<KeywordDTO> klList = sm.getAllKeywordLite(MessageManager.ESPANYOL);
 		if(klList == null){
     	
-   	 System.out.println("No hay keyword para esos paremetros");
+			logger.info("No hay keyword para esos paremetros");
     
     } else { 
 	     //logger.debug("con el id["+kl.getKeywordId()+"] y el nombre ="+kl.getName() );
-	     System.out.println("total de elementos: " + klList.size());
+    	logger.info("total de elementos: " + klList.size());
 	     
 	     for(KeywordDTO kl : klList){
-	    	 System.out.println("con el id["+kl.getKeywordKey()+"] y el nombre ="+kl.getName() );
+	    	 logger.info("con el id["+kl.getKeywordKey()+"] y el nombre ='"+kl.getName()+"'" );
 	     }
     }
 		
 	}
-	*/
+	/**/
 	
+	
+	/*
 	public void testGetAllUsePolicies(){
 		
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
@@ -66,8 +68,11 @@ public class MessageManagerTest extends AbstractServiceTest{
 	     }
     }
 	}
+	*/
 	
-public void testGetUsePolicyByName(){
+
+	/*
+	public void testGetUsePolicyByName(){
 		try {
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
 		UsePolicyDTO kl = sm.getUsePolicyByName("Consultar con el autor");
@@ -83,10 +88,7 @@ public void testGetUsePolicyByName(){
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
-	//public UsePolicyDTO getUsePolicyByName(String usePolicyName) throws UsePolicyNotFoundException {
-
+	*/
 	
 	/*
 	public void testGetAllAssociatedToValues(){
