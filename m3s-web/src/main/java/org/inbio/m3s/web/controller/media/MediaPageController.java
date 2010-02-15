@@ -215,9 +215,25 @@ public class MediaPageController extends SimpleController{
 			throw ve;
 		}
 		
+		mav.addObject("url", this.getHostUrl(request));
+		
 		return mav;
 			
 		
+	}
+	
+	
+	/**
+	 * Get the host url.
+	 * @param request
+	 * @return
+	 */
+	private String getHostUrl(HttpServletRequest request) {
+		StringBuffer hostUrl = new StringBuffer("http://");
+		String host = request.getHeader("host");
+		hostUrl.append(host);
+		hostUrl.append(request.getContextPath());
+		return hostUrl.toString();
 	}
 
 

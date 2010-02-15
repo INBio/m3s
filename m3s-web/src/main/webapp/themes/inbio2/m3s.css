@@ -63,14 +63,14 @@ br { clear:both;}
 /*visible on upload.jsp*/
 .upload-files-form { 
     float:right; 
-    width: 600px; 
-    padding:5px; 
+    width: 570px; 
+    padding:10px; 
     position: absolute;
-    margin: 0 0 0 250px; 
+    margin: 0 0 0 270px; 
 }
 .insert-type{ 
     float:left; 
-    width: 250px; 
+    width: 270px; 
     padding: 10px; 
     position: absolute;
     margin: 0 0 0 5px;  

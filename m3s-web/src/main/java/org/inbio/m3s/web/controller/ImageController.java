@@ -22,6 +22,7 @@ public class ImageController extends AbstractController {
 
 	// values of the servlet
 	private String metadataTemporalId = "temporal";
+	private String downloadKey = "download";
 
 	// constantes
 	private String temporalFilesPath; // ${temporalFilesPath}
@@ -59,6 +60,7 @@ public class ImageController extends AbstractController {
 		try {
 
 			String temporalId = httpServletRequest.getParameter(metadataTemporalId);
+			String download = httpServletRequest.getParameter(downloadKey);
 
 			String imageAddress;
 
@@ -79,7 +81,8 @@ public class ImageController extends AbstractController {
 					imageAddress = temporalFilesPath + "unavailable.png";
 				}
 				
-				httpServletResponse.setHeader("Content-Disposition", "attachment; filename="+imageId+".jpg" );
+				if(download!=null)
+					httpServletResponse.setHeader("Content-Disposition", "attachment; filename="+imageId+".jpg" );
 			}
 
 			// starting the delivering of the image

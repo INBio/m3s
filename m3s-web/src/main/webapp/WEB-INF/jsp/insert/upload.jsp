@@ -31,12 +31,12 @@ Usado por:
       <%-- Nombre del Usuario --%>
       <input type="hidden" name="username" value="<sec:authentication property="principal.username"/>"/>
           
-        <label>1.<input type="file" name="file1"></label>
-        <label>2.<input type="file" name="file2"></label>
-        <label>3. <input type="file" name="file3"></label>
-        <label>4. <input type="file" name="file4"></label>
-        <label>5. <input type="file" name="file5"></label>
-        <label>6. <input type="file" name="file6"></label>
+        <label><input id="file1" type="file" name="file1"></label>
+        <label><input id="file2" type="file" name="file2"></label>
+        <label><input id="file3" type="file" name="file3"></label>
+        <label><input id="file4" type="file" name="file4"></label>
+        <label><input id="file5" type="file" name="file5"></label>
+        <label><input id="file6" type="file" name="file6"></label>
         <br>
           
       <input type="submit" value="<spring:message code="buton.continue"/>" />
