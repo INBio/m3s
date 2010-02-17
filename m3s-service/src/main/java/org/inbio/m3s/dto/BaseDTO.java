@@ -20,6 +20,7 @@ public class BaseDTO implements Serializable {
 	
 	//log value
 	private String username;
+	private String logCreationDate;
 
 	/**
 	 * @return the username
@@ -33,6 +34,20 @@ public class BaseDTO implements Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * @return the logCreationDate
+	 */
+	public String getLogCreationDate() {
+		return logCreationDate;
+	}
+
+	/**
+	 * @param logCreationDate the logCreationDate to set
+	 */
+	public void setLogCreationDate(String logCreationDate) {
+		this.logCreationDate = logCreationDate;
 	}
 
 }

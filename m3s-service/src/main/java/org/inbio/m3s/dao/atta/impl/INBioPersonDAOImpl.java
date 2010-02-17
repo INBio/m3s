@@ -63,7 +63,6 @@ public class INBioPersonDAOImpl extends GenericBaseDAOImpl<Person,Integer> imple
 						+ " and ( pp.person.firstName like :authorName "
 						+       " or pp.person.lastName like :authorName )"
 						+ " order by pp.person.firstName asc, pp.person.lastName asc");
-				//query.setParameter(0, nomenclaturalGroupId);
 				query.setParameter("authorName", authorName);
 				query.setFirstResult(0);
 				query.setMaxResults(maxResults);				

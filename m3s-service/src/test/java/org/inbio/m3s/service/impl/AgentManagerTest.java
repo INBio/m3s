@@ -28,6 +28,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 	//protected static String testPersonName = "Jaime Gutiérrez";
 	protected static String testPersonKey = "13965";
 	
+	/*
 	public void testGetInstitutionLiteByName(){
 		logger.info("testGetInstitutionLiteByName");
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
@@ -35,7 +36,9 @@ public class AgentManagerTest extends AbstractServiceTest{
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		logger.info(iDTO.toString());
 	}
+	*/
 
+	/*
 	public void testGetInstitutionLite(){
 		logger.info("testGetInstitutionLite");
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
@@ -43,7 +46,9 @@ public class AgentManagerTest extends AbstractServiceTest{
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		logger.info(iDTO.toString());
 	}
+	*/
 	
+	/*
 	public void testGetAllInstitutionLite(){
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
 		List<InstitutionLiteDTO> iList = am.getAllInstitutionLite();
@@ -59,14 +64,18 @@ public class AgentManagerTest extends AbstractServiceTest{
 			logger.info(iList.get(0).toString());
 		}
 	}	
+	*/
 
+	/*
 	public void testGetPersonLiteByName(){
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
 		PersonLiteDTO pDTO = am.getPersonLiteByName(testPersonName);
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		logger.info(pDTO.toString());
 	}	
+	*/
 	
+	/*
 	public void testGetPersonLite(){
 		logger.info("testGetPersonLite");
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
@@ -74,7 +83,9 @@ public class AgentManagerTest extends AbstractServiceTest{
 		logger.info("Usando el AgentManger: "+Properties.AGENT_MANAGER);
 		logger.info(pDTO.toString());
 	}	
+	*/
 	
+	/*
 	public void testGetAllPersonLite(){
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
 		List<PersonLiteDTO> pList = am.getAllPersonLite();
@@ -90,7 +101,8 @@ public class AgentManagerTest extends AbstractServiceTest{
 			logger.info("La primera:");
 			logger.info(pList.get(0).toString());
 		}
-	}		
+	}	
+	*/	
 	
 	/*		
 	public PersonLiteDTO getGatheringResposibleLiteByName(String personName)	throws IllegalArgumentException;	

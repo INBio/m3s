@@ -24,8 +24,7 @@ public class GenericSearchDAOImpl extends HibernateDaoSupport implements Generic
 	 * 
 	 * @return number of results
 	 */
-	public Integer getTotalResults(final String HSQL)
-			throws IllegalArgumentException {
+	public Integer getTotalResults(final String HSQL) throws IllegalArgumentException {
 		logger.debug("query: " + HSQL);
 		HibernateTemplate template = getHibernateTemplate();
 		return (Integer) template.execute(new HibernateCallback() {

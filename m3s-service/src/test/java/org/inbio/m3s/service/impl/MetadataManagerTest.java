@@ -18,20 +18,39 @@ import org.inbio.m3s.service.MetadataManager;
 @SuppressWarnings("unused")
 public class MetadataManagerTest extends AbstractServiceTest{
 
-	
+	/*
 	public void testGetMetadataByMedia(){
 		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);	
 		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
-		MetadataDTO mDTO = mm.getMetadataByMedia("45791");
+		MetadataDTO mDTO = mm.getMetadataByMedia("1");
 		logger.info(mDTO.toString());
-		
-		/*
-		logger.info("media attribute id: "+String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
-		TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
-		logger.info("el youtube video Id");
-		logger.info(maDTO.toString());
-		*/	
+			
 	}
+	*/	
+	
+	/*
+	logger.info("media attribute id: "+String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+	TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+	logger.info("el youtube video Id");
+	logger.info(maDTO.toString());
+	*/
+	
+	
+	public void testUpdateMetadata(){
+		MetadataManager mm = (MetadataManager) getBean(Properties.METADATA_MANAGER);	
+		logger.info("Usando el Metadata Manger: "+Properties.METADATA_MANAGER);
+		MetadataDTO mDTO = mm.getMetadataByMedia("1");
+		logger.info(mDTO.toString());
+		logger.info("Antes, isPublic: "+mDTO.getIsPublic());
+		
+		mDTO.setIsPublic(new Character('N'));
+		mm.updateMetadata(mDTO);
+		
+		mDTO = mm.getMetadataByMedia("1");
+		logger.info("Despues, isPublic: "+mDTO.getIsPublic());
+	}
+	
+	
 	
 	
 		/*

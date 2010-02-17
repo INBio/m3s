@@ -40,6 +40,8 @@ public class SearchManagerImpl implements SearchManager {
 	 * @see org.inbio.m3s.service.impl.SearchManager#getTotalResults(java.util.List)
 	 */
 	public Integer getTotalResults(List<SearchCriteriaTripletDTO> searchCriteria) throws IllegalArgumentException {
+		logger.debug("getTotalResults starting");
+		
 		String HSQL = createHSQLQueryString(searchCriteria);
 		HSQL = "select count(m.mediaId)"
 			+ HSQL.substring(("select m.mediaId").length());
@@ -130,6 +132,20 @@ public class SearchManagerImpl implements SearchManager {
 				where = where.concat(higherTaxonomyWhere(tripletPivote, TaxonomicalRangeEntity.ORDER));
 				items++;
 			
+			} else if (tripletPivote.getFilter().intValue() == SearchFilterEntity.TITLE.getId()){
+				where = where.concat(" m.title "
+						//+ getCriteria(tripletPivote.getCriteria()) + " "
+						+ getCriteria(SearchCriteriaValuesDTO.LIKE) + " "
+						//+ tripletPivote.getValue() + "");
+						+ "'%"+tripletPivote.getValue()+"%'");
+				items++;
+			} else if (tripletPivote.getFilter().intValue() == SearchFilterEntity.DESCRIPTION.getId()){
+				where = where.concat(" m.description "
+						//+ getCriteria(tripletPivote.getCriteria()) + " "
+						+ getCriteria(SearchCriteriaValuesDTO.LIKE) + " "
+					//+ tripletPivote.getValue() + "");
+						+ "'%"+tripletPivote.getValue()+"%'");
+				items++;
 			}
 			
 		}
@@ -263,6 +279,8 @@ public class SearchManagerImpl implements SearchManager {
 	private String getCriteria(Integer criteriaValue) {
 		if (criteriaValue.equals(SearchCriteriaValuesDTO.IS)) {
 			return "=";
+		} else if(criteriaValue.equals(SearchCriteriaValuesDTO.LIKE)){
+			return "like";
 		} else {
 			return null;
 		}

@@ -20,6 +20,7 @@ public class AutoCompleteManagerTest extends AbstractServiceTest{
 	
 	protected static Log logger = LogFactory.getLog(AutoCompleteManagerTest.class);
 
+	/*
 	public void testGetAutoCompleteOptionsTaxonomy(){
 
 		logger.info("Usando el AutoCompleteManager del TaxonomyManager: "+Properties.TAXONOMY_MANAGER);
@@ -33,6 +34,7 @@ public class AutoCompleteManagerTest extends AbstractServiceTest{
 		
 		assertTrue( true );
 	}
+	*/
 	
 
 	public void testGetAutoCompleteOptionsMediaAuthor(){

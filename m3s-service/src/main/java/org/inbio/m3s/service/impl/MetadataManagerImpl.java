@@ -124,6 +124,7 @@ public class MetadataManagerImpl implements MetadataManager {
 			mDTO.setSiteKey(String.valueOf(m.getSiteId()));
 			mDTO.setSiteDescription(m.getSiteDescription());
 			mDTO.setAuthorKey(String.valueOf(m.getAuthorPersonId()));
+			mDTO.setLogCreationDate(m.getCreationDate().toString());
 			
 			if(m.getOwnerPersonId() == null){
 				mDTO.setPersonOwnerKey(null);
@@ -1141,8 +1142,8 @@ public class MetadataManagerImpl implements MetadataManager {
 		// deleteds the previoulsy associated gatherings of the MEDIA
 		for (GatheringLiteDTO glDTO : gatheringsList) {
 			logger.debug("deleteAssociatedGatherings... GatheringNumber="
-					+ glDTO.getGatheringKey());
-			pLite = agentManager.getGatheringResposiblePersonLite(glDTO.getResponsiblePersonName());
+					+ glDTO.getGatheringKey() + " Person name="+glDTO.getResponsiblePersonName());
+			pLite = agentManager.getGatheringResposibleLiteByName(glDTO.getResponsiblePersonName());
 			// empty variables
 			oldGatheringMedia = null;
 			oldGatheringMediaId = null;

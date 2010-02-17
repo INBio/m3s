@@ -48,6 +48,15 @@ public class SearchCriteriaTripletDTO implements Serializable {
 		this.setValue(value);
 	}
 
+	@Override
+	public String toString(){
+		return "El Search Criteria Triplet DTO tiene:" +
+		"\n\tFilter : " + this.getFilter() +
+		"\n\tCriteria : " + this.getCriteria() +
+		"\n\tValue: "+ this.getValue() +
+		"";
+	}
+	
 	/**
 	 * @param filter
 	 *            the filter to set

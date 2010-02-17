@@ -12,21 +12,11 @@
 		<property name="mediaTypeId" type="java.lang.Integer">
             <column name="media_type_id" not-null="true"/>
         </property>
-        <!-- 
-		<many-to-one name="mediaType"
-			class="org.inbio.m3s.model.core.MediaType" fetch="select">
-			<column name="media_type_id" not-null="true" />
-		</many-to-one>
-		 -->
+
 		 <property name="usePolicyId" type="java.lang.Integer">
             <column name="use_policy_id" not-null="true"/>
         </property>
-		 <!-- 
-		<many-to-one name="usePolicy"
-			class="org.inbio.m3s.model.core.UsePolicy" fetch="select">
-			<column name="use_policy_id" not-null="true" />
-		</many-to-one>
-		 -->
+
 		<property name="authorPersonId" type="java.lang.Integer">
 			<column name="author_person_id" />
 		</property>

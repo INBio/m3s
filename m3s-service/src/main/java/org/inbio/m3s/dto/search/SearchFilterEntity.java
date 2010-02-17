@@ -17,7 +17,9 @@ public enum SearchFilterEntity {
 	FAMILY(5,"Familia"),
 	GENUS(6,"Genero"),
 	SPECIES(7,"Specie"),
-	ORDER(8,"Order");
+	TITLE(8,"Title"),
+	DESCRIPTION(9,"Description"),
+	ORDER(10,"Order");
 	
 	private int id;
 	
