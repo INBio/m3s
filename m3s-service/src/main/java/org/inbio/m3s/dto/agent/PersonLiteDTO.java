@@ -21,6 +21,8 @@ public class PersonLiteDTO extends BaseDTO {
 	/* The name in a display ready way, i.e. first name + last name*/
 	private String name;
 	
+	/* A contact email*/
+	private String email;
 
 	/**
 	 * 
@@ -32,21 +34,25 @@ public class PersonLiteDTO extends BaseDTO {
 	/**
 	 * @param personKey
 	 * @param name
+	 * @param email
 	 */
-	public PersonLiteDTO(String personKey, String name) {
+	public PersonLiteDTO(String personKey, String name, String email) {
 		super();
 		this.setPersonKey(personKey);
 		this.setName(name);
+		this.email = email;
 	}
 	
 	/**
 	 * @param personId
 	 * @param name
+	 * @param email
 	 */
-	public PersonLiteDTO(Integer personId, String name) {
+	public PersonLiteDTO(Integer personId, String name, String email) {
 		super();
 		this.setPersonKey(String.valueOf(personId));
 		this.setName(name);
+		this.email = email;
 	}
 	
 	@Override
@@ -54,6 +60,7 @@ public class PersonLiteDTO extends BaseDTO {
 		return "La Person Lite DTO tiene:" +
 		"\n\tKey : " + this.getPersonKey() +
 		"\n\tName: '"+ this.getName() +"'" +
+		"\n\te-mail: '"+ this.email +"'" +
 		"";
 	}
 
@@ -83,6 +90,20 @@ public class PersonLiteDTO extends BaseDTO {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

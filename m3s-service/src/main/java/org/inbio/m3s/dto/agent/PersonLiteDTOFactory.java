@@ -18,7 +18,7 @@ public class PersonLiteDTOFactory extends BaseDTOFactory<Person, PersonLiteDTO> 
 	public PersonLiteDTO createDTO(Person p) {
 		if(p == null)
 				return null;
-		return new PersonLiteDTO(p.getPersonId(), p.getFirstName()+" "+ p.getLastName());
+		return new PersonLiteDTO(p.getPersonId(), p.getFirstName()+" "+ p.getLastName(), p.getEmail());
 	}
 
 }

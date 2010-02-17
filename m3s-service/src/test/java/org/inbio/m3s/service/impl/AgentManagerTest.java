@@ -85,7 +85,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 	}	
 	*/
 	
-	/*
+
 	public void testGetAllPersonLite(){
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
 		List<PersonLiteDTO> pList = am.getAllPersonLite();
@@ -93,16 +93,15 @@ public class AgentManagerTest extends AbstractServiceTest{
 		
 		logger.info("Total de personas: "+pList.size());
 		
-		//for(PersonLiteDTO p: iList){
-		//	logger.info(p.toString());
-		//}
+		if(pList.size() > 1)
+			logger.info("La primera: " + pList.get(0).toString());
 		
-		if(pList.size() > 1){
-			logger.info("La primera:");
-			logger.info(pList.get(0).toString());
+		for(PersonLiteDTO p: pList){
+			if(p.getEmail()!=null)
+				logger.info(p.toString());
 		}
 	}	
-	*/	
+	/*	*/	
 	
 	/*		
 	public PersonLiteDTO getGatheringResposibleLiteByName(String personName)	throws IllegalArgumentException;	
