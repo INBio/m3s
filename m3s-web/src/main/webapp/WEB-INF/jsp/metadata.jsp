@@ -117,11 +117,13 @@
     <b><spring:message code="metadata.label.taxonomy"/>:</b>
   </label>
   <label>
+    <spring:message code="metadata.label.taxon"/>
     <input id="taxonomyId" type="text" tabindex="8"/>
     <div id="taxonomyContainer" class="yui-skin-m3s"></div>
   </label>
   <m3s:autoComplete containerId="taxonomyContainer" inputId="taxonomyId" url="${pageContext.request.contextPath}/ajax/taxonName"/>
   <label>
+    <spring:message code="metadata.label.kingdom"/>
     <input id="kingdomId" type="text" tabindex="9"/>
     <div id="taxonomyKingdomContainer" class="yui-skin-m3s"></div>    
   </label>

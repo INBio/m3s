@@ -20,6 +20,7 @@
                 <!-- AutoComplete  -->
                 <prop key="/taxonName/**/**">taxonNameAutoCompleteController</prop>
                 <prop key="/taxonsByKingdom/**/**">taxonomyAutoCompleteController</prop>
+                <prop key="/taxonsByOrder/**/**">taxonomyAutoCompleteController</prop>
                 <prop key="/taxonsByFamily/**/**">taxonomyAutoCompleteController</prop>
                 <prop key="/taxonsByGenus/**/**">taxonomyAutoCompleteController</prop>
                 <prop key="/taxonsBySpecies/**/**">taxonomyAutoCompleteController</prop>

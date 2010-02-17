@@ -143,6 +143,13 @@
     <input type="checkbox" name="mediaVisible" <c:if test="${not empty mediaVisible}"> checked="checked"</c:if> tabindex="15" disabled="disabled"/>
   </label>
   <br/>
-  
-      
+
+<%--date Created, fecha en que se insertó al sistema --%>   
+<label>
+  <b><spring:message code="media.log.creation.date"/>:</b>
+</label>
+<label>
+  <c:out value="${mDTO.logCreationDate}"/>
+</label>
+<br/>      
       

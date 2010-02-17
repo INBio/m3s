@@ -5,7 +5,7 @@
         3 Types of filter
         0) Plain string search
         1) Dropdown combo
-        2) Wizard - leading to a read-only value
+        2) Wizard - leading to a read-only valueloca
        
         The filters require a unique numeric id (for use in javascript arrays).
     -->
@@ -18,11 +18,13 @@
                 <ref bean="taxonNameFilter" />
                 <ref bean="mediaAuthorNameFilter" />
                 <ref bean="keywordFilter" />
-                <ref bean="projectFilter" />
-                <!-- <ref bean="orderTaxonFilter" /> -->   
+                <ref bean="projectFilter" />   
                 <ref bean="familyTaxonFilter" />                
                 <ref bean="genusTaxonFilter" />
                 <ref bean="speciesTaxonFilter" />
+                <ref bean="mediaTitleFilter"/>
+                <ref bean="mediaDescriptionFilter"/>
+                <!-- <ref bean="orderTaxonFilter" /> -->                
             </list>
         </property>
     </bean>  
@@ -95,16 +97,6 @@
         <property name="helpView" value="/speciesRecord/languageHelp.htm" />
         <property name="autoCompleteUrl" value="ajax/projectName" />
     </bean>     
-             
-    <bean id="orderTaxonFilter" parent="baseFilter">
-        <property name="id" value="8" />
-        <property name="name" value="orderTaxon" />
-        <property name="displayName" value="search.filters.taxon.order" />
-        <!-- falta revisar estos -->
-        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
-        <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
-        <property name="autoCompleteUrl" value="ajax/taxonName" />
-    </bean>
 
     <bean id="familyTaxonFilter" parent="baseFilter">
         <property name="id" value="5" />
@@ -133,15 +125,34 @@
         <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DATARESOURCEID" />
         <property name="autoCompleteUrl" value="ajax/taxonsBySpecies" />
     </bean>
-
-    <!-- filter helper for scientific name 
-    <bean id="rawSpeciesRecordScientificNameFilterHelper" class="org.gbif.portal.web.content.taxonomy.ScientificNameFilterHelper">
-        <property name="taxonomyManager" ref="speciesRecordTaxonomyManager" />
-        <property name="dataResourceManager" ref="dataResourceManager" />
-        <property name="messageSource" ref="messageSource"/>        
-        <property name="queryHelper" ref="rawSpeciesRecordQueryHelper" />
-        <property name="rankToTripletSubjectMappings" ref="rankToTripletSubjectMappings" />
-        <property name="taxonConceptUtils" ref="speciesRecordTaxonConceptUtils"/>
+    
+    <bean id="mediaTitleFilter" parent="baseFilter">
+      <property name="id" value="8" />
+      <property name="name" value="mediaTitle" />
+      <property name="displayName" value="metadata.label.title" />
+      <!--
+        <property name="autoCompleteUrl" value="taxonomy/taxonName/ajax/view/ajaxTaxonName" /> 
+      -->
     </bean>
-    -->
+
+    <bean id="mediaDescriptionFilter" parent="baseFilter">
+      <property name="id" value="9" />
+      <property name="name" value="mediaDescription" />
+      <property name="displayName" value="metadata.label.description" />
+      <!--
+        <property name="autoCompleteUrl" value="taxonomy/taxonName/ajax/view/ajaxTaxonName" /> 
+      -->
+    </bean>
+        
+    
+    <bean id="orderTaxonFilter" parent="baseFilter">
+        <property name="id" value="10" />
+        <property name="name" value="orderTaxon" />
+        <property name="displayName" value="search.filters.taxon.order" />
+        <!-- falta revisar estos -->
+        <property name="subject" value="SERVICE.RAWSPECIESRECORD.QUERY.SUBJECT.DISTRIBUTION" />
+        <property name="helpView" value="/speciesRecord/distributionHelp.htm" />
+        <property name="autoCompleteUrl" value="ajax/taxonsByOrder" />
+    </bean>
+
 </beans>

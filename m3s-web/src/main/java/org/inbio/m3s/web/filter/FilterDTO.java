@@ -16,8 +16,6 @@ package org.inbio.m3s.web.filter;
 
 import java.util.Map;
 
-//import org.gbif.portal.web.content.filter.FilterHelper;
-//import org.gbif.portal.web.content.filter.PicklistHelper;
 
 /**
  * A DTO containing details of a filter.
@@ -45,14 +43,6 @@ public class FilterDTO {
 	private String displayName;
 	/** The property store subject key this filter corresponds to */
 	private String subject;
-	/** The category this filter falls into. e.g. Taxonomy */
-	//private String categoryId;	 --> no se ocupa
-	/** The category this filter falls into. e.g. Taxonomy */
-	//private String category; --> no se ocupa
-	/** The subcategory this filter falls into */
-	//private String subcategory; --> no se ocupa
-	/** A list of String predicates */
-	//private List<PredicateDTO> predicates;
 	/** The type of the value object associated with this filter e.g. date  */
 	private String valueType;
 	/** The filter type. Default of normal string type */

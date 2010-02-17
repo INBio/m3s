@@ -126,6 +126,31 @@ public class TaxonomyAutoCompleteController extends MultiActionController{
 	
 	}
 	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelAndView taxonsByOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String param = request.getParameter(queryParam);		
+		String errorMsj = "No se puede obtener los ordenes para: " + param + ".";
+		List<TaxonLiteDTO> tlDTOList = new ArrayList<TaxonLiteDTO>();
+		
+
+		try {
+			tlDTOList = taxonomyManager.getTaxonsByPatialNameAndTaxonomicalRange(param,TaxonomicalRangeEntity.ORDER);
+			return writeReponse(request,response, tlDTOList);
+
+			
+		} catch (IllegalArgumentException iae) {
+			throw new Exception(errorMsj + " "+ iae.getMessage());
+		}
+	
+	}
+	
 	
 	/**
 	 * Writes the response in the output!.
