@@ -12,7 +12,7 @@ body {  margin:0;}
 #footer { text-align:center; background: url(images/pie-back.jpg) repeat-x center bottom;}
 #footer-in { text-align:center; background: url(images/pie-der.jpg) no-repeat bottom right; height: 80px; vertical-align:bottom;}
 #footer-out { text-align:center; background: url(images/pie-izq.jpg) no-repeat bottom left;}
-#footer-in p { line-height:80px; font-size:12px;}
+#footer-in p { line-height:25px; font-size:12px;}
 
 .clear {clear: both;}
 h2 {margin: 0; padding:0; line-height: 35px; display:block; border-bottom: solid 1px #006699; color:#006699; font-size: 24px;}
@@ -34,6 +34,7 @@ br { clear:both;}
 .thumb-text1, .thumb-text2 { font-size:10px; }
 .thumb-date { font-size:9px;}
 .media-kind, .thumb-imaName, .thumb-text1, thumb-text2, .thumb-date, { display: inline; overflow:auto; height:20px;position: fixed;asz}
+.media-kind-image {background-image: url(images/image.png); background-repeat: no-repeat; }
 
 .imagesRightPanel { float:left; width: 200px; margin: 10px; height: 230px;}
 /*.imagesRightPanel:hover {border: solid gray 1px}*/
@@ -97,25 +98,42 @@ br { clear:both;}
 /******************************************
 /* Media Profile
 *******************************************/
+/*
 .profile-media{
   float:left;
-  /*background-color: #E8EEF7;*/
   margin: 10px;
   border: 1px solid #516AA0;
   width: 100%;
 }
-.profile-bigMedia{
-    /*height:396px;*/ 
-    width:396px;
-    background-position: center center; 
-    background-repeat:no-repeat; 
-    margin:2px;	
-}
-.profile-thumbMedia{
-	height:196px;
-	width:196px;  
-    background-position: center center; 
-    background-repeat:no-repeat; 
-    margin:2px;
+*/
+.profile-viewMedia{
+    height:500px;
+    width:500px;
+    position:absolute;
+    left: 0;
+    top: 0;
+    margin: 10px;
+    background: #F2F6d2; 	
 }
 
+.viewMedia { 
+	width:500px; 
+	height:500px; 
+	background-position:center center; 
+	background-repeat: no-repeat;  
+}
+
+
+.profile-infoAndActions{
+    width:400px;
+    height:500px; 
+    position:absolute;
+    right: 0;
+    top: 0;
+    background: #f2f6fb;
+    margin: 10px;
+}
+
+.profile-infoAndActions input {
+     background: #ffffff; float: none;
+}

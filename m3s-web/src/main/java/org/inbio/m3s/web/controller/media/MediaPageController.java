@@ -180,7 +180,8 @@ public class MediaPageController extends SimpleController{
 
 			//Author
 			PersonLiteDTO authorPersonDTO = agentManager.getPersonLite(mDTO.getAuthorKey());
-			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());			
+			mav.addObject(metadataMediaAuthor, authorPersonDTO.getName());
+			mav.addObject("mediaAuthorEmailKey", authorPersonDTO.getEmail());
 
 			//Tipos de Dueños de Imágenes -- esto debe ser eliminado
 			logger.debug("personOwnerKey '"+mDTO.getPersonOwnerKey()+"'");

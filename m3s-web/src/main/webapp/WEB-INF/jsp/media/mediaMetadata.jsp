@@ -10,15 +10,6 @@
     <font color="red">Error[properties] -> <spring:message code="${errorMessageKey}"/></font>
   </label>
 </c:if>
-
-<%--Identificador --%>
-<label>
-  <b><spring:message code="metadata.label.id"/></b>
-</label>
-<label>
-  <c:out value="${id}"/>
-</label>
-<br/>
   
 <%--Titulo --%>
 <label>
