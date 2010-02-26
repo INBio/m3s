@@ -3,7 +3,7 @@
 <h3><spring:message code="media.profile.info"/></h3>
 
   <%--Identificador --%>
-  <label>
+  <label style="width:80px;">
     <b><spring:message code="metadata.label.id"/></b>
   </label>
   <label>
@@ -29,7 +29,7 @@
   </label>
   <br>
   
-    <label>
+    <label style="width:80px;">
       <spring:message code="media.profile.image.big"/>:
     </label>
     <label>
@@ -37,7 +37,7 @@
     </label>
     <br/>
   
-    <label>
+    <label style="width:80px;">
       <spring:message code="media.profile.image.thumb"/>:
     </label>
     <label>
@@ -61,7 +61,8 @@
   <br/>
 
   <label>
-    <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?download=1&size=thumb&id=<c:out value="${id}"/>"><spring:message code="media.profile.download"/></a>  
+    <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?download=1&size=big&id=<c:out value="${id}"/>"><spring:message code="media.profile.download"/> <spring:message code="media.profile.image.big"/></a>
+    <a href="<c:out value="${pageContext.request.contextPath}"/>/getImage?download=1&size=thumb&id=<c:out value="${id}"/>"><spring:message code="media.profile.download"/> <spring:message code="media.profile.image.thumb"/></a>  
   </label>
   <br/>
   
