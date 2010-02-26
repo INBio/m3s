@@ -63,10 +63,8 @@ br { clear:both;}
 *******************************************/
 /*visible on upload.jsp*/
 .upload-files-form { 
-    float:right; 
     width: 570px; 
     padding:10px; 
-    position: absolute;
     margin: 0 0 0 270px; 
 }
 .insert-type{ 
@@ -113,7 +111,7 @@ br { clear:both;}
     left: 0;
     top: 0;
     margin: 10px;
-    background: #F2F6d2; 	
+    /*background: #F2F6d2;*/ 	
 }
 
 .viewMedia { 
@@ -125,15 +123,13 @@ br { clear:both;}
 
 
 .profile-infoAndActions{
-    width:400px;
-    height:500px; 
-    position:absolute;
-    right: 0;
-    top: 0;
     background: #f2f6fb;
-    margin: 10px;
+    margin: 0 0 0 520px;
+    padding: 10px;
 }
-
+ .profile-infoAndActions label {
+ float: left;
+ }
 .profile-infoAndActions input {
-     background: #ffffff; float: none;
+     background: #ffffff; 
 }
