@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>m3s</groupId>
+  <groupId>org.inbio.m3s</groupId>
   <artifactId>m3s-service</artifactId>
   <packaging>jar</packaging>
   <version>2.1-SNAPSHOT</version>
   <name>m3s-service</name>
-  <url>http://larus.inbio.ac.cr/m3sINBio</url>
+  <url>http://lucina.inbio.ac.cr/m3sINBio</url>
+
   <dependencies>
   	<dependency>
 		<groupId>aopalliance</groupId>
@@ -195,5 +196,45 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>	
+	</build>
+
+  <inceptionYear>2007</inceptionYear>
+  <issueManagement>
+    <system>Trac</system>
+    <url>http://pulsatrix.inbio.ac.cr/projects/m3s/report/1</url>
+  </issueManagement>
+
+  <developers>
+    <developer>
+      <name>Jaime Gutiérrez</name>
+      <email>jgutierrez@inbio.ac.cr</email>
+      <timezone>-6</timezone>
+    </developer>
+  </developers>	  
+  <organization>
+    <name>Instituto Nacional de Biodiversidad - INBio</name>
+    <url>http://www.inbio.ac.cr</url>
+  </organization>
+
+  <distributionManagement>
+    <repository>
+      <id>inbio</id>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+    </repository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>inbio</id>
+      <name>INBio - Archiva Managed Repository</name>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+	
 </project>

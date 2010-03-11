@@ -5,6 +5,7 @@ package org.inbio.m3s.service.impl;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +14,7 @@ import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
 import org.inbio.m3s.service.AbstractServiceTest;
 import org.inbio.m3s.service.AgentManager;
+import org.inbio.m3s.service.autocomplete.AutoCompleteManager;
 
 /**
  * @author jgutierrez
@@ -85,7 +87,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 	}	
 	*/
 	
-
+	/*
 	public void testGetAllPersonLite(){
 		AgentManager am = (AgentManager) getBean(Properties.AGENT_MANAGER);
 		List<PersonLiteDTO> pList = am.getAllPersonLite();
@@ -101,7 +103,7 @@ public class AgentManagerTest extends AbstractServiceTest{
 				logger.info(p.toString());
 		}
 	}	
-	/*	*/	
+	*/	
 	
 	/*		
 	public PersonLiteDTO getGatheringResposibleLiteByName(String personName)	throws IllegalArgumentException;	

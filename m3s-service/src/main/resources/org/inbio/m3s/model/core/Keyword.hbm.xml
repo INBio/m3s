@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 30/10/2007 05:47:37 PM by Hibernate Tools 3.2.0.b9 -->
+
 <hibernate-mapping>
     <class name="org.inbio.m3s.model.core.Keyword" table="core.keyword">
         <id name="keywordId" type="java.lang.Integer">
@@ -10,9 +10,14 @@
         </id>       
  
         <property name="nameTextId" column="name_concept_id" not-null="true" insert="false" update="false"/>
+        <set name="translations" lazy="false">
+          <key column="text_id" property-ref="nameTextId"/>
+          <one-to-many  class="org.inbio.m3s.model.core.TextTranslation" />
+        </set>
 
         <property name="keywordCategoryId" column="keyword_category_id" not-null="true" insert="false" update="false"/>
         
+        <!-- log values -->
         <property name="creationDate" type="date">
             <column name="creation_date" length="4" />
         </property>
@@ -24,6 +29,7 @@
         </property>
         <property name="lastModificationBy" type="string">
             <column name="last_modification_by" length="20" />
-        </property>
+        </property>       
+
     </class>
 </hibernate-mapping>

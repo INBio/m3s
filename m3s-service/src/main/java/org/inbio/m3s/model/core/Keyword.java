@@ -20,6 +20,8 @@ package org.inbio.m3s.model.core;
 
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.inbio.m3s.model.LogGenericEntity;
 
@@ -38,7 +40,21 @@ public class Keyword extends LogGenericEntity {
 	private Integer nameTextId;
 	
 	private Integer keywordCategoryId;
-
+	
+	private Set<TextTranslation> translations = new HashSet<TextTranslation>(0);
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		if(this== null)
+			return "null";
+		return "Keyword [keywordCategoryId=" + keywordCategoryId + ", keywordId="
+				+ keywordId + ", nameTextId=" + nameTextId + ", translations="
+				+ translations + "]";
+	}
+	
 	/**
 	 * 
 	 */
@@ -51,10 +67,11 @@ public class Keyword extends LogGenericEntity {
 	 * @param keywordCategoryId
 	 */
 	public Keyword(Integer keywordId, Integer nameTextId,
-			Integer keywordCategoryId) {
+			Integer keywordCategoryId, Set<TextTranslation> translations) {
 		this.keywordId = keywordId;
 		this.nameTextId = nameTextId;
 		this.keywordCategoryId = keywordCategoryId;
+		this.translations = translations;
 	}
 
 	/**
@@ -75,6 +92,8 @@ public class Keyword extends LogGenericEntity {
 		this.keywordCategoryId = keywordCategoryId;
 	}
 
+
+	
 	/**
 	 * @return the keywordId
 	 */
@@ -115,6 +134,20 @@ public class Keyword extends LogGenericEntity {
 	 */
 	public void setKeywordCategoryId(Integer keywordCategoryId) {
 		this.keywordCategoryId = keywordCategoryId;
-	}	
+	}
+
+	/**
+	 * @return the translations
+	 */
+	public Set<TextTranslation> getTranslations() {
+		return translations;
+	}
+
+	/**
+	 * @param translations the translations to set
+	 */
+	public void setTranslations(Set<TextTranslation> translations) {
+		this.translations = translations;
+	}
 
 }

@@ -30,16 +30,49 @@ import org.inbio.m3s.model.core.Keyword;
  */
 public interface KeywordDAO extends GenericBaseDAO<Keyword,Integer> {
 
-	@Deprecated
+	
+	/*
+	 * @deprecated
+	 * @use findByName(final String keywordName) but be careful because the languageId parameter disappear!
+	 */
 	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws IllegalArgumentException;
 	
-	@Deprecated
+	/**
+	 * Looks for all the coincidences for the keyword name, this includes all languages and
+	 * also this method will not be case sensitive
+	 * 
+	 * @param keywordName
+	 * @return the list of Keywords that match* the name (* ignoring case and language)
+	 * @throws IllegalArgumentException
+	 */
+	public Keyword findByName(final String keywordName) throws IllegalArgumentException;
+	/*
+	 * @deprecated
+	 * @use findAllByMedia(final Integer mediaId) 
+	 */
 	public List<KeywordDTO> getAllKeywordLiteForMedia(Integer mediaId, Integer languageId) throws IllegalArgumentException;
 	
+	/**
+	 * 
+	 * @param mediaId
+	 * @return the list of keywords for the MediaId
+	 * @throws IllegalArgumentException
+	 */
 	public List<Keyword> findAllByMedia(final Integer mediaId)  throws IllegalArgumentException;
 
-	@Deprecated
+	
+	/*
+	 * @deprecated
+	 * @use findAllByPartialNamePaginated(String partialKeywrod, int maxResults)
+	 */
 	public List<KeywordDTO> findAllByPartialNamePaginated(String partialKeywrod, int maxResults, Integer languageId);
 
-	
+	/**
+	 * Looks by partial name ignoring case and language.
+	 * 
+	 * @param partialKeywrod
+	 * @param maxResults
+	 * @return the list of Keywords that match* the name (* ignoring case and language)
+	 */
+	public List<Keyword> findAllByPartialNamePaginated(String partialKeywrod, int maxResults);
 }

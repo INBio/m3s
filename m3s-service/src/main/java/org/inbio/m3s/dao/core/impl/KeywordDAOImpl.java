@@ -20,8 +20,10 @@ package org.inbio.m3s.dao.core.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.inbio.m3s.dao.GenericBaseDAOImpl;
 import org.inbio.m3s.dao.core.KeywordDAO;
 import org.inbio.m3s.dto.message.KeywordDTO;
@@ -55,6 +57,25 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 						return query.uniqueResult();
 				}
 			});
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	public Keyword findByName(final String keywordName) throws IllegalArgumentException {
+		logger.debug("findAllByName with ["+keywordName+"] ");
+		HibernateTemplate template = getHibernateTemplate();
+		return (Keyword) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Criteria criteria = session.createCriteria(Keyword.class, "k");
+				criteria.createAlias("translations", "t");
+				criteria.add(Restrictions.ilike("t.name", keywordName));
+				
+				criteria.setCacheable(true);
+				
+				return criteria.uniqueResult();
+				
+			}
+		});
 	}
 	
 	/* (non-Javadoc)
@@ -119,6 +140,34 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 				return query.list();
 			}
 		});
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.KeywordDAO#findAllByPartialNamePaginated(java.lang.String, int)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Keyword> findAllByPartialNamePaginated(final String partialKeywrod, final int maxResults){
+		logger.debug("findAllByPartialNamePaginatedUncaseSensitive with[" + partialKeywrod +"]");
+		
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Keyword>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				
+				Criteria criteria = session.createCriteria(Keyword.class, "k");
+				criteria.createAlias("translations", "t");
+				criteria.add(Restrictions.ilike("t.name", partialKeywrod));
+				
+				criteria.setFirstResult(0);
+				criteria.setMaxResults(maxResults);
+				criteria.setCacheable(true);
+				
+				return criteria.list();
+				
+			}
+		});
+		
 	}
 	
 }

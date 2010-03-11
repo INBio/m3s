@@ -37,12 +37,28 @@ public class AutoCompleteManagerTest extends AbstractServiceTest{
 	*/
 	
 
+	/*
 	public void testGetAutoCompleteOptionsMediaAuthor(){
 
 		logger.info("Usando el AutoCompleteManager del AgentManager: "+Properties.AGENT_MANAGER);
 		AutoCompleteManager acm = (AutoCompleteManager) getBean(Properties.AGENT_MANAGER);
 		
 		Map<Integer, String> results = acm.getAutoCompleteOptions("i");
+		
+		for(Integer key : results.keySet()){
+			logger.info("key: '"+key+"' value: '"+results.get(key)+"'");
+		}
+		
+		assertTrue( true );
+	}
+	*/
+
+	public void testGetAutoCompleteOptionsKeyword(){
+
+		logger.info("Usando el AutoCompleteManager del AgentManager: keywordAutoCompleteManager");
+		AutoCompleteManager acm = (AutoCompleteManager) getBean("keywordAutoCompleteManager");
+		
+		Map<Integer, String> results = acm.getAutoCompleteOptions("lepidoptera");
 		
 		for(Integer key : results.keySet()){
 			logger.info("key: '"+key+"' value: '"+results.get(key)+"'");

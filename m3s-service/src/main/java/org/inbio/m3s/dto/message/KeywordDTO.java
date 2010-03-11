@@ -46,6 +46,8 @@ public class KeywordDTO extends BaseDTO {
 	
 	@Override
 	public String toString(){
+		if(this== null)
+			return "null";
 		return "EL Keyword Lite DTO tiene:" +
 		"\n\tKey: " + keywordKey +
 		"\n\tNombre: '"+ name +"'" +
