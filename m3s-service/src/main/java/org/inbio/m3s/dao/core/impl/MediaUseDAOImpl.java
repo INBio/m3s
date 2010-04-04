@@ -28,7 +28,7 @@ public class MediaUseDAOImpl extends GenericBaseDAOImpl<MediaUse, Integer>  impl
 	 * (non-Javadoc)
 	 * 
 	 * @see org.inbio.m3s.dao.core.MediaUseDAO#getMediaUseLite(java.lang.String)
-	 */
+	 
 	public MediaUseDTO getMediaUseLite(String mediaUseName, Integer languageId)
 			throws IllegalArgumentException {
 		logger.debug("getMediaUseLite with name = '" + mediaUseName + "'.");
@@ -53,6 +53,7 @@ public class MediaUseDAOImpl extends GenericBaseDAOImpl<MediaUse, Integer>  impl
 			throw new IllegalArgumentException(errorMsj);
 		}
 	}
+	*/
 
 	/*
 	 * (non-Javadoc)
@@ -153,6 +154,7 @@ public class MediaUseDAOImpl extends GenericBaseDAOImpl<MediaUse, Integer>  impl
 		});
 	}
 
+	/*
 	public MediaUseDTO findByNameAndLanguage(final String mediaUseName,
 			final String languageKey) throws IllegalArgumentException {
 		logger.debug("getMediaUseLite with name = '" + mediaUseName + "'.");
@@ -177,7 +179,7 @@ public class MediaUseDAOImpl extends GenericBaseDAOImpl<MediaUse, Integer>  impl
 			throw new IllegalArgumentException(errorMsj);
 		}
 	}
-
+*/
 
 
 }

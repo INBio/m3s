@@ -21,7 +21,7 @@ public class KeywordCategory extends LogGenericEntity {
 
 	private Integer keywordCategoryId;
 
-	private Text text;
+	private Integer text;
 
 	private String description;
 
@@ -30,11 +30,11 @@ public class KeywordCategory extends LogGenericEntity {
 	public KeywordCategory() {
 	}
 
-	public KeywordCategory(Text text) {
+	public KeywordCategory(Integer text) {
 		this.text = text;
 	}
 
-	public KeywordCategory(Text text, String description, Date creationDate,
+	public KeywordCategory(Integer text, String description, Date creationDate,
 			String createdBy, Date lastModificationDate,
 			String lastModificationBy, Set<Keyword> keywords) {
 		this.text = text;
@@ -54,13 +54,6 @@ public class KeywordCategory extends LogGenericEntity {
 		this.keywordCategoryId = keywordCategoryId;
 	}
 
-	public Text getText() {
-		return this.text;
-	}
-
-	public void setText(Text text) {
-		this.text = text;
-	}
 
 	public String getDescription() {
 		return this.description;
@@ -76,6 +69,20 @@ public class KeywordCategory extends LogGenericEntity {
 
 	public void setKeywords(Set<Keyword> keywords) {
 		this.keywords = keywords;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public Integer getText() {
+		return text;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(Integer text) {
+		this.text = text;
 	}
 
 }

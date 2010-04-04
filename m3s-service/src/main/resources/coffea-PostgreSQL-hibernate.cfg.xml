@@ -12,7 +12,6 @@
 	<mapping resource="org/inbio/m3s/model/core/ImportControl.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/Keyword.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/KeywordCategory.hbm.xml" />
-	<mapping resource="org/inbio/m3s/model/core/Language.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/M3SInstitution.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/M3SPerson.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/Media.hbm.xml" />
@@ -32,7 +31,6 @@
 	<mapping resource="org/inbio/m3s/model/core/SecurityUsers.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/SpecimenMedia.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TaxonMedia.hbm.xml" />	
-	<mapping resource="org/inbio/m3s/model/core/Text.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TextTranslation.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TypeSpecimenMedia.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/User.hbm.xml" />

@@ -10,7 +10,7 @@ import org.inbio.m3s.model.core.MediaCategory;
 
 /**
  * @author jgutierrez
- *
+ * @deprecated
  */
 public interface MediaCategoryDAO extends GenericBaseDAO<MediaCategory, Integer>{
 	

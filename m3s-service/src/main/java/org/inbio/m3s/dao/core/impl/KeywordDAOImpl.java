@@ -40,7 +40,11 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 	private static Logger logger = Logger.getLogger(KeywordDAOImpl.class);
 
 
-	public KeywordDTO getKeywordLite(final String keywordName, final Integer languageId) {
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.KeywordDAO#getKeywordLite(java.lang.String, java.lang.String)
+	 */
+	public KeywordDTO getKeywordLite(final String keywordName, final String locale) {
 		//	logger.debug("getKeywordDBId... start ");
 		HibernateTemplate template = getHibernateTemplate();
 		return (KeywordDTO) template.execute(new HibernateCallback() {
@@ -50,8 +54,8 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 						"select new org.inbio.m3s.dto.message.KeywordDTO(k.keywordId, tt.name)"
 					+ " from TextTranslation as tt, Keyword as k"
 					+ " where tt.name = '" + keywordName + "'"
-					+ " and tt.text.textId = k.nameTextId"
-					+ " and tt.language.languageId = " + languageId + "");
+					+ " and tt.textId = k.nameTextId"
+					+ " and tt.locale = " + locale + "");
 						//query.setParameter(0, nomenclaturalGroupId);
 						query.setCacheable(true);
 						return query.uniqueResult();
@@ -60,7 +64,10 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 	}
 	
 
-	@SuppressWarnings("unchecked")
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.dao.core.KeywordDAO#findByName(java.lang.String)
+	 */
 	public Keyword findByName(final String keywordName) throws IllegalArgumentException {
 		logger.debug("findAllByName with ["+keywordName+"] ");
 		HibernateTemplate template = getHibernateTemplate();
@@ -82,7 +89,7 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 	 * @see org.inbio.portal.dao.nomenclaturalgroup.NomenclaturalGroupDAO#getChildGroupsOf(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<KeywordDTO> getAllKeywordLiteForMedia(final Integer mediaId, final Integer languageId) {
+	public List<KeywordDTO> getAllKeywordLiteForMedia(final Integer mediaId, final String locale) {
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<KeywordDTO>) template.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) {
@@ -90,8 +97,8 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 						"select new org.inbio.m3s.dto.message.KeywordDTO(mk.keyword.keywordId, tt.name)"
 						+ " from TextTranslation as tt, MediaKeyword as mk"
 						+ " where mk.id.mediaId = " + mediaId
-						+ " and tt.text.textId = mk.keyword.nameTextId"
-						+ " and tt.language.languageId = " + languageId + "");
+						+ " and tt.textId = mk.keyword.nameTextId"
+						+ " and tt.locale = " + locale + "");
 				//query.setParameter(0, nomenclaturalGroupId);
 				query.setCacheable(true);
 				return query.list();
@@ -121,7 +128,7 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<KeywordDTO> findAllByPartialNamePaginated(final String partialKeywrod, final int maxResults, final Integer languageId) {
+	public List<KeywordDTO> findAllByPartialNamePaginated(final String partialKeywrod, final int maxResults, final String locale) {
 		logger.debug("findAllByPartialNamePaginated with[" + partialKeywrod +"]");
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<KeywordDTO>) template.execute(new HibernateCallback() {
@@ -129,10 +136,10 @@ public class KeywordDAOImpl extends GenericBaseDAOImpl<Keyword,Integer> implemen
 				Query query = session.createQuery(
 						"select new org.inbio.m3s.dto.message.KeywordDTO(k.keywordId, tt.name)"
 						+ " from TextTranslation as tt, Keyword as k"
-						+ " where tt.language.languageId = :languageId" 
+						+ " where tt.locale = :locale" 
 						+ " and tt.name like :keyword"
-						+ " and k.nameTextId = tt.text.textId");
-				query.setParameter("languageId", languageId);
+						+ " and k.nameTextId = tt.textId");
+				query.setParameter("locale", locale);
 				query.setParameter("keyword", partialKeywrod);
 				query.setFirstResult(0);
 				query.setMaxResults(maxResults);				

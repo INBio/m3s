@@ -9,14 +9,14 @@
 			<column name="text_translation_id" />
 			<generator class="increment" />
 		</id>
-		<many-to-one name="text"
-			class="org.inbio.m3s.model.core.Text" fetch="select">
-			<column name="text_id" not-null="true" />
-		</many-to-one>
-		<many-to-one name="language"
-			class="org.inbio.m3s.model.core.Language" fetch="select">
-			<column name="language_id" not-null="true" />
-		</many-to-one>
+		
+		<property name="textId" type="java.lang.Integer">
+			<column name="text_id" not-null="true"/>
+		</property>
+		<property name="locale" type="string">
+			<column name="locale" length="2" not-null="true" />
+		</property>
+
 		<property name="name" type="string">
 			<column name="name" length="200" not-null="true" />
 		</property>

@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  */
 public class TextTranslationDAOImpl extends GenericBaseDAOImpl<TextTranslation, Integer> implements TextTranslationDAO {
 
-	public TextTranslation finByIdAndLanguage(final Integer id, final Integer languageId) {
+	public TextTranslation finByIdAndLanguage(final Integer id, final String locale) {
 		logger.debug("TextTranslation... start ");
 		HibernateTemplate template = getHibernateTemplate();
 		return (TextTranslation) template.execute(new HibernateCallback() {
@@ -27,9 +27,9 @@ public class TextTranslationDAOImpl extends GenericBaseDAOImpl<TextTranslation, 
 				Query query = session.createQuery(
 						"select tt"
 						+ " from TextTranslation as tt"
-						+ " where tt.text.textId = " + id
-						+ " and tt.language.languageId = " + languageId + "");
-				//query.setParameter(0, nomenclaturalGroupId);
+						+ " where tt.textId = " + id
+						+ " and tt.locale = :locale");
+				query.setParameter("locale", locale);
 				query.setCacheable(true);
 				return query.uniqueResult();
 			}
@@ -37,7 +37,7 @@ public class TextTranslationDAOImpl extends GenericBaseDAOImpl<TextTranslation, 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> findTechnicalMetadataTexts(final Integer mediaTypeId, final Integer languageId) {
+	public List<String> findTechnicalMetadataTexts(final Integer mediaTypeId, final String locale) {
 		logger.debug("findTechnicalMetadataTexts... start ");
 		HibernateTemplate template = getHibernateTemplate();
 		return (List<String>) template.execute(new HibernateCallback() {
@@ -46,8 +46,9 @@ public class TextTranslationDAOImpl extends GenericBaseDAOImpl<TextTranslation, 
 						"select tt.name" +
 						" from TextTranslation as tt, MediaAttributeType as mat"	+ 
 						" where mat.mediaType.mediaTypeId = "	+ mediaTypeId +
-						" and tt.text.textId = mat.mediaAttribute.textByNameTextId.textId" +
-						" and tt.language.languageId = " + languageId + "");
+						" and tt.textId = mat.mediaAttribute.textByNameTextId.textId" +
+						" and tt.locale = :locale");
+				query.setParameter("locale", locale);
 				//query.setParameter(0, nomenclaturalGroupId);
 				query.setCacheable(true);
 				return query.list();

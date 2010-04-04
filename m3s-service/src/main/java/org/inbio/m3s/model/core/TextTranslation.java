@@ -17,26 +17,26 @@ public class TextTranslation extends LogGenericEntity {
 
 	private Integer textTranslationId;
 
-	private Text text;
-
-	private Language language;
+	private Integer textId;
+	
+	private String locale;
 
 	private String name;
 
 	public TextTranslation() {
 	}
 
-	public TextTranslation(Text text, Language language, String name) {
-		this.text = text;
-		this.language = language;
+	public TextTranslation(Integer textId, String locale, String name) {
+		this.textId = textId;
+		this.locale = locale;
 		this.name = name;
 	}
 
-	public TextTranslation(Text text, Language language, String name,
+	public TextTranslation(Integer textId, String locale, String name,
 			Date creationDate, String createdBy, Date lastModificationDate,
 			String lastModificationBy) {
-		this.text = text;
-		this.language = language;
+		this.textId = textId;
+		this.locale = locale;
 		this.name = name;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
@@ -52,21 +52,6 @@ public class TextTranslation extends LogGenericEntity {
 		this.textTranslationId = textTranslationId;
 	}
 
-	public Text getText() {
-		return this.text;
-	}
-
-	public void setText(Text text) {
-		this.text = text;
-	}
-
-	public Language getLanguage() {
-		return this.language;
-	}
-
-	public void setLanguage(Language language) {
-		this.language = language;
-	}
 
 	public String getName() {
 		return this.name;
@@ -82,6 +67,34 @@ public class TextTranslation extends LogGenericEntity {
 	@Override
 	public String toString() {
 		return "TextTranslation [name=" + name + ", textTranslationId=" + textTranslationId + "]";
+	}
+
+	/**
+	 * @return the textId
+	 */
+	public Integer getTextId() {
+		return textId;
+	}
+
+	/**
+	 * @param textId the textId to set
+	 */
+	public void setTextId(Integer textId) {
+		this.textId = textId;
+	}
+
+	/**
+	 * @return the locale
+	 */
+	public String getLocale() {
+		return locale;
+	}
+
+	/**
+	 * @param locale the locale to set
+	 */
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 
 }

@@ -93,8 +93,8 @@ public class MediaCategoryDAOImpl  extends GenericBaseDAOImpl<MediaCategory, Int
 				Query query = session.createQuery(
 						"select new org.inbio.m3s.dto.message.MediaCategoryDTO(mc.mediaCategoryId, tt.name)"
 						+ " from TextTranslation as tt, MediaCategory as mc"
-						+ " where tt.text.textId = mc.textByNameTextId.textId"
-						+ " and tt.language.languageId = "+ MessageManager.DEFAULT_LANGUAGE);
+						+ " where tt.textId = mc.textByNameTextId.textId"
+						+ " and tt.locale = "+ MessageManager.DEFAULT_LOCALE);
 				query.setCacheable(true);
 				return query.list();
 			}
@@ -116,7 +116,7 @@ public class MediaCategoryDAOImpl  extends GenericBaseDAOImpl<MediaCategory, Int
 				Query query = session.createQuery(
 						"select new org.inbio.m3s.dto.message.MediaCategoryDTO(mc.mediaCategoryId, tt.name)"
 						+ " from TextTranslation as tt, MediaCategory as mc"
-						+ " where tt.text.textId = mc.textByNameTextId.textId"
+						+ " where tt.textId = mc.textByNameTextId.textId"
 						+ " and tt.language.languageId = "+ language
 						+ " and mc.mediaTypes.mediaTypeId = " + mediaTypeId);
 				//query.setParameter(0, nomenclaturalGroupId);

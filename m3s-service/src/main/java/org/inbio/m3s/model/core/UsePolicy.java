@@ -16,9 +16,9 @@ public class UsePolicy extends LogGenericEntity {
 
 	private Integer usePolicyId;
 
-	private Text textByDescriptionTextId;
+	private Integer textByDescriptionTextId;
 
-	private Text textByNameTextId;
+	private Integer textByNameTextId;
 
 	private String name;
 
@@ -28,11 +28,11 @@ public class UsePolicy extends LogGenericEntity {
 	public UsePolicy() {
 	}
 
-	public UsePolicy(Text textByNameTextId) {
+	public UsePolicy(Integer textByNameTextId) {
 		this.textByNameTextId = textByNameTextId;
 	}
 
-	public UsePolicy(Text textByDescriptionTextId, Text textByNameTextId,
+	public UsePolicy(Integer textByDescriptionTextId, Integer textByNameTextId,
 			Date creationDate, String createdBy, Date lastModificationDate,
 			String lastModificationBy, String name, String description) {
 		this.textByDescriptionTextId = textByDescriptionTextId;
@@ -53,19 +53,19 @@ public class UsePolicy extends LogGenericEntity {
 		this.usePolicyId = usePolicyId;
 	}
 
-	public Text getTextByDescriptionTextId() {
+	public Integer getTextByDescriptionTextId() {
 		return this.textByDescriptionTextId;
 	}
 
-	public void setTextByDescriptionTextId(Text textByDescriptionTextId) {
+	public void setTextByDescriptionTextId(Integer textByDescriptionTextId) {
 		this.textByDescriptionTextId = textByDescriptionTextId;
 	}
 
-	public Text getTextByNameTextId() {
+	public Integer getTextByNameTextId() {
 		return this.textByNameTextId;
 	}
 
-	public void setTextByNameTextId(Text textByNameTextId) {
+	public void setTextByNameTextId(Integer textByNameTextId) {
 		this.textByNameTextId = textByNameTextId;
 	}
 

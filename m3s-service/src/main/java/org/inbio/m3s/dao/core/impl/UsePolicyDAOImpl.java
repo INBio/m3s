@@ -93,7 +93,7 @@ public class UsePolicyDAOImpl extends GenericBaseDAOImpl<UsePolicy, Integer> imp
 				Query query = session.createQuery(
 						"select new org.inbio.m3s.dto.metadata.UsePolicyDTO(up.usePolicyId, tt.name)"
 						+ " from TextTranslation as tt, UsePolicy as up"
-						+ " where tt.language.languageId = "	+ MessageManager.DEFAULT_LANGUAGE
+						+ " where tt.language.languageId = "	+ MessageManager.DEFAULT_LOCALE
 						+ " and tt.text = up.textByNameTextId");
 				//query.setParameter(0, nomenclaturalGroupId);
 				query.setCacheable(true);
@@ -111,7 +111,7 @@ public class UsePolicyDAOImpl extends GenericBaseDAOImpl<UsePolicy, Integer> imp
 				Query query = session.createQuery(
 						"select up"
 						+ " from TextTranslation as tt, UsePolicy as up"
-						+ " where tt.language.languageId = "	+ MessageManager.DEFAULT_LANGUAGE
+						+ " where tt.language.languageId = "	+ MessageManager.DEFAULT_LOCALE
 						+ " and tt.name = '"+usePolicyText+"'"
 						+ " and tt.text = up.textByNameTextId");
 				//query.setParameter(0, nomenclaturalGroupId);

@@ -51,7 +51,7 @@ public class MetadataStandardDAOImpl extends HibernateDaoSupport implements Meta
 						"select new org.inbio.m3s.dto.lite.MetadataStandardLiteDTO(tt.name, mat.metadataStandard.metadataStandardId, mat.standardAttributeId)"
 									+ " from TextTranslation as tt, MediaAttributeType as mat "
 									+ " where mat.mediaType.mediaTypeId = " + mediaTypeDBId
-									+ " and tt.text.textId = mat.mediaAttribute.textByNameTextId.textId "
+									+ " and tt.textId = mat.mediaAttribute.textByNameTextId.textId "
 									+ "and tt.language.languageId = " + languageId + "");
 				query.setCacheable(true);
 				return query.list();

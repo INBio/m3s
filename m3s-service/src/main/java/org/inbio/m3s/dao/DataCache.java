@@ -26,6 +26,7 @@ import org.inbio.m3s.util.ServiceUtil;
  * the config.Properties class
  * 
  * @author jgutierrez
+ * @deprecated
  * 
  */
 public class DataCache {
@@ -52,13 +53,14 @@ public class DataCache {
 
 	public static List<Integer> mediaCategoriesDBIds;
 	
+	/*
 	public static void initMediaUsesInfo() {
 		//logger.debug("getting Media uses Info... using default language");
 		
 		MediaUseDAO mediaUseDAO = (MediaUseDAO) ServiceUtil.appContext.getBean("mediaUseDAO");
 		
 		try{
-			List<MediaUseDTO> mediaUsesInfo = mediaUseDAO.listAllLite(new Integer(MessageManager.DEFAULT_LANGUAGE));
+			List<MediaUseDTO> mediaUsesInfo = mediaUseDAO.listAllLite(new Integer(MessageManager.DEFAULT_LOCALE))
 			
 			mediaUsesDBIds = new ArrayList<Integer>();
 			mediaUsesNames = new ArrayList<String>();
@@ -69,13 +71,14 @@ public class DataCache {
 			}
 			logger.debug("getting Media uses Info... is now on cache!.");
 			mediaUsesInCache = true;
-			mediaUses4Language = new Integer(MessageManager.DEFAULT_LANGUAGE);
+			mediaUses4Language = new Integer(MessageManager.DEFAULT_LOCALE);
 			
 		} catch (Exception e) {
 			logger.error("Something gets wrong on initMediaUsesInfo.");
 			logger.error(e.getMessage());
 		}
 	}
+	*/
 
 	public static void initUsePoliciesInfo() {
 		logger.debug("getting use policy Info...");

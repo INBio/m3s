@@ -18,20 +18,20 @@ public class MediaCategory extends LogGenericEntity {
 
 	private Integer mediaCategoryId;
 
-	private Text textByDescriptionTextId;
+	private Integer textByDescriptionTextId;
 
-	private Text textByNameTextId;
+	private Integer textByNameTextId;
 
 	private Set<MediaType> mediaTypes = new HashSet<MediaType>(0);
 
 	public MediaCategory() {
 	}
 
-	public MediaCategory(Text textByNameTextId) {
+	public MediaCategory(Integer textByNameTextId) {
 		this.textByNameTextId = textByNameTextId;
 	}
 
-	public MediaCategory(Text textByDescriptionTextId, Text textByNameTextId,
+	public MediaCategory(Integer textByDescriptionTextId, Integer textByNameTextId,
 			Date creationDate, String createdBy, Date lastModificationDate,
 			String lastModificationBy, Set<MediaType> mediaTypes) {
 		this.textByDescriptionTextId = textByDescriptionTextId;
@@ -51,19 +51,19 @@ public class MediaCategory extends LogGenericEntity {
 		this.mediaCategoryId = mediaCategoryId;
 	}
 
-	public Text getTextByDescriptionTextId() {
+	public Integer getTextByDescriptionTextId() {
 		return this.textByDescriptionTextId;
 	}
 
-	public void setTextByDescriptionTextId(Text textByDescriptionTextId) {
+	public void setTextByDescriptionTextId(Integer textByDescriptionTextId) {
 		this.textByDescriptionTextId = textByDescriptionTextId;
 	}
 
-	public Text getTextByNameTextId() {
+	public Integer getTextByNameTextId() {
 		return this.textByNameTextId;
 	}
 
-	public void setTextByNameTextId(Text textByNameTextId) {
+	public void setTextByNameTextId(Integer textByNameTextId) {
 		this.textByNameTextId = textByNameTextId;
 	}
 

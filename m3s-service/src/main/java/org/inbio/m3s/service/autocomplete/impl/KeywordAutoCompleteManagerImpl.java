@@ -31,7 +31,7 @@ public class KeywordAutoCompleteManagerImpl implements AutoCompleteManager {
 	 */
 	public Map<Integer, String> getAutoCompleteOptions(String value) {
 		
-		List<KeywordDTO> kDTOList =  keywordDAO.findAllByPartialNamePaginated("%"+value+"%", 20, MessageManager.DEFAULT_LANGUAGE);
+		List<KeywordDTO> kDTOList =  keywordDAO.findAllByPartialNamePaginated("%"+value+"%", 20, MessageManager.DEFAULT_LOCALE);
 		Map<Integer, String> results = new HashMap<Integer, String>();
 		
 		for(KeywordDTO kDTO: kDTOList)

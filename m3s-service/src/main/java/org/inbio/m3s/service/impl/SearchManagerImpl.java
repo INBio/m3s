@@ -216,7 +216,7 @@ public class SearchManagerImpl implements SearchManager {
 		Integer criteria = triplete.getCriteria();
 		String value = triplete.getValue();
 		
-		KeywordDTO klDTO = keywordDAO.getKeywordLite(value, MessageManager.DEFAULT_LANGUAGE);
+		KeywordDTO klDTO = keywordDAO.getKeywordLite(value, MessageManager.DEFAULT_LOCALE);
 		
 		return " m.mediaId in ( select mk.id.mediaId" +
 				" from MediaKeyword as mk" +

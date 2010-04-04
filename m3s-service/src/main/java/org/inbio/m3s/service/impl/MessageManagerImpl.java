@@ -47,6 +47,7 @@ public class MessageManagerImpl implements MessageManager {
 	
 	private KeywordDAO keywordDAO;
 	private TextTranslationDAO textTranslationDAO;
+	
 	private MediaTypeDAO mediaTypeDAO;
 	private UsePolicyDAO usePolicyDAO;
 	private MediaCategoryDAO mediaCategoryDAO;
@@ -59,10 +60,14 @@ public class MessageManagerImpl implements MessageManager {
 	private static Logger logger = Logger.getLogger(ImportFromFile.class);
 	
 
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MessageManager#getKeywordLite(java.lang.String, java.lang.String)
+	 */
+	public KeywordDTO getKeywordLite(String keywordName, String locale) throws KeywordNotFoundException {
 	
-	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws KeywordNotFoundException {
-	
-		KeywordDTO klDTO = keywordDAO.getKeywordLite(keywordName, languageId);
+		KeywordDTO klDTO = keywordDAO.getKeywordLite(keywordName, locale);
 		if(klDTO==null)
 			throw new KeywordNotFoundException("The keyword ["+keywordName+"] cannot be found the database", null, keywordName);
 		
@@ -71,16 +76,16 @@ public class MessageManagerImpl implements MessageManager {
 
 
 	/* (non-Javadoc)
-	 * @see org.inbio.m3s.service.MessageManager#getAllKeywordLite(java.lang.Integer)
+	 * @see org.inbio.m3s.service.MessageManager#getAllKeywordLite(java.lang.String)
 	 */
-	public List<KeywordDTO> getAllKeywordLite(Integer languageId) throws IllegalArgumentException {
+	public List<KeywordDTO> getAllKeywordLite(String locale) throws IllegalArgumentException {
 		
 		List<KeywordDTO> kDTOList = new ArrayList<KeywordDTO>();
 		List<Keyword> kList = keywordDAO.findAll(Keyword.class);
 		TextTranslation tt;
 		
 		for(Keyword k : kList){
-			tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), languageId);
+			tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), locale);
 			if(tt!=null)
 				kDTOList.add(new KeywordDTO(String.valueOf(k.getKeywordId()), tt.getName()));
 		}
@@ -104,7 +109,7 @@ public class MessageManagerImpl implements MessageManager {
 		List<Object> separatedValues = StringUtil.getIndividualItems(textualKeywords,java.lang.String.class);
 		
 		for(Object elem : separatedValues){
-			klDTO = getKeywordLite((String)elem, MessageManager.DEFAULT_LANGUAGE);
+			klDTO = getKeywordLite((String)elem, MessageManager.DEFAULT_LOCALE);
 			klDTOList.add(klDTO);
 		}
 		
@@ -118,7 +123,7 @@ public class MessageManagerImpl implements MessageManager {
 		TextTranslation tt;
 		
 		for(UsePolicy up : upList){
-			tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+			tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId(), MessageManager.DEFAULT_LOCALE);
 			upDTOList.add(new UsePolicyDTO(((UsePolicy) up).getUsePolicyId().toString(), tt.getName()));
 		}
 		
@@ -132,7 +137,7 @@ public class MessageManagerImpl implements MessageManager {
 	public UsePolicyDTO getUsePolicy(String usePolicyKey) throws IllegalArgumentException {
 		UsePolicy up = (UsePolicy) usePolicyDAO.findById(UsePolicy.class, Integer.valueOf(usePolicyKey));
 		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId(), MessageManager.DEFAULT_LOCALE);
 		return new UsePolicyDTO(usePolicyKey, tt.getName());
 		
 	}
@@ -145,7 +150,7 @@ public class MessageManagerImpl implements MessageManager {
 		if(up==null)
 			throw new UsePolicyNotFoundException("The use policy ["+usePolicyName+"] cannot be found the database", null, usePolicyName);
 		//TextTranslation tt;
-		//tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		//tt = textTranslationDAO.finByIdAndLanguage(((UsePolicy) up).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LOCALE);
 		return new UsePolicyDTO(up.getUsePolicyId() , usePolicyName);
 	}
 	
@@ -156,7 +161,7 @@ public class MessageManagerImpl implements MessageManager {
 		TextTranslation tt;
 		
 		for(MediaCategory mc : mcList){
-			tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+			tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId(), MessageManager.DEFAULT_LOCALE);
 			mcDTOList.add(new MediaCategoryDTO(((MediaCategory) mc).getMediaCategoryId().toString(), tt.getName()));
 		}
 		
@@ -169,7 +174,7 @@ public class MessageManagerImpl implements MessageManager {
 		
 		MediaCategory mc = (MediaCategory) mediaCategoryDAO.findById(MediaCategory.class, mt.getMediaCategoryId());
 		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId(), MessageManager.DEFAULT_LOCALE);
 		return new MediaCategoryDTO(String.valueOf(mt.getMediaCategoryId()), tt.getName());
 	}
 	
@@ -177,7 +182,7 @@ public class MessageManagerImpl implements MessageManager {
 		throws IllegalArgumentException {
 		MediaCategory mc = (MediaCategory) mediaCategoryDAO.findById(MediaCategory.class, Integer.valueOf(mediaCategoryKey));
 		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		tt = textTranslationDAO.finByIdAndLanguage(((MediaCategory) mc).getTextByNameTextId(), MessageManager.DEFAULT_LOCALE);
 		return new MediaCategoryDTO(mediaCategoryKey, tt.getName());
 	}
 	
@@ -187,7 +192,7 @@ public class MessageManagerImpl implements MessageManager {
 		TextTranslation tt;
 		
 		for(MediaType mt : mtList){
-			tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LANGUAGE);
+			tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LOCALE);
 			mtDTOList.add(new MediaTypeDTO(mt.getMediaTypeId(), tt.getName()));
 		}
 		
@@ -199,7 +204,7 @@ public class MessageManagerImpl implements MessageManager {
 	public MediaTypeDTO getMediaType(String mediaTypeKey) throws IllegalArgumentException {
 		MediaType mt = mediaTypeDAO.findById(MediaType.class, Integer.valueOf(mediaTypeKey));
 		TextTranslation tt;
-		tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LANGUAGE);
+		tt = textTranslationDAO.finByIdAndLanguage(mt.getMediaTypeNameTextId(), MessageManager.DEFAULT_LOCALE);
 		return new MediaTypeDTO(mediaTypeKey, tt.getName());
 	}
 	
@@ -209,7 +214,7 @@ public class MessageManagerImpl implements MessageManager {
 			throw new MediaTypeNotFoundException("The media type ["+mediaTypeName+"] cannot be found the database", null, mediaTypeName);
 		
 		//TextTranslation tt;
-		//tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LANGUAGE);
+		//tt = textTranslationDAO.finByIdAndLanguage(((MediaType) mt).getTextByNameTextId().getTextId(), MessageManager.DEFAULT_LOCALE);
 		return new MediaTypeDTO(mt.getMediaTypeId(), mediaTypeName);
 }
 
@@ -263,13 +268,14 @@ public class MessageManagerImpl implements MessageManager {
 	}
 	
 	
-
+/*
 	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String languageKey) throws MediaUseNotFoundException {
 		MediaUseDTO muDTO = mediaUseDAO.findByNameAndLanguage(mediaUseName, languageKey);
 		if(muDTO==null)
 			throw new MediaUseNotFoundException("The media use ["+mediaUseName+"] cannot be found the database", null, mediaUseName);
 		return muDTO;
 	}
+	*/
 	
 	/**
 	 * @param keywordDAO the keywordDAO to set

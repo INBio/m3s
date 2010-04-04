@@ -35,7 +35,7 @@ public interface KeywordDAO extends GenericBaseDAO<Keyword,Integer> {
 	 * @deprecated
 	 * @use findByName(final String keywordName) but be careful because the languageId parameter disappear!
 	 */
-	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws IllegalArgumentException;
+	public KeywordDTO getKeywordLite(String keywordName, String locale) throws IllegalArgumentException;
 	
 	/**
 	 * Looks for all the coincidences for the keyword name, this includes all languages and
@@ -50,7 +50,7 @@ public interface KeywordDAO extends GenericBaseDAO<Keyword,Integer> {
 	 * @deprecated
 	 * @use findAllByMedia(final Integer mediaId) 
 	 */
-	public List<KeywordDTO> getAllKeywordLiteForMedia(Integer mediaId, Integer languageId) throws IllegalArgumentException;
+	public List<KeywordDTO> getAllKeywordLiteForMedia(Integer mediaId, String locale) throws IllegalArgumentException;
 	
 	/**
 	 * 
@@ -65,7 +65,7 @@ public interface KeywordDAO extends GenericBaseDAO<Keyword,Integer> {
 	 * @deprecated
 	 * @use findAllByPartialNamePaginated(String partialKeywrod, int maxResults)
 	 */
-	public List<KeywordDTO> findAllByPartialNamePaginated(String partialKeywrod, int maxResults, Integer languageId);
+	public List<KeywordDTO> findAllByPartialNamePaginated(String partialKeywrod, int maxResults, String locale);
 
 	/**
 	 * Looks by partial name ignoring case and language.

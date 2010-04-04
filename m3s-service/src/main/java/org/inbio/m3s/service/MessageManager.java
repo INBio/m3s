@@ -24,33 +24,30 @@ import org.inbio.m3s.exception.UsePolicyNotFoundException;
  */
 public interface MessageManager {
 	
-	// languagues
-	public static Integer ESPANYOL = new Integer(1);
-	public static String ESPANYOL_KEY = "1";
-
-	public static Integer ENGLISH = new Integer(2);
-	public static String ENGLISH_KEY = "2";
-	
-	public static Integer DEFAULT_LANGUAGE = ESPANYOL;
-	public static String DEFAULT_LANGUAGE_KEY = ESPANYOL_KEY;
+	//locales
+	public static String DEFAULT_LOCALE = "es";
+	public static String SPANISH_LOCALE = "es";
+	public static String ENGLISH_LOCALE = "en";
+	public static String PORTUGUES_LOCALE = "pt";
+ 
 	
 	
 	/**
 	 * 
 	 * @param keywordName
-	 * @param languageId
+	 * @param locale
 	 * @return
 	 * @throws KeywordNotFoundException
 	 */
-	public KeywordDTO getKeywordLite(String keywordName, Integer languageId) throws KeywordNotFoundException;
+	public KeywordDTO getKeywordLite(String keywordName, String locale) throws KeywordNotFoundException;
 	
 	/**
 	 * 
-	 * @param languageId
+	 * @param locale
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public List<KeywordDTO> getAllKeywordLite(Integer languageId) throws IllegalArgumentException;
+	public List<KeywordDTO> getAllKeywordLite(String locale) throws IllegalArgumentException;
 	
 	/**
 	 * Parsea el texto que viene del archivo excell, que tiene una estructura de
@@ -153,7 +150,7 @@ public interface MessageManager {
 	 * @param defaultLanguageKey
 	 * @return
 	 */
-	public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String defaultLanguageKey) throws MediaUseNotFoundException ;
+	//public MediaUseDTO getMediaUseByNameAndLanguage(String mediaUseName, String defaultLanguageKey) throws MediaUseNotFoundException ;
 	
 	/**
 	 * The options for the associated to values

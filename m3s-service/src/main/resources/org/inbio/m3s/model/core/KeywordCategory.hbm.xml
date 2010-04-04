@@ -8,9 +8,11 @@
             <column name="keyword_category_id" />
             <generator class="increment" />
         </id>
-        <many-to-one name="text" class="org.inbio.m3s.model.core.Text" fetch="select">
-            <column name="name_concept_id" not-null="true" />
-        </many-to-one>
+        
+        <property name="text" type="java.lang.Integer">
+			<column name="name_concept_id" not-null="true"/>
+		</property>
+        
         <property name="description" type="string">
             <column name="description" length="200" />
         </property>

@@ -65,9 +65,9 @@ public class MediaTypeDAOImpl extends GenericBaseDAOImpl<MediaType,Integer> impl
 				Query query = session.createQuery(
 						"select new org.inbio.m3s.dto.message.MediaTypeDTO(mt.mediaTypeId, tt.name)"
 						+ " from TextTranslation as tt, MediaType as mt"
-						+ " where tt.language.languageId  = "	+ MessageManager.DEFAULT_LANGUAGE
+						+ " where tt.language.languageId  = "	+ MessageManager.DEFAULT_LOCALE
 						+ " and tt.name = '"+ mediaTypeName	+ "'"
-						+ " and tt.text.textId = mt.textByNameTextId.textId");
+						+ " and tt.textId = mt.textByNameTextId.textId");
 				//query.setParameter(0, nomenclaturalGroupId);
 				query.setCacheable(true);
 				return query.uniqueResult();
@@ -87,8 +87,8 @@ public class MediaTypeDAOImpl extends GenericBaseDAOImpl<MediaType,Integer> impl
 						"select new org.inbio.m3s.dto.message.MediaTypeDTO(mt.mediaTypeId, tt.name)"
 						+ " from TextTranslation as tt, MediaType as mt"
 						+ " where mt.mediaCategory.mediaCategoryId = " + mediaCategoryId
-						+ " and tt.text.textId = mt.textByNameTextId.textId"
-						+ " and tt.language.languageId = "+ MessageManager.DEFAULT_LANGUAGE);
+						+ " and tt.textId = mt.textByNameTextId.textId"
+						+ " and tt.locale = "+ MessageManager.DEFAULT_LOCALE);
 				query.setCacheable(true);
 				return query.list();
 			}
@@ -107,10 +107,10 @@ public class MediaTypeDAOImpl extends GenericBaseDAOImpl<MediaType,Integer> impl
 			public Object doInHibernate(Session session) {
 				Query query = session.createQuery(
 						"select mt from TextTranslation as tt, MediaType as mt"
-						+ " where tt.language.languageId  = :languageId" 
+						+ " where tt.locale = :locale" 
 						+ " and tt.name = :mediaTypeName"
-						+ " and tt.text.textId = mt.mediaTypeNameTextId");
-				query.setParameter("languageId", MessageManager.DEFAULT_LANGUAGE);
+						+ " and tt.textId = mt.mediaTypeNameTextId");
+				query.setParameter("locale", MessageManager.DEFAULT_LOCALE);
 				query.setParameter("mediaTypeName", mediaTypeName);
 				query.setCacheable(true);
 				return query.uniqueResult();

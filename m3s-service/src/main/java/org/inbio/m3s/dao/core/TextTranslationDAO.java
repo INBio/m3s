@@ -14,10 +14,10 @@ import org.inbio.m3s.model.core.TextTranslation;
  */
 public interface TextTranslationDAO extends GenericBaseDAO<TextTranslation, Integer>{
 	
-	TextTranslation finByIdAndLanguage(Integer id, Integer languageId);
+	TextTranslation finByIdAndLanguage(Integer id, String locale);
 	
 	@Deprecated
-	List<String> findTechnicalMetadataTexts(Integer mediaTypeId, Integer languageId);
+	List<String> findTechnicalMetadataTexts(Integer mediaTypeId, String locale);
 	
 	
 

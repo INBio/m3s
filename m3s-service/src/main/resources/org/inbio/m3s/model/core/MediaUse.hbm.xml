@@ -9,14 +9,13 @@
 			<column name="media_use_id" />
 			<generator class="increment" />
 		</id>
-		<many-to-one name="textByDescriptionTextId"
-			class="org.inbio.m3s.model.core.Text" fetch="select">
-			<column name="description_text_id" />
-		</many-to-one>
-		<many-to-one name="textByNameTextId"
-			class="org.inbio.m3s.model.core.Text" fetch="select">
-			<column name="name_text_id" not-null="true" />
-		</many-to-one>
+		<property name="textByDescriptionTextId" type="java.lang.Integer">
+			<column name="description_text_id" not-null="true"/>
+		</property>
+		<property name="textByNameTextId" type="java.lang.Integer">
+			<column name="name_text_id" not-null="true"/>
+		</property>
+		
 		<property name="creationDate" type="date">
 			<column name="creation_date" length="4" />
 		</property>

@@ -147,7 +147,7 @@ public class MetadataManagerImpl implements MetadataManager {
 			List<KeywordDTO> keywordsDTOList = new ArrayList<KeywordDTO>();
 			TextTranslation tt;
 			for(Keyword k : keywords){
-				tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), MessageManager.DEFAULT_LANGUAGE);
+				tt = textTranslationDAO.finByIdAndLanguage(k.getNameTextId(), MessageManager.DEFAULT_LOCALE);
 				keywordsDTOList.add(new KeywordDTO(k.getKeywordId(),tt.getName()));
 			}
 			mDTO.setKeywordsList(keywordsDTOList);
