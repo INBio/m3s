@@ -32,7 +32,7 @@ public class MessageManagerTest extends AbstractServiceTest{
 	public void testSpanishKeywords(){
 		
 		MessageManager sm = (MessageManager) getBean(Properties.MESSAGE_MANAGER);	
-		List<KeywordDTO> klList = sm.getAllKeywordLite(MessageManager.ESPANYOL);
+		List<KeywordDTO> klList = sm.getAllKeywordLite(MessageManager.SPANISH_LOCALE);
 		if(klList == null){
     	
 			logger.info("No hay keyword para esos paremetros");

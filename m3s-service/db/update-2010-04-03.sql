@@ -24,4 +24,8 @@ ALTER TABLE core.text_translation  ADD CONSTRAINT llave_secundaria UNIQUE(text_i
 -- Se elimina la tabla text y todas sus llaves en otras tablas
 DROP TABLE core.text CASCADE;
 
-
+-- Se deben hacer las siguientes cosas y luego borrar este archivo:
+--
+-- Ejecutarlo en coffea: listo
+-- Ejecutarlo en fornax[db 'real']:
+-- Actualizar el db.sql:

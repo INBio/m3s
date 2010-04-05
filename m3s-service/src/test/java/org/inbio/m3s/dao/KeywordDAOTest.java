@@ -50,7 +50,7 @@ public class KeywordDAOTest extends
 		Integer mediaId = new Integer(10);
 
 		List<KeywordDTO> kDTOList = kDAO.getAllKeywordLiteForMedia(mediaId,
-				MessageManager.ESPANYOL);
+				MessageManager.SPANISH_LOCALE);
 
 		List<Keyword> kList = kDAO.findAllByMedia(mediaId);
 
@@ -84,7 +84,7 @@ public class KeywordDAOTest extends
 
 		String keywordName = "epidoptera";
 
-		KeywordDTO kDTO = kDAO.getKeywordLite(keywordName, MessageManager.ESPANYOL);
+		KeywordDTO kDTO = kDAO.getKeywordLite(keywordName, MessageManager.SPANISH_LOCALE);
 		Keyword k = kDAO.findByName(keywordName);
 
 		logger.info("Keywrod DTO");
