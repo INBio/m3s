@@ -74,13 +74,14 @@ function checkAndAddTaxonomy(urlContext) {
 var handleSuccess = function(o){
 	
 	var root = o.responseXML.documentElement; //root element -> response
-	var rootChildNodes = root.childNodes;
+	//var rootChildNodes = root.childNodes;
+	var rootChildNoder = root.getElementByTagName("taxon");
 	
 	for(var i=0; i< rootChildNodes.length; i++){
 	 var basicElement = root.childNodes[i];  //taxon
-	 var id =  basicElement.childNodes[0].textContent; //id
-	 var name =  basicElement.childNodes[1].textContent; //name
-	 var kingdom =  basicElement.childNodes[2].textContent; //kingdom
+	 var id =  basicElement.getElementByTagName("id")[0].childNodes[0].nodeValue; //id
+	 var name =  basicElement.getElementByTagName("name")[0].childNodes[0].nodeValue; //name
+	 var kingdom =  basicElement.getElementByTagName("kingdom")[0].childNodes[0].nodeValue; //kingdom
 
 	 value = name+ " ["+kingdom+"]";
 	 addTaxonomy(id, value);
@@ -96,8 +97,8 @@ var handleSuccess = function(o){
 var handleSiteSuccess = function(o){
 	
 	var root = o.responseXML.documentElement; //root element -> response
-	var basicElement = root.childNodes[0];  //site
-	var description =  basicElement.childNodes[0].textContent; //description
+	var basicElement = root.getElementByTagName("site")[0];  //site
+	var description =  basicElement.getElementByTagName("description")[0].childNodes[0].nodeValue; //description
 	//var id en caso de ponerse el id deberia agregarse una linea aca.
 
 	if(description != ""){
