@@ -104,7 +104,7 @@ public class MediaCategoryDAOImpl  extends GenericBaseDAOImpl<MediaCategory, Int
 	/**
 	 * 
 	 * @param mediaTypeId
-	 * @param language sugested language = Properties.DEFAULT_LANGUAGE
+	 * @param language sugested language = Properties.DEFAULT_LOCALE
 	 * @return
 	 * @throws IllegalArgumentException
 	 */

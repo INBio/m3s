@@ -29,3 +29,6 @@ DROP TABLE core.text CASCADE;
 -- Ejecutarlo en coffea: listo
 -- Ejecutarlo en fornax[db 'real']:
 -- Actualizar el db.sql:
+
+
+--DROP SCHEMA pam CASCADE;

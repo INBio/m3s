@@ -216,6 +216,7 @@
     <url>http://www.inbio.ac.cr</url>
   </organization>
 
+<!-- 
   <distributionManagement>
     <repository>
       <id>inbio</id>
@@ -236,5 +237,5 @@
       </snapshots>
     </repository>
   </repositories>
-	
+ -->	
 </project>
