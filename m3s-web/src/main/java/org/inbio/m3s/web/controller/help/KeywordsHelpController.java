@@ -32,7 +32,7 @@ public class KeywordsHelpController extends SimpleController {
 		
 		ModelAndView mav = super.handleRequestInternal(request, response);
 		
-		List<KeywordDTO> kDTOList = messageManager.getAllKeywordLite(MessageManager.DEFAULT_LANGUAGE);
+		List<KeywordDTO> kDTOList = messageManager.getAllKeywordLite(MessageManager.DEFAULT_LOCALE);
 		mav.addObject("kListDTO", kDTOList);
 		
 		return mav;
