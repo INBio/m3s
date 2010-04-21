@@ -68,20 +68,22 @@ function checkAndAddTaxonomy(urlContext) {
 /**
  * The expected input is and XML document with the taxons info.
  * 
- * @param o
+ * @param oResponse
  * @return
  */
-var handleSuccess = function(o){
+var handleSuccess = function(oResponse){
 	
-	var root = o.responseXML.documentElement; //root element -> response
-	//var rootChildNodes = root.childNodes;
-	var rootChildNoder = root.getElementByTagName("taxon");
+	//var root = o.responseXML.documentElement; //root element -> response
+	//var rootChildNoder = root.getElementByTagName("taxon");
+	var xmlDoc = oResponse.responseXML.documentElement;
+    //child node (taxon)
+    var rootChildNodes = xmlDoc.getElementsByTagName("taxon");
 	
 	for(var i=0; i< rootChildNodes.length; i++){
-	 var basicElement = root.childNodes[i];  //taxon
-	 var id =  basicElement.getElementByTagName("id")[0].childNodes[0].nodeValue; //id
-	 var name =  basicElement.getElementByTagName("name")[0].childNodes[0].nodeValue; //name
-	 var kingdom =  basicElement.getElementByTagName("kingdom")[0].childNodes[0].nodeValue; //kingdom
+	 var basicElement = rootChildNodes[i];  //taxon
+	 var id =  basicElement.getElementsByTagName("id")[0].childNodes[0].nodeValue; //id
+	 var name =  basicElement.getElementsByTagName("name")[0].childNodes[0].nodeValue; //name
+	 var kingdom =  basicElement.getElementsByTagName("kingdom")[0].childNodes[0].nodeValue; //kingdom
 
 	 value = name+ " ["+kingdom+"]";
 	 addTaxonomy(id, value);
@@ -91,14 +93,21 @@ var handleSuccess = function(o){
 /**
  * The expected input is and XML document with the site info.
  * 
- * @param o
+ * @param oResponse
  * @return
  */
-var handleSiteSuccess = function(o){
+var handleSiteSuccess = function(oResponse){
 	
-	var root = o.responseXML.documentElement; //root element -> response
-	var basicElement = root.getElementByTagName("site")[0];  //site
-	var description =  basicElement.getElementByTagName("description")[0].childNodes[0].nodeValue; //description
+	//var root = o.responseXML.documentElement; //root element -> response
+	//var rootChildNoder = root.getElementByTagName("site");
+	var xmlDoc = oResponse.responseXML.documentElement;
+    //child node (site)
+    var rootChildNodes = xmlDoc.getElementsByTagName("site");
+	
+	//site es solo 1, por eso el 0
+    var basicElement = rootChildNodes[0];  //site
+    var description =  basicElement.getElementsByTagName("description")[0].childNodes[0].nodeValue; //description
+
 	//var id en caso de ponerse el id deberia agregarse una linea aca.
 
 	if(description != ""){
