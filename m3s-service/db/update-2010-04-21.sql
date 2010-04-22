@@ -17,3 +17,5 @@ insert into core.media_attribute_value (media_attribute_id, media_id, value_varc
   select 37, media_id,high_resolution_file_name, 'admin', '2010-04-21' 
   from core.media 
   where media.high_resolution_file_name is not null;  
+  
+--insertar esto en media_attribute_type lo hice manual...
