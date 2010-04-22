@@ -103,7 +103,9 @@ public class MediaPageController extends SimpleController{
 		MetadataDTO mDTO = null;
 		try{
 			mDTO = metadataManager.getMetadataByMedia(mediaKey);
+			logger.debug("molt be");
 		} catch(Exception e){
+			logger.error("exception at metadataManager.getMetadataByMedia(mediaKey)");
 			//esta jodido porque no se encontro nada para ese multimedio
 			ve.setErrorMessageKey("error.edit.03");
 			throw ve;

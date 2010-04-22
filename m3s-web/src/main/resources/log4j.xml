@@ -24,15 +24,10 @@
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
 		<priority value="all"/>
 	</category>
-	<category name="org.inbio.m3s.gwt.server.rpcimpl">
-		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
-		<priority value="all"/>
-	</category>
 	
 	<category name="org.inbio.m3s.service.util">
 		<priority value="all"/>
 	</category>
-	
 
 	<category name="org.inbio">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
@@ -40,7 +35,7 @@
 	</category>
 	<category name="org.hibernate">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
-		<priority value="error"/>
+		<priority value="debug"/>
 	</category>	
 	<category name="org">
 		<priority value="error"/>

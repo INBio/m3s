@@ -43,7 +43,9 @@ public enum MediaAttributeEntity {
 	FILM_BRAND(32,"media.attribute.film.brand","",'V'),
 	SCANNING_DATE(33,"media.attribute.scanning.date","",'D'),
 	IMAGE_DATE(34,"media.attribute.image.date","",'D'),
-	YOUTUBE_ID(35,"media.attribute.youtube.id","",'V')
+	YOUTUBE_ID(35,"media.attribute.youtube.id","",'V'),
+	HIGH_RESOLUTION_VOLUME(36, "media.attribute.high.resolution.volume","", 'V'),
+	HIGH_RESOLUTION_FILE_NAME(37, "media.attribute.high.resolution.file.name","", 'V'),
 	; 
 
 	/* A que estandard pertenecen:
@@ -52,6 +54,7 @@ public enum MediaAttributeEntity {
 	 *  del 19 al 30 -> MET (video) 
 	 *  del 31 al 34 -> migración
 	 *  del 35 al 35 -> video youtube
+	 *  del 36 al 37 -> migración (más de migración)
 	 */
 
 

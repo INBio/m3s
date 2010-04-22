@@ -27,8 +27,8 @@ DROP TABLE core.text CASCADE;
 -- Se deben hacer las siguientes cosas y luego borrar este archivo:
 --
 -- Ejecutarlo en coffea: listo
--- Ejecutarlo en fornax[db 'real']:
--- Actualizar el db.sql:
+-- Ejecutarlo en fornax[db 'real']: listo, ahora la base de datos real es cimex.
+-- Actualizar el db.sql: 
 
 
 --DROP SCHEMA pam CASCADE;
