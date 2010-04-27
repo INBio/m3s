@@ -19,3 +19,7 @@ insert into core.media_attribute_value (media_attribute_id, media_id, value_varc
   where media.high_resolution_file_name is not null;  
   
 --insertar esto en media_attribute_type lo hice manual...
+
+-- Ejecutarlo en coffea: listo
+-- Ejecutarlo en Cimex[db 'real']: listo
+-- Actualizar el db.sql: 

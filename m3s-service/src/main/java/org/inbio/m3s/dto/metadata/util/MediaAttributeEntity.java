@@ -46,6 +46,8 @@ public enum MediaAttributeEntity {
 	YOUTUBE_ID(35,"media.attribute.youtube.id","",'V'),
 	HIGH_RESOLUTION_VOLUME(36, "media.attribute.high.resolution.volume","", 'V'),
 	HIGH_RESOLUTION_FILE_NAME(37, "media.attribute.high.resolution.file.name","", 'V'),
+	GPS_LONGITUDE(38, "media.attribute.gps.longitude","",'V'),
+	GPS_LATITUDE(39, "media.attribute.gps.latitude","",'V')
 	; 
 
 	/* A que estandard pertenecen:
@@ -55,6 +57,7 @@ public enum MediaAttributeEntity {
 	 *  del 31 al 34 -> migración
 	 *  del 35 al 35 -> video youtube
 	 *  del 36 al 37 -> migración (más de migración)
+	 *  del 38 al 39 -> gps information
 	 */
 
 

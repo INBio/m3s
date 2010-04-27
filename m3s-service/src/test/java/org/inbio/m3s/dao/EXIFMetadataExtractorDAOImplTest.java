@@ -26,7 +26,8 @@ public class EXIFMetadataExtractorDAOImplTest extends AbstractDependencyInjectio
 		
 		MetadataExtractorDAO exifExtractor = (MetadataExtractorDAO) this.applicationContext.getBean("EXIFMetadataExtractorDAO");
 
-		exifExtractor.init("/home/james/Desktop/Foto.jpg");
+		//exifExtractor.init("/home/james/Desktop/Foto.jpg");
+		exifExtractor.init("/home/jgutierrez/Desktop/FujiFilm FinePixS1Pro.jpg");
 		
 		System.out.println(EXIFStandardAttributeEntity.ISO.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.ISO.getId()));
 		System.out.println(EXIFStandardAttributeEntity.CAMARA_MAKER.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.CAMARA_MAKER.getId()));
@@ -44,8 +45,7 @@ public class EXIFMetadataExtractorDAOImplTest extends AbstractDependencyInjectio
 		System.out.println(EXIFStandardAttributeEntity.EXPOSURE_TIME.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.EXPOSURE_TIME.getId()));
 		System.out.println(EXIFStandardAttributeEntity.PRODUCTION_DATE.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.PRODUCTION_DATE.getId()));
 		System.out.println(EXIFStandardAttributeEntity.RESOLUTION.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.RESOLUTION.getId()));
-		System.out.println(EXIFStandardAttributeEntity.LIGHT_SOURCE.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.LIGHT_SOURCE.getId()));
-		
+		System.out.println(EXIFStandardAttributeEntity.LIGHT_SOURCE.getName()+" = "+exifExtractor.getAttributeValue(EXIFStandardAttributeEntity.LIGHT_SOURCE.getId()));		
 		
 		assertTrue( true );
 		

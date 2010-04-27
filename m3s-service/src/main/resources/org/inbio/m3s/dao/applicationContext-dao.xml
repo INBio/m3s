@@ -47,5 +47,6 @@
   
   <!--  Multimedia  Metadata Exraction DAO's -->
   <bean id="EXIFMetadataExtractorDAO" class="org.inbio.m3s.dao.multimedia.impl.EXIFMetadataExtractorDAOImpl"/>
+  <bean id="ExifGpsMetadataExtractorDAO" class="org.inbio.m3s.dao.multimedia.impl.ExifGpsMetadataExtractorDAOImpl"/>
   
 </beans>

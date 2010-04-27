@@ -5,6 +5,7 @@ package org.inbio.m3s.dto.metadata.util;
 
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.dao.multimedia.impl.EXIFMetadataExtractorDAOImpl;
+import org.inbio.m3s.dao.multimedia.impl.ExifGpsMetadataExtractorDAOImpl;
 import org.inbio.m3s.dao.multimedia.impl.FileInfoMetadataExtractorImpl;
 import org.inbio.m3s.dao.multimedia.impl.VIDEOMDMetadataExtractorImpl;
 
@@ -18,7 +19,8 @@ public enum MetadataStandardEntity {
 	FILE_INFO(2, "File Information", FileInfoMetadataExtractorImpl.class.getName()),  
 	MET(3, "MET",VIDEOMDMetadataExtractorImpl.class.getName()),
 	MIGRATION(4, "Migration",null),
-	YOUTUBE_VIDEO(5, "Youtube Video",null);
+	YOUTUBE_VIDEO(5, "Youtube Video",null),
+	GPS_INFO(6, "GPS Information", ExifGpsMetadataExtractorDAOImpl.class.getName());
 	
 	private int id;
 	private String name;

@@ -123,14 +123,30 @@ public class MediaPageController extends SimpleController{
 			mav.addObject(mediaTypeIdKey, mDTO.getMediaTypeKey());
 			mav.addObject(mediaTypeNameKey, mediaType.getNamekey());
 			
+			TechnicalMetadataItemDTO maDTO;
+			
 			//Si es video saca los metadatos acá:
 			if( mediaType == MediaTypeEntity.YOUTUBE_VIDEO) {
-				TechnicalMetadataItemDTO maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
+				maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.YOUTUBE_ID.getMediaAtributeId()));
 				logger.debug("el youtube video Id");
 				logger.debug(maDTO.toString());
 				mav.addObject("videoIdKey",maDTO.getValue());
 			}
-
+			
+			//GPS georeferenciacion
+			maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.GPS_LATITUDE.getMediaAtributeId()));
+			if( maDTO != null) { 
+				logger.debug("el gpsLatitude");
+				logger.debug(maDTO.toString());
+				mav.addObject("gpsLatitudeKey",maDTO.getValue());
+			}
+			maDTO = mDTO.getMediaAttributeItemByKey(String.valueOf(MediaAttributeEntity.GPS_LONGITUDE.getMediaAtributeId()));
+			if( maDTO != null) { 
+				logger.debug("el gpsLongitude");
+				logger.debug(maDTO.toString());
+				mav.addObject("gpsLongitudeKey",maDTO.getValue());
+			}
+			
 			//projects
 			List<ProjectDTO> pDTOList = mDTO.getProjectsList();
 			String projectsList ="";

@@ -53,4 +53,7 @@
   </c:forEach>
 </div>
 
-
+<c:if test="${gpsLatitudeKey != null && gpsLongitudeKey !=null}">
+  <h2>GPS Information</h2>
+  <tiles:insert page="/WEB-INF/jsp/media/googleMap.jsp"/>
+</c:if>
