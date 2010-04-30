@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.inbio.m3s.model.core.SystemUser" table="core.system_user">
+    
+    <id name="userId" type="java.lang.Integer">
+      <column name="user_id" />
+      <generator class="increment" />
+    </id>
+    
+    <property name="username" type="java.lang.String" column="username"/>
+    <property name="fullname" type="java.lang.String" column="fullname"/>        
+    <property name="password" type="java.lang.String" column="password"/>
+    <property name="personId" type="java.lang.Integer" column="person_id"/>
+    <property name="roles" type="java.lang.String" column="roles"/>
+
+    <property name="enabled" type="boolean" column="enabled"/>
+        
+
+        <property name="creationDate" type="date">
+            <column name="creation_date" length="4" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="20" />
+        </property>
+        <property name="lastModificationDate" type="date">
+            <column name="last_modification_date" length="4" />
+        </property>
+        <property name="lastModificationBy" type="string">
+            <column name="last_modification_by" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

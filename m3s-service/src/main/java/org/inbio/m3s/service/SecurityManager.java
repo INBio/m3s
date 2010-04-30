@@ -9,6 +9,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 /**
  * @author jgutierrez
  *
+ *@Deprecated
  */
 public interface SecurityManager extends UserDetailsService {
 	

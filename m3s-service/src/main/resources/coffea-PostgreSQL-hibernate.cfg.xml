@@ -29,6 +29,7 @@
 	<mapping resource="org/inbio/m3s/model/core/Privilege.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/Project.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/SecurityUsers.hbm.xml" />
+	<mapping resource="org/inbio/m3s/model/core/SystemUser.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/SpecimenMedia.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TaxonMedia.hbm.xml" />	
 	<mapping resource="org/inbio/m3s/model/core/TextTranslation.hbm.xml" />

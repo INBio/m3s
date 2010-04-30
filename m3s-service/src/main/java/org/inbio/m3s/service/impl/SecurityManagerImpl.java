@@ -19,7 +19,8 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 
 /**
  * @author jgutierrez
- * 
+ * @deprecated
+ * @use UserDetailsManagerImpl
  */
 public class SecurityManagerImpl implements SecurityManager {
 

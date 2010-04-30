@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.inbio.m3s.model.LogGenericEntity;
 
-
+@Deprecated
 public class SecurityUsers extends LogGenericEntity {
 
 	private static final long serialVersionUID = 832577557606661546L;

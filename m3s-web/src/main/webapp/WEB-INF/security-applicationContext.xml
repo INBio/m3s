@@ -24,8 +24,15 @@
     <!--  <http-basic/>-->
   </http>
   
+  <!-- 
   <authentication-provider>
     <user-service id="userDetailsInFileService" properties="WEB-INF/classes/users.properties"/>
-  </authentication-provider>   
+  </authentication-provider>
+   -->
+   
+   <authentication-provider user-service-ref="myUserDetailsService"/>
+   <!-- 
+   <beans:bean id="myUserDetailsService" class="org.inbio.m3s.service.impl.UserDetailsManagerImpl" ></beans:bean>
+    -->   
   
 </beans:beans>

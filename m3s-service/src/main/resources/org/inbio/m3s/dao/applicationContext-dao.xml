@@ -39,6 +39,7 @@
   <bean id="usePolicyDAO" class="org.inbio.m3s.dao.core.impl.UsePolicyDAOImpl" parent="baseDAORO"/>
   <bean id="userPrivilegeDAO" class="org.inbio.m3s.dao.core.impl.UserPrivilegeDAOImpl" parent="baseDAORO"/>
   <bean id="genericSearchDAO" class="org.inbio.m3s.dao.impl.GenericSearchDAOImpl" parent="baseDAORO"/>
+  <bean id="systemUserDAO" class="org.inbio.m3s.dao.core.impl.SystemUserDAOImpl" parent="baseDAORO"/>
 
   <!-- M3S Agents implementation -->
   <bean id="M3SPersonDAO" class="org.inbio.m3s.dao.core.impl.M3SPersonDAOImpl" parent="baseDAORO"/>

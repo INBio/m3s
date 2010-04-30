@@ -43,10 +43,14 @@
     <property name="projectDTOFactory" ref="projectDTOFactory"/>    
   </bean>
 
-
-  <!-- SecurityManager (1 version)-->
+  <!--  security manager no sirve para nada! -->
+  <!-- SecurityManager (1 version)
   <bean id="securityManager" class="org.inbio.m3s.service.impl.SecurityManagerImpl">
     <property name="securityUserDAO" ref="securityUserDAO"/>
+  </bean>
+  -->
+  <bean id="myUserDetailsService" class="org.inbio.m3s.service.impl.UserDetailsManagerImpl" >
+    <property name="systemUserDAO" ref="systemUserDAO"/>
   </bean>
   
   <!-- SiteManager (2 version)-->
