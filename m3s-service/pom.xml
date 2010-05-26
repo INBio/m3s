@@ -9,26 +9,29 @@
   <url>http://lucina.inbio.ac.cr/m3sINBio</url>
 
   <dependencies>
+<!-- 
   	<dependency>
 		<groupId>aopalliance</groupId>
 		<artifactId>aopalliance</artifactId>
 		<version>1.0</version>
 	</dependency>
+ -->	
 	<dependency>
 		<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>
 			<version>3.2.0.cr4</version>
 	</dependency>
 	<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>2.5.2</version>
+      <groupId>org.springframework</groupId>
+	  <artifactId>spring-core</artifactId>
+      <version>2.5.2</version>
 	</dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
       <version>2.0.4</version>
     </dependency>	
+<!-- 
 	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
@@ -39,6 +42,7 @@
 			<artifactId>spring-aop-cache</artifactId>
 			<version>2.0</version>
 	</dependency>
+ -->	
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -108,7 +112,7 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    
+<!--     
     <dependency>
        <groupId>velocity</groupId>
        <artifactId>velocity</artifactId>
@@ -138,7 +142,7 @@
        		<artifactId>velocity-tools-generic</artifactId>
        		<version>1.4</version>
      	</dependency>		
-	
+ -->	
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-mock</artifactId>
@@ -147,11 +151,12 @@
 		</dependency>
 	
 		<dependency>
-			<groupId>org.apache</groupId>
+			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.1</version>
+			<version>3.6</version>
 			<scope>compile</scope>
 		</dependency>
+		
 	<dependency>
 	<!-- http://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor/2.4.0-beta-1 -->
     	<groupId>com.drewnoakes</groupId>
