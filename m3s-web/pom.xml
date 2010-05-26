@@ -143,12 +143,12 @@
 			<version>3.8.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.1</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.6</version>
+            <scope>compile</scope>
+        </dependency>
 		<dependency>
 	 	  <groupId>org.codehaus.xfire</groupId>
 			<artifactId>xfire-spring</artifactId>
