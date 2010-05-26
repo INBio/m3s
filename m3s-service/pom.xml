@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.inbio.m3s</groupId>
@@ -9,17 +11,10 @@
   <url>http://lucina.inbio.ac.cr/m3sINBio</url>
 
   <dependencies>
-<!-- 
-  	<dependency>
-		<groupId>aopalliance</groupId>
-		<artifactId>aopalliance</artifactId>
-		<version>1.0</version>
-	</dependency>
- -->	
-	<dependency>
-		<groupId>org.hibernate</groupId>
-			<artifactId>hibernate</artifactId>
-			<version>3.2.0.cr4</version>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate</artifactId>
+      <version>3.2.0.cr4</version>
 	</dependency>
 	<dependency>
       <groupId>org.springframework</groupId>
@@ -31,140 +26,92 @@
       <artifactId>spring-security-core</artifactId>
       <version>2.0.4</version>
     </dependency>	
-<!-- 
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>2.5.2</version>
+    </dependency>	    		
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.3</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.6</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>8.3-603.jdbc3</version>
+    </dependency>
+    
+    <!-- provided jar -->
+    <dependency>
+      <groupId>com.oracle</groupId>
+      <artifactId>ojdbc14</artifactId>
+      <version>9.0.2.0.0</version>
+    </dependency>		
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>1.2</version>
+    </dependency>
 	<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>2.5.2</version>
-	</dependency>
-	<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop-cache</artifactId>
-			<version>2.0</version>
-	</dependency>
- -->	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>2.5.2</version>
-		</dependency>
-    	<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>2.5.2</version>
-	    </dependency>		
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-			<version>1.6</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>3.1.13</version>
-		</dependency>
-		 -->
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>8.3-603.jdbc3</version>
-		</dependency>
-		<dependency>
-        	<groupId>com.oracle</groupId>
-        	<artifactId>ojdbc14</artifactId>
-        	<version>9.0.2.0.0</version>
-		</dependency>		
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.2</version>
-		</dependency>
-	<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
 	</dependency>
 	
+	<!-- test -->
 	<dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
-    </dependency>
-<!--     
+    </dependency>	
+    
     <dependency>
-       <groupId>velocity</groupId>
-       <artifactId>velocity</artifactId>
-       <version>1.5</version>
-     </dependency>
-    
-     <dependency>
-       <groupId>velocity</groupId>
-       <artifactId>velocity-dvsl</artifactId>
-       <version>1.0</version>
-     </dependency>
-    
-     <dependency>
-       <groupId>velocity</groupId>
-       <artifactId>velocity-tools</artifactId>
-       <version>1.4</version>
-     </dependency>     
-    
-     <dependency>
-       <groupId>velocity</groupId>
-       <artifactId>velocity-tools-view</artifactId>
-       <version>1.4</version>
-     </dependency>
-    
-     	<dependency>
-       		<groupId>velocity</groupId>
-       		<artifactId>velocity-tools-generic</artifactId>
-       		<version>1.4</version>
-     	</dependency>		
- -->	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0</version>
-			<scope>test</scope>
-		</dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-mock</artifactId>
+      <version>2.0</version>
+      <scope>test</scope>
+    </dependency>
 	
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.6</version>
-			<scope>compile</scope>
-		</dependency>
-		
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.6</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- http://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor/2.4.0-beta-1 -->		
 	<dependency>
-	<!-- http://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor/2.4.0-beta-1 -->
-    	<groupId>com.drewnoakes</groupId>
-    	<artifactId>metadata-extractor</artifactId>
-    	<version>2.4.0-beta-1</version>
+      <groupId>com.drewnoakes</groupId>
+      <artifactId>metadata-extractor</artifactId>
+      <version>2.4.0-beta-1</version>
 	</dependency> 
 	
-</dependencies>
+  </dependencies>
+
 
 	<build>
 		<finalName>m3s-service</finalName>
@@ -221,7 +168,6 @@
     <url>http://www.inbio.ac.cr</url>
   </organization>
 
-<!-- 
   <distributionManagement>
     <repository>
       <id>inbio</id>
@@ -242,5 +188,70 @@
       </snapshots>
     </repository>
   </repositories>
- -->	
 </project>
+
+
+<!-- 
+    <dependency>
+        <groupId>aopalliance</groupId>
+        <artifactId>aopalliance</artifactId>
+        <version>1.0</version>
+    </dependency>
+ -->
+ <!-- 
+    <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>2.5.2</version>
+    </dependency>
+    <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop-cache</artifactId>
+            <version>2.0</version>
+    </dependency>
+ -->        
+ <!--       
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+ -->
+        <!--
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>3.1.13</version>
+        </dependency>
+         -->
+<!--     
+    <dependency>
+       <groupId>velocity</groupId>
+       <artifactId>velocity</artifactId>
+       <version>1.5</version>
+     </dependency>
+    
+     <dependency>
+       <groupId>velocity</groupId>
+       <artifactId>velocity-dvsl</artifactId>
+       <version>1.0</version>
+     </dependency>
+    
+     <dependency>
+       <groupId>velocity</groupId>
+       <artifactId>velocity-tools</artifactId>
+       <version>1.4</version>
+     </dependency>     
+    
+     <dependency>
+       <groupId>velocity</groupId>
+       <artifactId>velocity-tools-view</artifactId>
+       <version>1.4</version>
+     </dependency>
+    
+        <dependency>
+            <groupId>velocity</groupId>
+            <artifactId>velocity-tools-generic</artifactId>
+            <version>1.4</version>
+        </dependency>       
+ -->         
