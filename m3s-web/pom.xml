@@ -105,11 +105,13 @@
 			<artifactId>standard</artifactId>
 			<version>1.1.2</version>
 		</dependency>
+<!-- 
         <dependency>
           <groupId>atg</groupId>
           <artifactId>json-taglib</artifactId>
           <version>0.4.1</version>
-        </dependency>    	  
+        </dependency>
+-->
 		<dependency>
 			<groupId>taglibs</groupId>
 			<artifactId>datetime</artifactId>
@@ -204,11 +206,10 @@
     <url>http://www.inbio.ac.cr</url>
   </organization>
     
-<!-- 
   <distributionManagement>
     <repository>
       <id>inbio</id>
-      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio</url>
     </repository>
   </distributionManagement>
 
@@ -216,7 +217,7 @@
     <repository>
       <id>inbio</id>
       <name>INBio - Archiva Managed Repository</name>
-      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -225,5 +226,5 @@
       </snapshots>
     </repository>
   </repositories>
- -->
+
 </project>
