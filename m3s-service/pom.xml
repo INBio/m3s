@@ -172,7 +172,7 @@
   <distributionManagement>
     <repository>
       <id>inbio</id>
-      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio</url>
     </repository>
   </distributionManagement>
 
@@ -180,7 +180,7 @@
     <repository>
       <id>inbio</id>
       <name>INBio - Archiva Managed Repository</name>
-      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio/</url>
+      <url>http://pulsatrix.inbio.ac.cr:9876/archiva/repository/inbio</url>
       <releases>
         <enabled>true</enabled>
       </releases>
