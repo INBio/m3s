@@ -268,10 +268,24 @@ public class ARATaxonDAOImpl extends GenericBaseDAOImpl<Taxon,Integer> implement
 		return template.loadAll(ARATaxon.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Taxon> findAllByRangeAndPartialNamePaginated(
-			Integer taxonimicalRangeId, String partialTaxonName) {
-		// TODO Auto-generated method stub
-		return null;
+			final Integer taxonimicalRangeId, final String partialTaxonName) {
+		logger.debug("findAllByRangeAndPartialNamePaginated, taxonimicalRangeId["+taxonimicalRangeId+"] and  partialTaxonName["+partialTaxonName+"]");
+		HibernateTemplate template = getHibernateTemplate();
+		return (List<Taxon>) template.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) {
+				Query query = session.createQuery(
+						"select t"
+						+ " from ARATaxon as t"
+						+ " where t.taxonomicalRangeId = :taxonimicalRangeId"
+						+ " and t.defaultName like :defaultName");
+				query.setParameter("taxonimicalRangeId", taxonimicalRangeId);
+				query.setParameter("defaultName", partialTaxonName);
+				query.setCacheable(true);
+				return query.list();
+			}
+		});		
 	}	
 	
 
