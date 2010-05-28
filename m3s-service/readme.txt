@@ -29,4 +29,7 @@
 
 ** About eclipse problems with tr.jar
  In some version of Eclipse on Ubuntu (using java-sun) the IDE is unable to locate the jar file. This
- could be fixed setting the concrete path of the java jre. (look for the installed jrw in eclipse).
+ could be fixed setting the concrete path of the java jre as follow:
+Go to java build path and edit the JRE library, selecting the workspace default JRE.
+
+
