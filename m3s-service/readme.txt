@@ -1,6 +1,6 @@
 ** Download Dependencies and Generation of the Eclipse configuration files
 
-  $mvn clean eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
+  $mvn -Dmaven.test.skip=true clean eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
 
 
 * --> JTA
