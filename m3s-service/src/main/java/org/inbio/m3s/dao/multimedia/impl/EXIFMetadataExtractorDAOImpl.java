@@ -130,7 +130,7 @@ public class EXIFMetadataExtractorDAOImpl implements MetadataExtractorDAO {
 			return getResolution();
 		
 		else if (standardAttributeId == EXIFStandardAttributeEntity.LIGHT_SOURCE.getId())
-			return getLightSource(exifDirectory.getString(ExifDirectory.TAG_LIGHT_SOURCE));
+			return getLightSource(exifDirectory.getString(ExifDirectory.TAG_LIGHT_SOURCE));		
 		
 		else
 			throw new IllegalArgumentException("atributo invalido");
