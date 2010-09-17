@@ -15,8 +15,9 @@
 	      <td width="25%" height="65" align="left" valign="top">
 		      <div class="contenido" id="layer1">
 		        <p>
-		          <a href="http://larus.inbio.ac.cr:8090/multimedios/doku.php"><spring:message code="home.help"/></a><br>
-		          <a href="http://larus.inbio.ac.cr:8090/multimedios/doku.php?id=politicas_de_uso"><spring:message code="home.use.policies"/></a><br>
+		        
+		          <a href="http://larus.inbio.ac.cr/dokuwiki/multimedios/doku.php"><spring:message code="home.help"/></a><br>
+		          <a href="http://larus.inbio.ac.cr/dokuwiki/multimedios/doku.php?id=politicas_de_uso"><spring:message code="home.use.policies"/></a><br>
 		        </p>
 		        <div id="leftPanelContentDiv"></div>
 		      </div>

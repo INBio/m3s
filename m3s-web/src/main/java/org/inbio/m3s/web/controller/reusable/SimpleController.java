@@ -3,6 +3,10 @@
  */
 package org.inbio.m3s.web.controller.reusable;
 
+/* TODO: move to this package: org.inbio.common.web.controller in order to create a new jar file
+/  which includes all the reusable components like this simple controllers, security stuff, etc.
+ */
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;

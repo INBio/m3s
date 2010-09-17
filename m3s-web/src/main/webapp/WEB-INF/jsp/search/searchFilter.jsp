@@ -65,21 +65,8 @@
   <label>  
     <span id="newFilterValue" class="value">
     <input id="valueId" class="statesinput" name="value" value="<c:out value="${value}"/>" tabindex="7"/>
-  <%--
-    <c:if test="${not empty filter.autoCompleteUrl}">
-      <div id="statescontainer" class="statescontainer"></div>
-        <gbiftag:autoComplete url="${pageContext.request.contextPath}/${filter.autoCompleteUrl}" inputId="statesinput" containerId="statescontainer"/>
-    </c:if>
-  --%> 
     </span>   
   </label>
-
-  <%--
-  <label>
-    <input id="valueId" name="value" value="<c:out value="${value}"/>"/>
-    <div id="valueContainer"></div>
-  </label>  
- --%>
   
   <label>
     <input type="submit" onclick="javascript:resetValue();" value="Buscar" />

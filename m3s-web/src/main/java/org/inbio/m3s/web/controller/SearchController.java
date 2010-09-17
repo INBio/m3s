@@ -54,6 +54,10 @@ public class SearchController extends SimpleController {
 		
 		
 		ModelAndView mav = super.handleRequestInternal(request, response);
+		logger.debug("El Model al inicio es: ");
+		for(Object o : mav.getModel().keySet()){
+			logger.debug("\t"+o+" = "+mav.getModel().get(o));	
+		}
 		
 		//filtros de búsqueda
 		mav.addObject(metadataFilters, filtersMap.getFilters());
@@ -78,6 +82,8 @@ public class SearchController extends SimpleController {
 
 
 			if(filter!=null&criteria!=null&value!=null){
+				logger.debug("filter!=null&criteria!=null&value!=null");
+				
 				first =  Integer.valueOf(request.getParameter("first")).intValue();
 				if(first < 1)
 					first = 1;
@@ -112,6 +118,7 @@ public class SearchController extends SimpleController {
 				mav.addObject("value", value);
 
 			} else {
+				logger.debug("en el else de> filter!=null&criteria!=null&value!=null");
 				criteria ="0";
 				first =0;
 				last = 10;
@@ -147,10 +154,16 @@ public class SearchController extends SimpleController {
 			modelElements.put("first", 0);
 			modelElements.put("last", 10);
 			
+			
 			ve.setModelElements(modelElements);
 			logger.debug("throw ValidationException");
 			throw ve;
 		} 
+		
+		logger.debug("El Model es: ");
+		for(Object o : mav.getModel().keySet()){
+			logger.debug("\t"+o+" = "+mav.getModel().get(o));	
+		}
 		
 		return mav;
 	}
@@ -198,6 +211,15 @@ public class SearchController extends SimpleController {
 		
 		return interfaceElements;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		logger.debug("Terminando clase searchController");	
+		super.finalize();
+	}	
 	
 	/**
 	 * @return the metadataMediaList
@@ -309,5 +331,7 @@ public class SearchController extends SimpleController {
 	public void setFiltersMap(FilterMapWrapper filtersMap) {
 		this.filtersMap = filtersMap;
 	}
+
+
 	
 }

@@ -1,6 +1,6 @@
 ** Download Dependencies and Generation of the Eclipse configuration files
 
-  $mvn clean eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
+  $mvn -Dmaven.test.skip=true clean eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
 
  If you have problems with the dependencies contact me: jgutierrez[at]inbio[dot]ac[dot]cr
 

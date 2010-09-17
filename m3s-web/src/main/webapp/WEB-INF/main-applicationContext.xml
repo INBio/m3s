@@ -341,7 +341,7 @@
   </bean>   
 
   <!-- The Filter Querying controller for Species Records -->
-  <bean id="searchFilterController" class="org.inbio.m3s.web.controller.SearchController ">
+  <bean id="searchFilterController" class="org.inbio.m3s.web.controller.SearchController" singleton="false">
     <property name="viewName" value="searchFilter"/>
     <property name="modelElements">
       <map>
