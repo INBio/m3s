@@ -17,7 +17,6 @@ import org.inbio.m3s.dto.search.SearchCriteriaValuesDTO;
 import org.inbio.m3s.dto.search.SearchFilterEntity;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
-import org.inbio.m3s.model.core.Keyword;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.MessageManager;
 import org.inbio.m3s.service.SearchManager;

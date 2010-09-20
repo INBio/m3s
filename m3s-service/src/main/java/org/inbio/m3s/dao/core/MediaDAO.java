@@ -21,23 +21,11 @@ package org.inbio.m3s.dao.core;
 import java.util.List;
 
 import org.inbio.m3s.dao.GenericBaseDAO;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.model.core.Media;
 
 public interface MediaDAO extends GenericBaseDAO<Media, Integer>{
 
 	//stadisticas
-
-	@Deprecated
-	public List<MediaLite> getLastPublicMedia(int quantity) throws IllegalArgumentException;
-	@Deprecated
-	public MediaLite getMediaLite(Integer mediaId) throws IllegalArgumentException;  
-	@Deprecated
-	public List<MediaLite> getMediaLiteForTaxonId(Integer taxonId) throws IllegalArgumentException;
-	//@Deprecated
-	//public GeneralMetadataDTO getGeneralMetadataDTO(String mediaKey);
-	//@Deprecated
-	//public UsesAndCopyrightsDTO getUsesAndCopyrightsDTO(Integer mediaId);
-
-	
+	public List<Media> getLastPublicMedia(int quantity) throws IllegalArgumentException;
+		
 }

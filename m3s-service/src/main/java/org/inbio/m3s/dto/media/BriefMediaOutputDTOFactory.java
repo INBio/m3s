@@ -10,8 +10,8 @@ import org.apache.log4j.Logger;
 import org.inbio.m3s.dto.BaseDTOFactory;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
+import org.inbio.m3s.model.core.Media;
 import org.inbio.m3s.service.AgentManager;
 import org.inbio.m3s.service.TaxonomyManager;
 
@@ -21,7 +21,7 @@ import org.inbio.m3s.service.TaxonomyManager;
  * @author jgutierrez
  *
  */
-public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMediaOutputDTO> {
+public class BriefMediaOutputDTOFactory extends BaseDTOFactory<Media,BriefMediaOutputDTO> {
 
 	private static Logger logger = Logger.getLogger(BriefMediaOutputDTOFactory.class);
 
@@ -29,7 +29,7 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMe
 	private TaxonomyManager taxonomyManager;
 	private AgentManager agentManager;
 	
-	public BriefMediaOutputDTO createDTO(MediaLite mediaLiteObject) {
+	public BriefMediaOutputDTO createDTO(Media mediaLiteObject) {
 		
 		if(mediaLiteObject == null)
 			return null;
@@ -41,7 +41,7 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMe
 	 * @param ml
 	 * @return
 	 */
-	private BriefMediaOutputDTO createBriefMediaOutputDTO(MediaLite ml){
+	private BriefMediaOutputDTO createBriefMediaOutputDTO(Media m){
 		//Auxiliary variables
 		List<TaxonLiteDTO> taxonLiteList = new ArrayList<TaxonLiteDTO>();
 		TaxonLiteDTO tlDTO = null; 
@@ -52,7 +52,7 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMe
 		BriefMediaOutputDTO bmoDTO = new BriefMediaOutputDTO();
 		
 		//mediaKey
-		bmoDTO.setMediaKey(String.valueOf(ml.getMediaId()));
+		bmoDTO.setMediaKey(String.valueOf(m.getMediaId()));
 		logger.debug("mediaKey is ready");
 		
 		//TODO media category has to be displayed in some way...
@@ -60,34 +60,34 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMe
 		//title: idealmente debe ser el título de la imágen, pero si este es nulo,
 		// entonces se tomará el primer nombre cintífico que se pueda extraer. 
 		// si ambos son nulos, el campo quedará vacío.
-		if(ml.getTitle() == null  || ml.getTitle().length() == 0){
+		if(m.getTitle() == null  || m.getTitle().length() == 0){
 			logger.debug("title viene 'null' en MediaLite.");
-			taxonLiteList = taxonomyManager.getTaxonLiteForMediaId(ml.getMediaId().toString());
+			taxonLiteList = taxonomyManager.getTaxonLiteForMediaId(m.getMediaId().toString());
 				if(taxonLiteList.size() > 0){
 					tlDTO = taxonLiteList.get(0);
 					bmoDTO.setTitle(tlDTO.getDefaultName());
 					logger.debug("Title will be the Taxon default name.");
 				}
 		} else {
-			bmoDTO.setTitle(ml.getTitle());
+			bmoDTO.setTitle(m.getTitle());
 		}
 		logger.debug("title set with ["+bmoDTO.getTitle()+"].");
 		
 		
 		//info1: Author name
-		pLite = agentManager.getPersonLite(ml.getAuthorPersonId().toString());
+		pLite = agentManager.getPersonLite(m.getAuthorPersonId().toString());
 		bmoDTO.setInfo1(pLite.getName());
 		//di.setInfo1("Autor: "+pl.getDisplayName());
 		logger.debug("info1 set with ["+bmoDTO.getInfo1()+"].");
 		
 		
 		//info2: Owner text & Type
-		if(ml.getOwnerInstitutionId() != null){
-			il = agentManager.getInstitutionLite(ml.getOwnerInstitutionId().toString());
+		if(m.getOwnerInstitutionId() != null){
+			il = agentManager.getInstitutionLite(m.getOwnerInstitutionId().toString());
 			bmoDTO.setInfo2(il.getName());
 			logger.debug("info2 set with the owner institution");
-		} else if (ml.getOwnerPersonId() != null){
-			pLite = agentManager.getPersonLite(ml.getOwnerPersonId().toString());
+		} else if (m.getOwnerPersonId() != null){
+			pLite = agentManager.getPersonLite(m.getOwnerPersonId().toString());
 			bmoDTO.setInfo2(pLite.getName());
 			logger.debug("info2 set with the owner person");
 		} else{
@@ -98,7 +98,7 @@ public class BriefMediaOutputDTOFactory extends BaseDTOFactory<MediaLite,BriefMe
 		
 		//info3: fecha de la creación del multimedio
 		//creation date
-		bmoDTO.setInfo3(String.valueOf(ml.getCreationDate()));
+		bmoDTO.setInfo3(String.valueOf(m.getCreationDate()));
 		logger.debug("info3 set with ["+bmoDTO.getInfo3()+"]");
 		
 		return bmoDTO;

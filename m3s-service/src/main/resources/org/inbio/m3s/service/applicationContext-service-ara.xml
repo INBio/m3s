@@ -34,6 +34,8 @@
     <property name="projectDAO" ref="projectDAO"/>
     <property name="projectDTOFactory" ref="projectDTOFactory"/>                
     <property name="keywordDAO" ref="keywordDAO"/>
+
+    <property name="briefMediaOutputDTOFactory" ref="ARABriefMediaOutputDTOFactory"/>
     
     <!-- Managers -->
     <property name="agentManager" ref="ARAAgentManager"/>

@@ -26,7 +26,6 @@ import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 import org.inbio.m3s.dto.taxonomy.TaxonLiteDTOFactory;
 import org.inbio.m3s.dto.taxonomy.util.TaxonomicalRangeEntity;
 import org.inbio.m3s.exception.TaxonNotFoundException;
-import org.inbio.m3s.model.general.Person;
 import org.inbio.m3s.model.general.Specimen;
 import org.inbio.m3s.model.core.GatheringMediaId;
 import org.inbio.m3s.model.core.ObservedTaxonMediaId;

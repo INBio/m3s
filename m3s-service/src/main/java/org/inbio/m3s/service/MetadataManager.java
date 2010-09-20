@@ -5,16 +5,10 @@ package org.inbio.m3s.service;
 
 import java.util.List;
 
-import org.inbio.m3s.dto.message.KeywordDTO;
-import org.inbio.m3s.dto.message.ProjectDTO;
-import org.inbio.m3s.dto.metadata.MediaUseDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataDTO;
 import org.inbio.m3s.dto.metadata.TechnicalMetadataItemDTO;
-import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
-import org.inbio.m3s.dto.taxonomy.ObservationLiteDTO;
-import org.inbio.m3s.dto.taxonomy.SpecimenLiteDTO;
-import org.inbio.m3s.dto.taxonomy.TaxonLiteDTO;
 
 
 /**
@@ -30,6 +24,22 @@ public interface MetadataManager {
 	 * @throws IllegalArgumentException
 	 */
 	public MetadataDTO getMetadataByMedia(String mediaKey) throws IllegalArgumentException;
+	
+	/**
+	 * 
+	 * @param quantity
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public List<BriefMediaOutputDTO> getLastPublicMetadataBrief(int quantity) throws IllegalArgumentException;
+	
+	/**
+	 * 
+	 * @param mediaKey
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public BriefMediaOutputDTO getMetadataBriefByMedia(String mediaKey) throws IllegalArgumentException;
 	
 	/**
 	 * 
@@ -87,7 +97,7 @@ public interface MetadataManager {
 	
 	
 	/**  Are this methods private?**/
-	
+	/*
 	public void addProjectsList(String mediaKey, List<ProjectDTO> projectLiteList) throws IllegalArgumentException;
 	
 	public void addKeywordsList(String mediaKey, List<KeywordDTO> keywordsList) throws IllegalArgumentException;
@@ -113,5 +123,5 @@ public interface MetadataManager {
 	public void addObservations(String mediaKey, List<ObservationLiteDTO> observationsList) throws IllegalArgumentException;
 	
 	public void deleteObservations(String mediaKey, List<ObservationLiteDTO> observationsList) throws IllegalArgumentException;
-
+*/
 }

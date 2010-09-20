@@ -9,12 +9,10 @@ import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.MediaCategoryDTO;
 import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
-import org.inbio.m3s.dto.metadata.MediaUseDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.util.KeyValueDTO;
 import org.inbio.m3s.exception.KeywordNotFoundException;
 import org.inbio.m3s.exception.MediaTypeNotFoundException;
-import org.inbio.m3s.exception.MediaUseNotFoundException;
 import org.inbio.m3s.exception.ProjectNotFoundException;
 import org.inbio.m3s.exception.UsePolicyNotFoundException;
 

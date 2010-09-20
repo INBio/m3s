@@ -13,6 +13,6 @@ import org.springframework.security.userdetails.UserDetailsService;
  */
 public interface SecurityManager extends UserDetailsService {
 	
-	public boolean isValidUser(String username, String password) throws IllegalArgumentException;
+	//public boolean isValidUser(String username, String password) throws IllegalArgumentException;
 
 }

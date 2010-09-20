@@ -35,6 +35,8 @@
     <property name="projectDTOFactory" ref="projectDTOFactory"/>                
     <property name="keywordDAO" ref="keywordDAO"/>
 
+    <property name="briefMediaOutputDTOFactory" ref="ATTABriefMediaOutputDTOFactory"/>
+
     <!-- Managers -->
     <property name="agentManager" ref="ATTAAgentManager"/>
     <property name="taxonomyManager" ref="ATTATaxonomyManager"/>

@@ -27,6 +27,8 @@ import org.inbio.m3s.dao.core.TaxonMediaDAO;
 import org.inbio.m3s.dao.core.TextTranslationDAO;
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
+import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.message.KeywordDTO;
 import org.inbio.m3s.dto.message.ProjectDTO;
 import org.inbio.m3s.dto.message.ProjectDTOFactory;
@@ -95,6 +97,9 @@ public class MetadataManagerImpl implements MetadataManager {
 	/* Este dao no se inicializa con inyeccion de dependencia */
 	/* This dao is not initialized using dependency injection */
 	private MetadataExtractorDAO metadataExtractorDAO;
+	
+	//DTO Factory
+	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
 	
 	private TaxonomyManager taxonomyManager;
 	private AgentManager agentManager;
@@ -186,6 +191,25 @@ public class MetadataManagerImpl implements MetadataManager {
 			throw new IllegalArgumentException("Query fails on getMetadata", he);
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MetadataManager#getMetadataBriefByMedia(java.lang.String)
+	 */
+	public BriefMediaOutputDTO getMetadataBriefByMedia(String mediaKey) throws IllegalArgumentException {
+		Media m = mediaDAO.findById(Media.class, Integer.valueOf(mediaKey));
+		return briefMediaOutputDTOFactory.createDTO(m);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.MetadataManager#getLastPublicMetadataBrief(int)
+	 */
+	public List<BriefMediaOutputDTO> getLastPublicMetadataBrief(int quantity) throws IllegalArgumentException{
+		List<Media> mList = mediaDAO.getLastPublicMedia(quantity);
+		return briefMediaOutputDTOFactory.createDTOList(mList);
 	}
 
 	/*
@@ -1640,6 +1664,21 @@ public class MetadataManagerImpl implements MetadataManager {
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
+	}
+
+	/**
+	 * @return the briefMediaOutputDTOFactory
+	 */
+	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
+		return briefMediaOutputDTOFactory;
+	}
+
+	/**
+	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
+	 */
+	public void setBriefMediaOutputDTOFactory(
+			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
+		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
 	}
 
 

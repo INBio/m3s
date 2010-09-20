@@ -212,7 +212,7 @@ public class ExcelImportFileParserImpl implements ImportFileParser {
 		try {
 			HSSFSheet sheet = this.wb.getSheetAt(sheetNumber);
 			HSSFRow row = sheet.getRow(rowNumber);
-			HSSFCell cell = row.getCell((short) columnNumber);
+			HSSFCell cell = row.getCell(columnNumber);
 
 			if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
 				// System.out.println("-string-"+rowNumber);
@@ -248,9 +248,9 @@ public class ExcelImportFileParserImpl implements ImportFileParser {
 			row = sheet.createRow(rowNumber);
 		}
 
-		cell = row.getCell((short) columnNumber);
+		cell = row.getCell(columnNumber);
 		if (cell == null) {
-			cell = row.createCell((short) columnNumber);
+			cell = row.createCell(columnNumber);
 		}
 
 		cell.setCellType(HSSFCell.CELL_TYPE_STRING);
