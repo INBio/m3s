@@ -12,11 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
-import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.dto.taxonomy.GatheringLiteDTO;
@@ -46,10 +42,7 @@ public class GalleryController extends SimpleController {
 	private AgentManager agentManager;	
 	
 	//DTOFactory/Service Mixture
-	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
-	
-	//DAO :S ;(
-	private MediaDAO mediaDAO;
+	//private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
 	
 	//parameters
 	private String metadataMediaList;
@@ -112,16 +105,13 @@ public class GalleryController extends SimpleController {
 				List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
 
 				MetadataDTO mDTO;
-				MediaLite ml;
 				List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
 				BriefMediaOutputDTO bmoDTO;
 				String info2 = "";
 				
 				for(Integer mediaId : mediaIdsList){
-					ml = mediaDAO.getMediaLite(mediaId);
 					mDTO = metadataManager.getMetadataByMedia(String.valueOf(mediaId));
-					
-					bmoDTO = (BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml);
+					bmoDTO = metadataManager.getMetadataBriefByMedia(String.valueOf(mediaId));
 				
 					//modify info2, set the association type
 					//biodiversity information (associated to?)
@@ -267,35 +257,6 @@ public class GalleryController extends SimpleController {
 	 */
 	public void setAgentManager(AgentManager agentManager) {
 		this.agentManager = agentManager;
-	}
-
-	/**
-	 * @return the briefMediaOutputDTOFactory
-	 */
-	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
-		return briefMediaOutputDTOFactory;
-	}
-
-	/**
-	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
-	 */
-	public void setBriefMediaOutputDTOFactory(
-			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
-		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
-	}
-
-	/**
-	 * @return the mediaDAO
-	 */
-	public MediaDAO getMediaDAO() {
-		return mediaDAO;
-	}
-
-	/**
-	 * @param mediaDAO the mediaDAO to set
-	 */
-	public void setMediaDAO(MediaDAO mediaDAO) {
-		this.mediaDAO = mediaDAO;
 	}
 
 	/**

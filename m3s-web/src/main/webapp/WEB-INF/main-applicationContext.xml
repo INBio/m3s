@@ -10,12 +10,9 @@
     <property name="metadataImagesCount" value="imagesCount"/>
     <property name="metadataVideosCount" value="videosCount"/>
 
-    <!-- daos,managers,dto/service -->
-    <property name="mediaDAO" ref="mediaDAO"/>
+    <!-- managers -->
     <property name="statisticsManager" ref="statisticsManager"/>
-    <!-- check constants.properties-->
-    <property name="briefMediaOutputDTOFactory" ref="${briefMediaOutputDTOFactory}"/>
-     
+    <property name="metadataManager" ref="${metadataManager}"/>        
   </bean>     
   
   <!-- insert page -->
@@ -331,13 +328,11 @@
     <property name="metadataCriteria" value="criteria"/>
     <property name="metadataValue" value="value"/>
     <property name="metadataCss" value="css"/>
-    
-    <property name="mediaDAO" ref="mediaDAO"/>   
+     
     <!-- check constants.properties-->
     <property name="metadataManager" ref="${metadataManager}"/>
     <property name="agentManager" ref="${agentManager}"/>
-    <property name="searchManager" ref="${searchManager}"/>
-    <property name="briefMediaOutputDTOFactory" ref="${briefMediaOutputDTOFactory}"/>    
+    <property name="searchManager" ref="${searchManager}"/>    
   </bean>   
 
   <!-- The Filter Querying controller for Species Records -->
@@ -352,11 +347,10 @@
     <property name="filtersMap" ref="searchFilters"/>
     <property name="metadataFilters" value="filters"/>
     <property name="metadataMediaList" value="outputMediaList"/>
-    <property name="mediaDAO" ref="mediaDAO"/>
     <!-- check constants.properties-->
     <property name="searchManager" ref="${searchManager}"/>
     <property name="agentManager" ref="${agentManager}"/>
-    <property name="briefMediaOutputDTOFactory" ref="${briefMediaOutputDTOFactory}"/>
+    <property name="metadataManager" ref="${metadataManager}"/>
   </bean> 
   
   <!-- importation files dispatcher -->
@@ -371,7 +365,7 @@
 
   <!-- image dispatcher -->
   <bean id="imageController" class="org.inbio.m3s.web.controller.ImageController">
-    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="metadataManager" ref="${metadataManager}"/>
     
     <!-- check constants.properties-->
     <property name="temporalFilesPath" value="${temporalFilesPath}"/>
@@ -385,7 +379,7 @@
   
   <!-- video dispatcher -->
   <bean id="videoController" class="org.inbio.m3s.web.controller.dispatcher.VideoController">
-    <property name="mediaDAO" ref="mediaDAO"/>
+    <property name="metadataManager" ref="${metadataManager}"/>
     
     <!-- check constants.properties-->
     <property name="temporalFilesPath" value="${temporalFilesPath}"/>

@@ -10,10 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
-import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.StatisticsManager;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -30,9 +28,9 @@ public class HomePageController extends AbstractController{
 	private String metadataMultimediaCount;
 	private String metadataImagesCount;
 	private String metadataVideosCount;
-	
-	private MediaDAO mediaDAO;	
-	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
+
+	/*managers*/
+	private MetadataManager metadataManager;
 	private StatisticsManager statisticsManager;
 	
 	protected static Log logger = LogFactory.getLog(HomePageController.class);
@@ -44,9 +42,8 @@ public class HomePageController extends AbstractController{
 		
 		ModelAndView mav = new ModelAndView("home");
 		
-		List<MediaLite> mediaLiteList = mediaDAO.getLastPublicMedia(12);
-		
-		List<BriefMediaOutputDTO> bmoDTOList = briefMediaOutputDTOFactory.createDTOList(mediaLiteList);
+		//getMetadataBriefByMedia
+		List<BriefMediaOutputDTO> bmoDTOList = metadataManager.getLastPublicMetadataBrief(12);
 		mav.addObject(metadataOutputMediaList, bmoDTOList);
 		
 		logger.debug("Cantidad de resulatados> "+bmoDTOList.size());
@@ -62,27 +59,7 @@ public class HomePageController extends AbstractController{
 		
 	}
 
-	/**
-	 * @param mediaDAO the mediaDAO to set
-	 */
-	public void setMediaDAO(MediaDAO mediaDAO) {
-		this.mediaDAO = mediaDAO;
-	}
 
-	/**
-	 * @return the briefMediaOutputDTOFactory
-	 */
-	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
-		return briefMediaOutputDTOFactory;
-	}
-
-	/**
-	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
-	 */
-	public void setBriefMediaOutputDTOFactory(
-			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
-		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
-	}
 
 	/**
 	 * @return the metadataOutputMediaList
@@ -110,13 +87,6 @@ public class HomePageController extends AbstractController{
 	 */
 	public void setStatisticsManager(StatisticsManager statisticsManager) {
 		this.statisticsManager = statisticsManager;
-	}
-
-	/**
-	 * @return the mediaDAO
-	 */
-	public MediaDAO getMediaDAO() {
-		return mediaDAO;
 	}
 
 	/**
@@ -160,6 +130,21 @@ public class HomePageController extends AbstractController{
 	public void setMetadataVideosCount(String metadataVideosCount) {
 		this.metadataVideosCount = metadataVideosCount;
 	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
+	}
+
 
 }
 

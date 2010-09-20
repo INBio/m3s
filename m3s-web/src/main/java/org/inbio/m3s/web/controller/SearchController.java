@@ -12,12 +12,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.lite.MediaLite;
 import org.inbio.m3s.dto.media.BriefMediaOutputDTO;
-import org.inbio.m3s.dto.media.BriefMediaOutputDTOFactory;
 import org.inbio.m3s.dto.search.SearchCriteriaTripletDTO;
 import org.inbio.m3s.service.AgentManager;
+import org.inbio.m3s.service.MetadataManager;
 import org.inbio.m3s.service.SearchManager;
 import org.inbio.m3s.web.controller.reusable.SimpleController;
 import org.inbio.m3s.web.exception.ValidationException;
@@ -34,14 +32,10 @@ public class SearchController extends SimpleController {
 	
 	//managers
 	private SearchManager searchManager;
-	private AgentManager agentManager;	
+	private AgentManager agentManager;
+	private MetadataManager metadataManager;
 
-	//DTOFactory/Service Mixture
-	private BriefMediaOutputDTOFactory briefMediaOutputDTOFactory;
-	
-	//DAO :S ;(
-	private MediaDAO mediaDAO;
-	
+
 	private String metadataFilters;
 	private FilterMapWrapper filtersMap;
 	
@@ -100,11 +94,9 @@ public class SearchController extends SimpleController {
 				int totalResults = searchManager.getTotalResults(sctList); 
 				List<Integer> mediaIdsList = searchManager.getResults(sctList, first, last);
 
-				MediaLite ml;
 				List<BriefMediaOutputDTO> bmoDTOList = new ArrayList<BriefMediaOutputDTO>();
 				for(Integer mediaId : mediaIdsList){
-					ml = mediaDAO.getMediaLite(mediaId);
-					bmoDTOList.add((BriefMediaOutputDTO) briefMediaOutputDTOFactory.createDTO(ml));
+					bmoDTOList.add(metadataManager.getMetadataBriefByMedia(String.valueOf(mediaId)));
 				}
 
 				//pone la lista con resultados en el model
@@ -263,40 +255,6 @@ public class SearchController extends SimpleController {
 		this.agentManager = agentManager;
 	}
 
-	/**
-	 * @return the mediaDAO
-	 */
-	public MediaDAO getMediaDAO() {
-		return mediaDAO;
-	}
-
-	/**
-	 * @param mediaDAO the mediaDAO to set
-	 */
-	public void setMediaDAO(MediaDAO mediaDAO) {
-		this.mediaDAO = mediaDAO;
-	}
-
-
-
-	/**
-	 * @return the briefMediaOutputDTOFactory
-	 */
-	public BriefMediaOutputDTOFactory getBriefMediaOutputDTOFactory() {
-		return briefMediaOutputDTOFactory;
-	}
-
-
-
-	/**
-	 * @param briefMediaOutputDTOFactory the briefMediaOutputDTOFactory to set
-	 */
-	public void setBriefMediaOutputDTOFactory(
-			BriefMediaOutputDTOFactory briefMediaOutputDTOFactory) {
-		this.briefMediaOutputDTOFactory = briefMediaOutputDTOFactory;
-	}
-
-
 
 	/**
 	 * @return the metadataFilters
@@ -330,6 +288,20 @@ public class SearchController extends SimpleController {
 	 */
 	public void setFiltersMap(FilterMapWrapper filtersMap) {
 		this.filtersMap = filtersMap;
+	}
+
+	/**
+	 * @return the metadataManager
+	 */
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
+	}
+
+	/**
+	 * @param metadataManager the metadataManager to set
+	 */
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 

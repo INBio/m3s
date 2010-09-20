@@ -8,8 +8,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.inbio.m3s.dao.core.MediaDAO;
-import org.inbio.m3s.dto.lite.MediaLite;
+import org.inbio.m3s.dto.metadata.MetadataDTO;
+import org.inbio.m3s.service.MetadataManager;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -37,7 +37,7 @@ public class ImageController extends AbstractController {
 
 	private int bigImageCode;
 
-	private MediaDAO mediaDAO;
+	private MetadataManager metadataManager;
 
 	/*
 	 * Este servlet ataja las peticiones de imagenes. (incluye imagenes
@@ -71,11 +71,11 @@ public class ImageController extends AbstractController {
 				Integer imageId = Integer.valueOf(httpServletRequest.getParameter("id"));
 				int size = validatedLiteralSize(httpServletRequest.getParameter("size"));
 
-				MediaLite mediaLite = mediaDAO.getMediaLite(imageId);
+				MetadataDTO mDTO = metadataManager.getMetadataByMedia(String.valueOf(imageId));
+
 				// Is Visible?
-				if (mediaLite.getIsPublic() == 'Y')
-					imageAddress = getPath(imageId, size, mediaLite.getCreationDate()
-							.toString());
+				if (mDTO.getIsPublic() == 'Y')
+					imageAddress = getPath(imageId, size, mDTO.getLogCreationDate());
 				else {
 					logger.error("image with id=" + imageId + " isn't visible");
 					imageAddress = temporalFilesPath + "unavailable.png";
@@ -289,18 +289,17 @@ public class ImageController extends AbstractController {
 	}
 
 	/**
-	 * @return the mediaDAO
+	 * @return the metadataManager
 	 */
-	public MediaDAO getMediaDAO() {
-		return mediaDAO;
+	public MetadataManager getMetadataManager() {
+		return metadataManager;
 	}
 
 	/**
-	 * @param mediaDAO
-	 *          the mediaDAO to set
+	 * @param metadataManager the metadataManager to set
 	 */
-	public void setMediaDAO(MediaDAO mediaDAO) {
-		this.mediaDAO = mediaDAO;
+	public void setMetadataManager(MetadataManager metadataManager) {
+		this.metadataManager = metadataManager;
 	}
 
 }
