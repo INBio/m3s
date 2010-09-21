@@ -12,7 +12,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.ImportControlDAO;
-import org.inbio.m3s.dao.core.SecurityUserDAO;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOFull;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOFullFactory;
 import org.inbio.m3s.dto.importcontrol.ImportControlDTOLite;
@@ -31,8 +30,6 @@ public class ImportationManagerImpl implements ImportationManager {
 
 	private ImportControlDAO importControlDAO;
 	
-	private SecurityUserDAO securityUserDAO;
-
 	private ImportControlDTOFullFactory importControlFullDTOFactory;
 	
 	private ImportControlDTOLiteFactory importControlLiteDTOFactory;
@@ -174,20 +171,6 @@ public class ImportationManagerImpl implements ImportationManager {
 	 */
 	public ImportControlDAO getImportControlDAO() {
 		return importControlDAO;
-	}
-
-	/**
-	 * @param securityUserDAO the securityUserDAO to set
-	 */
-	public void setSecurityUserDAO(SecurityUserDAO securityUserDAO) {
-		this.securityUserDAO = securityUserDAO;
-	}
-
-	/**
-	 * @return the securityUserDAO
-	 */
-	public SecurityUserDAO getSecurityUserDAO() {
-		return securityUserDAO;
 	}
 
 	/**

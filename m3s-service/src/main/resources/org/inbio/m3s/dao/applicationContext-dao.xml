@@ -31,7 +31,6 @@
   <bean id="metadataStandardDAO" class="org.inbio.m3s.dao.core.impl.MetadataStandardDAOImpl" parent="baseDAORO"/>
   <bean id="observationMediaDAO" class="org.inbio.m3s.dao.core.impl.ObservationMediaDAOImpl"  parent="baseDAORO"/>  
   <bean id="projectDAO" class="org.inbio.m3s.dao.core.impl.ProjectDAOImpl"  parent="baseDAORO"/>
-  <bean id="securityUserDAO" class="org.inbio.m3s.dao.core.impl.SecurityUserDAOImpl" parent="baseDAORO"/>
   <bean id="specimenMediaDAO" class="org.inbio.m3s.dao.core.impl.SpecimenMediaDAOImpl"  parent="baseDAORO"/>
   <bean id="statisticsDAO" class="org.inbio.m3s.dao.core.impl.StatisticsDAOImpl" parent="baseDAORO"/>
   <bean id="taxonMediaDAO" class="org.inbio.m3s.dao.core.impl.TaxonMediaDAOImpl" parent="baseDAORO"/>

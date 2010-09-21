@@ -15,7 +15,6 @@
 <!-- ImportationManagers (1 version)-->
   <bean id="importationManager" class="org.inbio.m3s.service.impl.ImportationManagerImpl">
     <property name="importControlDAO" ref="importControlDAO"/>
-    <property name="securityUserDAO" ref="securityUserDAO"/>
     <property name="importControlFullDTOFactory" ref="importControlFullDTOFactory"/>
     <property name="importControlLiteDTOFactory" ref="importControlLiteDTOFactory"/>
   </bean>
@@ -43,12 +42,7 @@
     <property name="projectDTOFactory" ref="projectDTOFactory"/>    
   </bean>
 
-  <!--  security manager no sirve para nada! -->
-  <!-- SecurityManager (1 version)
-  <bean id="securityManager" class="org.inbio.m3s.service.impl.SecurityManagerImpl">
-    <property name="securityUserDAO" ref="securityUserDAO"/>
-  </bean>
-  -->
+
   <bean id="myUserDetailsService" class="org.inbio.m3s.service.impl.UserDetailsManagerImpl" >
     <property name="systemUserDAO" ref="systemUserDAO"/>
   </bean>

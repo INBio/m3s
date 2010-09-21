@@ -13,7 +13,7 @@ public class UserProjectPrivilege extends LogGenericEntity {
 
 	private Privilege privilege;
 
-	private SecurityUsers securityUsers;
+	private SystemUser user;
 
 	private Project project;
 
@@ -21,20 +21,20 @@ public class UserProjectPrivilege extends LogGenericEntity {
 	}
 
 	public UserProjectPrivilege(UserProjectPrivilegeId id, Privilege privilege,
-			SecurityUsers securityUsers, Project project) {
+			SystemUser user, Project project) {
 		this.id = id;
 		this.privilege = privilege;
-		this.securityUsers = securityUsers;
+		this.user = user;
 		this.project = project;
 	}
 
 	public UserProjectPrivilege(UserProjectPrivilegeId id, Privilege privilege,
-			SecurityUsers securityUsers, Project project, Date creationDate,
+			SystemUser user, Project project, Date creationDate,
 			String createdBy, Date lastModificationDate,
 			String lastModificationBy) {
 		this.id = id;
 		this.privilege = privilege;
-		this.securityUsers = securityUsers;
+		this.user = user;
 		this.project = project;
 		this.setCreationDate(creationDate);
 		this.setCreatedBy(createdBy);
@@ -58,20 +58,26 @@ public class UserProjectPrivilege extends LogGenericEntity {
 		this.privilege = privilege;
 	}
 
-	public SecurityUsers getSecurityUsers() {
-		return this.securityUsers;
-	}
-
-	public void setSecurityUsers(SecurityUsers securityUsers) {
-		this.securityUsers = securityUsers;
-	}
-
 	public Project getProject() {
 		return this.project;
 	}
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public SystemUser getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(SystemUser user) {
+		this.user = user;
 	}
 
 }

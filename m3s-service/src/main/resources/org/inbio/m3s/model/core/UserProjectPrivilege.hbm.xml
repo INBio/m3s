@@ -22,8 +22,8 @@
 			insert="false" fetch="select">
 			<column name="privilege_id" not-null="true" />
 		</many-to-one>
-		<many-to-one name="securityUsers"
-			class="org.inbio.m3s.model.core.SecurityUsers" update="false"
+		<many-to-one name="user"
+			class="org.inbio.m3s.model.core.SystemUser" update="false"
 			insert="false" fetch="select">
 			<column name="user_name" length="16" not-null="true" />
 		</many-to-one>

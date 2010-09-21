@@ -1,9 +1,7 @@
 package org.inbio.m3s.dao;
 
-import org.inbio.m3s.dao.core.SecurityUserDAO;
 import org.inbio.m3s.dao.multimedia.MetadataExtractorDAO;
 import org.inbio.m3s.dto.metadata.util.EXIFStandardAttributeEntity;
-import org.inbio.m3s.model.core.SecurityUsers;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 @SuppressWarnings("unused")

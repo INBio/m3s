@@ -28,13 +28,11 @@
 	<mapping resource="org/inbio/m3s/model/core/ObservedTaxonMedia.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/Privilege.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/Project.hbm.xml" />
-	<mapping resource="org/inbio/m3s/model/core/SecurityUsers.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/SystemUser.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/SpecimenMedia.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TaxonMedia.hbm.xml" />	
 	<mapping resource="org/inbio/m3s/model/core/TextTranslation.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/TypeSpecimenMedia.hbm.xml" />
-	<mapping resource="org/inbio/m3s/model/core/User.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/UsePolicy.hbm.xml" />
 	<mapping resource="org/inbio/m3s/model/core/UserProjectPrivilege.hbm.xml" />
 	
