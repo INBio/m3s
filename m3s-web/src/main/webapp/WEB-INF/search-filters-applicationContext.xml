@@ -14,16 +14,16 @@
     <bean id="searchFilters" class="org.inbio.m3s.web.filter.FilterMapWrapper">
         <property name="filters">
             <list>
-                <ref bean="mediaIdFilter" />
                 <ref bean="taxonNameFilter" />
                 <ref bean="mediaAuthorNameFilter" />
+                <ref bean="mediaDescriptionFilter"/>
                 <ref bean="keywordFilter" />
                 <ref bean="projectFilter" />   
                 <ref bean="familyTaxonFilter" />                
                 <ref bean="genusTaxonFilter" />
                 <ref bean="speciesTaxonFilter" />
                 <ref bean="mediaTitleFilter"/>
-                <ref bean="mediaDescriptionFilter"/>
+                <ref bean="mediaIdFilter" />
                 <!-- <ref bean="orderTaxonFilter" /> -->                
             </list>
         </property>

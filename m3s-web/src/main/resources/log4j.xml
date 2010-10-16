@@ -22,16 +22,16 @@
 	<!-- Alter the logging of known libs -->
 	<category name="org.inbio.m3s.web.controller">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
-		<priority value="all"/>
-	</category>
-	
-	<category name="org.inbio.m3s.service.util">
 		<priority value="debug"/>
+	</category>
+		
+	<category name="org.inbio.m3s.service">
+		<priority value="all"/>
 	</category>
 
 	<category name="org.inbio">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->
-		<priority value="all"/>
+		<priority value="debug"/>
 	</category>
 	<category name="org.hibernate">
 		<!-- USAGE and FEEDBACK NEEDS INFO!!! -->

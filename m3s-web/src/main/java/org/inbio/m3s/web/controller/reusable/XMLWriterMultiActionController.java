@@ -12,10 +12,13 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * @author jgutierrez
- *
+ * @deprecated
+ * @use org.inbio.common.web.controller.XMLResponseMultiActionController
  */
 public class XMLWriterMultiActionController extends MultiActionController {
 
+	private String urlCharset = "UTF-8";
+	
 	/**
 	 * Method that writes XML Strings to the output.
 	 * 
@@ -24,6 +27,8 @@ public class XMLWriterMultiActionController extends MultiActionController {
 	 * @param xml
 	 * @return
 	 * @throws Exception
+	 * @deprecated
+	 * @use writeXMLDocumentOnResponse
 	 */
 	public ModelAndView writeXMLOnResponse(HttpServletRequest request,
 			HttpServletResponse response, String xml) throws Exception {
@@ -39,4 +44,5 @@ public class XMLWriterMultiActionController extends MultiActionController {
 		
 		return null;
 	}
+	
 }

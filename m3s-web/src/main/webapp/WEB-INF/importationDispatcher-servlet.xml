@@ -8,19 +8,8 @@
 
   <!--  Define how the dispatcher will select the controllers -->
   <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    <!--
-    <property name="interceptors">
-      <list>
-        <ref bean="localeChangeInterceptor"/>
-        <ref bean="SpeciesRecordDataAgreementInterceptor"/>
-        <ref bean="sessionHistoryInterceptor"/>             
-      </list> 
-    </property>
-    -->
     <property name="mappings">
       <props>
-        <!-- <prop key="/">searchFilterController</prop> -->
-        <!--<prop key="/search*.htm">searchFilterController</prop> -->   
         <prop key="/getImportationFile">importationFile</prop>    
       </props>
     </property>

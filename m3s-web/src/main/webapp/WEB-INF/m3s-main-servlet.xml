@@ -45,6 +45,9 @@
         
         <!-- Help pages -->
         <prop key="/help/keywords.html">keywordsListController</prop>
+        
+        <!--  Admin pages  /admin/*-->
+        <prop key="/admin/admin.html">adminHomePageController</prop>
       </props>
     </property>
   </bean>
@@ -57,16 +60,6 @@
       <value>10485760</value>
     </property>
   </bean>  
-  <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/> -->
-  <!-- 
-    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="/upload.form">fileUploadController</prop>
-            </props>
-        </property>
-    </bean>
- -->  
     
   <!-- org.inbio.m3s.web.controller.LoginPageController -->
   <bean id="loginPageController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
@@ -83,6 +76,9 @@
     <property name="messageManager" ref="messageManager"/>
   </bean>
   
-  
+  <!-- Admin home page   -->
+  <bean id="adminHomePageController" class="org.inbio.m3s.web.controller.reusable.SimpleController">
+    <property name="viewName" value="adminHome"/>
+  </bean>
   
 </beans>

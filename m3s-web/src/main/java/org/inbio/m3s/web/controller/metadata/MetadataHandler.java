@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.inbio.m3s.dao.core.SiteDAO;
 import org.inbio.m3s.dto.agent.InstitutionLiteDTO;
 import org.inbio.m3s.dto.agent.PersonLiteDTO;
-import org.inbio.m3s.dto.message.MediaTypeDTO;
 import org.inbio.m3s.dto.metadata.MetadataDTO;
 import org.inbio.m3s.dto.metadata.UsePolicyDTO;
 import org.inbio.m3s.dto.metadata.util.AssociatedToEntity;

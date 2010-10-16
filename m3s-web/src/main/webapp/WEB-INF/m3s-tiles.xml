@@ -99,6 +99,12 @@
     <put name="contactMessage" value="Contactenos"></put>
     <put name="contactEmail" value="alm@nhm.ac.uk"></put>
     <put name="footerMessage" value="2009 Derechos reservados al proyecto ‘Herramientas por el manejo del Parque Internacional La Amistad de la Iniciativa Darwin del Reino Unido"></put> <!-- will be overwritten -->
+  </definition>
+  
+  <!-- Administration Pages -->
+  <definition name="adminHome" extends="mainTemplate">
+    <put name="title" value="Administration"/>      
+    <put name="content" value="/WEB-INF/jsp/admin/admin.jsp"/>
   </definition>  
 
 </tiles-definitions>

@@ -16,6 +16,7 @@
     <intercept-url pattern="/import.*" access="ROLE_ADMIN" />
     <intercept-url pattern="/media*" access="ROLE_USER" />
     <intercept-url pattern="/ajax*" access="ROLE_USER" />
+    <intercept-url pattern="/admin/*" access="ROLE_MANAGER" />
     <anonymous username="guest" granted-authority="ROLE_GUEST"/>
     <form-login login-page="/login.html" default-target-url="/home.html" authentication-failure-url="/login.html?error=true" />
     <logout/> 

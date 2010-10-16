@@ -12,21 +12,9 @@
     </c:forEach>
 </script>
 
-<%-- Filter Help -
-<script type="text/javascript">
-    var helpViews = new Array(${ fn:length(requestScope['filters'])});
-    <c:forEach items="${requestScope['filters']}" var="filter" varStatus="filterStatus" begin="0">
-    <c:if test="${not empty filter.helpView}">
-        helpViews[${filter.id}] = "${pageContext.request.contextPath}<string:trim>${filter.helpView}</string:trim>";
-    </c:if> 
-    </c:forEach>
-</script>
--%>
 
 <h2><spring:message code="search.title"/></h2>
  
-
-<%--${pageContext.request.contextPath} --%>
 
 <c:if test="${not empty error}">
   <label>

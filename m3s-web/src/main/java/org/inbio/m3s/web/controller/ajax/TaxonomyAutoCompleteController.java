@@ -160,6 +160,7 @@ public class TaxonomyAutoCompleteController extends MultiActionController{
 	 * @param tlDTOList
 	 * @return
 	 * @throws Exception
+	 * @deprecated
 	 */
 	private ModelAndView writeReponse(HttpServletRequest request,
 			HttpServletResponse response, List<TaxonLiteDTO> tlDTOList) throws Exception {
