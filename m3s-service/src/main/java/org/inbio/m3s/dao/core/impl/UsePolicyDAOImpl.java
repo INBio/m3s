@@ -33,10 +33,10 @@ public class UsePolicyDAOImpl extends GenericBaseDAOImpl<UsePolicy, Integer> imp
 				Query query = session.createQuery(
 						"select up"
 						+ " from TextTranslation as tt, UsePolicy as up"
-						+ " where tt.language.languageId = :languageKey"
+						+ " where tt.locale = :localeKey"
 						+ " and tt.name = :usePolicyText"
-						+ " and tt.text = up.textByNameTextId");
-				query.setParameter("languageKey", MessageManager.DEFAULT_LOCALE);
+						+ " and tt.textId = up.textByNameTextId");
+				query.setParameter("localeKey", MessageManager.DEFAULT_LOCALE);
 				query.setParameter("usePolicyText", usePolicyText);
 				query.setCacheable(true);
 				return query.uniqueResult();

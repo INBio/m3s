@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author jgutierrez
+ * @deprecated
  *
  */
 public class UserPrivilegeDAOImpl extends HibernateDaoSupport implements UserPrivilegeDAO {

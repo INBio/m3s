@@ -84,22 +84,6 @@ public class SystemUser extends LogGenericEntity implements UserDetails {
 			grantedAuthorityImplArray[i] = new GrantedAuthorityImpl(st.nextToken());
 		
 		return grantedAuthorityImplArray;
-
-		/*
-		//return null;
-		GrantedAuthorityImpl[] grantedAuthorityImplArray = {new GrantedAuthorityImpl("ROLE_ADMIN"), new GrantedAuthorityImpl("ROLE_USER")};
-		
-		//User(String username, String password, boolean enabled, boolean accountNonExpired,
-   // boolean credentialsNonExpired, boolean accountNonLocked, GrantedAuthority[] authorities)
-		if(username.equalsIgnoreCase("jgutierrez"))
-			return new User("jgutierrez", "prueba", true, true, true, true, grantedAuthorityImplArray);
-		else if(username.equalsIgnoreCase("gama"))
-			return new User("gama", "gama", true, true, true, true, grantedAuthorityImplArray);
-		else
-			return new User("lala", "lolo", true, true, true, true, grantedAuthorityImplArray);
-	}
-		 */
-		//return null;
 	}
 
 	/* (non-Javadoc)

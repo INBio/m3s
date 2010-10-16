@@ -3,8 +3,11 @@
  */
 package org.inbio.m3s.service.impl;
 
+import java.util.List;
+
 import org.inbio.m3s.dao.core.SystemUserDAO;
 import org.inbio.m3s.model.core.SystemUser;
+import org.inbio.m3s.service.CustomUserDetailsManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsManager;
@@ -14,7 +17,7 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
  * @author jgutierrez
  *
  */
-public class UserDetailsManagerImpl implements UserDetailsManager {
+public class UserDetailsManagerImpl implements CustomUserDetailsManager {
 	
 	private SystemUserDAO systemUserDAO;
 
@@ -73,6 +76,20 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 		return su;
 
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inbio.m3s.service.CustomUserDetailsManager#listUsers()
+
+	public List<UserDetails> listUsers() {
+
+		List<SystemUser> suList = systemUserDAO.findAll(SystemUser.class);
+
+		return suList;
+
+		
+	}
+	 */
 
 	/**
 	 * @return the systemUserDAO
