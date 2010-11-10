@@ -18,15 +18,11 @@
  */
 package org.inbio.m3s.web.controller.ajax;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.inbio.common.web.controller.XMLResponseMultiActionController;
-import org.inbio.commons.dublincore.dto.ElementTypeDTO;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.springframework.security.userdetails.UserDetailsManager;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,6 +62,7 @@ public class AdminAjaxController extends XMLResponseMultiActionController {
 		Element dcLabelElement;
 		Element dcValueElement;
 		//process the dcElements
+		/*
 		for (String dcElementName : validElements) {
 
 			if (validElements.contains(dcElementName)) {
@@ -86,8 +83,8 @@ public class AdminAjaxController extends XMLResponseMultiActionController {
 
 			}
 		}
-		
-		return writeXMLDocumentOnResponse(request, response, doc);	
+*/		
+		return writeXMLDocumentOnResponse(request, response, new Document());	
 	}
 	
 }
