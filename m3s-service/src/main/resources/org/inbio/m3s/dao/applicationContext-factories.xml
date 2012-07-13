@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- Hibernate SessionFactory
+		 Algunas propiedades de este bean serán sobre escritas en el m3s-web utilizando el archivo
+		 de configuración '/WEB-INF/classes/config.properties'.
+		 Sin embargo para uso dentro del m3s-service deben ser configuradas acá
+	-->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- use the shared resource data source definition -->
+		<property name="dataSource" ref="dataSource"/>
+        
+        <!-- Estas propiedad serán sobre escritas por el archivo /WEB-INF/classes/config.properties -->
+		<!-- coffea & saturno-->
+		<property name="configLocation" value="classpath:coffea-PostgreSQL-hibernate.cfg.xml"/>
+		<!-- cimex 
+		<property name="configLocation" value="classpath:fornax-PostgreSQL-hibernate.cfg.xml"/>
+		-->
+		<!-- museo nacional 
+		<property name="configLocation" value="classpath:museoNacionalFornax-PostgreSQL-hibernate.cfg.xml"/>
+		-->
+	</bean>
+
+	<!-- Data Source
+		 Algunas propiedades de este bean serán sobre escritas en el m3s-web utilizando el archivo
+		 de configuración '/WEB-INF/classes/config.properties'.
+		 Sin embargo para uso dentro del m3s-service deben ser configuradas acá
+	-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver"/>
+		<property name="initialSize" value="1"/>
+		<property name="maxActive" value="25"/>
+		<property name="maxIdle" value="10"/>
+		<property name="maxWait" value="10000"/>
+		<property name="poolPreparedStatements" value="true"/>
+		
+		<!-- Estas propiedad serán sobre escritas por el archivo /WEB-INF/classes/config.properties -->
+		<!-- coffea config 
+		<property name="url" value="jdbc:postgresql://localhost:5432/m3s_fornax"/>
+		-->
+		<property name="url" value="jdbc:postgresql://localhost:5432/m3s"/>
+		<property name="username" value=""/>
+		<property name="password" value=""/>
+	</bean>	
+	
+</beans>
